@@ -10,7 +10,6 @@ public class NPC extends Trainer {
 	private static final long serialVersionUID = 1L;
 	private String name;
 	private EnumsAndConstants.DIR dir;
-	public Image[] sprites = new Image[12];
 	private Image sprite;
 	private boolean stationary;
 	public boolean trainer;

@@ -20,7 +20,6 @@ public class SpriteFactory {
 	public Image PLAYER_UP, PLAYER_UP1, PLAYER_UP2;
 	public Image PLAYER_LEFT, PLAYER_LEFT1, PLAYER_LEFT2;
 	public Image PLAYER_RIGHT, PLAYER_RIGHT1, PLAYER_RIGHT2;
-	public Image[] PLAYERSET = new Image[12];
 
 	public Image POKEDEX, POKESEL, BAGSCREEN, POKEGEAR, TRAINERCARD, SAVE, OPTION, TRAINER_FOR_CARD;
 
@@ -161,19 +160,6 @@ public class SpriteFactory {
 		PLAYER_RIGHT = createImage(playerPath + "Right.png");
 		PLAYER_RIGHT1 = createImage(playerPath + "Right1.png");
 		PLAYER_RIGHT2 = createImage(playerPath + "Right2.png");
-
-		PLAYERSET[0] = PLAYER_UP;
-		PLAYERSET[1] = PLAYER_UP1;
-		PLAYERSET[2] = PLAYER_UP2;
-		PLAYERSET[3] = PLAYER_DOWN;
-		PLAYERSET[4] = PLAYER_DOWN1;
-		PLAYERSET[5] = PLAYER_DOWN2;
-		PLAYERSET[6] = PLAYER_RIGHT;
-		PLAYERSET[7] = PLAYER_RIGHT1;
-		PLAYERSET[8] = PLAYER_RIGHT2;
-		PLAYERSET[9] = PLAYER_LEFT;
-		PLAYERSET[10] = PLAYER_LEFT1;
-		PLAYERSET[11] = PLAYER_LEFT2;
 
 		MESSAGE_BOX = createImage(picPath + "Message_Text.png");
 		ARROW = createImage(picPath + "Arrow.png");

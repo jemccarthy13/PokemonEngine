@@ -1,10 +1,12 @@
 package data_structures;
 
+import java.awt.Image;
 import java.io.Serializable;
 
 import list_types.BeatenTrainerList;
 import locations.Town;
 import utilities.EnumsAndConstants;
+import utilities.EnumsAndConstants.DIR;
 
 public class Player extends Trainer implements Serializable {
 	private int gameState = 0;
@@ -14,20 +16,28 @@ public class Player extends Trainer implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int pokemonowned = 1;
 	private int badges = 0;
-	private EnumsAndConstants.DIR dir;
-
+	DIR dir;
+	
 	public Player(int x, int y, String n, EnumsAndConstants.SPRITENAMES s) {
 		super(x, y, n, new String[] { "" }, s, null, 2000);
-		if (s.equals(EnumsAndConstants.SPRITENAMES.PLAYER)) {
-			this.sprite = EnumsAndConstants.sprite_lib.PLAYER_DOWN;
-		}
+		this.sprite = EnumsAndConstants.sprite_lib.PLAYER_DOWN;
+		this.sprites[0] = EnumsAndConstants.sprite_lib.PLAYER_DOWN;
+		this.sprites[1] = EnumsAndConstants.sprite_lib.PLAYER_DOWN1;
+		this.sprites[2] = EnumsAndConstants.sprite_lib.PLAYER_DOWN2;
+		this.sprites[3] = EnumsAndConstants.sprite_lib.PLAYER_RIGHT;
+		this.sprites[4] = EnumsAndConstants.sprite_lib.PLAYER_RIGHT1;
+		this.sprites[5] = EnumsAndConstants.sprite_lib.PLAYER_RIGHT2;
+		this.sprites[6] = EnumsAndConstants.sprite_lib.PLAYER_UP;
+		this.sprites[7] = EnumsAndConstants.sprite_lib.PLAYER_UP1;
+		this.sprites[8] = EnumsAndConstants.sprite_lib.PLAYER_UP2;
+		this.sprites[9] = EnumsAndConstants.sprite_lib.PLAYER_LEFT;
+		this.sprites[10] = EnumsAndConstants.sprite_lib.PLAYER_LEFT1;
+		this.sprites[11] = EnumsAndConstants.sprite_lib.PLAYER_LEFT2;
 	}
 
 	public Player(String n, EnumsAndConstants.SPRITENAMES s) {
 		super(0, 0, n, new String[] { "" }, s, null, 2000);
-		if (s.equals(EnumsAndConstants.SPRITENAMES.PLAYER)) {
 			this.sprite = EnumsAndConstants.sprite_lib.PLAYER_DOWN;
-		}
 	}
 
 	public int getPokemonOwned() {
@@ -74,10 +84,14 @@ public class Player extends Trainer implements Serializable {
 		return this.money;
 	}
 
-	public void setDir(EnumsAndConstants.DIR dir) {
+	public void setDir(DIR dir) {
 		this.dir = dir;
 	}
 
+	public DIR getDir() {
+		return this.dir;
+	}
+	
 	public void changeLoc(int dir, int loc) {
 		if (dir == 0) {
 			if (loc == 0) {
@@ -110,30 +124,26 @@ public class Player extends Trainer implements Serializable {
 		setCurrentY(Y);
 	}
 
-	public EnumsAndConstants.DIR getDir() {
-		return this.dir;
-	}
-
 	public void changeSprite(int pixels, boolean rightFoot) {
 		int direction = 3 * getDir().ordinal();
 		if ((pixels >= 0) && (pixels < 4)) {
-			setSprite(EnumsAndConstants.sprite_lib.PLAYERSET[direction]);
+			setSprite(sprites[direction]);
 		} else if ((pixels > 4) && (pixels < 8)) {
-			setSprite(EnumsAndConstants.sprite_lib.PLAYERSET[direction]);
+			setSprite(sprites[direction]);
 		} else if ((pixels > 8) && (pixels < 12)) {
 			if (!rightFoot) {
-				setSprite(EnumsAndConstants.sprite_lib.PLAYERSET[(direction + 1)]);
+				setSprite(sprites[(direction + 1)]);
 			} else {
-				setSprite(EnumsAndConstants.sprite_lib.PLAYERSET[(direction + 2)]);
+				setSprite(sprites[(direction + 2)]);
 			}
 		} else if ((pixels >= 12) && (pixels < 15)) {
 			if (!rightFoot) {
-				setSprite(EnumsAndConstants.sprite_lib.PLAYERSET[(direction + 1)]);
+				setSprite(sprites[(direction + 1)]);
 			} else {
-				setSprite(EnumsAndConstants.sprite_lib.PLAYERSET[(direction + 2)]);
+				setSprite(sprites[(direction + 2)]);
 			}
 		} else {
-			setSprite(EnumsAndConstants.sprite_lib.PLAYERSET[direction]);
+			setSprite(sprites[direction]);
 		}
 	}
 }

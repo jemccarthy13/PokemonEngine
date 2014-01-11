@@ -23,7 +23,7 @@ public class PokemonGameFrame extends JFrame {
 		Utils.playBackgroundMusic(EnumsAndConstants.MUSIC.TITLE);
 	}
 
-	public static void main(String[] Args) {
+	public static void main(String[] args) {
 		PokemonGameFrame pf = new PokemonGameFrame();
 		pf.setVisible(true);
 	}
