@@ -1,0 +1,36 @@
+Included in this file is the naming conventions for git branches and 
+general requests.
+
+The main components of the program for git branching purposes are 
+as follows:
+===============================================================================
+COMPONENT:  |  DEALS WITH:
+===============================================================================
+graphics    |  image library files
+driver      |  code responsible for game events
+interface   |  code responsible for graphics
+backend     |  Utils, 'global' enums / constants, etc
+data        |  load/save/initialization files
+audio       |  audio library files
+midiplayer  | code responsible for managing audio
+===============================================================================
+
+Changes that can be made are as follows:
+===============================================================================
+CHANGE:     |  DEALS WITH:
+===============================================================================
+cleanup     |  reorganization / reformatting
+enhance     |  efficiency, standards compliance, bug fixes
+create      |  adding features or missing parts
+remove      |  deleting old code or files
+===============================================================================
+
+Branches will have the naming convention "component_change", where component
+is of the main components listed above and change is of the changes 
+listed above.  
+
+I ask that any contributors kindly stick to this naming scheme to the best of
+your ability so I understand the changes made.  
+
+Any pull request made without this scheme has a low probability of being
+adopted.  Please rebase logically.
