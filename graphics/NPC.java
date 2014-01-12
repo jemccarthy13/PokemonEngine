@@ -21,37 +21,6 @@ public class NPC extends Trainer {
 		this.loc_x = x;
 		this.loc_y = y;
 		this.trainer = t;
-		if (s.equals(EnumsAndConstants.SPRITENAMES.BOY)) {
-			this.sprite = EnumsAndConstants.sprite_lib.BOY_DOWN;
-			this.sprites[0] = EnumsAndConstants.sprite_lib.BOY_DOWN;
-			this.sprites[1] = EnumsAndConstants.sprite_lib.BOY_DOWN1;
-			this.sprites[2] = EnumsAndConstants.sprite_lib.BOY_DOWN2;
-			this.sprites[3] = EnumsAndConstants.sprite_lib.BOY_RIGHT;
-			this.sprites[4] = EnumsAndConstants.sprite_lib.BOY_RIGHT1;
-			this.sprites[5] = EnumsAndConstants.sprite_lib.BOY_RIGHT2;
-			this.sprites[6] = EnumsAndConstants.sprite_lib.BOY_UP;
-			this.sprites[7] = EnumsAndConstants.sprite_lib.BOY_UP1;
-			this.sprites[8] = EnumsAndConstants.sprite_lib.BOY_UP2;
-			this.sprites[9] = EnumsAndConstants.sprite_lib.BOY_LEFT;
-			this.sprites[10] = EnumsAndConstants.sprite_lib.BOY_LEFT1;
-			this.sprites[11] = EnumsAndConstants.sprite_lib.BOY_LEFT2;
-		}
-	}
-
-	public int getOriginalX() {
-		return this.o_loc_x;
-	}
-
-	public int getOriginalY() {
-		return this.o_loc_y;
-	}
-
-	public int getCurrentX() {
-		return super.getX();
-	}
-
-	public int getCurrentY() {
-		return super.getY();
 	}
 
 	public void setDirection(EnumsAndConstants.DIR dir) {
@@ -156,17 +125,17 @@ public class NPC extends Trainer {
 
 	public void setSpriteFacing(EnumsAndConstants.DIR dir) {
 		setDirection(dir);
-		if (dir.equals(EnumsAndConstants.DIR.EAST)) {
-			setSprite(this.sprites[3]);
+		if (dir.equals(EnumsAndConstants.DIR.NORTH)) {
+			setSprite(this.sprites[0]);
 		}
 		if (dir.equals(EnumsAndConstants.DIR.SOUTH)) {
-			setSprite(this.sprites[0]);
+			setSprite(this.sprites[3]);
+		}
+		if (dir.equals(EnumsAndConstants.DIR.EAST)) {
+			setSprite(this.sprites[6]);
 		}
 		if (dir.equals(EnumsAndConstants.DIR.WEST)) {
 			setSprite(this.sprites[9]);
-		}
-		if (dir.equals(EnumsAndConstants.DIR.NORTH)) {
-			setSprite(this.sprites[6]);
 		}
 	}
 

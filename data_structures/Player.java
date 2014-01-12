@@ -1,6 +1,5 @@
 package data_structures;
 
-import java.awt.Image;
 import java.io.Serializable;
 
 import list_types.BeatenTrainerList;
@@ -10,34 +9,21 @@ import utilities.EnumsAndConstants.DIR;
 
 public class Player extends Trainer implements Serializable {
 	private int gameState = 0;
-	Trainer rival = new Trainer("???");
+	Trainer rival = new Trainer("???", 50);
 	Town saveLoc;
 	public BeatenTrainerList beatenTrainers = new BeatenTrainerList();
 	private static final long serialVersionUID = 1L;
 	private int pokemonowned = 1;
 	private int badges = 0;
 	DIR dir;
-	
-	public Player(int x, int y, String n, EnumsAndConstants.SPRITENAMES s) {
-		super(x, y, n, new String[] { "" }, s, null, 2000);
-		this.sprite = EnumsAndConstants.sprite_lib.PLAYER_DOWN;
-		this.sprites[0] = EnumsAndConstants.sprite_lib.PLAYER_DOWN;
-		this.sprites[1] = EnumsAndConstants.sprite_lib.PLAYER_DOWN1;
-		this.sprites[2] = EnumsAndConstants.sprite_lib.PLAYER_DOWN2;
-		this.sprites[3] = EnumsAndConstants.sprite_lib.PLAYER_RIGHT;
-		this.sprites[4] = EnumsAndConstants.sprite_lib.PLAYER_RIGHT1;
-		this.sprites[5] = EnumsAndConstants.sprite_lib.PLAYER_RIGHT2;
-		this.sprites[6] = EnumsAndConstants.sprite_lib.PLAYER_UP;
-		this.sprites[7] = EnumsAndConstants.sprite_lib.PLAYER_UP1;
-		this.sprites[8] = EnumsAndConstants.sprite_lib.PLAYER_UP2;
-		this.sprites[9] = EnumsAndConstants.sprite_lib.PLAYER_LEFT;
-		this.sprites[10] = EnumsAndConstants.sprite_lib.PLAYER_LEFT1;
-		this.sprites[11] = EnumsAndConstants.sprite_lib.PLAYER_LEFT2;
+
+	public Player(int x, int y, String n) {
+		super(x, y, n, new String[] { "" }, EnumsAndConstants.SPRITENAMES.PLAYER, null, 2000);
 	}
 
 	public Player(String n, EnumsAndConstants.SPRITENAMES s) {
 		super(0, 0, n, new String[] { "" }, s, null, 2000);
-			this.sprite = EnumsAndConstants.sprite_lib.PLAYER_DOWN;
+		this.sprite = EnumsAndConstants.sprite_lib.PLAYER_DOWN;
 	}
 
 	public int getPokemonOwned() {
@@ -91,7 +77,7 @@ public class Player extends Trainer implements Serializable {
 	public DIR getDir() {
 		return this.dir;
 	}
-	
+
 	public void changeLoc(int dir, int loc) {
 		if (dir == 0) {
 			if (loc == 0) {
@@ -125,6 +111,7 @@ public class Player extends Trainer implements Serializable {
 	}
 
 	public void changeSprite(int pixels, boolean rightFoot) {
+
 		int direction = 3 * getDir().ordinal();
 		if ((pixels >= 0) && (pixels < 4)) {
 			setSprite(sprites[direction]);

@@ -52,7 +52,7 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 	private int movespritepixels = 0;
 
 	public long timeStarted;
-	public Player gold = new Player(0, 0, "Gold", SPRITENAMES.PLAYER);
+	public Player gold = new Player(0, 0, "Gold");
 
 	boolean walking = false;
 	boolean movable_up = true;
