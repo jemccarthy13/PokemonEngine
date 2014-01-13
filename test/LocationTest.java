@@ -3,13 +3,12 @@ package test;
 import locations.Location;
 
 import org.junit.Assert;
-import org.junit.Test;
 
 import utilities.EnumsAndConstants;
 
 public class LocationTest {
-	@Test
-	public void testLocation() {
+
+	public static void testLocation() {
 		Assert.assertTrue(((Location) EnumsAndConstants.loc_lib.MOMSHOUSE).getName().equals("Mom's House"));
 		Assert.assertTrue(((Location) EnumsAndConstants.loc_lib.ROUTE29).getTrainers() == null);
 		Assert.assertTrue(((Location) EnumsAndConstants.loc_lib.ROUTE29).getMaxLevel("Pidgey") == 4);
@@ -17,5 +16,10 @@ public class LocationTest {
 		Assert.assertTrue(((Location) EnumsAndConstants.loc_lib.ROUTE29).getPokemon(60).equals("Rattatta"));
 		Assert.assertTrue(((Location) EnumsAndConstants.loc_lib.ROUTE29).getPokemon(43).equals("Pidgey"));
 		Assert.assertTrue(((Location) EnumsAndConstants.loc_lib.ROUTE29).getPokemon(80).equals("Sentret"));
+		System.out.println("All tests passsed.");
+	}
+
+	public static void main(String[] args) {
+		testLocation();
 	}
 }
