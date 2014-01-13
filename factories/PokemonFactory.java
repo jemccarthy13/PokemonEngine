@@ -1,27 +1,29 @@
 package factories;
 
-import pokedex.Bulbasaur;
-import pokedex.Pidgey;
+import java.util.HashMap;
+
 import pokedex.Pokemon;
-import pokedex.Rattatta;
-import pokedex.Sentret;
+import pokedex.PokemonData;
 
 public class PokemonFactory {
-	public static Pokemon createPokemon(String name, int level) {
-		String str = name;
 
-		if (str.equals("Pidgey")) {
-			return new Pidgey(level);
+	class PokemonDataMap extends HashMap<String, PokemonData> {
+
+		private static final long serialVersionUID = 1L;
+
+		public PokemonDataMap() {
+			this.put("Pidgey", new PokemonData("Data/Pokemon/PIDGEY.PDAT"));
+			this.put("Sentret", new PokemonData("Data/Pokemon/SENTRET.PDAT"));
+			this.put("Bulbasaur", new PokemonData("Data/Pokemon/BULBASAUR.PDAT"));
+			this.put("Rattatta", new PokemonData("Data/Pokemon/RATTATTA.PDAT"));
+			this.put("Charmander", new PokemonData("Data/Pokemon/CHARMANDER.PDAT"));
 		}
-		if (str.equals("Bulbasaur")) {
-			return new Bulbasaur(level);
-		}
-		if (str.equals("Sentret")) {
-			return new Sentret(level);
-		}
-		if (!str.equals("Rattatta")) {
-			return new Rattatta(level);
-		}
-		return new Sentret(2);
+	}
+
+	PokemonDataMap pokemonData = new PokemonDataMap();
+
+	public Pokemon createPokemon(String name, int level) {
+
+		return new Pokemon(pokemonData.get(name), level);
 	}
 }

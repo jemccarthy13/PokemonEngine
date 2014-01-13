@@ -19,38 +19,6 @@ public class EventHandler {
 	}
 
 	void handleBattleEvent(int keyCode) {
-		if (game.encounter.inMain) {
-			if (game.encounter.playerTurn) {
-				if (keyCode == KeyEvent.VK_UP) {
-					game.encounter.currentSelectionMainY = 0;
-					Utils.playSelectSound();
-				} else if (keyCode == KeyEvent.VK_DOWN) {
-					game.encounter.currentSelectionMainY = 1;
-					Utils.playSelectSound();
-				} else if (keyCode == KeyEvent.VK_LEFT) {
-					game.encounter.currentSelectionMainX = 0;
-					Utils.playSelectSound();
-				} else if (keyCode == KeyEvent.VK_RIGHT) {
-					game.encounter.currentSelectionMainX = 1;
-					Utils.playSelectSound();
-				}
-				if (keyCode == KeyEvent.VK_Z) {
-					if ((game.encounter.currentSelectionMainX == 0) && (game.encounter.currentSelectionMainY == 0)) {
-						game.encounter.Fight();
-					}
-					if ((game.encounter.currentSelectionMainX == 1) && (game.encounter.currentSelectionMainY == 0)) {
-						game.encounter.Pokemon();
-					}
-					if ((game.encounter.currentSelectionMainX == 0) && (game.encounter.currentSelectionMainY == 1)) {
-						game.encounter.Item();
-					}
-					if ((game.encounter.currentSelectionMainX == 1) && (game.encounter.currentSelectionMainY == 1)) {
-						game.encounter.Run();
-					}
-					Utils.playSelectSound();
-				}
-			}
-		}
 		if (game.encounter.inFight) {
 			Pokemon playerPokemon = game.encounter.playerPokemon;
 			if (game.encounter.playerTurn) {
@@ -96,6 +64,38 @@ public class EventHandler {
 				Utils.playSelectSound();
 			}
 		}
+		if (game.encounter.inMain) {
+			if (game.encounter.playerTurn) {
+				if (keyCode == KeyEvent.VK_UP) {
+					game.encounter.currentSelectionMainY = 0;
+					Utils.playSelectSound();
+				} else if (keyCode == KeyEvent.VK_DOWN) {
+					game.encounter.currentSelectionMainY = 1;
+					Utils.playSelectSound();
+				} else if (keyCode == KeyEvent.VK_LEFT) {
+					game.encounter.currentSelectionMainX = 0;
+					Utils.playSelectSound();
+				} else if (keyCode == KeyEvent.VK_RIGHT) {
+					game.encounter.currentSelectionMainX = 1;
+					Utils.playSelectSound();
+				}
+				if (keyCode == KeyEvent.VK_Z) {
+					if ((game.encounter.currentSelectionMainX == 0) && (game.encounter.currentSelectionMainY == 0)) {
+						game.encounter.Fight();
+					}
+					if ((game.encounter.currentSelectionMainX == 1) && (game.encounter.currentSelectionMainY == 0)) {
+						game.encounter.Pokemon();
+					}
+					if ((game.encounter.currentSelectionMainX == 0) && (game.encounter.currentSelectionMainY == 1)) {
+						game.encounter.Item();
+					}
+					if ((game.encounter.currentSelectionMainX == 1) && (game.encounter.currentSelectionMainY == 1)) {
+						game.encounter.Run();
+					}
+					Utils.playSelectSound();
+				}
+			}
+		}
 	}
 
 	private void resetBattleVars() {
@@ -112,7 +112,7 @@ public class EventHandler {
 		Random r = new Random();
 		boolean par = (checkPar) ? r.nextInt(2) < 0 : false;
 		if (!par) {
-			Move chosen = playerPokemon.getMoves()[move];
+			Move chosen = playerPokemon.getMove(move);
 
 			int attackStat = 0;
 			int defStat = 0;
@@ -162,11 +162,11 @@ public class EventHandler {
 		}
 		if ((game.encounter.currentSelectionFightX == 0) && (game.encounter.currentSelectionFightY == 1)) {
 			System.out.println("Attack 3 Selected");
-			move = 3;
+			move = 2;
 		}
 		if ((game.encounter.currentSelectionFightX == 1) && (game.encounter.currentSelectionFightY == 1)) {
 			System.out.println("Attack 4 Selected");
-			move = 4;
+			move = 3;
 		}
 		return move;
 	}

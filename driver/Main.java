@@ -22,7 +22,6 @@ import javax.swing.Timer;
 
 import locations.Coordinate;
 import pokedex.Pokemon;
-import pokedex.Rattatta;
 import utilities.EnumsAndConstants;
 import utilities.EnumsAndConstants.MUSIC;
 import utilities.EnumsAndConstants.SPRITENAMES;
@@ -31,7 +30,6 @@ import data_structures.ObstacleTile;
 import data_structures.Player;
 import data_structures.Tile;
 import data_structures.TimeStruct;
-import data_structures.Trainer;
 
 public class Main extends JPanel implements KeyListener, ActionListener {
 
@@ -327,10 +325,7 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 	public void doTrainerBattle(NPC curNPC) {
 		movable = false;
 		Utils.playBackgroundMusic(MUSIC.TRAINER_BATTLE);
-		Pokemon JoeyRattatta = new Rattatta(4);
-		Trainer Joey = new Trainer("NBT_Citizen1", 64);
-		Joey.caughtPokemon(JoeyRattatta);
-		encounter = new BattleScene(this, Joey);
+		encounter = new BattleScene(this, curNPC);
 		inBattle = true;
 		encounter.Start();
 	}

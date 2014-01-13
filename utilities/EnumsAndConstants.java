@@ -13,6 +13,7 @@ import factories.AudioFactory;
 import factories.ItemFactory;
 import factories.LocationFactory;
 import factories.NPCFactory;
+import factories.PokemonFactory;
 import factories.SpriteFactory;
 import factories.TeleportFactory;
 import graphics.MessageBox;
@@ -53,13 +54,15 @@ public class EnumsAndConstants {
 		MOMHOUSE, ELMLAB, NEWBARKTOWN, ROUTE29, CHERRYGROVE, ROUTE30, CHERRYGROVEMART, CHERRYGROVEPOKECENTER;
 	}
 
-	public static final SpriteFactory sprite_lib = new SpriteFactory();
-	public static final NPCFactory npc_lib = new NPCFactory();
 	public static final AudioFactory audio_lib = new AudioFactory();
 	public static final ItemFactory item_lib = new ItemFactory();
 	public static final LocationFactory loc_lib = new LocationFactory();
 
 	public static final Toolkit tk = Toolkit.getDefaultToolkit();
+	public static final PokemonFactory pokemon_generator = new PokemonFactory();
+	public static final SpriteFactory sprite_lib = new SpriteFactory();
+	public static final NPCFactory npc_lib = new NPCFactory();
+
 	public static final Font POKEFONT = new Font("pokesl1", 0, 18);
 	public static final String filePath = "PokemonOrange.SAV";
 	public static final ObstacleTile OBSTACLE = new ObstacleTile();

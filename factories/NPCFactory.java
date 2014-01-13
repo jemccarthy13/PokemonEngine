@@ -105,6 +105,7 @@ public class NPCFactory {
 
 		String[] text4 = { "I'm hungry." };
 		NBT_CITIZEN1 = new NPC(26, 8, "NBT_Citizen1", text4, EnumsAndConstants.SPRITENAMES.BOY, null, true);
+		NBT_CITIZEN1.caughtPokemon(EnumsAndConstants.pokemon_generator.createPokemon("Rattatta", 3));
 
 		text[0] = "Professor Elm knows a lot about pokemon.";
 		NBT_CITIZEN2 = new NPC(10, 10, "Citizen", text, EnumsAndConstants.SPRITENAMES.BEAUTY, null, false);

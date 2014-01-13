@@ -1,14 +1,20 @@
 package test;
 
 import org.junit.Assert;
-import org.junit.Test;
 
-import pokedex.Bulbasaur;
+import pokedex.Pokemon;
+import pokedex.PokemonData;
 
 public class PokemonTest {
-	@Test
-	public void testPokemon() {
-		Bulbasaur bulbasaur = new Bulbasaur(5);
+	public static void testPokemon() {
+
+		PokemonData pData = new PokemonData("Data/Pokemon/BULBASAUR.PDAT");
+
+		Pokemon bulbasaur = new Pokemon(pData, 5);
+		Pokemon bulbasaur2 = new Pokemon(pData, 10);
+
+		System.out.println(bulbasaur.toString());
+
 		Assert.assertTrue(bulbasaur.getLevel() == 5);
 		for (int m = 0; m < 10; m++) {
 			bulbasaur.levelUp();
@@ -29,6 +35,14 @@ public class PokemonTest {
 		for (int z = 0; z < 30; z++) {
 			bulbasaur.levelUp();
 		}
+
+		Assert.assertTrue(bulbasaur2.getName().equals("Bulbasaur"));
+		Assert.assertTrue(bulbasaur2.getLevel() == 10);
+		System.exit(0);
+	}
+
+	public static void main(String[] args) {
+		testPokemon();
 	}
 }
 

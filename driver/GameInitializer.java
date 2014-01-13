@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-import pokedex.Charmander;
 import pokedex.Pokemon;
-import pokedex.Rattatta;
 import utilities.EnumsAndConstants;
 import utilities.Utils;
 
@@ -30,9 +28,9 @@ public class GameInitializer {
 			String name = "Gold";
 			game.gold.setName(name);
 			game.gold.createTrainerID();
-			game.gold.setCurrentX(15);
+			game.gold.setCurrentX(27);
 			game.gold.setCurrentY(10);
-			Pokemon charmander = new Charmander(5);
+			Pokemon charmander = EnumsAndConstants.pokemon_generator.createPokemon("Charmander", 25);
 			game.gold.caughtPokemon(charmander);
 			game.gold.setMoney(1000000);
 			Utils.playBackgroundMusic(EnumsAndConstants.MUSIC.NEWBARKTOWN);
@@ -43,7 +41,7 @@ public class GameInitializer {
 			game.gold.createTrainerID();
 			game.gold.setCurrentX(36);
 			game.gold.setCurrentY(4);
-			Pokemon charmander = new Rattatta(5);
+			Pokemon charmander = EnumsAndConstants.pokemon_generator.createPokemon("Rattatta", 5);
 			game.gold.caughtPokemon(charmander);
 			game.gold.setMoney(2000);
 			game.gold.setCurLoc(EnumsAndConstants.loc_lib.NEWBARKTOWN);

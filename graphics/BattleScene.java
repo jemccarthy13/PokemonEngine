@@ -52,6 +52,7 @@ public class BattleScene {
 	public BattleScene(Main pkmn, Trainer joey) {
 		this.game = pkmn;
 		this.playerPokemon = ((Pokemon) pkmn.gold.getPokemon().get(0));
+		playerPokemon.setParticipated();
 		this.enemyPokemon = joey.getPokemon();
 		this.enemy = joey;
 		this.playerTurn = true;
@@ -167,7 +168,7 @@ public class BattleScene {
 				int rand = r.nextInt(2);
 				if (rand <= 0) {
 					int choice = Utils.generateRandom(0, ((Pokemon) this.enemyPokemon.get(0)).getNumMoves());
-					Move chosen = ((Pokemon) this.enemyPokemon.get(0)).getMoves()[choice];
+					Move chosen = ((Pokemon) this.enemyPokemon.get(0)).getMove(choice);
 
 					int attackStat = 0;
 					int defStat = 0;
@@ -193,7 +194,7 @@ public class BattleScene {
 				}
 			} else {
 				int choice = Utils.generateRandom(0, ((Pokemon) this.enemyPokemon.get(0)).getNumMoves());
-				Move chosen = ((Pokemon) this.enemyPokemon.get(0)).getMoves()[choice];
+				Move chosen = ((Pokemon) this.enemyPokemon.get(0)).getMove(choice);
 
 				int attackStat = 0;
 				int defStat = 1;

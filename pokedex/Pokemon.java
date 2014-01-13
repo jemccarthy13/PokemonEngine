@@ -1,106 +1,33 @@
 package pokedex;
 
 import java.awt.Image;
-import java.io.Serializable;
 
 import utilities.EnumsAndConstants;
+import utilities.EnumsAndConstants.STATS;
 import utilities.Utils;
 import data_structures.Move;
 import factories.MoveFactory;
 
-public class Pokemon implements Serializable {
-	private static final long serialVersionUID = 1L;
-	int evolution_stage;
+public class Pokemon {
+	int evolution_stage = 0;
 	int level;
-	String name;
-	String type;
-	String pokedexNumber;
 	boolean participated = false;
 	Move[] moves = new Move[4];
 	public Integer[] stats = new Integer[7];
 	Integer[] max_stats = new Integer[7];
 	Integer accuracy = Integer.valueOf(100);
-	String[] evolution_stages = new String[3];
-	Integer[] evolution_levels = new Integer[3];
-	int baseExp;
-	private int exp;
+	private int curExp;
 	protected Image party_icon;
 	public int statusEffect;
 	protected Image back_sprite;
 	protected Image front_sprite;
-	protected String basePokedexNumber;
 
-	public int getLevel() {
-		return this.level;
-	}
-
-	public void setName() {
-		this.name = this.evolution_stages[0];
-		if ((this.evolution_levels[1] != null) && (this.level > this.evolution_levels[1].intValue())) {
-			this.name = this.evolution_stages[1];
-		}
-		if ((this.evolution_levels[2] != null) && (this.level > this.evolution_levels[2].intValue())) {
-			this.name = this.evolution_stages[2];
-		}
-	}
-
-	public void setStage() {
-		this.evolution_stage = 0;
-		if ((this.evolution_levels[1] != null) && (this.level > this.evolution_levels[1].intValue())) {
-			this.evolution_stage = 1;
-		}
-		if ((this.evolution_levels[2] != null) && (this.level > this.evolution_levels[2].intValue())) {
-			this.evolution_stage = 2;
-		}
-	}
-
-	public void reset() {
-		this.accuracy = Integer.valueOf(100);
-		this.participated = false;
-	}
-
-	public Move[] getMoves() {
-		return this.moves;
-	}
-
-	public int getNumMoves() {
-		int count = 0;
-		for (int x = 0; x < this.moves.length; x++) {
-			if (this.moves[x] != MoveFactory.PLACEHOLDER) {
-				count++;
-			}
-		}
-		return count;
-	}
-
-	public int getExpGain(boolean wild, int s) {
-		double a = wild ? 1.0D : 1.5D;
-		if ((this.evolution_stage == 2) && (this.evolution_stages[2] != null)) {
-			baseExp *= 2;
-		}
-		if ((this.evolution_stage == 3) || ((this.evolution_stage == 2) && (this.evolution_stages[2] == null))) {
-			baseExp *= 3;
-		}
-		return (int) (a * this.baseExp * this.level / (7 * s));
-	}
-
-	public void printMoves() {
-		System.out.println("1. " + this.moves[0] + "\n2. " + this.moves[1] + "\n3. " + this.moves[2] + "\n4. "
-				+ this.moves[3]);
-	}
-
-	public void setLevel(int level) {
-		this.level = level;
-	}
-
-	public String getName() {
-		return this.name;
-	}
+	PokemonData pData;
 
 	public void levelUp() {
 		if (this.level < 100) {
 			this.level += 1;
-			System.out.println(this.name + " grew to level " + this.level + "!");
+			System.out.println(pData.evolution_stages.get(evolution_stage) + " grew to level " + level + "!");
 		}
 		for (int x = 0; x < 6; x++) {
 			int incr = Utils.randomStatIncr();
@@ -118,11 +45,14 @@ public class Pokemon implements Serializable {
 				this.stats[x] = Integer.valueOf(240);
 			}
 		}
-		if ((this.evolution_stage < 2) && (this.level == this.evolution_levels[(this.evolution_stage + 1)].intValue())) {
+		if ((this.evolution_stage < 2) && (this.level == pData.evolution_levels.get(evolution_stage + 1))) {
 			this.evolution_stage += 1;
-			this.name = this.evolution_stages[this.evolution_stage];
-			System.out.println("Congratulations!  Your " + this.evolution_stages[(this.evolution_stage - 1)]
-					+ " has evolved into a " + this.name + "!");
+			System.out.println("Congratulations!  Your " + pData.evolution_stages.get(evolution_stage - 1)
+					+ " has evolved into a " + pData.evolution_stages.get(evolution_stage) + "!");
+		}
+		for (int x = 0; x < pData.moves.size(); x++) {
+			if (level == pData.levelsLearned.get(x))
+				System.out.println(getName() + " learned " + pData.moves.get(x));
 		}
 	}
 
@@ -134,16 +64,22 @@ public class Pokemon implements Serializable {
 		return this.max_stats[hp.ordinal()].intValue();
 	}
 
-	public Pokemon(int lev) {
+	public Pokemon(PokemonData pData, int lev) {
+		this.pData = pData;
 		this.level = lev;
-		this.stats[EnumsAndConstants.STATS.HP.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
-		this.stats[EnumsAndConstants.STATS.ATTACK.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
-		this.stats[EnumsAndConstants.STATS.DEFENSE.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
-		this.stats[EnumsAndConstants.STATS.SP_ATTACK.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
-		this.stats[EnumsAndConstants.STATS.SP_DEFENSE.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
-		this.stats[EnumsAndConstants.STATS.SPEED.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
-		this.stats[EnumsAndConstants.STATS.ACCURACY.ordinal()] = Integer.valueOf(100);
-		this.exp = (this.level * this.level * this.level);
+		for (Integer x : pData.evolution_levels) {
+			if (level > x && x != 0) {
+				evolution_stage++;
+			}
+		}
+		this.stats[STATS.HP.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
+		this.stats[STATS.ATTACK.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
+		this.stats[STATS.DEFENSE.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
+		this.stats[STATS.SP_ATTACK.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
+		this.stats[STATS.SP_DEFENSE.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
+		this.stats[STATS.SPEED.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
+		this.stats[STATS.ACCURACY.ordinal()] = Integer.valueOf(100);
+		this.curExp = (this.level * this.level * this.level);
 		for (int y = 0; y < 4; y++) {
 			this.moves[y] = MoveFactory.PLACEHOLDER;
 		}
@@ -153,22 +89,32 @@ public class Pokemon implements Serializable {
 			}
 			this.max_stats[x] = this.stats[x];
 		}
+		System.out.println(String.format("%03d", Integer.parseInt(this.pData.pokedexNumber) + evolution_stage));
+		this.party_icon = EnumsAndConstants.tk
+				.createImage(getClass().getResource(
+						"../graphics_lib/Icons/icon"
+								+ String.format("%03d", Integer.parseInt(this.pData.pokedexNumber) + evolution_stage)
+								+ ".png"));
+		this.back_sprite = EnumsAndConstants.tk.createImage(getClass()
+				.getResource(
+						"../graphics_lib/Battlers/"
+								+ String.format("%03d", Integer.parseInt(this.pData.pokedexNumber) + evolution_stage)
+								+ "b.png"));
+		this.front_sprite = EnumsAndConstants.tk
+				.createImage(getClass().getResource(
+						"../graphics_lib/Battlers/"
+								+ String.format("%03d", Integer.parseInt(this.pData.pokedexNumber) + evolution_stage)
+								+ ".png"));
 	}
 
-	public String toString(boolean own) {
-		String retStr = "";
-		if (!own) {
-			retStr = retStr + this.name + " (Lvl. " + this.level + ")";
-		} else {
-			retStr = retStr + this.name;
-		}
-		return retStr;
+	public String toString() {
+		return pData.toString() + "\n" + level;
 	}
 
 	public void doDamage(int damage, boolean playSound) {
-		setStat(EnumsAndConstants.STATS.HP, getStat(EnumsAndConstants.STATS.HP) - damage);
-		if (getStat(EnumsAndConstants.STATS.HP) < 0) {
-			setStat(EnumsAndConstants.STATS.HP, 0);
+		setStat(STATS.HP, getStat(STATS.HP) - damage);
+		if (getStat(STATS.HP) < 0) {
+			setStat(STATS.HP, 0);
 		}
 		if (playSound) {
 			Utils.playDamageSound();
@@ -187,15 +133,43 @@ public class Pokemon implements Serializable {
 		this.stats[hp.ordinal()] = Integer.valueOf(i);
 	}
 
+	public String getName() {
+		return pData.evolution_stages.get(evolution_stage);
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
 	public boolean hasParticipated() {
 		return this.participated;
 	}
 
+	public int getExpGain(boolean trainerOwned, int numParticipants) {
+		double a = trainerOwned ? 1.5 : 1;
+		int b = pData.baseExp;
+		return (int) (a * b * level) / (7 * numParticipants);
+	}
+
 	public void gainExp(int expGain) {
-		this.exp += expGain;
-		if (this.exp >= (this.level + 1) * (this.level + 1) * (this.level + 1)) {
+		this.curExp += expGain;
+		if (this.curExp >= (this.level + 1) * (this.level + 1) * (this.level + 1)) {
 			levelUp();
 		}
+	}
+
+	public int getNumMoves() {
+		int count = 0;
+		for (String x : pData.moves) {
+			if (!x.equals("")) {
+				count++;
+			}
+		}
+		return count;
+	}
+
+	public Move getMove(int choice) {
+		return moves[choice];
 	}
 
 	public void setParticipated() {
@@ -204,13 +178,12 @@ public class Pokemon implements Serializable {
 
 	public void heal(int amount) {
 		if (amount == -1) {
-			this.stats[EnumsAndConstants.STATS.HP.ordinal()] = this.max_stats[EnumsAndConstants.STATS.HP.ordinal()];
+			this.stats[STATS.HP.ordinal()] = this.max_stats[STATS.HP.ordinal()];
 		} else {
-			int tmp40_37 = EnumsAndConstants.STATS.HP.ordinal();
+			int tmp40_37 = STATS.HP.ordinal();
 			Integer[] tmp40_31 = this.stats;
 			tmp40_31[tmp40_37] = Integer.valueOf(tmp40_31[tmp40_37].intValue() + amount);
-			if (this.stats[EnumsAndConstants.STATS.HP.ordinal()].intValue() > this.max_stats[EnumsAndConstants.STATS.HP
-					.ordinal()].intValue()) {
+			if (this.stats[STATS.HP.ordinal()].intValue() > this.max_stats[STATS.HP.ordinal()].intValue()) {
 				heal(-1);
 			}
 		}
@@ -229,11 +202,3 @@ public class Pokemon implements Serializable {
 	}
 
 }
-
-/*
- * Location: C:\eclipse\workspace\PokemonOrange.jar
- * 
- * Qualified Name: pokedex.Pokemon
- * 
- * JD-Core Version: 0.7.0.1
- */

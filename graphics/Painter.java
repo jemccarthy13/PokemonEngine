@@ -103,11 +103,17 @@ public class Painter extends JPanel {
 
 	private void paintBattle(Graphics g, Main game) {
 		g.setFont(EnumsAndConstants.POKEFONT);
-		g.setColor(Color.BLACK);
 		g.drawImage(game.encounter.BG, 0, 0, null);
+
+		Pokemon playerPokemon = game.encounter.playerPokemon;
+		Pokemon enemyPokemon = game.encounter.enemyPokemon.get(0);
+
+		g.drawImage(playerPokemon.getBackSprite(), 30, 228 - playerPokemon.getBackSprite().getHeight(game), null);
+		g.drawImage(enemyPokemon.getFrontSprite(), 300, 25, null);
+
 		if (game.encounter.inMain) {
 			g.drawImage(game.encounter.battleMainBG, 0, 0, null);
-			g.drawString("Wild " + ((Pokemon) game.encounter.enemyPokemon.get(0)).getName() + " Appeared!", 30, 260);
+			g.drawString("Wild " + enemyPokemon.getName() + " Appeared!", 30, 260);
 			g.drawString("FIGHT", 290, 260);
 			g.drawString("PKMN", 400, 260);
 			g.drawString("ITEM", 290, 290);
@@ -123,12 +129,14 @@ public class Painter extends JPanel {
 			}
 		}
 		if (game.encounter.inFight) {
+
 			g.drawImage(game.encounter.battleFightBG, 0, 0, null);
 			g.drawString("Select a Move", 30, 260);
-			g.drawString(game.encounter.playerPokemon.getMoves()[0].getName(), 200, 260);
-			g.drawString(game.encounter.playerPokemon.getMoves()[1].getName(), 345, 260);
-			g.drawString(game.encounter.playerPokemon.getMoves()[2].getName(), 200, 290);
-			g.drawString(game.encounter.playerPokemon.getMoves()[3].getName(), 345, 290);
+			g.drawString(playerPokemon.getMove(0).getName(), 200, 260);
+			g.drawString(playerPokemon.getMove(1).getName(), 345, 260);
+			g.drawString(playerPokemon.getMove(2).getName(), 200, 290);
+			g.drawString(playerPokemon.getMove(3).getName(), 345, 290);
+
 			if ((game.encounter.currentSelectionFightX == 0) && (game.encounter.currentSelectionFightY == 0)) {
 				g.drawImage(game.encounter.arrow, 184, 240, null);
 			} else if ((game.encounter.currentSelectionFightX == 0) && (game.encounter.currentSelectionFightY == 1)) {
@@ -139,41 +147,37 @@ public class Painter extends JPanel {
 				g.drawImage(game.encounter.arrow, 329, 270, null);
 			}
 		}
-		g.drawString(game.encounter.playerPokemon.getName(), 300, 175);
-		g.drawString(((Integer) game.encounter.playerPokemon.getLevel()).toString(), 435, 175);
-		g.drawString(((Integer) game.encounter.playerPokemon.getStat(EnumsAndConstants.STATS.HP)).toString(), 361, 207);
-		g.drawString(((Integer) game.encounter.playerPokemon.getMaxStat(EnumsAndConstants.STATS.HP)).toString(), 403,
-				207);
-		g.drawImage(game.encounter.playerPokemon.getBackSprite(), 30, 130, null);
-		g.drawString(game.encounter.enemyPokemon.get(0).getName(), 20, 25);
-		g.drawString(((Integer) game.encounter.enemyPokemon.get(0).getLevel()).toString(), 145, 25);
-		g.drawString(((Integer) game.encounter.enemyPokemon.get(0).getStat(EnumsAndConstants.STATS.HP)).toString(), 70,
-				45);
-		g.drawString(((Integer) game.encounter.enemyPokemon.get(0).getMaxStat(EnumsAndConstants.STATS.HP)).toString(),
-				112, 45);
-		g.drawImage(((Pokemon) game.encounter.enemyPokemon.get(0)).getFrontSprite(), 300, 25, null);
-		if (game.encounter.playerPokemon.statusEffect == 1) {
+
+		if (playerPokemon.statusEffect == 1) {
 			g.drawImage(game.encounter.statusPAR, 415, 140, null);
-		} else if (game.encounter.playerPokemon.statusEffect == 2) {
+		} else if (playerPokemon.statusEffect == 2) {
 			g.drawImage(game.encounter.statusBRN, 415, 140, null);
-		} else if (game.encounter.playerPokemon.statusEffect == 3) {
+		} else if (playerPokemon.statusEffect == 3) {
 			g.drawImage(game.encounter.statusPSN, 415, 140, null);
-		} else if (game.encounter.playerPokemon.statusEffect == 4) {
+		} else if (playerPokemon.statusEffect == 4) {
 			g.drawImage(game.encounter.statusSLP, 415, 140, null);
-		} else if (game.encounter.playerPokemon.statusEffect == 5) {
+		} else if (playerPokemon.statusEffect == 5) {
 			g.drawImage(game.encounter.statusFRZ, 415, 140, null);
 		}
-		if (((Pokemon) game.encounter.enemyPokemon.get(0)).statusEffect == 1) {
+		if (enemyPokemon.statusEffect == 1) {
 			g.drawImage(game.encounter.statusPAR, 18, 60, null);
-		} else if (((Pokemon) game.encounter.enemyPokemon.get(0)).statusEffect == 2) {
+		} else if (enemyPokemon.statusEffect == 2) {
 			g.drawImage(game.encounter.statusBRN, 18, 60, null);
-		} else if (((Pokemon) game.encounter.enemyPokemon.get(0)).statusEffect == 3) {
+		} else if (enemyPokemon.statusEffect == 3) {
 			g.drawImage(game.encounter.statusPSN, 18, 60, null);
-		} else if (((Pokemon) game.encounter.enemyPokemon.get(0)).statusEffect == 4) {
+		} else if (enemyPokemon.statusEffect == 4) {
 			g.drawImage(game.encounter.statusSLP, 18, 60, null);
-		} else if (((Pokemon) game.encounter.enemyPokemon.get(0)).statusEffect == 5) {
+		} else if (enemyPokemon.statusEffect == 5) {
 			g.drawImage(game.encounter.statusFRZ, 18, 60, null);
 		}
+		g.drawString(playerPokemon.getName(), 300, 175);
+		g.drawString(((Integer) playerPokemon.getLevel()).toString(), 435, 175);
+		g.drawString(((Integer) playerPokemon.getStat(EnumsAndConstants.STATS.HP)).toString(), 361, 207);
+		g.drawString(((Integer) playerPokemon.getMaxStat(EnumsAndConstants.STATS.HP)).toString(), 403, 207);
+		g.drawString(enemyPokemon.getName(), 20, 25);
+		g.drawString(((Integer) enemyPokemon.getLevel()).toString(), 145, 25);
+		g.drawString(((Integer) enemyPokemon.getStat(EnumsAndConstants.STATS.HP)).toString(), 70, 45);
+		g.drawString(((Integer) enemyPokemon.getMaxStat(EnumsAndConstants.STATS.HP)).toString(), 112, 45);
 	}
 
 	private void paintIntroScreen(Graphics g, Main game) {
@@ -263,8 +267,8 @@ public class Painter extends JPanel {
 		if (game.gold.getPokemon().size() == 2) {
 			g.drawImage(EnumsAndConstants.sprite_lib.PARTYBOX, 190, 20, null);
 		}
-		g.drawImage(((Pokemon) game.gold.getPokemon().get(0)).getIcon(), 45, 30, null);
-		g.drawString(((Pokemon) game.gold.getPokemon().get(0)).getName(), 60, 120);
+		g.drawImage((game.gold.getPokemon().get(0)).getIcon(), 45, 30, null);
+		g.drawString((game.gold.getPokemon().get(0)).getName(), 60, 120);
 		if (!game.menuScreen.cancelbutton) {
 			g.drawImage(EnumsAndConstants.sprite_lib.PARTYCANCEL, 370, 280, null);
 		} else {

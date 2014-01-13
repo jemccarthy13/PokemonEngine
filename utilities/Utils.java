@@ -11,7 +11,6 @@ import locations.Location;
 import pokedex.Pokemon;
 import data_structures.Player;
 import data_structures.TimeStruct;
-import factories.PokemonFactory;
 
 public class Utils {
 	static Random randomGenerator = new Random();
@@ -167,7 +166,7 @@ public class Utils {
 		int level_start = location.getMinLevel(name);
 		int level_end = location.getMaxLevel(name);
 		int level = randomLevel(level_start, level_end);
-		p = PokemonFactory.createPokemon(name, level);
+		p = EnumsAndConstants.pokemon_generator.createPokemon(name, level);
 		return p;
 	}
 
