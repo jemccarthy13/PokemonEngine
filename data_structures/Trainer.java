@@ -5,7 +5,6 @@ import java.io.Serializable;
 
 import list_types.PokemonList;
 import locations.Location;
-import pokedex.Pokemon;
 import utilities.EnumsAndConstants;
 import utilities.EnumsAndConstants.SPRITENAMES;
 import utilities.Utils;

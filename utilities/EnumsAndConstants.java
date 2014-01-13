@@ -12,6 +12,7 @@ import data_structures.TileSet;
 import factories.AudioFactory;
 import factories.ItemFactory;
 import factories.LocationFactory;
+import factories.MoveFactory;
 import factories.NPCFactory;
 import factories.PokemonFactory;
 import factories.SpriteFactory;
@@ -59,6 +60,7 @@ public class EnumsAndConstants {
 	public static final LocationFactory loc_lib = new LocationFactory();
 
 	public static final Toolkit tk = Toolkit.getDefaultToolkit();
+	public static final MoveFactory move_lib = new MoveFactory();
 	public static final PokemonFactory pokemon_generator = new PokemonFactory();
 	public static final SpriteFactory sprite_lib = new SpriteFactory();
 	public static final NPCFactory npc_lib = new NPCFactory();

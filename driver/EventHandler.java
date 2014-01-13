@@ -5,10 +5,10 @@ import graphics.NPC;
 import java.awt.event.KeyEvent;
 import java.util.Random;
 
-import pokedex.Pokemon;
 import utilities.EnumsAndConstants;
 import utilities.Utils;
 import data_structures.Move;
+import data_structures.Pokemon;
 
 public class EventHandler {
 
@@ -116,16 +116,16 @@ public class EventHandler {
 
 			int attackStat = 0;
 			int defStat = 0;
-			if (chosen.getType() == EnumsAndConstants.MOVETYPE.PHYSICAL) {
+			if (chosen.getType().equals("PHYSICAL")) {
 				attackStat = ((Pokemon) game.encounter.enemyPokemon.get(0)).getStat(EnumsAndConstants.STATS.ATTACK);
 				defStat = playerPokemon.getStat(EnumsAndConstants.STATS.DEFENSE);
 			}
-			if (chosen.getType() == EnumsAndConstants.MOVETYPE.SPECIAL) {
+			if (chosen.getType().equals("SPECIAL")) {
 				attackStat = ((Pokemon) game.encounter.enemyPokemon.get(0)).getStat(EnumsAndConstants.STATS.SP_ATTACK);
 				defStat = playerPokemon.getStat(EnumsAndConstants.STATS.SP_DEFENSE);
 			}
 			int damage = 0;
-			if (chosen.getType() != EnumsAndConstants.MOVETYPE.STAT) {
+			if (!chosen.getType().equals("STAT")) {
 				damage = (int) (((2 * ((Pokemon) game.encounter.enemyPokemon.get(0)).getLevel() / 5 + 2)
 						* chosen.getStrength() * attackStat / defStat / 50 + 2)
 						* Utils.generateRandom(85, 100) / 100.0D);

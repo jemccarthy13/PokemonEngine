@@ -1,12 +1,10 @@
-package pokedex;
+package data_structures;
 
 import java.awt.Image;
 
 import utilities.EnumsAndConstants;
 import utilities.EnumsAndConstants.STATS;
 import utilities.Utils;
-import data_structures.Move;
-import factories.MoveFactory;
 
 public class Pokemon {
 	int evolution_stage = 0;
@@ -80,9 +78,20 @@ public class Pokemon {
 		this.stats[STATS.SPEED.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
 		this.stats[STATS.ACCURACY.ordinal()] = Integer.valueOf(100);
 		this.curExp = (this.level * this.level * this.level);
-		for (int y = 0; y < 4; y++) {
-			this.moves[y] = MoveFactory.PLACEHOLDER;
+
+		int idx = 0;
+		for (int x = 0; x < pData.moves.size(); x++) {
+
+			if (level > pData.levelsLearned.get(x)) {
+				idx++;
+			}
 		}
+		for (int y = 0; y < 4; y++) {
+			if (idx - y > 0) {
+				moves[y] = EnumsAndConstants.move_lib.getMove(pData.moves.get(idx - y));
+			}
+		}
+
 		for (int x = 0; x < this.stats.length; x++) {
 			if (this.stats[x].intValue() < 5) {
 				this.stats[x] = Integer.valueOf(5);

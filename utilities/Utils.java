@@ -8,8 +8,8 @@ import java.util.Random;
 import java.util.Scanner;
 
 import locations.Location;
-import pokedex.Pokemon;
 import data_structures.Player;
+import data_structures.Pokemon;
 import data_structures.TimeStruct;
 
 public class Utils {

@@ -2,40 +2,28 @@ package data_structures;
 
 import java.io.Serializable;
 
-import utilities.EnumsAndConstants;
-
 public class Move implements Serializable {
 	private static final long serialVersionUID = 1L;
-	String name;
-	int power;
-	protected EnumsAndConstants.MOVETYPE type;
+
+	MoveData moveData;
+
+	public Move(MoveData mData) {
+		moveData = mData;
+	}
 
 	public int getStrength() {
-		return this.power;
+		return moveData.power;
 	}
 
 	public String getName() {
-		return this.name;
-	}
-
-	public Move(String n, int p) {
-		this.name = n;
-		this.power = p;
+		return moveData.name;
 	}
 
 	public String toString() {
-		return this.name;
+		return moveData.name;
 	}
 
-	public EnumsAndConstants.MOVETYPE getType() {
-		return this.type;
+	public String getType() {
+		return moveData.type;
 	}
 }
-
-/*
- * Location: C:\eclipse\workspace\PokemonOrange.jar
- * 
- * Qualified Name: data_structures.Move
- * 
- * JD-Core Version: 0.7.0.1
- */

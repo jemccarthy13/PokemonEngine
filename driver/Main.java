@@ -21,13 +21,13 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import locations.Coordinate;
-import pokedex.Pokemon;
 import utilities.EnumsAndConstants;
 import utilities.EnumsAndConstants.MUSIC;
 import utilities.EnumsAndConstants.SPRITENAMES;
 import utilities.Utils;
 import data_structures.ObstacleTile;
 import data_structures.Player;
+import data_structures.Pokemon;
 import data_structures.Tile;
 import data_structures.TimeStruct;
 

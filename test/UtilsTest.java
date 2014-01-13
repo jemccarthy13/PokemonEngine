@@ -7,7 +7,7 @@ import locations.Route29;
 
 import org.junit.Test;
 
-import pokedex.Pokemon;
+import data_structures.Pokemon;
 import utilities.Utils;
 
 public class UtilsTest {

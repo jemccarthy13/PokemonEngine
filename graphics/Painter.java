@@ -9,9 +9,9 @@ import java.awt.geom.AffineTransform;
 
 import javax.swing.JPanel;
 
-import pokedex.Pokemon;
 import utilities.EnumsAndConstants;
 import utilities.Utils;
+import data_structures.Pokemon;
 import driver.Main;
 
 public class Painter extends JPanel {

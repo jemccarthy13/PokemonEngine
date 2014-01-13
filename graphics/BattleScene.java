@@ -5,10 +5,10 @@ import java.awt.Toolkit;
 import java.util.Random;
 
 import list_types.PokemonList;
-import pokedex.Pokemon;
 import utilities.EnumsAndConstants;
 import utilities.Utils;
 import data_structures.Move;
+import data_structures.Pokemon;
 import data_structures.Trainer;
 import driver.Main;
 
@@ -172,16 +172,16 @@ public class BattleScene {
 
 					int attackStat = 0;
 					int defStat = 0;
-					if (chosen.getType() == EnumsAndConstants.MOVETYPE.PHYSICAL) {
+					if (chosen.getType().equals("PHYSICAL")) {
 						attackStat = ((Pokemon) this.enemyPokemon.get(0)).getStat(EnumsAndConstants.STATS.ATTACK);
 						defStat = this.playerPokemon.getStat(EnumsAndConstants.STATS.DEFENSE);
 					}
-					if (chosen.getType() == EnumsAndConstants.MOVETYPE.SPECIAL) {
+					if (chosen.getType().equals("SPECIAL")) {
 						attackStat = ((Pokemon) this.enemyPokemon.get(0)).getStat(EnumsAndConstants.STATS.SP_ATTACK);
 						defStat = this.playerPokemon.getStat(EnumsAndConstants.STATS.SP_DEFENSE);
 					}
 					int damage = 0;
-					if (chosen.getType() != EnumsAndConstants.MOVETYPE.STAT) {
+					if (!chosen.getType().equals("STAT")) {
 						damage = (int) (((2 * ((Pokemon) this.enemyPokemon.get(0)).getLevel() / 5 + 2)
 								* chosen.getStrength() * attackStat / defStat / 50 + 2)
 								* Utils.generateRandom(85, 100) / 100.0D);
@@ -198,16 +198,16 @@ public class BattleScene {
 
 				int attackStat = 0;
 				int defStat = 1;
-				if (chosen.getType() == EnumsAndConstants.MOVETYPE.PHYSICAL) {
+				if (chosen.getType().equals("PHYSICAL")) {
 					attackStat = ((Pokemon) this.enemyPokemon.get(0)).getStat(EnumsAndConstants.STATS.ATTACK);
 					defStat = this.playerPokemon.getStat(EnumsAndConstants.STATS.DEFENSE);
 				}
-				if (chosen.getType() == EnumsAndConstants.MOVETYPE.SPECIAL) {
+				if (chosen.getType().equals("SPECIAL")) {
 					attackStat = ((Pokemon) this.enemyPokemon.get(0)).getStat(EnumsAndConstants.STATS.SP_ATTACK);
 					defStat = this.playerPokemon.getStat(EnumsAndConstants.STATS.SP_DEFENSE);
 				}
 				int damage = 0;
-				if (chosen.getType() != EnumsAndConstants.MOVETYPE.STAT) {
+				if (!chosen.getType().equals("STAT")) {
 					damage = (int) (((2 * ((Pokemon) this.enemyPokemon.get(0)).getLevel() / 5 + 2)
 							* chosen.getStrength() * attackStat / defStat / 50 + 2)
 							* Utils.generateRandom(85, 100) / 100.0D);

@@ -2,8 +2,8 @@ package test;
 
 import org.junit.Assert;
 
-import pokedex.Pokemon;
-import pokedex.PokemonData;
+import data_structures.Pokemon;
+import data_structures.PokemonData;
 
 public class PokemonTest {
 	public static void testPokemon() {
