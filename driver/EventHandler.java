@@ -117,18 +117,18 @@ public class EventHandler {
 			int attackStat = 0;
 			int defStat = 0;
 			if (chosen.getType().equals("PHYSICAL")) {
-				attackStat = ((Pokemon) game.encounter.enemyPokemon.get(0)).getStat(EnumsAndConstants.STATS.ATTACK);
-				defStat = playerPokemon.getStat(EnumsAndConstants.STATS.DEFENSE);
+				attackStat = playerPokemon.getStat(EnumsAndConstants.STATS.ATTACK);
+				defStat = game.encounter.enemyPokemon.get(0).getStat(EnumsAndConstants.STATS.DEFENSE);
 			}
 			if (chosen.getType().equals("SPECIAL")) {
-				attackStat = ((Pokemon) game.encounter.enemyPokemon.get(0)).getStat(EnumsAndConstants.STATS.SP_ATTACK);
-				defStat = playerPokemon.getStat(EnumsAndConstants.STATS.SP_DEFENSE);
+				attackStat = playerPokemon.getStat(EnumsAndConstants.STATS.SP_ATTACK);
+				defStat = game.encounter.enemyPokemon.get(0).getStat(EnumsAndConstants.STATS.SP_DEFENSE);
 			}
 			int damage = 0;
 			if (!chosen.getType().equals("STAT")) {
-				damage = (int) (((2 * ((Pokemon) game.encounter.enemyPokemon.get(0)).getLevel() / 5 + 2)
-						* chosen.getStrength() * attackStat / defStat / 50 + 2)
-						* Utils.generateRandom(85, 100) / 100.0D);
+				damage = (int) (((2 * playerPokemon.getLevel() / 5 + 2) * chosen.getStrength() * attackStat / defStat
+						/ 50 + 2)
+						* Utils.generateRandom(85, 100) / 100.0);
 				((Pokemon) game.encounter.enemyPokemon.get(0)).doDamage(damage);
 			}
 			System.out.println(((Pokemon) game.encounter.enemyPokemon.get(0)).getStat(EnumsAndConstants.STATS.HP));
@@ -153,19 +153,15 @@ public class EventHandler {
 
 	private int getSelectedMove(int move) {
 		if ((game.encounter.currentSelectionFightX == 0) && (game.encounter.currentSelectionFightY == 0)) {
-			System.out.println("Attack 1 Selected");
 			move = 0;
 		}
 		if ((game.encounter.currentSelectionFightX == 1) && (game.encounter.currentSelectionFightY == 0)) {
-			System.out.println("Attack 2 Selected");
 			move = 1;
 		}
 		if ((game.encounter.currentSelectionFightX == 0) && (game.encounter.currentSelectionFightY == 1)) {
-			System.out.println("Attack 3 Selected");
 			move = 2;
 		}
 		if ((game.encounter.currentSelectionFightX == 1) && (game.encounter.currentSelectionFightY == 1)) {
-			System.out.println("Attack 4 Selected");
 			move = 3;
 		}
 		return move;

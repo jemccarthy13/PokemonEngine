@@ -104,12 +104,14 @@ public class BattleScene {
 	}
 
 	public void Run() {
-		this.inMain = false;
-		this.inRun = true;
-		((Pokemon) this.enemyPokemon.get(0)).statusEffect = 0;
+		if (enemy == null) {
+			this.inMain = false;
+			this.inRun = true;
+			((Pokemon) this.enemyPokemon.get(0)).statusEffect = 0;
 
-		this.game.inBattle = false;
-		System.out.println("Got away safely!");
+			this.game.inBattle = false;
+			System.out.println("Got away safely!");
+		}
 	}
 
 	public void Win() {
@@ -137,7 +139,6 @@ public class BattleScene {
 
 	public void enemyTurn() {
 		if (!this.playerWon) {
-			int i = 0;
 			if ((((Pokemon) this.enemyPokemon.get(0)).statusEffect == 4)
 					|| (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 5)) {
 				Random rr = new Random();
@@ -159,17 +160,13 @@ public class BattleScene {
 						System.out.println(((Pokemon) this.enemyPokemon.get(0)).getName() + " is frozen solid.");
 					}
 				}
-			} else {
-				i = Utils.generateRandom(1, 4);
-				System.out.println("Enemy chose move " + i);
 			}
 			if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 1) {
 				Random r = new Random();
 				int rand = r.nextInt(2);
 				if (rand <= 0) {
-					int choice = Utils.generateRandom(0, ((Pokemon) this.enemyPokemon.get(0)).getNumMoves());
+					int choice = Utils.generateRandom(0, ((Pokemon) this.enemyPokemon.get(0)).getNumMoves() - 1);
 					Move chosen = ((Pokemon) this.enemyPokemon.get(0)).getMove(choice);
-
 					int attackStat = 0;
 					int defStat = 0;
 					if (chosen.getType().equals("PHYSICAL")) {
@@ -183,8 +180,8 @@ public class BattleScene {
 					int damage = 0;
 					if (!chosen.getType().equals("STAT")) {
 						damage = (int) (((2 * ((Pokemon) this.enemyPokemon.get(0)).getLevel() / 5 + 2)
-								* chosen.getStrength() * attackStat / defStat / 50 + 2)
-								* Utils.generateRandom(85, 100) / 100.0D);
+								* chosen.getStrength() * attackStat / 50 / defStat + 2)
+								* Utils.generateRandom(85, 100) / 100.0);
 					}
 					this.playerPokemon.doDamage(damage);
 					System.out.println("Enemy's turn is over");

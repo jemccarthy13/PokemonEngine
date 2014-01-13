@@ -15,13 +15,6 @@ import data_structures.TimeStruct;
 public class Utils {
 	static Random randomGenerator = new Random();
 
-	public static int generateRandom(int start, int end) {
-		double range = end - start + 1.0;
-		double fraction = (range * randomGenerator.nextDouble());
-		int num = (int) (fraction + start);
-		return num;
-	}
-
 	public static EnumsAndConstants.DIR randomDirection() {
 		int dir = generateRandom(1, 4);
 		switch (dir) {
@@ -141,6 +134,17 @@ public class Utils {
 		}
 	}
 
+	public static int generateRandom(int start, int end) {
+		double range = end - start + 1.0;
+		double fraction = (range * randomGenerator.nextDouble());
+		int num = (int) (fraction + start);
+		return num;
+	}
+
+	public static int getMove(Pokemon p) {
+		return generateRandom(0, p.getNumMoves() - 1);
+	}
+
 	public static int randomLevel(int start, int end) {
 		return generateRandom(start + 1, end - 1);
 	}
@@ -186,7 +190,7 @@ public class Utils {
 		FileOutputStream fout = null;
 		ObjectOutputStream oos = null;
 		try {
-			fout = new FileOutputStream("PokemonOrange.SAV");
+			fout = new FileOutputStream("Data/PokemonOrange.SAV");
 			oos = new ObjectOutputStream(fout);
 			oos.writeObject(you);
 			oos.close();
@@ -206,18 +210,7 @@ public class Utils {
 		System.out.println("computer menu here.");
 	}
 
-	public static int inputMove(String prompt, Pokemon p) {
-		int moveChoice = -1;
-		while ((moveChoice < 1) || (moveChoice > p.getNumMoves())) {
-			moveChoice = Integer.parseInt(input(prompt));
-		}
-		return moveChoice - 1;
-	}
-
-	public static int getMove(Pokemon p) {
-		return generateRandom(0, p.getNumMoves() - 1);
-	}
-
+	// Conversation dialog boxes (PokemonMessageBox)
 	public static void messageBox(Graphics g, String string) {
 		EnumsAndConstants.msg_box.Message(g, string);
 	}

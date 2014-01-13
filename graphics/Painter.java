@@ -134,9 +134,15 @@ public class Painter extends JPanel {
 			g.drawImage(game.encounter.battleFightBG, 0, 0, null);
 			g.drawString("Select a Move", 30, 260);
 			g.drawString(playerPokemon.getMove(0).getName(), 200, 260);
-			g.drawString(playerPokemon.getMove(1).getName(), 345, 260);
-			g.drawString(playerPokemon.getMove(2).getName(), 200, 290);
-			g.drawString(playerPokemon.getMove(3).getName(), 345, 290);
+			if (playerPokemon.getNumMoves() > 1) {
+				g.drawString(playerPokemon.getMove(1).getName(), 345, 260);
+			}
+			if (playerPokemon.getNumMoves() > 2) {
+				g.drawString(playerPokemon.getMove(2).getName(), 200, 290);
+			}
+			if (playerPokemon.getNumMoves() > 3) {
+				g.drawString(playerPokemon.getMove(3).getName(), 345, 290);
+			}
 
 			if ((game.encounter.currentSelectionFightX == 0) && (game.encounter.currentSelectionFightY == 0)) {
 				g.drawImage(game.encounter.arrow, 184, 240, null);

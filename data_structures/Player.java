@@ -1,8 +1,8 @@
 package data_structures;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
-import list_types.BeatenTrainerList;
 import locations.Town;
 import utilities.EnumsAndConstants;
 import utilities.EnumsAndConstants.DIR;
@@ -11,7 +11,7 @@ public class Player extends Trainer implements Serializable {
 	private int gameState = 0;
 	Trainer rival = new Trainer("???", 50);
 	Town saveLoc;
-	public BeatenTrainerList beatenTrainers = new BeatenTrainerList();
+	public ArrayList<String> beatenTrainers = new ArrayList<String>();
 	private static final long serialVersionUID = 1L;
 	private int pokemonowned = 1;
 	private int badges = 0;

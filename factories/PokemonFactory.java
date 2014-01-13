@@ -1,5 +1,6 @@
 package factories;
 
+import java.io.File;
 import java.util.HashMap;
 
 import data_structures.Pokemon;
@@ -12,11 +13,15 @@ public class PokemonFactory {
 		private static final long serialVersionUID = 1L;
 
 		public PokemonDataMap() {
-			this.put("Pidgey", new PokemonData("Data/Pokemon/PIDGEY.PDAT"));
-			this.put("Sentret", new PokemonData("Data/Pokemon/SENTRET.PDAT"));
-			this.put("Bulbasaur", new PokemonData("Data/Pokemon/BULBASAUR.PDAT"));
-			this.put("Rattatta", new PokemonData("Data/Pokemon/RATTATTA.PDAT"));
-			this.put("Charmander", new PokemonData("Data/Pokemon/CHARMANDER.PDAT"));
+			String path = "Data/Pokemon";
+			File folder = new File(path);
+			File[] listOfFiles = folder.listFiles();
+			for (int i = 0; i < listOfFiles.length; i++) {
+				if (listOfFiles[i].isFile()) {
+					PokemonData pd = new PokemonData(listOfFiles[i].getPath());
+					put(pd.evolution_stages.get(0), pd);
+				}
+			}
 		}
 	}
 

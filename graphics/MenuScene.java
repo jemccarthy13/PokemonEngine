@@ -72,6 +72,7 @@ public class MenuScene {
 	public void Save() {
 		this.inMain = false;
 		this.inSave = true;
+		// Utils.saveGame(game.gold);
 		System.out.println("Save");
 	}
 

@@ -1,6 +1,5 @@
 package data_structures;
 
-
 public class MoveData {
 
 	public String name;

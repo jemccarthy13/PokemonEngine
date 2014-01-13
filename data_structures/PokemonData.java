@@ -64,7 +64,7 @@ public class PokemonData {
 			for (int z = 0; z < y.length - 1; z++) {
 				moveName += " " + y[z];
 			}
-			moves.add(moveName.trim());
+			moves.add(moveName.trim().toUpperCase());
 			levelsLearned.add(Integer.parseInt(y[y.length - 1]));
 		}
 		s.close();

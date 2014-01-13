@@ -1,12 +1,14 @@
 package data_structures;
 
 import java.awt.Image;
+import java.io.Serializable;
 
 import utilities.EnumsAndConstants;
 import utilities.EnumsAndConstants.STATS;
 import utilities.Utils;
 
-public class Pokemon {
+public class Pokemon implements Serializable {
+	private static final long serialVersionUID = 1L;
 	int evolution_stage = 0;
 	int level;
 	boolean participated = false;
@@ -32,7 +34,6 @@ public class Pokemon {
 			if (this.stats[x].intValue() + incr == 240) {
 				incr = 0;
 			}
-			System.out.println(utilities.EnumsAndConstants.STATNAMES[x] + " +" + incr);
 			int tmp125_124 = x;
 			Integer[] tmp125_121 = this.stats;
 			tmp125_121[tmp125_124] = Integer.valueOf(tmp125_121[tmp125_124].intValue() + incr);
@@ -79,7 +80,7 @@ public class Pokemon {
 		this.stats[STATS.ACCURACY.ordinal()] = Integer.valueOf(100);
 		this.curExp = (this.level * this.level * this.level);
 
-		int idx = 0;
+		int idx = -1;
 		for (int x = 0; x < pData.moves.size(); x++) {
 
 			if (level > pData.levelsLearned.get(x)) {
@@ -87,7 +88,9 @@ public class Pokemon {
 			}
 		}
 		for (int y = 0; y < 4; y++) {
-			if (idx - y > 0) {
+			if (idx - y <= pData.moves.size() && idx - y >= 0) {
+				System.out.println("idx = " + idx);
+				System.out.println(pData.moves.get(idx - y));
 				moves[y] = EnumsAndConstants.move_lib.getMove(pData.moves.get(idx - y));
 			}
 		}
@@ -166,11 +169,12 @@ public class Pokemon {
 
 	public int getNumMoves() {
 		int count = 0;
-		for (String x : pData.moves) {
-			if (!x.equals("")) {
+		for (Move x : moves) {
+			if (x != null) {
 				count++;
 			}
 		}
+
 		return count;
 	}
 
