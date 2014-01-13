@@ -193,7 +193,7 @@ public class BattleScene {
 							.println(((Pokemon) this.enemyPokemon.get(0)).getName() + " is paralyzed. It can't move.");
 				}
 			} else {
-				int choice = Utils.generateRandom(0, ((Pokemon) this.enemyPokemon.get(0)).getNumMoves());
+				int choice = Utils.generateRandom(0, ((Pokemon) this.enemyPokemon.get(0)).getNumMoves() - 1);
 				Move chosen = ((Pokemon) this.enemyPokemon.get(0)).getMove(choice);
 
 				int attackStat = 0;

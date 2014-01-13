@@ -89,12 +89,9 @@ public class Pokemon {
 			}
 			this.max_stats[x] = this.stats[x];
 		}
-		System.out.println(String.format("%03d", Integer.parseInt(this.pData.pokedexNumber) + evolution_stage));
-		this.party_icon = EnumsAndConstants.tk
-				.createImage(getClass().getResource(
-						"../graphics_lib/Icons/icon"
-								+ String.format("%03d", Integer.parseInt(this.pData.pokedexNumber) + evolution_stage)
-								+ ".png"));
+		this.party_icon = EnumsAndConstants.tk.createImage(getClass().getResource(
+				"../graphics_lib/Icons/icon" + String.format("%03d", Integer.parseInt(this.pData.pokedexNumber))
+						+ ".png"));
 		this.back_sprite = EnumsAndConstants.tk.createImage(getClass()
 				.getResource(
 						"../graphics_lib/Battlers/"

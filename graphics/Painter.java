@@ -108,8 +108,9 @@ public class Painter extends JPanel {
 		Pokemon playerPokemon = game.encounter.playerPokemon;
 		Pokemon enemyPokemon = game.encounter.enemyPokemon.get(0);
 
-		g.drawImage(playerPokemon.getBackSprite(), 30, 228 - playerPokemon.getBackSprite().getHeight(game), null);
-		g.drawImage(enemyPokemon.getFrontSprite(), 300, 25, null);
+		g.drawImage(playerPokemon.getBackSprite(), 120 - (playerPokemon.getBackSprite().getHeight(game)) / 2,
+				228 - playerPokemon.getBackSprite().getHeight(game), null);
+		g.drawImage(enemyPokemon.getFrontSprite(), 310, 25, null);
 
 		if (game.encounter.inMain) {
 			g.drawImage(game.encounter.battleMainBG, 0, 0, null);
@@ -267,8 +268,8 @@ public class Painter extends JPanel {
 		if (game.gold.getPokemon().size() == 2) {
 			g.drawImage(EnumsAndConstants.sprite_lib.PARTYBOX, 190, 20, null);
 		}
-		g.drawImage((game.gold.getPokemon().get(0)).getIcon(), 45, 30, null);
-		g.drawString((game.gold.getPokemon().get(0)).getName(), 60, 120);
+		g.drawImage((game.gold.getPokemon().get(0)).getIcon(), 75, 40, null);
+		g.drawString((game.gold.getPokemon().get(0)).getName(), 65, 130);
 		if (!game.menuScreen.cancelbutton) {
 			g.drawImage(EnumsAndConstants.sprite_lib.PARTYCANCEL, 370, 280, null);
 		} else {

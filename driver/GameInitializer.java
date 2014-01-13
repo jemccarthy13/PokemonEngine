@@ -30,7 +30,7 @@ public class GameInitializer {
 			game.gold.createTrainerID();
 			game.gold.setCurrentX(27);
 			game.gold.setCurrentY(10);
-			Pokemon charmander = EnumsAndConstants.pokemon_generator.createPokemon("Charmander", 25);
+			Pokemon charmander = EnumsAndConstants.pokemon_generator.createPokemon("Charmander", 40);
 			game.gold.caughtPokemon(charmander);
 			game.gold.setMoney(1000000);
 			Utils.playBackgroundMusic(EnumsAndConstants.MUSIC.NEWBARKTOWN);
