@@ -5,7 +5,7 @@ For now this will be the location of any @TODO action items, desired features, a
 Also documented will be known bugs.
 
 ===================================================================
-Version 1.0.0
+Version 1.0.0                                           11 Jan 2014
 ===================================================================
 - Initial clean "working" version.
 Features:
@@ -31,5 +31,31 @@ BUGS:
 	when a trainer sees them.  The behavior is a glitch, 
 	the trainer should not move in to battle
 ===================================================================
-Version 1.0.1   ==> Scheduled for 01/15/2014
+Version 1.0.1                                           12 Jan 2014
+===================================================================
+Features:
+- Version 1.0.0 +
+- Pokemon database outside hard code
+- Battle Engine works with placeholder moves
+- Battle Engine accepts any Pokemon
+- Pokemon handles sprite upgrade with level up and evolution
+- Trainers' pokemon are included in npc factory to reduce hard code
+
+TODO:
+- Options don't work
+- pause menu selections only bare skeletons
+- need world map sprite for pokegear
+- wild encounters don't work
+- need grass animation when walking through wild
+- map should be expanded and should include indoors locations
+- interact with world map (e.g. items, signs)
+- prof elm's intro scenes
+
+BUGS:
+- occasionally the player will be in the process of moving
+	when a trainer sees them.  The behavior is a glitch, 
+	the trainer should not move in to battle
+	
+===================================================================
+Version 1.0.2         ==> Scheduled for 15 Jan 2014
 ===================================================================
