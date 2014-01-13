@@ -276,11 +276,6 @@ public class Painter extends JPanel {
 		}
 		g.drawImage((game.gold.getPokemon().get(0)).getIcon(), 75, 40, null);
 		g.drawString((game.gold.getPokemon().get(0)).getName(), 65, 130);
-		if (!game.menuScreen.cancelbutton) {
-			g.drawImage(EnumsAndConstants.sprite_lib.PARTYCANCEL, 370, 280, null);
-		} else {
-			g.drawImage(EnumsAndConstants.sprite_lib.PARTYCANCELSEL, 370, 280, null);
-		}
 	}
 
 	private void paintConversation(Graphics g, Main game) {

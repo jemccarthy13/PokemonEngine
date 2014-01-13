@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.text.DecimalFormat;
 import java.util.Random;
-import java.util.Scanner;
 
 import locations.Location;
 import data_structures.Player;
@@ -172,18 +171,6 @@ public class Utils {
 		int level = randomLevel(level_start, level_end);
 		p = EnumsAndConstants.pokemon_generator.createPokemon(name, level);
 		return p;
-	}
-
-	public static String input(String prompt) {
-		Scanner scanner = new Scanner(System.in);
-		System.out.print(prompt);
-		String retstr = scanner.next().trim().replace("\n", "");
-		scanner.close();
-		return retstr;
-	}
-
-	public static int inputInt(String prompt) {
-		return Integer.parseInt(input(prompt));
 	}
 
 	public static void saveGame(Player you) {

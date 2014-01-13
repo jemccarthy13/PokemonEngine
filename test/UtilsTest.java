@@ -4,15 +4,18 @@ import java.util.ArrayList;
 
 import locations.Location;
 import locations.Route29;
-
-import org.junit.Test;
-
-import data_structures.Pokemon;
 import utilities.Utils;
+import data_structures.Pokemon;
 
 public class UtilsTest {
-	@Test
-	public void testRandomLevel() {
+
+	public static void runAllTests() {
+		testRandomLevel();
+		testRandomBaseStat();
+		testRandomPokemon();
+	}
+
+	public static void testRandomLevel() {
 		System.out.println("Random Levels (2-4):");
 		for (int x = 0; x < 10; x++) {
 			System.out.print(Utils.randomLevel(4, 2) + " ");
@@ -31,8 +34,7 @@ public class UtilsTest {
 		System.out.println();
 	}
 
-	@Test
-	public void testRandomBaseStat() {
+	public static void testRandomBaseStat() {
 		System.out.println("Random Base Stats (Level 4):");
 		for (int x = 0; x < 10; x++) {
 			System.out.print(Utils.randomBaseStat(4) + " ");
@@ -50,8 +52,7 @@ public class UtilsTest {
 		System.out.println();
 	}
 
-	@Test
-	public void testRandomPokemon() {
+	public static void testRandomPokemon() {
 		Location loc = new Route29();
 		System.out.println("Random Pokemon (Route 29):");
 		for (int x = 0; x < 10; x++) {
@@ -70,5 +71,9 @@ public class UtilsTest {
 			System.out.println(trainer.get(y));
 		}
 		System.out.println();
+	}
+
+	public static void main(String[] args) {
+		runAllTests();
 	}
 }

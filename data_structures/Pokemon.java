@@ -89,8 +89,6 @@ public class Pokemon implements Serializable {
 		}
 		for (int y = 0; y < 4; y++) {
 			if (idx - y <= pData.moves.size() && idx - y >= 0) {
-				System.out.println("idx = " + idx);
-				System.out.println(pData.moves.get(idx - y));
 				moves[y] = EnumsAndConstants.move_lib.getMove(pData.moves.get(idx - y));
 			}
 		}
