@@ -3,7 +3,6 @@ package data_structures;
 import java.awt.Image;
 import java.io.Serializable;
 
-import list_types.PokemonList;
 import locations.Location;
 import utilities.EnumsAndConstants;
 import utilities.EnumsAndConstants.SPRITENAMES;

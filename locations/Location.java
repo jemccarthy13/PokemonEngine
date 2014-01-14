@@ -2,7 +2,7 @@ package locations;
 
 import java.io.Serializable;
 
-import list_types.TrainerList;
+import data_structures.TrainerList;
 
 public class Location implements Serializable {
 	private static final long serialVersionUID = 1L;

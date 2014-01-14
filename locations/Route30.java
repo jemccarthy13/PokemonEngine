@@ -1,6 +1,6 @@
 package locations;
 
-import list_types.TrainerList;
+import data_structures.TrainerList;
 
 public class Route30 extends Location {
 	private static final long serialVersionUID = 1L;
