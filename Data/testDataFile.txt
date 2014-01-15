@@ -1,0 +1,21 @@
+// a preliminary possibility of having scripted events
+
+tile x,y:
+		if numPokedex == 0:
+			textBox "It's dangerous out there. You should talk to mom before going off on an adventure."
+			player.move(player.x-1,player.y-1)
+		if badges == 6:
+			rivalBattle
+		if badges == 8
+			teamrocketBattle
+	
+door x1,y1,newX,newY      // <- I like this verion for parsing
+door x2,y2,newX2,newY2    // easy to make x1,y1 : newX, newY
+                          // and          newX, newY : x1,y1
+
+macro door x1,y1,x2,y2:
+	tile x1,y1:
+		warp(x2,y2)
+	tile x2,y2:
+		warp(x1,y1)
+

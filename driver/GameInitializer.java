@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
+import locations.Location;
 import utilities.EnumsAndConstants;
 import utilities.Utils;
 import data_structures.Pokemon;
@@ -34,7 +35,7 @@ public class GameInitializer {
 			game.gold.caughtPokemon(charmander);
 			game.gold.setMoney(1000000);
 			Utils.playBackgroundMusic(EnumsAndConstants.MUSIC.NEWBARKTOWN);
-			game.gold.setCurLoc(EnumsAndConstants.loc_lib.NEWBARKTOWN);
+			game.gold.setCurLoc(new Location(EnumsAndConstants.loc_lib.getLocation("New Bark Town").name));
 		} else {
 			String name = "Gold";
 			game.gold.setName(name);
@@ -44,7 +45,7 @@ public class GameInitializer {
 			Pokemon charmander = EnumsAndConstants.pokemon_generator.createPokemon("Rattatta", 5);
 			game.gold.caughtPokemon(charmander);
 			game.gold.setMoney(2000);
-			game.gold.setCurLoc(EnumsAndConstants.loc_lib.NEWBARKTOWN);
+			game.gold.setCurLoc(new Location(EnumsAndConstants.loc_lib.getLocation("New Bark Town").name));
 			game.introScreen.Start();
 		}
 		game.start_coorX = (EnumsAndConstants.TILESIZE * (8 - game.gold.getCurrentX()));

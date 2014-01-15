@@ -1,27 +1,31 @@
 package factories;
 
-import locations.CherryGrove;
-import locations.Location;
-import locations.MomsHouse;
-import locations.NewBarkTown;
-import locations.ProfElmLab;
-import locations.Route29;
-import locations.Route30;
+import java.io.File;
+import java.util.HashMap;
+
+import data_structures.LocationData;
 
 public class LocationFactory {
-	public Location ELMSLAB = new ProfElmLab();
-	public Location NEWBARKTOWN = new NewBarkTown();
-	public Location ROUTE29 = new Route29();
-	public Location ROUTE30 = new Route30();
-	public Location MOMSHOUSE = new MomsHouse();
-	public Location CHERRYGROVE = new CherryGrove();
+	class LocationDataMap extends HashMap<String, LocationData> {
 
-	public void initializeAll() {
-		MOMSHOUSE = new MomsHouse();
-		ELMSLAB = new ProfElmLab();
-		NEWBARKTOWN = new NewBarkTown();
-		ROUTE29 = new Route29();
-		CHERRYGROVE = new CherryGrove();
-		ROUTE30 = new Route30();
+		private static final long serialVersionUID = 1L;
+
+		public LocationDataMap() {
+			String path = "Data/Pokemon";
+			File folder = new File(path);
+			File[] listOfFiles = folder.listFiles();
+			for (int i = 0; i < listOfFiles.length; i++) {
+				if (listOfFiles[i].isFile()) {
+					LocationData ld = new LocationData(listOfFiles[i].getPath());
+					put(ld.name, ld);
+				}
+			}
+		}
+	}
+
+	LocationDataMap locationData = new LocationDataMap();
+
+	public LocationData getLocation(String locKey) {
+		return locationData.get(locKey);
 	}
 }
