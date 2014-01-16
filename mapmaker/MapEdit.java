@@ -96,14 +96,14 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 		Toolkit.getDefaultToolkit().setDynamicLayout(true);
 
 		mainFrame = new JFrame();
-		mainFrame.setTitle("Map Editor by Judd");
+		mainFrame.setTitle("Tile-Based Map Editor");
 
 		tileChooser = new TileChooser(gfx, mainFrame);
 		chooser = new JFileChooser("scenes");
 		tschooser = new JFileChooser("gfx");
 
-		tschooser.setSelectedFile(new File("C:/eclipse/workspace/PokemonOrange/mapmaker/Tiles.mapeditor"));
-		chooser.setSelectedFile(new File("C:/eclipse/workspace/PokemonOrange/mapmaker/Maps/Johto.map"));
+		tschooser.setSelectedFile(new File("C:/Users/John/git/PokemonEngine/mapmaker/Tiles.mapeditor"));
+		chooser.setSelectedFile(new File("C:/Users/John/git/PokemonEngine/mapmaker/Maps/Johto.map"));
 		JPanel localJPanel1 = (JPanel) mainFrame.getContentPane();
 		JPanel localJPanel2 = new JPanel(new BorderLayout());
 		JPanel localJPanel3 = new JPanel(new BorderLayout());

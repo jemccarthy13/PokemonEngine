@@ -1,8 +1,6 @@
-package locations;
+package data_structures;
 
 import java.io.Serializable;
-
-import data_structures.TrainerList;
 
 public class Location implements Serializable {
 	private static final long serialVersionUID = 1L;

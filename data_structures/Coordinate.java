@@ -1,8 +1,10 @@
-package locations;
+package data_structures;
 
 public class Coordinate {
 	int x;
 	int y;
+
+	// TODO use this class in place of x,y pairs?
 
 	public Coordinate(int X, int Y) {
 		x = X;

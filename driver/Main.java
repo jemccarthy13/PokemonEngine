@@ -20,11 +20,11 @@ import java.util.Set;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import locations.Coordinate;
 import utilities.EnumsAndConstants;
 import utilities.EnumsAndConstants.MUSIC;
 import utilities.EnumsAndConstants.SPRITENAMES;
 import utilities.Utils;
+import data_structures.Coordinate;
 import data_structures.ObstacleTile;
 import data_structures.Player;
 import data_structures.Pokemon;
@@ -33,59 +33,72 @@ import data_structures.TimeStruct;
 
 public class Main extends JPanel implements KeyListener, ActionListener {
 
-	int test;
+	// //////////////////////////////////////////////////////////////////////
+	// ================== BEGIN VARIABLE DECLARATIONS =====================//
+	// //////////////////////////////////////////////////////////////////////
 
+	// TODO make a gameData struct to hold some of this information
+	// which'll make it easier for saving - and bc not everything needs to be
+	// public
 	private static final long serialVersionUID = 1L;
 
-	private boolean noClip = false;
-	private boolean noBattle = false;
+	// VERSION is used in validating .sav files
+	// Orange save files are only compatible with Orange engine
+	// as per nature of "scripted events"
+	// private static String VERSION = "Orange";
 
-	private Timer gameTimer;
-
-	public int offsetX = 0;
-	public int offsetY = 0;
-	public int start_coorX, start_coorY;
-	public int menuSelection = 0;
+	// =========================== CHEATS ===================================//
+	private boolean noClip = false; // walk anywhere
+	private boolean noBattle = false; // no wild/trainer battles
+	// ==================== Game Timing Data ================================//
+	// holds how long the game has been played
 	public TimeStruct gameTimeStruct = new TimeStruct();
-	private int movespritepixels = 0;
-
-	public long timeStarted;
-	public Player gold = new Player(0, 0, "Gold");
-
+	public long timeStarted; // time the game was started
+	private Timer gameTimer; // time difference between game events
+	// ================= Movement control variables =========================//
 	boolean walking = false;
+	private int movespritepixels = 0; // movement (animation) counter
+	boolean movable = true;
 	boolean movable_up = true;
 	boolean movable_down = true;
 	boolean movable_left = true;
 	boolean movable_right = true;
-	private boolean rightFoot = false;
-	boolean movable = true;
-	public boolean atTitle = true;
-	public boolean atContinueScreen = false;
-
+	boolean rightFoot = false;
+	// ======================== Map Data ===================================//
 	public int[][] currentMap = new int[3][16500];
 	public Tile[][] tileMap = new Tile[200][200];
 	public int map_width;
-
 	public int map_height;
-
+	// ====================== NPC Information ==============================//
 	public NPC[] currentMapNPC = EnumsAndConstants.npc_lib.NEWBARKTOWN_NPC;
 	public static NPCThread NPCTHREAD;
-
+	// ======================= Battle information ==========================//
 	public boolean inBattle = false;
 	public boolean playerWin = false;
-
+	// ==================== Graphics Logic Controllers =====================//
 	public BattleScene encounter;
 	public MenuScene menuScreen;
 	public IntroScene introScreen;
 	public NameScene nameScreen;
 
+	EventHandler eventHandler;
+
 	public boolean inMenu = false;
 	public boolean inIntro = false;
 	public boolean inNameScreen = false;
+	public boolean atTitle = true;
+	public boolean atContinueScreen = false;
 
-	String playerName;
+	public int offsetX = 0; // graphics variables
+	public int offsetY = 0;
+	public int start_coorX, start_coorY; // teleportation graphics variables
+	public int menuSelection = 0;
+	// ======================== User Data ==================================//
+	public Player gold = new Player(0, 0, "Gold"); // User's character
 
-	EventHandler eventHandler;
+	// //////////////////////////////////////////////////////////////////////
+	// ==================== END VARIABLE DECLARATIONS =====================//
+	// //////////////////////////////////////////////////////////////////////
 
 	public Main() {
 		menuScreen = new MenuScene(this);
@@ -97,11 +110,10 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 		setBackground(Color.BLACK);
 		setPreferredSize(new Dimension(480, 320));
 		addKeyListener(this);
-		gameTimer = new Timer(20, this);
+		gameTimer = new Timer(100 - EnumsAndConstants.PLAYERSPEED, this);
 		gameTimer.start();
 		NPCTHREAD = new NPCThread(gold);
 		NPCTHREAD.start();
-		playerName = gold.getName();
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -308,8 +320,8 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 
 	private void handleWhiteOut() {
 		System.out.println("Player Pokemon has fainted");
-		System.out.println(playerName + " is all out of usable Pokemon!");
-		System.out.println(playerName + " whited out.");
+		System.out.println(gold.getName() + " is all out of usable Pokemon!");
+		System.out.println(gold.getName() + " whited out.");
 		encounter.whiteOut();
 		gold.setSprite(EnumsAndConstants.sprite_lib.PLAYER_UP);
 		gold.getPokemon().get(0).heal(-1);

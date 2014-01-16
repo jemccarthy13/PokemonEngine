@@ -53,7 +53,12 @@ public class EnumsAndConstants {
 
 	public static final int TILESIZE = 32;
 	public static final int MAX_NAME_SIZE = 7;
-	public static final int MAX_TILES = 91;
+
+	// on a scale of 0-100, slow - fast
+	public static final int PLAYERSPEED = 80;
+	public static final int PLAYERSPEED_WALK = 80;
+	public static final int PLAYERSPEED_RUN = 90;
+	public static final int PLAYERSPEED_BIKE = 95;
 
 	public static TeleportFactory TELEPORTS = new TeleportFactory();
 

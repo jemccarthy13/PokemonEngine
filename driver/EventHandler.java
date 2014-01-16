@@ -282,7 +282,7 @@ public class EventHandler {
 			if (keyCode == KeyEvent.VK_Z) {
 				if (game.menuScreen.currentSelectionSave == 0) {
 					// Utils.saveGame(game.gold);
-					System.out.println(game.playerName + "'s Game has been saved!");
+					System.out.println(game.gold.getName() + "'s Game has been saved! (Not really though)");
 				} else {
 					game.menuScreen.inSave = false;
 					game.menuScreen.inMain = true;
