@@ -37,8 +37,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.border.TitledBorder;
 
-public class TileChooser extends JPanel implements ActionListener,
-		GraphicsBankChangeListener {
+public class TileChooser extends JPanel implements ActionListener, GraphicsBankChangeListener {
 	private static final long serialVersionUID = 1L;
 	ArrayList<Object> tiles;
 	GridLayout layout;
@@ -71,8 +70,7 @@ public class TileChooser extends JPanel implements ActionListener,
 
 		this.spacer = new JPanel();
 		this.spacer.add(new JLabel("  Drop new tiles here"));
-		this.spacer
-				.setToolTipText("Drop image files here to create more tiles.");
+		this.spacer.setToolTipText("Drop image files here to create more tiles.");
 
 		add(this.spacer, "Center");
 
@@ -221,12 +219,10 @@ public class TileChooser extends JPanel implements ActionListener,
 	}
 
 	public void actionPerformed(ActionEvent paramActionEvent) {
-		if ((paramActionEvent.getSource() == this.applyBtn)
-				&& (this.propertyTile != null)) {
+		if ((paramActionEvent.getSource() == this.applyBtn) && (this.propertyTile != null)) {
 			this.propertyTile.name = this.tileName.getText();
 			this.propertyTile.type = this.tileType.getText();
-			this.propertyTile.number = ((Integer) this.tileNumber.getValue())
-					.intValue();
+			this.propertyTile.number = ((Integer) this.tileNumber.getValue()).intValue();
 			this.propertyTile.info = this.userText.getText();
 			this.propertiesDialog.dispose();
 			this.propertyTile = null;
@@ -240,8 +236,7 @@ public class TileChooser extends JPanel implements ActionListener,
 			}
 			this.propertiesDialog.dispose();
 		} else {
-			System.err.println("Unknown button fired action. "
-					+ paramActionEvent);
+			System.err.println("Unknown button fired action. " + paramActionEvent);
 		}
 	}
 
@@ -293,8 +288,7 @@ public class TileChooser extends JPanel implements ActionListener,
 		importImageAsTile(paramFile, 0);
 	}
 
-	public void importImageAsTile(File paramFile, int paramInt)
-			throws IOException {
+	public void importImageAsTile(File paramFile, int paramInt) throws IOException {
 		if (paramFile.isDirectory()) {
 			File[] arrayOfFile = paramFile.listFiles();
 			for (int j = 0; j < arrayOfFile.length; j++) {
@@ -312,8 +306,7 @@ public class TileChooser extends JPanel implements ActionListener,
 		System.out.println("?1");
 		int i = this.gfx.getUnusedNumber();
 		System.out.println("?2");
-		MapTile localTile = new MapTile(i, paramFile.getAbsolutePath(),
-				"New Tile " + i, "No Type");
+		MapTile localTile = new MapTile(i, paramFile.getAbsolutePath(), "New Tile " + i, "No Type");
 
 		System.out.println("Adding " + paramFile);
 		this.gfx.add(localTile);
@@ -322,36 +315,28 @@ public class TileChooser extends JPanel implements ActionListener,
 		}
 	}
 
-	public void MapTileRemoved(GraphicsBank paramGraphicsBank, MapTile paramTile) {
-	}
+	public void MapTileRemoved(GraphicsBank paramGraphicsBank, MapTile paramTile) {}
 
-	public void MapTileAdded(GraphicsBank paramGraphicsBank, MapTile paramTile) {
-	}
+	public void MapTileAdded(GraphicsBank paramGraphicsBank, MapTile paramTile) {}
 
 	class FileDropHandler extends TransferHandler {
 		private static final long serialVersionUID = 1L;
 
-		FileDropHandler() {
-		}
+		FileDropHandler() {}
 
-		public boolean canImport(JComponent paramJComponent,
-				DataFlavor[] paramArrayOfDataFlavor) {
+		public boolean canImport(JComponent paramJComponent, DataFlavor[] paramArrayOfDataFlavor) {
 			for (int i = 0; i < paramArrayOfDataFlavor.length; i++) {
-				if (paramArrayOfDataFlavor[i]
-						.equals(DataFlavor.javaFileListFlavor)) {
+				if (paramArrayOfDataFlavor[i].equals(DataFlavor.javaFileListFlavor)) {
 					return true;
 				}
 			}
 			return false;
 		}
 
-		public boolean importData(JComponent paramJComponent,
-				Transferable paramTransferable) {
+		public boolean importData(JComponent paramJComponent, Transferable paramTransferable) {
 			try {
-				List<?> localList = (List<?>) paramTransferable
-						.getTransferData(DataFlavor.javaFileListFlavor);
-				if (localList.size() > 4) {
-				}
+				List<?> localList = (List<?>) paramTransferable.getTransferData(DataFlavor.javaFileListFlavor);
+				if (localList.size() > 4) {}
 				Iterator<?> localIterator = localList.iterator();
 				while (localIterator.hasNext()) {
 					File localFile = (File) localIterator.next();
@@ -359,32 +344,26 @@ public class TileChooser extends JPanel implements ActionListener,
 					TileChooser.this.importImageAsTile(localFile);
 				}
 			} catch (UnsupportedFlavorException localUnsupportedFlavorException) {
-				System.err.println("Unsupported drop content: "
-						+ localUnsupportedFlavorException);
+				System.err.println("Unsupported drop content: " + localUnsupportedFlavorException);
 			} catch (IOException localIOException) {
-				System.err
-						.println("Unexpected IO Exception while importing tile: "
-								+ localIOException);
+				System.err.println("Unexpected IO Exception while importing tile: " + localIOException);
 				localIOException.printStackTrace();
 			}
 			return true;
 		}
 	}
 
-	class TileButton extends JToggleButton implements ActionListener,
-			MouseListener {
+	class TileButton extends JToggleButton implements ActionListener, MouseListener {
 		private static final long serialVersionUID = 1L;
 		MapTile tile;
 
 		public TileButton(MapTile arg2) {
-			BufferedImage localBufferedImage = new BufferedImage(
-					TileChooser.this.gfx.getBaseMapTileSize().width,
+			BufferedImage localBufferedImage = new BufferedImage(TileChooser.this.gfx.getBaseMapTileSize().width,
 					TileChooser.this.gfx.getBaseMapTileSize().height, 2);
 			MapTile localObject = arg2;
 			if (localObject != null) {
 				Image localImage = localObject.getImage();
-				localBufferedImage.getGraphics().drawImage(localImage, 0, 0,
-						32, 32, null);
+				localBufferedImage.getGraphics().drawImage(localImage, 0, 0, 32, 32, null);
 				setToolTipText(localObject.getName());
 			}
 			setIcon(new ImageIcon(localBufferedImage));
@@ -400,17 +379,13 @@ public class TileChooser extends JPanel implements ActionListener,
 			TileChooser.this.selectedTile = this.tile;
 		}
 
-		public void mouseEntered(MouseEvent paramMouseEvent) {
-		}
+		public void mouseEntered(MouseEvent paramMouseEvent) {}
 
-		public void mouseExited(MouseEvent paramMouseEvent) {
-		}
+		public void mouseExited(MouseEvent paramMouseEvent) {}
 
-		public void mousePressed(MouseEvent paramMouseEvent) {
-		}
+		public void mousePressed(MouseEvent paramMouseEvent) {}
 
-		public void mouseReleased(MouseEvent paramMouseEvent) {
-		}
+		public void mouseReleased(MouseEvent paramMouseEvent) {}
 
 		public void mouseClicked(MouseEvent paramMouseEvent) {
 			if (SwingUtilities.isRightMouseButton(paramMouseEvent)) {
@@ -423,11 +398,3 @@ public class TileChooser extends JPanel implements ActionListener,
 		}
 	}
 }
-
-/*
- * Location: C:\eclipse\workspace\PokemonOrange.jar
- * 
- * Qualified Name: mapmaker.TileChooser
- * 
- * JD-Core Version: 0.7.0.1
- */

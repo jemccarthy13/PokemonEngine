@@ -245,8 +245,6 @@ public class GraphicsBank {
 	}
 
 	private void fireAddEvent(MapTile paramMapTile) {
-		System.out.println("Fire add event");
-
 		Iterator<GraphicsBankChangeListener> localIterator = this.changeListeners.iterator();
 		while (localIterator.hasNext()) {
 			GraphicsBankChangeListener localGraphicsBankChangeListener = (GraphicsBankChangeListener) localIterator
@@ -264,11 +262,3 @@ public class GraphicsBank {
 		}
 	}
 }
-
-/*
- * Location: C:\eclipse\workspace\PokemonOrange.jar
- * 
- * Qualified Name: mapmaker.GraphicsBank
- * 
- * JD-Core Version: 0.7.0.1
- */

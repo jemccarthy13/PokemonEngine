@@ -55,8 +55,6 @@ public class MapTile {
 	}
 
 	public MapTile(MapTile paramTile) {
-		System.err.println("WARNING: Creating shallow copy of tile");
-
 		this.number = paramTile.number;
 		this.type = paramTile.type;
 		this.name = paramTile.name;
@@ -183,11 +181,3 @@ public class MapTile {
 		}
 	}
 }
-
-/*
- * Location: C:\eclipse\workspace\PokemonOrange.jar
- * 
- * Qualified Name: mapmaker.MapTile
- * 
- * JD-Core Version: 0.7.0.1
- */

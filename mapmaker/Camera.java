@@ -36,11 +36,3 @@ public class Camera {
 		this.viewy += this.speedy;
 	}
 }
-
-/*
- * Location: C:\eclipse\workspace\PokemonOrange.jar
- * 
- * Qualified Name: mapmaker.Camera
- * 
- * JD-Core Version: 0.7.0.1
- */

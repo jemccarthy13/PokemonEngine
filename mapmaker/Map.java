@@ -30,8 +30,7 @@ public class Map {
 		this.zoomHeight = paramInt4;
 	}
 
-	public void setTile(int paramInt1, int paramInt2, int paramInt3,
-			MapTile paramTile) {
+	public void setTile(int paramInt1, int paramInt2, int paramInt3, MapTile paramTile) {
 		this.tiles[paramInt1][paramInt2][paramInt3] = paramTile;
 	}
 
@@ -47,18 +46,15 @@ public class Map {
 
 	public void render(Graphics paramGraphics, int paramInt1, int paramInt2) {
 		int i = Math.max(paramInt1 / this.zoomWidth, 0);
-		int j = Math.min((paramInt1 + this.viewWidth) / this.zoomWidth,
-				this.tiles.length);
+		int j = Math.min((paramInt1 + this.viewWidth) / this.zoomWidth, this.tiles.length);
 
 		int k = Math.max(paramInt2 / this.zoomHeight, 0);
-		int m = Math.min((paramInt2 + this.viewHeight) / this.zoomHeight,
-				this.tiles[0].length);
+		int m = Math.min((paramInt2 + this.viewHeight) / this.zoomHeight, this.tiles[0].length);
 		for (int n = 0; n < 3; n++) {
 			for (int i1 = i; i1 < j; i1++) {
 				for (int i2 = k; i2 < m; i2++) {
 					if (this.tiles[i1][i2][n] != null) {
-						this.tiles[i1][i2][n].render(paramGraphics, i1
-								* this.zoomWidth - paramInt1, i2
+						this.tiles[i1][i2][n].render(paramGraphics, i1 * this.zoomWidth - paramInt1, i2
 								* this.zoomHeight - paramInt2);
 					}
 				}
@@ -72,21 +68,17 @@ public class Map {
 				(int) (paramCamera.viewy - this.viewHeight / 2));
 	}
 
-	public void render(Graphics paramGraphics, Point paramPoint,
-			Dimension paramDimension) {
+	public void render(Graphics paramGraphics, Point paramPoint, Dimension paramDimension) {
 		double d1 = Math.max(paramPoint.getX() / this.zoomWidth, 0.0D);
-		double d2 = Math.min((paramPoint.getX() + paramDimension.getWidth())
-				/ this.zoomWidth, this.tiles.length);
+		double d2 = Math.min((paramPoint.getX() + paramDimension.getWidth()) / this.zoomWidth, this.tiles.length);
 
 		double d3 = Math.max(paramPoint.getY() / this.zoomHeight, 0.0D);
-		double d4 = Math.min((paramPoint.getY() + paramDimension.getHeight())
-				/ this.zoomHeight, this.tiles[0].length);
+		double d4 = Math.min((paramPoint.getY() + paramDimension.getHeight()) / this.zoomHeight, this.tiles[0].length);
 		for (int i = 0; i < 3; i++) {
 			for (int j = (int) d3; j < d4; j++) {
 				for (int k = (int) d1; k < d2; k++) {
 					if (this.tiles[k][j][i] != null) {
-						this.tiles[k][j][i].render(paramGraphics, k
-								* this.zoomWidth + this.zoomWidth, j
+						this.tiles[k][j][i].render(paramGraphics, k * this.zoomWidth + this.zoomWidth, j
 								* this.zoomHeight + this.zoomHeight);
 					}
 				}
@@ -94,22 +86,18 @@ public class Map {
 		}
 	}
 
-	public void render(Graphics paramGraphics, Point paramPoint,
-			Dimension paramDimension, int paramInt) {
+	public void render(Graphics paramGraphics, Point paramPoint, Dimension paramDimension, int paramInt) {
 		double d1 = Math.max(paramPoint.getX() / this.zoomWidth, 0.0D);
-		double d2 = Math.min((paramPoint.getX() + paramDimension.getWidth())
-				/ this.zoomWidth, this.tiles.length);
+		double d2 = Math.min((paramPoint.getX() + paramDimension.getWidth()) / this.zoomWidth, this.tiles.length);
 
 		double d3 = Math.max(paramPoint.getY() / this.zoomHeight, 0.0D);
-		double d4 = Math.min((paramPoint.getY() + paramDimension.getHeight())
-				/ this.zoomHeight, this.tiles[0].length);
+		double d4 = Math.min((paramPoint.getY() + paramDimension.getHeight()) / this.zoomHeight, this.tiles[0].length);
 		int i = paramInt;
 		for (int j = (int) d3; j < d4; j++) {
 			for (int k = (int) d1; k < d2; k++) {
 				if (this.tiles[k][j][i] != null) {
-					this.tiles[k][j][i].render(paramGraphics, k
-							* this.zoomWidth + this.zoomWidth, j
-							* this.zoomHeight + this.zoomHeight);
+					this.tiles[k][j][i].render(paramGraphics, k * this.zoomWidth + this.zoomWidth, j * this.zoomHeight
+							+ this.zoomHeight);
 				}
 			}
 		}
@@ -148,8 +136,6 @@ public class Map {
 	}
 
 	void resize(int paramInt1, int paramInt2, int paramInt3) {
-		System.out.println("Call resize");
-
 		paramInt1 = Math.max(1, paramInt1);
 		paramInt2 = Math.max(1, paramInt2);
 		MapTile[][][] arrayOfTile = new MapTile[paramInt1][paramInt2][paramInt3];
@@ -168,15 +154,12 @@ public class Map {
 	}
 
 	void shift(int paramInt1, int paramInt2) {
-		System.out.println("Shift to new offset " + paramInt1 + ", "
-				+ paramInt2 + ".");
 		MapTile[][][] arrayOfTile = new MapTile[this.tiles.length][this.tiles[0].length][3];
 
 		int i = Math.max(0, -paramInt1);
 		int j = Math.max(0, -paramInt2);
 		int k = Math.min(this.tiles.length, this.tiles.length - paramInt1);
-		int m = Math
-				.min(this.tiles[0].length, this.tiles[0].length - paramInt2);
+		int m = Math.min(this.tiles[0].length, this.tiles[0].length - paramInt2);
 		for (int n = i; n < k; n++) {
 			for (int i1 = j; i1 < m; i1++) {
 				for (int i2 = 0; i2 < 3; i2++) {
@@ -213,15 +196,13 @@ public class Map {
 		return arrayOfInt;
 	}
 
-	public void setAllTiles(int[][][] paramArrayOfInt,
-			GraphicsBank paramGraphicsBank) {
+	public void setAllTiles(int[][][] paramArrayOfInt, GraphicsBank paramGraphicsBank) {
 		this.gfx = paramGraphicsBank;
 		resize(this.tiles.length, this.tiles[0].length, this.tiles[0][0].length);
 		for (int i = 0; i < this.tiles.length; i++) {
 			for (int j = 0; j < this.tiles[0].length; j++) {
 				for (int k = 0; k < 3; k++) {
-					this.tiles[i][j][k] = paramGraphicsBank
-							.getMapTile(paramArrayOfInt[i][j][k]);
+					this.tiles[i][j][k] = paramGraphicsBank.getMapTile(paramArrayOfInt[i][j][k]);
 				}
 			}
 		}
@@ -240,11 +221,3 @@ public class Map {
 		this.changeListeners.remove(paramMapChangeListener);
 	}
 }
-
-/*
- * Location: C:\eclipse\workspace\PokemonOrange.jar
- * 
- * Qualified Name: mapmaker.Map
- * 
- * JD-Core Version: 0.7.0.1
- */

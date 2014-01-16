@@ -14,8 +14,7 @@ import java.util.Stack;
 import javax.swing.JComponent;
 import javax.swing.JViewport;
 
-public class MapComponent extends JComponent implements MouseListener,
-		MouseMotionListener, MapChangeListener {
+public class MapComponent extends JComponent implements MouseListener, MouseMotionListener, MapChangeListener {
 	private static final long serialVersionUID = 1L;
 	Map map;
 	MapEdit mapEdit;
@@ -49,8 +48,7 @@ public class MapComponent extends JComponent implements MouseListener,
 		this.tileWidth = paramMap.getZoomWidth();
 		this.tileHeight = paramMap.getZoomHeight();
 
-		setPreferredSize(new Dimension(this.tileWidth * this.width,
-				this.tileHeight * this.height));
+		setPreferredSize(new Dimension(this.tileWidth * this.width, this.tileHeight * this.height));
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		this.undoStack = new Stack<Object>();
@@ -71,8 +69,7 @@ public class MapComponent extends JComponent implements MouseListener,
 		this.tileWidth = paramMap.getZoomWidth();
 		this.tileHeight = paramMap.getZoomHeight();
 
-		setPreferredSize(new Dimension(this.tileWidth * this.width,
-				this.tileHeight * this.height));
+		setPreferredSize(new Dimension(this.tileWidth * this.width, this.tileHeight * this.height));
 		revalidate();
 		this.undoStack.clear();
 		this.redoStack.clear();
@@ -82,75 +79,62 @@ public class MapComponent extends JComponent implements MouseListener,
 	void refreshZoom() {
 		this.tileWidth = this.map.getZoomWidth();
 		this.tileHeight = this.map.getZoomHeight();
-		setPreferredSize(new Dimension(this.tileWidth * this.width,
-				this.tileHeight * this.height));
+		setPreferredSize(new Dimension(this.tileWidth * this.width, this.tileHeight * this.height));
 		revalidate();
 		repaint();
 	}
 
 	public synchronized void paintComponent(Graphics paramGraphics) {
 		paramGraphics.setColor(Color.white);
-		paramGraphics.fillRect(0, 0, this.width * this.tileWidth, this.height
-				* this.tileHeight);
+		paramGraphics.fillRect(0, 0, this.width * this.tileWidth, this.height * this.tileHeight);
 		if (this.hideLayers) {
-			this.map.render(paramGraphics, this.viewport.getViewPosition(),
-					this.viewport.getSize(), this.activeLayer);
+			this.map.render(paramGraphics, this.viewport.getViewPosition(), this.viewport.getSize(), this.activeLayer);
 		} else {
-			this.map.render(paramGraphics, this.viewport.getViewPosition(),
-					this.viewport.getSize());
+			this.map.render(paramGraphics, this.viewport.getViewPosition(), this.viewport.getSize());
 		}
 		if (this.showGrid) {
 			paramGraphics.setColor(Color.gray);
 			for (int i = 0; i < this.width; i++) {
-				paramGraphics.drawLine(i * this.tileWidth, 0, i
-						* this.tileWidth, this.height * this.tileHeight);
+				paramGraphics.drawLine(i * this.tileWidth, 0, i * this.tileWidth, this.height * this.tileHeight);
 			}
 			for (int i = 0; i < this.height; i++) {
-				paramGraphics.drawLine(0, i * this.tileHeight, this.width
-						* this.tileWidth, i * this.tileHeight);
+				paramGraphics.drawLine(0, i * this.tileHeight, this.width * this.tileWidth, i * this.tileHeight);
 			}
 		}
 		((Graphics2D) paramGraphics).setStroke(new BasicStroke(2.0F));
 		paramGraphics.setColor(Color.black);
 		paramGraphics.drawLine(0, 0, this.width * this.tileWidth, 0);
 		paramGraphics.drawLine(0, 0, 0, this.height * this.tileHeight);
-		paramGraphics.drawLine(this.width * this.tileWidth, 0, this.width
-				* this.tileWidth, this.height * this.tileHeight);
-		paramGraphics.drawLine(0, this.height * this.tileHeight, this.width
-				* this.tileWidth, this.height * this.tileHeight);
+		paramGraphics.drawLine(this.width * this.tileWidth, 0, this.width * this.tileWidth, this.height
+				* this.tileHeight);
+		paramGraphics.drawLine(0, this.height * this.tileHeight, this.width * this.tileWidth, this.height
+				* this.tileHeight);
 	}
 
 	public void mapClicked(int paramInt1, int paramInt2) {
 		paramInt1 /= this.tileWidth;
 		paramInt2 /= this.tileHeight;
-		if ((paramInt1 < this.map.getWidth()) && (paramInt1 >= 0)
-				&& (paramInt2 < this.map.getHeight()) && (paramInt2 >= 0)) {
+		if ((paramInt1 < this.map.getWidth()) && (paramInt1 >= 0) && (paramInt2 < this.map.getHeight())
+				&& (paramInt2 >= 0)) {
 			if (this.mapEdit.getPaintMode() == 0) {
-				this.map.setTile(paramInt1, paramInt2, this.activeLayer,
-						this.mapEdit.getSelectedTile());
+				this.map.setTile(paramInt1, paramInt2, this.activeLayer, this.mapEdit.getSelectedTile());
 				this.stateChanged = true;
 			} else if (this.mapEdit.getPaintMode() == 1) {
-				recursiveFlood(
-						paramInt1,
-						paramInt2,
-						this.activeLayer,
-						this.map.getTile(paramInt1, paramInt2, this.activeLayer),
-						this.mapEdit.getSelectedTile());
+				recursiveFlood(paramInt1, paramInt2, this.activeLayer,
+						this.map.getTile(paramInt1, paramInt2, this.activeLayer), this.mapEdit.getSelectedTile());
 			} else {
 				System.out.println("Invalid paint mode");
 			}
 		}
 	}
 
-	public void recursiveFlood(int paramInt1, int paramInt2, int paramInt3,
-			MapTile paramTile1, MapTile paramTile2) {
-		if ((paramInt1 < 0) || (paramInt1 > this.map.getWidth() - 1)
-				|| (paramInt2 < 0) || (paramInt2 > this.map.getHeight() - 1)) {
+	public void recursiveFlood(int paramInt1, int paramInt2, int paramInt3, MapTile paramTile1, MapTile paramTile2) {
+		if ((paramInt1 < 0) || (paramInt1 > this.map.getWidth() - 1) || (paramInt2 < 0)
+				|| (paramInt2 > this.map.getHeight() - 1)) {
 			return;
 		}
 		MapTile localTile = this.map.getTile(paramInt1, paramInt2, paramInt3);
-		if ((MapTile.areEqual(localTile, paramTile2))
-				|| (!MapTile.areEqual(localTile, paramTile1))) {
+		if ((MapTile.areEqual(localTile, paramTile2)) || (!MapTile.areEqual(localTile, paramTile1))) {
 			return;
 		}
 		this.stateChanged = true;
@@ -164,11 +148,8 @@ public class MapComponent extends JComponent implements MouseListener,
 			if (i < 0) {
 				break;
 			}
-		} while (MapTile.areEqual(this.map.getTile(i, paramInt2, paramInt3),
-				paramTile1));
-		while ((j < this.map.getWidth())
-				&& (MapTile.areEqual(this.map.getTile(j, paramInt2, paramInt3),
-						paramTile1))) {
+		} while (MapTile.areEqual(this.map.getTile(i, paramInt2, paramInt3), paramTile1));
+		while ((j < this.map.getWidth()) && (MapTile.areEqual(this.map.getTile(j, paramInt2, paramInt3), paramTile1))) {
 			this.map.setTile(j, paramInt2, paramInt3, paramTile2);
 			j++;
 		}
@@ -206,7 +187,6 @@ public class MapComponent extends JComponent implements MouseListener,
 
 			this.grabX = paramMouseEvent.getX();
 			this.grabY = paramMouseEvent.getY();
-			System.out.println("Grab at " + this.grabX + ", " + this.grabY);
 		}
 	}
 
@@ -223,19 +203,15 @@ public class MapComponent extends JComponent implements MouseListener,
 			this.oldY = paramMouseEvent.getY();
 			if (!this.dragged) {
 				Dimension localDimension = this.viewport.getSize();
-				Point localPoint = new Point(
-						(int) (paramMouseEvent.getX() - localDimension
-								.getWidth() / 2.0D),
-						(int) (paramMouseEvent.getY() - localDimension
-								.getHeight() / 2.0D));
+				Point localPoint = new Point((int) (paramMouseEvent.getX() - localDimension.getWidth() / 2.0D),
+						(int) (paramMouseEvent.getY() - localDimension.getHeight() / 2.0D));
 				this.viewport.setViewPosition(localPoint);
 			}
 			this.dragged = false;
 		}
 	}
 
-	public void mouseEntered(MouseEvent paramMouseEvent) {
-	}
+	public void mouseEntered(MouseEvent paramMouseEvent) {}
 
 	public void mouseDragged(MouseEvent paramMouseEvent) {
 		if ((this.btn1Pressed) && (this.mapEdit.getPaintMode() != 1)) {
@@ -253,14 +229,11 @@ public class MapComponent extends JComponent implements MouseListener,
 		}
 	}
 
-	public void mouseExited(MouseEvent paramMouseEvent) {
-	}
+	public void mouseExited(MouseEvent paramMouseEvent) {}
 
-	public void mouseClicked(MouseEvent paramMouseEvent) {
-	}
+	public void mouseClicked(MouseEvent paramMouseEvent) {}
 
-	public void mouseMoved(MouseEvent paramMouseEvent) {
-	}
+	public void mouseMoved(MouseEvent paramMouseEvent) {}
 
 	public void setGrid(boolean paramBoolean) {
 		this.showGrid = paramBoolean;
@@ -308,11 +281,3 @@ public class MapComponent extends JComponent implements MouseListener,
 		}
 	}
 }
-
-/*
- * Location: C:\eclipse\workspace\PokemonOrange.jar
- * 
- * Qualified Name: mapmaker.MapComponent
- * 
- * JD-Core Version: 0.7.0.1
- */

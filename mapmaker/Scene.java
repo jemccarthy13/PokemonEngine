@@ -65,10 +65,6 @@ public class Scene {
 
 		GraphicsBank localGraphicsBank = new GraphicsBank();
 
-		System.out.println("Attempt to load tileset " + str2);
-
-		System.out.println("Working path is " + paramFile.getParentFile());
-
 		File localFile = new File(paramFile.getParentFile(), str2);
 		System.out.println("Attempt to load tileset " + localFile.getAbsoluteFile());
 
@@ -104,7 +100,6 @@ public class Scene {
 		Scene localScene = new Scene(localMap, new ArrayList<Object>(), localGraphicsBank);
 		localScene.tileset = localGraphicsBank;
 		if (i != 0) {
-			System.out.println("Calling setEffect on scene recently loaded.");
 			float[] fParams = { f1, f2, f3, f4, f5, (float) 1.0 };
 			localScene.setEffect(fParams);
 		}
@@ -141,7 +136,6 @@ public class Scene {
 
 			localPrintWriter.println(str1);
 
-			System.out.println("Colorization red in save is " + this.effect_rScale);
 			localPrintWriter.println(".");
 			writeScene(localPrintWriter, i, j);
 			localPrintWriter.flush();
@@ -205,8 +199,6 @@ public class Scene {
 	}
 
 	public void setEffect(float[] floatParams) {
-		System.out.println("Scene setEffect called. will call for the gfx bank...r" + floatParams[0] + " g"
-				+ floatParams[1] + " b" + floatParams[2] + " z" + floatParams[5]);
 		this.effect_rScale = floatParams[0];
 		this.effect_gScale = floatParams[1];
 		this.effect_bScale = floatParams[2];

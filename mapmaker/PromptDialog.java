@@ -33,18 +33,9 @@ public class PromptDialog {
 			private final JDialog val$d = new JDialog();
 
 			public void actionPerformed(ActionEvent paramAnonymousActionEvent) {
-				PromptDialog.ans = ((JButton) paramAnonymousActionEvent
-						.getSource()).getText();
+				PromptDialog.ans = ((JButton) paramAnonymousActionEvent.getSource()).getText();
 				this.val$d.dispose();
 			}
 		});
 	}
 }
-
-/*
- * Location: C:\eclipse\workspace\PokemonOrange.jar
- * 
- * Qualified Name: mapmaker.PromptDialog
- * 
- * JD-Core Version: 0.7.0.1
- */

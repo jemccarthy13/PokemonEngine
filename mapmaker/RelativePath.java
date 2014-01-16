@@ -21,8 +21,7 @@ public class RelativePath {
 		return localArrayList;
 	}
 
-	private static String matchPathLists(List<String> paramList1,
-			List<String> paramList2) {
+	private static String matchPathLists(List<String> paramList1, List<String> paramList2) {
 		String str = "";
 		int i = paramList1.size() - 1;
 		int j = paramList2.size() - 1;
@@ -56,18 +55,5 @@ public class RelativePath {
 			System.out.println("RelativePath <home> <file>");
 			return;
 		}
-		System.out.println("home = " + paramArrayOfString[0]);
-		System.out.println("file = " + paramArrayOfString[1]);
-		System.out.println("path = "
-				+ getRelativePath(new File(paramArrayOfString[0]), new File(
-						paramArrayOfString[1])));
 	}
 }
-
-/*
- * Location: C:\eclipse\workspace\PokemonOrange.jar
- * 
- * Qualified Name: mapmaker.RelativePath
- * 
- * JD-Core Version: 0.7.0.1
- */

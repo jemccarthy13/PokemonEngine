@@ -168,14 +168,12 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 		mainFrame.setSize(new Dimension(830, 650));
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setVisible(true);
-		mainFrame.setDefaultCloseOperation(3);
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		for (;;) {
 			mapPanel.repaint();
 			try {
 				Thread.sleep(1000L);
-			} catch (InterruptedException localInterruptedException) {
-				System.out.println("wow... an interrupted exception. Never seen one before.");
-			}
+			} catch (InterruptedException localInterruptedException) {}
 		}
 	}
 
@@ -314,17 +312,11 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 		layerButtons[0].setSelected(true);
 	}
 
-	public void keyPressed(KeyEvent paramKeyEvent) {
-		System.out.println("pressed");
-	}
+	public void keyPressed(KeyEvent paramKeyEvent) {}
 
-	public void keyReleased(KeyEvent paramKeyEvent) {
-		System.out.println("released");
-	}
+	public void keyReleased(KeyEvent paramKeyEvent) {}
 
-	public void keyTyped(KeyEvent paramKeyEvent) {
-		System.out.println("typed");
-	}
+	public void keyTyped(KeyEvent paramKeyEvent) {}
 
 	public void actionPerformed(ActionEvent paramActionEvent) {
 		Object localObject = paramActionEvent.getSource();
@@ -505,9 +497,7 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 	}
 
 	public void saveFile(File paramFile) {
-		System.err.println("Saving scene as " + paramFile);
 		if (scene.getTileset().isUnsaved()) {
-			System.out.println("?? 2 " + (scene.getTileset() == gfx));
 			PromptDialog.tell("Please save your tileset first.", "OK");
 			return;
 		}
@@ -527,7 +517,6 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 			scene = Scene.loadScene(paramFile);
 			map = scene.getMap();
 			setGraphicsBank(scene.getTileset());
-			System.out.println("Scene caused tileset " + gfx.getFile() + " to be loaded");
 
 			mapPanel.setMap(map);
 
@@ -544,7 +533,7 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 			mapPanel.validate();
 			mainFrame.repaint();
 		} catch (IOException localIOException) {
-			System.out.println("Invalid Map File. " + localIOException);
+			System.err.println("Invalid Map File. " + localIOException);
 		}
 	}
 
@@ -642,11 +631,11 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 			}
 		} catch (FileNotFoundException localFileNotFoundException) {
 			PromptDialog.tell("Selected file could not be found", "OK");
-			System.out.println(localFileNotFoundException);
+			System.err.println(localFileNotFoundException);
 			localFileNotFoundException.printStackTrace();
 		} catch (IOException localIOException) {
 			PromptDialog.tell("Could not read the file", "OK");
-			System.out.println(localIOException);
+			System.err.println(localIOException);
 			localIOException.printStackTrace();
 		}
 	}
@@ -660,7 +649,7 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 			}
 		} catch (IOException localIOException) {
 			PromptDialog.tell("Could not read the file", "OK");
-			System.out.println(localIOException);
+			System.err.println(localIOException);
 			localIOException.printStackTrace();
 		}
 	}
@@ -675,7 +664,6 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 		redoAction() {}
 
 		public void actionPerformed(ActionEvent paramActionEvent) {
-			System.out.println("CTRL Y pressed");
 			MapEdit.redoBtn.doClick();
 		}
 	}
@@ -686,16 +674,7 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 		undoAction() {}
 
 		public void actionPerformed(ActionEvent paramActionEvent) {
-			System.out.println("CTRL Z pressed");
 			MapEdit.undoBtn.doClick();
 		}
 	}
 }
-
-/*
- * Location: C:\eclipse\workspace\PokemonOrange.jar
- * 
- * Qualified Name: mapmaker.MapEdit
- * 
- * JD-Core Version: 0.7.0.1
- */
