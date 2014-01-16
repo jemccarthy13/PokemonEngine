@@ -2,8 +2,6 @@ package test;
 
 import java.util.ArrayList;
 
-import locations.Location;
-import locations.Route29;
 import utilities.Utils;
 import data_structures.Pokemon;
 
@@ -53,17 +51,17 @@ public class UtilsTest {
 	}
 
 	public static void testRandomPokemon() {
-		Location loc = new Route29();
+		// Location loc = new Route29();
 		System.out.println("Random Pokemon (Route 29):");
 		for (int x = 0; x < 10; x++) {
-			Pokemon p = Utils.randomPokemon(loc);
-			System.out.println(p);
+			// Pokemon p = Utils.randomPokemon(loc);
+			// System.out.println(p);
 		}
 		System.out.println();
 
 		ArrayList<Pokemon> trainer = new ArrayList<Pokemon>();
 		for (int y = 0; y < 5; y++) {
-			trainer.add(Utils.randomPokemon(loc));
+			// trainer.add(Utils.randomPokemon(loc));
 		}
 		System.out.println();
 		System.out.println("Trainer's Random Pokemon");
