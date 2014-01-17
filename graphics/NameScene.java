@@ -8,9 +8,9 @@ public class NameScene {
 
 	StringBuilder buildName = new StringBuilder();
 
-	public EnumsAndConstants.SPRITENAMES toBeNamed;
+	public String toBeNamed;
 
-	public void setToBeNamed(EnumsAndConstants.SPRITENAMES tbn) {
+	public void setToBeNamed(String tbn) {
 		toBeNamed = tbn;
 	}
 

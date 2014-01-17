@@ -11,8 +11,7 @@ public class SpriteFactory {
 	public Toolkit tk;
 	public String libPath = "graphics_lib/";
 	public String charPath = libPath + "Characters/Battle/";
-	public String playerPath = libPath + "Characters/Player/";
-	public String npcPath = libPath + "Characters/NPC/";
+	public String spritePath = libPath + "Characters/Sprites/";
 	public String titlePath = libPath + "Titles/";
 	public String picPath = libPath + "Pictures/";
 	public String fontPath = libPath + "Font/";
@@ -25,15 +24,11 @@ public class SpriteFactory {
 
 	public Image POKEGEARMAP, POKEGEARRADIO, POKEGEARPHONE, POKEGEAREXIT;
 
-	public Image PLAYER_DOWN, PLAYER_DOWN1, PLAYER_DOWN2, PLAYER_UP, PLAYER_UP1, PLAYER_UP2, PLAYER_LEFT, PLAYER_LEFT1,
-			PLAYER_LEFT2, PLAYER_RIGHT, PLAYER_RIGHT1, PLAYER_RIGHT2;
-
-	public Image PROFOAK;
 	public Image BEGINNING, POKEBALL, NAMESCREEN;
 	public Image FONT_UNDERSCORE, FONT_CURSOR;
 
 	HashMap<Character, Image> fontMap = new HashMap<Character, Image>();
-	HashMap<String, ArrayList<Image>> NPCSpriteMap = new HashMap<String, ArrayList<Image>>();
+	HashMap<String, ArrayList<Image>> spriteMap = new HashMap<String, ArrayList<Image>>();
 
 	public Image createImage(String path) {
 		tk = Toolkit.getDefaultToolkit();
@@ -46,13 +41,13 @@ public class SpriteFactory {
 		return fontMap.get(c);
 	}
 
-	public ArrayList<Image> getSpritesForNPC(String name) {
-		return NPCSpriteMap.get(name);
+	public ArrayList<Image> getSprites(String name) {
+		return spriteMap.get(name);
 	}
 
 	public SpriteFactory() {
 
-		File file = new File(npcPath);
+		File file = new File(spritePath);
 		String[] directories = file.list(new FilenameFilter() {
 			@Override
 			public boolean accept(File dir, String name) {
@@ -61,15 +56,13 @@ public class SpriteFactory {
 		});
 
 		for (String x : directories) {
-			System.out.println(x);
-			File f = new File(npcPath + x);
+			File f = new File(spritePath + x);
 			String[] files = f.list();
 			ArrayList<Image> sprites = new ArrayList<Image>();
 			for (String y : files) {
-				System.out.println(npcPath + x + "/" + y);
-				sprites.add(createImage(npcPath + x + "/" + y));
+				sprites.add(createImage(spritePath + x + "/" + y));
 			}
-			NPCSpriteMap.put(x, sprites);
+			spriteMap.put(x, sprites);
 		}
 
 		POKEBALL = createImage(picPath + "Pokeball.png");
@@ -113,22 +106,6 @@ public class SpriteFactory {
 		fontMap.put(' ', createImage(fontPath + "SPACE.png"));
 		fontMap.put('.', createImage(fontPath + "PERIOD.png"));
 
-		PLAYER_DOWN = createImage(playerPath + "Down.png");
-		PLAYER_DOWN1 = createImage(playerPath + "Down1.png");
-		PLAYER_DOWN2 = createImage(playerPath + "Down2.png");
-
-		PLAYER_UP = createImage(playerPath + "Up.png");
-		PLAYER_UP1 = createImage(playerPath + "Up1.png");
-		PLAYER_UP2 = createImage(playerPath + "Up2.png");
-
-		PLAYER_LEFT = createImage(playerPath + "Left.png");
-		PLAYER_LEFT1 = createImage(playerPath + "Left1.png");
-		PLAYER_LEFT2 = createImage(playerPath + "Left2.png");
-
-		PLAYER_RIGHT = createImage(playerPath + "Right.png");
-		PLAYER_RIGHT1 = createImage(playerPath + "Right1.png");
-		PLAYER_RIGHT2 = createImage(playerPath + "Right2.png");
-
 		MESSAGE_BOX = createImage(picPath + "Message_Text.png");
 		ARROW = createImage(picPath + "Arrow.png");
 		MAIN_MENU = createImage(picPath + "Menu.png");
@@ -148,8 +125,5 @@ public class SpriteFactory {
 		POKEGEARRADIO = createImage(picPath + "PokegearRadio.png");
 		POKEGEARPHONE = createImage(picPath + "PokegearPhone.png");
 		POKEGEAREXIT = createImage(picPath + "PokegearExit.png");
-
-		PROFOAK = createImage(npcPath + "ProfOak.png");
-		PROFOAK_LARGE = createImage(charPath + "trainer9001.png");
 	}
 }

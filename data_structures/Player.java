@@ -1,5 +1,6 @@
 package data_structures;
 
+import java.awt.Image;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -14,14 +15,42 @@ public class Player extends Trainer implements Serializable {
 	private int pokemonowned = 1;
 	private int badges = 0;
 	DIR dir;
+	ArrayList<Image> sprites;
 
 	public Player(int x, int y, String n) {
-		super(x, y, n, new String[] { "" }, EnumsAndConstants.SPRITENAMES.PLAYER, null, 2000);
+		super(x, y, n, 2000);
+		sprites = EnumsAndConstants.sprite_lib.getSprites("PLAYER");
+		setSpriteFacing(DIR.SOUTH);
 	}
 
-	public Player(String n, EnumsAndConstants.SPRITENAMES s) {
-		super(0, 0, n, new String[] { "" }, s, null, 2000);
-		this.sprite = EnumsAndConstants.sprite_lib.PLAYER_DOWN;
+	public Player(String n) {
+		super(0, 0, n, 2000);
+		sprites = EnumsAndConstants.sprite_lib.getSprites("PLAYER");
+		this.setSpriteFacing(DIR.SOUTH);
+	}
+
+	public Player() {
+		super();
+	}
+
+	public void setDirection(DIR direction) {
+		dir = direction;
+	}
+
+	public void setSpriteFacing(DIR dir) {
+		setDirection(dir);
+		if (dir.equals(DIR.NORTH)) {
+			setSprite(sprites.get(9));
+		}
+		if (dir.equals(DIR.SOUTH)) {
+			setSprite(sprites.get(0));
+		}
+		if (dir.equals(DIR.EAST)) {
+			setSprite(sprites.get(6));
+		}
+		if (dir.equals(DIR.WEST)) {
+			setSprite(sprites.get(3));
+		}
 	}
 
 	public int getPokemonOwned() {
@@ -107,24 +136,25 @@ public class Player extends Trainer implements Serializable {
 	public void changeSprite(int pixels, boolean rightFoot) {
 
 		int direction = 3 * getDir().ordinal();
+
 		if ((pixels >= 0) && (pixels < 4)) {
-			setSprite(sprites[direction]);
+			setSprite(sprites.get(direction));
 		} else if ((pixels > 4) && (pixels < 8)) {
-			setSprite(sprites[direction]);
+			setSprite(sprites.get(direction));
 		} else if ((pixels > 8) && (pixels < 12)) {
 			if (!rightFoot) {
-				setSprite(sprites[(direction + 1)]);
+				setSprite(sprites.get(direction + 1));
 			} else {
-				setSprite(sprites[(direction + 2)]);
+				setSprite(sprites.get(direction + 2));
 			}
 		} else if ((pixels >= 12) && (pixels < 15)) {
 			if (!rightFoot) {
-				setSprite(sprites[(direction + 1)]);
+				setSprite(sprites.get(direction + 1));
 			} else {
-				setSprite(sprites[(direction + 2)]);
+				setSprite(sprites.get(direction + 2));
 			}
 		} else {
-			setSprite(sprites[direction]);
+			setSprite(sprites.get(direction));
 		}
 	}
 }

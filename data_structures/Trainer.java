@@ -3,8 +3,6 @@ package data_structures;
 import java.awt.Image;
 import java.io.Serializable;
 
-import utilities.EnumsAndConstants;
-import utilities.EnumsAndConstants.SPRITENAMES;
 import utilities.Utils;
 
 public class Trainer implements Serializable {
@@ -21,29 +19,11 @@ public class Trainer implements Serializable {
 	protected Location curLoc;
 	protected int loc_x, loc_y;
 
-	public Trainer(int x, int y, String n, String[] t, SPRITENAMES player, Image bs, int i) {
+	public Trainer(int x, int y, String n, int i) {
 		this.name = n;
-		this.text = t;
 		this.loc_x = x;
 		this.loc_y = y;
-		setBattleText(t);
-		this.battleSprite = bs;
 		this.money = i;
-		if (player == SPRITENAMES.PLAYER) {
-			this.sprite = EnumsAndConstants.sprite_lib.PLAYER_DOWN;
-			this.sprites[0] = EnumsAndConstants.sprite_lib.PLAYER_UP;
-			this.sprites[1] = EnumsAndConstants.sprite_lib.PLAYER_UP1;
-			this.sprites[2] = EnumsAndConstants.sprite_lib.PLAYER_UP2;
-			this.sprites[3] = EnumsAndConstants.sprite_lib.PLAYER_DOWN;
-			this.sprites[4] = EnumsAndConstants.sprite_lib.PLAYER_DOWN1;
-			this.sprites[5] = EnumsAndConstants.sprite_lib.PLAYER_DOWN2;
-			this.sprites[6] = EnumsAndConstants.sprite_lib.PLAYER_RIGHT;
-			this.sprites[7] = EnumsAndConstants.sprite_lib.PLAYER_RIGHT1;
-			this.sprites[8] = EnumsAndConstants.sprite_lib.PLAYER_RIGHT2;
-			this.sprites[9] = EnumsAndConstants.sprite_lib.PLAYER_LEFT;
-			this.sprites[10] = EnumsAndConstants.sprite_lib.PLAYER_LEFT1;
-			this.sprites[11] = EnumsAndConstants.sprite_lib.PLAYER_LEFT2;
-		}
 		curLoc = new Location("New Bark Town");
 	}
 
@@ -51,6 +31,8 @@ public class Trainer implements Serializable {
 		name = string;
 		money = i;
 	}
+
+	public Trainer() {}
 
 	public Image getBattleSprite() {
 		return this.battleSprite;

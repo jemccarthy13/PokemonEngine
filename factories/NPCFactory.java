@@ -34,22 +34,15 @@ public class NPCFactory {
 		}
 	}
 
-	public ArrayList<NPC> getAll() {
-		ArrayList<NPC> intermediate = new ArrayList<NPC>();
-		for (String key : npcData.keySet()) {
-			NPC newNPC = new NPC(npcData.get(key));
-			newNPC.setDirection(DIR.SOUTH);
-			intermediate.add(newNPC);
-		}
-		return intermediate;
-	}
-
 	public NPC getNPC(String name) {
 		return new NPC(npcData.get(name));
 	}
 
 	public NPCFactory() {
-
-		npcs = getAll();
+		for (String key : npcData.keySet()) {
+			NPC newNPC = new NPC(npcData.get(key));
+			newNPC.setDirection(DIR.SOUTH);
+			npcs.add(newNPC);
+		}
 	}
 }

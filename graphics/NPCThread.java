@@ -12,7 +12,7 @@ public class NPCThread extends Thread {
 	public boolean stop;
 
 	public NPCThread(Player gold) {
-		this.NPCs = EnumsAndConstants.npc_lib.getAll();
+		this.NPCs = EnumsAndConstants.npc_lib.npcs;
 		this.user = gold;
 	}
 

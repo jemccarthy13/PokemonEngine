@@ -17,6 +17,7 @@ public class NPC {
 
 	public NPC(NPCData npcData) {
 		nData = npcData;
+		setSpriteFacing(DIR.SOUTH);
 	}
 
 	public void setDirection(EnumsAndConstants.DIR dir) {
@@ -60,11 +61,11 @@ public class NPC {
 	}
 
 	public Image getSprite() {
-		return this.sprite;
+		return sprite;
 	}
 
 	public void setSprite(Image i) {
-		this.sprite = i;
+		sprite = i;
 	}
 
 	public boolean getTalkable(Player other) {
@@ -101,26 +102,17 @@ public class NPC {
 
 	public void setSpriteFacing(EnumsAndConstants.DIR dir) {
 		setDirection(dir);
-		System.out.println(dir);
-		if (dir.equals(EnumsAndConstants.DIR.NORTH)) {
-			setSprite(this.nData.sprites.get(9));
-			System.out.println(this.nData.sprites.get(9));
-			System.out.println(this.getSprite());
+		if (dir.equals(DIR.NORTH)) {
+			setSprite(nData.sprites.get(9));
 		}
-		if (dir.equals(EnumsAndConstants.DIR.SOUTH)) {
-			setSprite(this.nData.sprites.get(0));
-			System.out.println(this.getName() + " " + this.nData.sprites.get(0));
-			System.out.println(this.getSprite());
+		if (dir.equals(DIR.SOUTH)) {
+			setSprite(nData.sprites.get(0));
 		}
-		if (dir.equals(EnumsAndConstants.DIR.EAST)) {
-			setSprite(this.nData.sprites.get(6));
-			System.out.println(this.nData.sprites.get(6));
-			System.out.println(this.getSprite());
+		if (dir.equals(DIR.EAST)) {
+			setSprite(nData.sprites.get(6));
 		}
-		if (dir.equals(EnumsAndConstants.DIR.WEST)) {
-			setSprite(this.nData.sprites.get(3));
-			System.out.println(this.nData.sprites.get(3));
-			System.out.println(this.getSprite());
+		if (dir.equals(DIR.WEST)) {
+			setSprite(nData.sprites.get(3));
 		}
 	}
 

@@ -58,11 +58,8 @@ public class Painter extends JPanel {
 		}
 	}
 
-	private Image getNameSprite(EnumsAndConstants.SPRITENAMES tbn) {
-		if (tbn == EnumsAndConstants.SPRITENAMES.PLAYER) {
-			return EnumsAndConstants.sprite_lib.PLAYER_DOWN;
-		}
-		return null;
+	private Image getNameSprite(String tbn) {
+		return EnumsAndConstants.sprite_lib.getSprites(tbn).get(0);
 	}
 
 	private void paintNameInputScreen(Graphics g, Main game) {
@@ -311,17 +308,16 @@ public class Painter extends JPanel {
 					if (!(layer == 2 && tilePicNum == 0)) {
 						g.drawImage((Image) EnumsAndConstants.tileset.get(tilePicNum), x_coor, y_coor, null);
 					}
-					x_coor += 32;
+					x_coor += EnumsAndConstants.TILESIZE;
 					tile_number++;
 				}
 				x_coor = game.start_coorX;
-				y_coor += 32;
+				y_coor += EnumsAndConstants.TILESIZE;
 			}
 		}
 
 		for (int i = 0; i < EnumsAndConstants.npc_lib.npcs.size(); i++) {
 			NPC curNPC = EnumsAndConstants.npc_lib.npcs.get(i);
-			// System.out.println(curNPC.getName() + "  " + curNPC.getSprite());
 			g.drawImage(curNPC.getSprite(), curNPC.getCurrentX() * 32 + game.start_coorX, curNPC.getCurrentY() * 32
 					+ game.start_coorY - 10, null);
 			game.tileMap[curNPC.getCurrentY()][curNPC.getCurrentX()] = EnumsAndConstants.OBSTACLE;

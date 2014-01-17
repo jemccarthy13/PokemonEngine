@@ -26,7 +26,7 @@ public class EnumsAndConstants {
 	}
 
 	public static enum DIR implements Serializable {
-		NORTH, SOUTH, EAST, WEST;
+		SOUTH, WEST, EAST, NORTH;
 	}
 
 	public static enum MUSIC {

@@ -43,7 +43,7 @@ public class Coordinate {
 	public void move(DIR dir) {
 		if (dir == DIR.NORTH) {
 			y -= 1;
-		} else if (dir == DIR.NORTH) {
+		} else if (dir == DIR.SOUTH) {
 			y += 1;
 		} else if (dir == DIR.WEST) {
 			x -= 1;

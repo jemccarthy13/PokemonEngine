@@ -7,7 +7,6 @@ import java.util.StringTokenizer;
 
 import utilities.EnumsAndConstants;
 import utilities.Utils;
-import data_structures.Location;
 import data_structures.Pokemon;
 
 public class GameInitializer {
@@ -16,7 +15,6 @@ public class GameInitializer {
 
 	public static void startgame(boolean continued, Main theGame) {
 		game = theGame;
-		game.currentMapNPC = EnumsAndConstants.npc_lib.getAll();
 		String loadedMap = "/mapmaker/Maps/Johto.map";
 
 		EnumsAndConstants.initializeJukeBox();
@@ -47,7 +45,8 @@ public class GameInitializer {
 			Pokemon charmander = EnumsAndConstants.pokemon_generator.createPokemon("Rattatta", 5);
 			game.gold.caughtPokemon(charmander);
 			game.gold.setMoney(2000);
-			game.gold.setCurLoc(new Location(EnumsAndConstants.loc_lib.getLocation("New Bark Town").name));
+			// game.gold.setCurLoc(new
+			// Location(EnumsAndConstants.loc_lib.getLocation("New Bark Town").name));
 			game.introScreen.Start();
 		}
 		game.start_coorX = (EnumsAndConstants.TILESIZE * (8 - game.gold.getCurrentX()));

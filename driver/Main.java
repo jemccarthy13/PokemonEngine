@@ -14,7 +14,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,8 +21,8 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import utilities.EnumsAndConstants;
+import utilities.EnumsAndConstants.DIR;
 import utilities.EnumsAndConstants.MUSIC;
-import utilities.EnumsAndConstants.SPRITENAMES;
 import utilities.Utils;
 import data_structures.Coordinate;
 import data_structures.ObstacleTile;
@@ -71,7 +70,6 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 	public int map_width;
 	public int map_height;
 	// ====================== NPC Information ==============================//
-	public ArrayList<NPC> currentMapNPC = EnumsAndConstants.npc_lib.getAll();
 	public static NPCThread NPCTHREAD;
 	// ======================= Battle information ==========================//
 	public boolean inBattle = false;
@@ -90,7 +88,7 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 	public boolean atTitle = true;
 	public boolean atContinueScreen = false;
 
-	public int offsetX = 0; // graphics variables
+	public int offsetX = 0;
 	public int offsetY = 0;
 	public int start_coorX, start_coorY; // teleportation graphics variables
 	public int menuSelection = 0;
@@ -211,8 +209,8 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 				|| ((playerDir == EnumsAndConstants.DIR.EAST) && (movable_right))) {
 			gold.changeSprite(movespritepixels, rightFoot);
 		}
-		for (int i = 0; i < currentMapNPC.size(); i++) {
-			NPC curNPC = currentMapNPC.get(i);
+		for (int i = 0; i < EnumsAndConstants.npc_lib.npcs.size(); i++) {
+			NPC curNPC = EnumsAndConstants.npc_lib.npcs.get(i);
 			boolean doBattle = !noBattle;
 			if (curNPC.isTrainer()) {
 				if ((curNPC.getCurrentX() < map_height) && (curNPC.getCurrentY() < map_width) && (!inBattle)) {
@@ -241,7 +239,6 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 			}
 			if (doBattle && !inBattle && !inMenu) {
 				NPCTHREAD.stop = true;
-
 				enemyTrainerAnimation(curNPC);
 				doTrainerBattle(curNPC);
 			}
@@ -253,42 +250,50 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 		int playerCurX = gold.getCurrentX();
 		int NPC_X = curNPC.getCurrentX();
 		int NPC_Y = curNPC.getCurrentY();
-		EnumsAndConstants.DIR NPC_DIR = curNPC.getDirection();
+		DIR NPC_DIR = curNPC.getDirection();
 
-		return (((playerCurX == curNPC.getCurrentX()) && (((playerCurY < NPC_Y) && (NPC_Y - playerCurY <= 5) && (NPC_DIR == EnumsAndConstants.DIR.NORTH)) || ((playerCurY > NPC_Y)
-				&& (playerCurY - NPC_Y <= 5) && (NPC_DIR == EnumsAndConstants.DIR.SOUTH)))) || ((playerCurY == NPC_Y) && (((playerCurX < NPC_X)
-				&& (NPC_X - playerCurX <= 5) && (NPC_DIR == EnumsAndConstants.DIR.WEST)) || ((playerCurX > NPC_X)
-				&& (playerCurX - NPC_X <= 5) && (NPC_DIR == EnumsAndConstants.DIR.EAST)))));
+		return (((playerCurX == curNPC.getCurrentX()) && (((playerCurY < NPC_Y) && (NPC_Y - playerCurY <= 5) && (NPC_DIR == DIR.NORTH)) || ((playerCurY > NPC_Y)
+				&& (playerCurY - NPC_Y <= 5) && (NPC_DIR == DIR.SOUTH)))) || ((playerCurY == NPC_Y) && (((playerCurX < NPC_X)
+				&& (NPC_X - playerCurX <= 5) && (NPC_DIR == DIR.WEST)) || ((playerCurX > NPC_X)
+				&& (playerCurX - NPC_X <= 5) && (NPC_DIR == DIR.EAST)))));
 	}
 
 	private void enemyTrainerAnimation(NPC curNPC) {
 		Utils.pickTrainerMusic();
+		System.out.println("TODO: Player ! upon beeing seen.");
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {}
 		int NPC_Y = curNPC.getCurrentY();
 		int NPC_X = curNPC.getCurrentX();
-		EnumsAndConstants.DIR NPC_DIR = curNPC.getDirection();
+		DIR NPC_DIR = curNPC.getDirection();
 
 		tileMap[NPC_Y][NPC_X] = EnumsAndConstants.TILE;
-		if (NPC_DIR == EnumsAndConstants.DIR.NORTH) {
+		if (NPC_DIR == DIR.NORTH) {
+			gold.setSpriteFacing(DIR.SOUTH);
 			while (curNPC.getCurrentY() > gold.getCurrentY() + 1) {
 				tileMap[curNPC.getCurrentY()][curNPC.getCurrentX()] = EnumsAndConstants.TILE;
 				curNPC.moveUp();
 				paintComponent(getGraphics());
 				try {
-					Thread.sleep(500L);
+					Thread.sleep(1000);
 				} catch (InterruptedException localInterruptedException) {}
 			}
 		}
-		if (NPC_DIR == EnumsAndConstants.DIR.SOUTH) {
+		if (NPC_DIR == DIR.SOUTH) {
+			gold.setSpriteFacing(DIR.NORTH);
 			while (curNPC.getCurrentY() < gold.getCurrentY() - 1) {
 				tileMap[curNPC.getCurrentY()][curNPC.getCurrentX()] = EnumsAndConstants.TILE;
 				curNPC.moveDown();
+				System.out.println("NPC moved South");
 				paintComponent(getGraphics());
 				try {
 					Thread.sleep(500L);
 				} catch (InterruptedException localInterruptedException1) {}
 			}
 		}
-		if (NPC_DIR == EnumsAndConstants.DIR.EAST) {
+		if (NPC_DIR == DIR.EAST) {
+			gold.setSpriteFacing(DIR.WEST);
 			while (curNPC.getCurrentX() < gold.getCurrentX() - 1) {
 				tileMap[curNPC.getCurrentY()][curNPC.getCurrentX()] = EnumsAndConstants.TILE;
 				curNPC.moveRight();
@@ -298,7 +303,8 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 				} catch (InterruptedException localInterruptedException2) {}
 			}
 		}
-		if (NPC_DIR == EnumsAndConstants.DIR.WEST) {
+		if (NPC_DIR == DIR.WEST) {
+			gold.setSpriteFacing(DIR.EAST);
 			while (curNPC.getCurrentX() > gold.getCurrentX() + 1) {
 				tileMap[curNPC.getCurrentY()][curNPC.getCurrentX()] = EnumsAndConstants.TILE;
 				curNPC.moveLeft();
@@ -324,7 +330,7 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 		System.out.println(gold.getName() + " is all out of usable Pokemon!");
 		System.out.println(gold.getName() + " whited out.");
 		encounter.whiteOut();
-		gold.setSprite(EnumsAndConstants.sprite_lib.PLAYER_UP);
+		gold.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(9));
 		gold.getPokemon().get(0).heal(-1);
 	}
 
@@ -363,7 +369,7 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 				}
 				if (introScreen.stage == 15) {
 					inNameScreen = true;
-					nameScreen.setToBeNamed(SPRITENAMES.PLAYER);
+					nameScreen.setToBeNamed("PLAYER");
 					inIntro = false;
 				}
 			}

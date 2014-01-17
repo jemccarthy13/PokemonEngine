@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.util.Random;
 
 import utilities.EnumsAndConstants;
+import utilities.EnumsAndConstants.DIR;
 import utilities.Utils;
 import data_structures.Move;
 import data_structures.Pokemon;
@@ -319,35 +320,35 @@ public class EventHandler {
 
 	void handleWorldEvent(int keyCode) {
 		if (keyCode == KeyEvent.VK_UP) {
-			game.gold.setDir(EnumsAndConstants.DIR.NORTH);
+			game.gold.setDir(DIR.NORTH);
 			if (game.movable_up) {
 				game.walking = true;
 			} else {
-				game.gold.setSprite(EnumsAndConstants.sprite_lib.PLAYER_UP);
+				game.gold.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(9));
 				Utils.playCollisionSound();
 			}
 		} else if (keyCode == KeyEvent.VK_DOWN) {
-			game.gold.setDir(EnumsAndConstants.DIR.SOUTH);
+			game.gold.setDir(DIR.SOUTH);
 			if (game.movable_down) {
 				game.walking = true;
 			} else {
-				game.gold.setSprite(EnumsAndConstants.sprite_lib.PLAYER_DOWN);
+				game.gold.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(0));
 				Utils.playCollisionSound();
 			}
 		} else if (keyCode == KeyEvent.VK_LEFT) {
-			game.gold.setDir(EnumsAndConstants.DIR.WEST);
+			game.gold.setDir(DIR.WEST);
 			if (game.movable_left) {
 				game.walking = true;
 			} else {
-				game.gold.setSprite(EnumsAndConstants.sprite_lib.PLAYER_LEFT);
+				game.gold.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(3));
 				Utils.playCollisionSound();
 			}
 		} else if (keyCode == KeyEvent.VK_RIGHT) {
-			game.gold.setDir(EnumsAndConstants.DIR.EAST);
+			game.gold.setDir(DIR.EAST);
 			if (game.movable_right) {
 				game.walking = true;
 			} else {
-				game.gold.setSprite(EnumsAndConstants.sprite_lib.PLAYER_RIGHT);
+				game.gold.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(6));
 				Utils.playCollisionSound();
 			}
 		} else if (keyCode == KeyEvent.VK_ENTER) {
@@ -359,31 +360,31 @@ public class EventHandler {
 			System.out.println("Action Button");
 			Utils.playSelectSound();
 			NPC borderNPC = null;
-			EnumsAndConstants.DIR playerDir = game.gold.getDir();
+			DIR playerDir = game.gold.getDir();
 			int playerCurX = game.gold.getCurrentX();
 			int playerCurY = game.gold.getCurrentY();
-			for (int i = 0; i < game.currentMapNPC.size(); i++) {
-				NPC curNPC = game.currentMapNPC.get(i);
+			for (int i = 0; i < EnumsAndConstants.npc_lib.npcs.size(); i++) {
+				NPC curNPC = EnumsAndConstants.npc_lib.npcs.get(i);
 				int NPC_X = curNPC.getCurrentX();
 				int NPC_Y = curNPC.getCurrentY();
-				if (playerDir == EnumsAndConstants.DIR.WEST) {
+				if (playerDir == DIR.WEST) {
 					if ((NPC_X == playerCurX - 1) && (playerCurY == NPC_Y)) {
-						curNPC.setSpriteFacing(EnumsAndConstants.DIR.EAST);
+						curNPC.setSpriteFacing(DIR.EAST);
 						borderNPC = curNPC;
 					}
-				} else if (playerDir == EnumsAndConstants.DIR.NORTH) {
+				} else if (playerDir == DIR.NORTH) {
 					if ((playerCurX == NPC_X) && (playerCurY == NPC_Y + 1)) {
-						curNPC.setSpriteFacing(EnumsAndConstants.DIR.SOUTH);
+						curNPC.setSpriteFacing(DIR.SOUTH);
 						borderNPC = curNPC;
 					}
-				} else if (playerDir == EnumsAndConstants.DIR.EAST) {
+				} else if (playerDir == DIR.EAST) {
 					if ((playerCurX == NPC_X - 1) && (playerCurY == NPC_Y)) {
-						curNPC.setSpriteFacing(EnumsAndConstants.DIR.WEST);
+						curNPC.setSpriteFacing(DIR.WEST);
 						borderNPC = curNPC;
 					}
-				} else if (playerDir == EnumsAndConstants.DIR.SOUTH) {
+				} else if (playerDir == DIR.SOUTH) {
 					if ((playerCurX == NPC_X) && (playerCurY == NPC_Y - 1)) {
-						curNPC.setSpriteFacing(EnumsAndConstants.DIR.NORTH);
+						curNPC.setSpriteFacing(DIR.NORTH);
 						borderNPC = curNPC;
 					}
 				}

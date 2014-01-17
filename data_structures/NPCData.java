@@ -35,7 +35,7 @@ public class NPCData {
 
 		String text = s.nextLine();
 		stationary = text.replace(" ", "").equals("true");
-		sprites = EnumsAndConstants.sprite_lib.getSpritesForNPC(s.nextLine().trim());
+		sprites = EnumsAndConstants.sprite_lib.getSprites(s.nextLine().trim());
 		String[] conversation = s.nextLine().split("%");
 
 		for (String x : conversation) {
