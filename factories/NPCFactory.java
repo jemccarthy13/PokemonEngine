@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import utilities.EnumsAndConstants.DIR;
-import data_structures.Coordinate;
 import data_structures.NPCData;
 
 public class NPCFactory {
 
 	public NPCDataMap npcData = new NPCDataMap();
+	public ArrayList<NPC> npcs = new ArrayList<NPC>();
 
 	// public NPC PROFESSOROAK;
 
@@ -48,26 +48,6 @@ public class NPCFactory {
 	}
 
 	public NPCFactory() {
-		String[] text3 = { "Hello there!", "Welcome to the world of Pokemon!", "My name is Professor Oak.",
-				"People call me the Pokemon Prof.", "This world is inhabited by creatures", "that we call Pokemon.",
-				"People and Pokemon live together", "by supporting each other.", "Some people play with Pokemon,",
-				"some battle with them.", "But we don't know everything about Pokemon yet.",
-				"There are still many mysteries to solve.", "That's why I study Pokemon every day.",
-				"Now, what did you say your name was?", "That's right.  Well are you ready?",
-				"Your own Pokemon story is about to unfold.", "You'll face fun times and tough challenges.",
-				"A world of dreams and adventures awaits.", "Let's go!  I'll be seeing you later!", "" };
-		NPCData nDat = new NPCData();
-		nDat.name = "Professor Oak";
-		nDat.location = new Coordinate(0, 0);
-
-		for (String x : text3) {
-			nDat.conversationText.add(x);
-		}
-		nDat.trainer = false;
-		nDat.stationary = true;
-		nDat.moneyWon = 0;
-		// PROFESSOROAK = new NPC(nDat);
-		// PROFESSOROAK.sprite = EnumsAndConstants.sprite_lib.PROFOAK_LARGE;
-
+		npcs = getAll();
 	}
 }

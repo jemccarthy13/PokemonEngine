@@ -101,21 +101,26 @@ public class NPC {
 
 	public void setSpriteFacing(EnumsAndConstants.DIR dir) {
 		setDirection(dir);
+		System.out.println(dir);
 		if (dir.equals(EnumsAndConstants.DIR.NORTH)) {
 			setSprite(this.nData.sprites.get(9));
 			System.out.println(this.nData.sprites.get(9));
+			System.out.println(this.getSprite());
 		}
 		if (dir.equals(EnumsAndConstants.DIR.SOUTH)) {
 			setSprite(this.nData.sprites.get(0));
-			System.out.println(this.nData.sprites.get(0));
+			System.out.println(this.getName() + " " + this.nData.sprites.get(0));
+			System.out.println(this.getSprite());
 		}
 		if (dir.equals(EnumsAndConstants.DIR.EAST)) {
 			setSprite(this.nData.sprites.get(6));
 			System.out.println(this.nData.sprites.get(6));
+			System.out.println(this.getSprite());
 		}
 		if (dir.equals(EnumsAndConstants.DIR.WEST)) {
 			setSprite(this.nData.sprites.get(3));
 			System.out.println(this.nData.sprites.get(3));
+			System.out.println(this.getSprite());
 		}
 	}
 
@@ -130,18 +135,18 @@ public class NPC {
 	public void changeLoc(int dir, int loc) {
 		if (dir == 0) {
 			if (loc == 0) {
-				moveRight();
+				nData.location.setX(getCurrentX() + 1);
 			}
 			if (loc == 1) {
-				moveDown();
+				nData.location.setY(getCurrentY() + 1);
 			}
 		}
 		if (dir == 1) {
 			if (loc == 0) {
-				moveLeft();
+				nData.location.setX(getCurrentX() - 1);
 			}
 			if (loc == 1) {
-				moveRight();
+				nData.location.setY(getCurrentY() - 1);
 			}
 		}
 	}

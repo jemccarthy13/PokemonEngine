@@ -318,8 +318,9 @@ public class Painter extends JPanel {
 				y_coor += 32;
 			}
 		}
-		for (int i = 0; i < game.currentMapNPC.size(); i++) {
-			NPC curNPC = game.currentMapNPC.get(i);
+		for (int i = 0; i < EnumsAndConstants.npc_lib.npcs.size(); i++) {
+			NPC curNPC = EnumsAndConstants.npc_lib.npcs.get(i);
+			// System.out.println(curNPC.getName() + "  " + curNPC.getSprite());
 			g.drawImage(curNPC.getSprite(), curNPC.getCurrentX() * 32 + game.start_coorX, curNPC.getCurrentY() * 32
 					+ game.start_coorY - 10, null);
 			game.tileMap[curNPC.getCurrentY()][curNPC.getCurrentX()] = EnumsAndConstants.OBSTACLE;

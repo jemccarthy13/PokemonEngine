@@ -16,6 +16,7 @@ public class GameInitializer {
 
 	public static void startgame(boolean continued, Main theGame) {
 		game = theGame;
+		game.currentMapNPC = EnumsAndConstants.npc_lib.getAll();
 		String loadedMap = "/mapmaker/Maps/Johto.map";
 
 		EnumsAndConstants.initializeJukeBox();
