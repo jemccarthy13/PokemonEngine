@@ -12,6 +12,7 @@ import data_structures.NPCData;
 public class NPCFactory {
 
 	public NPCDataMap npcData = new NPCDataMap();
+
 	public ArrayList<NPC> npcs = new ArrayList<NPC>();
 
 	// public NPC PROFESSOROAK;
@@ -48,6 +49,7 @@ public class NPCFactory {
 	}
 
 	public NPCFactory() {
+
 		npcs = getAll();
 	}
 }

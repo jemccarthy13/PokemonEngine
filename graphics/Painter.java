@@ -318,6 +318,7 @@ public class Painter extends JPanel {
 				y_coor += 32;
 			}
 		}
+
 		for (int i = 0; i < EnumsAndConstants.npc_lib.npcs.size(); i++) {
 			NPC curNPC = EnumsAndConstants.npc_lib.npcs.get(i);
 			// System.out.println(curNPC.getName() + "  " + curNPC.getSprite());
