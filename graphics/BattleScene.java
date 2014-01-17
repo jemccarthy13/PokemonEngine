@@ -9,7 +9,6 @@ import utilities.Utils;
 import data_structures.Move;
 import data_structures.Pokemon;
 import data_structures.PokemonList;
-import data_structures.Trainer;
 import driver.Main;
 
 public class BattleScene {
@@ -30,7 +29,7 @@ public class BattleScene {
 	public int currentSelectionFightY;
 	public Pokemon playerPokemon;
 	public PokemonList enemyPokemon;
-	public Trainer enemy = null;
+	public NPC enemy = null;
 	Image BG = Toolkit.getDefaultToolkit().getImage(BattleScene.class.getResource("/graphics_lib/Pictures/BG.png"));
 	Image battleMainBG = Toolkit.getDefaultToolkit().getImage(
 			BattleScene.class.getResource("/graphics_lib/Pictures/Battle.png"));
@@ -49,12 +48,12 @@ public class BattleScene {
 	Image statusFRZ = Toolkit.getDefaultToolkit().getImage(
 			BattleScene.class.getResource("/graphics_lib/Pictures/StatusFRZ.png"));
 
-	public BattleScene(Main pkmn, Trainer joey) {
+	public BattleScene(Main pkmn, NPC curNPC) {
 		this.game = pkmn;
 		this.playerPokemon = ((Pokemon) pkmn.gold.getPokemon().get(0));
 		playerPokemon.setParticipated();
-		this.enemyPokemon = joey.getPokemon();
-		this.enemy = joey;
+		this.enemyPokemon = curNPC.getPokemon();
+		this.enemy = curNPC;
 		this.playerTurn = true;
 	}
 

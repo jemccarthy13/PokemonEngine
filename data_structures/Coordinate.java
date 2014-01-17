@@ -11,6 +11,11 @@ public class Coordinate {
 		y = Y;
 	}
 
+	public Coordinate() {
+		x = 0;
+		y = 0;
+	}
+
 	public int getX() {
 		return x;
 	}

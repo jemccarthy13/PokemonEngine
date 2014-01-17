@@ -39,7 +39,7 @@ public class SpriteFactory {
 		tk = Toolkit.getDefaultToolkit();
 		Class<SpriteFactory> o = SpriteFactory.class;
 
-		return tk.createImage(o.getResource(path));
+		return tk.createImage(o.getResource("/" + path));
 	}
 
 	public Image getFontChar(char c) {
@@ -66,8 +66,8 @@ public class SpriteFactory {
 			String[] files = f.list();
 			ArrayList<Image> sprites = new ArrayList<Image>();
 			for (String y : files) {
-				System.out.println("./" + npcPath + x + "/" + y);
-				sprites.add(createImage("./" + npcPath + x + "/" + y));
+				System.out.println(npcPath + x + "/" + y);
+				sprites.add(createImage(npcPath + x + "/" + y));
 			}
 			NPCSpriteMap.put(x, sprites);
 		}

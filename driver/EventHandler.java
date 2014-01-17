@@ -362,8 +362,8 @@ public class EventHandler {
 			EnumsAndConstants.DIR playerDir = game.gold.getDir();
 			int playerCurX = game.gold.getCurrentX();
 			int playerCurY = game.gold.getCurrentY();
-			for (int i = 0; i < game.currentMapNPC.length; i++) {
-				NPC curNPC = game.currentMapNPC[i];
+			for (int i = 0; i < game.currentMapNPC.size(); i++) {
+				NPC curNPC = game.currentMapNPC.get(i);
 				int NPC_X = curNPC.getCurrentX();
 				int NPC_Y = curNPC.getCurrentY();
 				if (playerDir == EnumsAndConstants.DIR.WEST) {

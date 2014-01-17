@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.io.Serializable;
 
 import utilities.EnumsAndConstants;
+import utilities.EnumsAndConstants.SPRITENAMES;
 import utilities.Utils;
 
 public class Trainer implements Serializable {
@@ -20,7 +21,7 @@ public class Trainer implements Serializable {
 	protected Location curLoc;
 	protected int loc_x, loc_y;
 
-	public Trainer(int x, int y, String n, String[] t, String sprite, Image bs, int i) {
+	public Trainer(int x, int y, String n, String[] t, SPRITENAMES player, Image bs, int i) {
 		this.name = n;
 		this.text = t;
 		this.loc_x = x;
@@ -28,7 +29,7 @@ public class Trainer implements Serializable {
 		setBattleText(t);
 		this.battleSprite = bs;
 		this.money = i;
-		if (sprite.equals("PLAYER")) {
+		if (player == SPRITENAMES.PLAYER) {
 			this.sprite = EnumsAndConstants.sprite_lib.PLAYER_DOWN;
 			this.sprites[0] = EnumsAndConstants.sprite_lib.PLAYER_UP;
 			this.sprites[1] = EnumsAndConstants.sprite_lib.PLAYER_UP1;
@@ -43,6 +44,7 @@ public class Trainer implements Serializable {
 			this.sprites[10] = EnumsAndConstants.sprite_lib.PLAYER_LEFT1;
 			this.sprites[11] = EnumsAndConstants.sprite_lib.PLAYER_LEFT2;
 		}
+		curLoc = new Location("New Bark Town");
 	}
 
 	public Trainer(String string, int i) {

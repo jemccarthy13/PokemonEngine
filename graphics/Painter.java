@@ -191,9 +191,10 @@ public class Painter extends JPanel {
 		g.setFont(EnumsAndConstants.POKEFONT);
 		g.drawImage(EnumsAndConstants.sprite_lib.BEGINNING, 0, 0, null);
 		g.drawImage(EnumsAndConstants.sprite_lib.PROFOAK_LARGE, 150, 20, null);
-		if (EnumsAndConstants.npc_lib.PROFESSOROAK.getText().length > game.introScreen.stage) {
-			Utils.messageBox(g, EnumsAndConstants.npc_lib.PROFESSOROAK.getText()[game.introScreen.stage - 1],
-					EnumsAndConstants.npc_lib.PROFESSOROAK.getText()[game.introScreen.stage]);
+		if (EnumsAndConstants.npc_lib.getNPC("Professor Oak").getText().size() > game.introScreen.stage) {
+			Utils.messageBox(g,
+					EnumsAndConstants.npc_lib.getNPC("Professor Oak").getText().get(game.introScreen.stage - 1),
+					EnumsAndConstants.npc_lib.getNPC("Professor Oak").getText().get(game.introScreen.stage));
 		}
 	}
 
@@ -317,9 +318,8 @@ public class Painter extends JPanel {
 				y_coor += 32;
 			}
 		}
-		for (int i = 0; i < game.currentMapNPC.length; i++) {
-			NPC curNPC = game.currentMapNPC[i];
-
+		for (int i = 0; i < game.currentMapNPC.size(); i++) {
+			NPC curNPC = game.currentMapNPC.get(i);
 			g.drawImage(curNPC.getSprite(), curNPC.getCurrentX() * 32 + game.start_coorX, curNPC.getCurrentY() * 32
 					+ game.start_coorY - 10, null);
 			game.tileMap[curNPC.getCurrentY()][curNPC.getCurrentX()] = EnumsAndConstants.OBSTACLE;

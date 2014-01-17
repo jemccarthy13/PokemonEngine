@@ -1,11 +1,13 @@
 package graphics;
 
+import java.util.ArrayList;
+
 import utilities.EnumsAndConstants;
 import utilities.Utils;
 import data_structures.Player;
 
 public class NPCThread extends Thread {
-	NPC[] NPCs;
+	ArrayList<NPC> NPCs;
 	public Player user;
 	public boolean stop;
 

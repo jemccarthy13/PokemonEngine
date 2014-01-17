@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
@@ -70,7 +71,7 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 	public int map_width;
 	public int map_height;
 	// ====================== NPC Information ==============================//
-	public NPC[] currentMapNPC = EnumsAndConstants.npc_lib.getAll();
+	public ArrayList<NPC> currentMapNPC = EnumsAndConstants.npc_lib.getAll();
 	public static NPCThread NPCTHREAD;
 	// ======================= Battle information ==========================//
 	public boolean inBattle = false;
@@ -210,10 +211,10 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 				|| ((playerDir == EnumsAndConstants.DIR.EAST) && (movable_right))) {
 			gold.changeSprite(movespritepixels, rightFoot);
 		}
-		for (int i = 0; i < currentMapNPC.length; i++) {
-			NPC curNPC = currentMapNPC[i];
+		for (int i = 0; i < currentMapNPC.size(); i++) {
+			NPC curNPC = currentMapNPC.get(i);
 			boolean doBattle = !noBattle;
-			if (curNPC.trainer) {
+			if (curNPC.isTrainer()) {
 				if ((curNPC.getCurrentX() < map_height) && (curNPC.getCurrentY() < map_width) && (!inBattle)) {
 					checkForTrainerEncounter(curNPC, doBattle);
 				} else {
@@ -356,7 +357,7 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 			}
 			if (keyCode == KeyEvent.VK_Z) {
 				introScreen.stage += 2;
-				if (introScreen.stage > EnumsAndConstants.npc_lib.get("PROFESSOROAK").getTextLength() - 1) {
+				if (introScreen.stage > EnumsAndConstants.npc_lib.getNPC("Professor Oak").getTextLength() - 1) {
 					Utils.playBackgroundMusic(MUSIC.NEWBARKTOWN);
 					inIntro = !inIntro;
 				}
