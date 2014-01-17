@@ -50,6 +50,7 @@ TODO:
 - map should be expanded and should include indoors locations
 - interact with world map (e.g. items, signs)
 - prof elm's intro scenes
+- ADD COMMENTS before it's too late!
 
 BUGS:
 - occasionally the player will be in the process of moving

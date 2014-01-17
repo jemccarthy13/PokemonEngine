@@ -2,11 +2,14 @@ package factories;
 
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SpriteFactory {
 	public Toolkit tk;
-	public String libPath = "/graphics_lib/";
+	public String libPath = "graphics_lib/";
 	public String charPath = libPath + "Characters/Battle/";
 	public String playerPath = libPath + "Characters/Player/";
 	public String npcPath = libPath + "Characters/NPC/";
@@ -16,49 +19,21 @@ public class SpriteFactory {
 
 	public Image CONTINUESCREEN, START_SYMBOL, TITLESCREEN, ARROW, MAIN_MENU, MESSAGE_BOX, PROFOAK_LARGE;
 
-	public Image PLAYER_DOWN, PLAYER_DOWN1, PLAYER_DOWN2;
-	public Image PLAYER_UP, PLAYER_UP1, PLAYER_UP2;
-	public Image PLAYER_LEFT, PLAYER_LEFT1, PLAYER_LEFT2;
-	public Image PLAYER_RIGHT, PLAYER_RIGHT1, PLAYER_RIGHT2;
-
 	public Image POKEDEX, POKESEL, BAGSCREEN, POKEGEAR, TRAINERCARD, SAVE, OPTION, TRAINER_FOR_CARD;
 
 	public Image PARTYFIRST, PARTYBOX, PARTYCANCEL, PARTYCANCELSEL;
 
 	public Image POKEGEARMAP, POKEGEARRADIO, POKEGEARPHONE, POKEGEAREXIT;
 
-	public Image BALDMAN;
-	public Image BEAUTY;
-	public Image BILL;
-	public Image BIRDKEEPER_LEFT;
-	public Image BIRDKEEPER_RIGHT;
-	public Image BUGCATCHER;
-	public Image CAMPER_DOWN;
-	public Image CAMPER_LEFT;
-	public Image CAMPER_RIGHT;
-	public Image CAMPER_UP;
-	public Image FALKNER;
-	public Image FATMAN;
-	public Image FISHER;
-	public Image GUIDEGENT;
-	public Image LASS;
-	public Image MOM;
-	public Image MR_POKEMON;
-	public Image NURSE;
-	public Image PICKNICKER;
+	public Image PLAYER_DOWN, PLAYER_DOWN1, PLAYER_DOWN2, PLAYER_UP, PLAYER_UP1, PLAYER_UP2, PLAYER_LEFT, PLAYER_LEFT1,
+			PLAYER_LEFT2, PLAYER_RIGHT, PLAYER_RIGHT1, PLAYER_RIGHT2;
+
 	public Image PROFOAK;
-	public Image SHOPKEEP;
-	public Image YOUNGSTER;
-	public Image BOY_DOWN, BOY_DOWN1, BOY_DOWN2;
-	public Image BOY_RIGHT, BOY_RIGHT1, BOY_RIGHT2;
-	public Image BOY_LEFT, BOY_LEFT1, BOY_LEFT2;
-	public Image BOY_UP, BOY_UP1, BOY_UP2;
 	public Image BEGINNING, POKEBALL, NAMESCREEN;
-	public Image FONT_A, FONT_B, FONT_C, FONT_D, FONT_E, FONT_F, FONT_G, FONT_H, FONT_I, FONT_J, FONT_K, FONT_L,
-			FONT_M, FONT_N, FONT_O, FONT_P, FONT_Q, FONT_R, FONT_S, FONT_T, FONT_U, FONT_V, FONT_W, FONT_X, FONT_Y,
-			FONT_Z, FONT_EXCLAMATION, FONT_QUESTION, FONT_PERIOD, FONT_UNDERSCORE, FONT_SPACE, FONT_CURSOR;
+	public Image FONT_UNDERSCORE, FONT_CURSOR;
 
 	HashMap<Character, Image> fontMap = new HashMap<Character, Image>();
+	HashMap<String, ArrayList<Image>> NPCSpriteMap = new HashMap<String, ArrayList<Image>>();
 
 	public Image createImage(String path) {
 		tk = Toolkit.getDefaultToolkit();
@@ -71,79 +46,72 @@ public class SpriteFactory {
 		return fontMap.get(c);
 	}
 
-	public SpriteFactory() {
-		POKEBALL = createImage(picPath + "Pokeball.png");
+	public ArrayList<Image> getSpritesForNPC(String name) {
+		return NPCSpriteMap.get(name);
+	}
 
-		CONTINUESCREEN = createImage(picPath + "Continue.png");
-		START_SYMBOL = createImage(titlePath + "Start.png");
+	public SpriteFactory() {
+
+		File file = new File(npcPath);
+		String[] directories = file.list(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				return new File(dir, name).isDirectory();
+			}
+		});
+
+		for (String x : directories) {
+			System.out.println(x);
+			File f = new File(npcPath + x);
+			String[] files = f.list();
+			ArrayList<Image> sprites = new ArrayList<Image>();
+			for (String y : files) {
+				System.out.println("./" + npcPath + x + "/" + y);
+				sprites.add(createImage("./" + npcPath + x + "/" + y));
+			}
+			NPCSpriteMap.put(x, sprites);
+		}
+
+		POKEBALL = createImage(picPath + "Pokeball.png");
 		TITLESCREEN = createImage(titlePath + "Title.png");
+		START_SYMBOL = createImage(titlePath + "Start.png");
+		CONTINUESCREEN = createImage(picPath + "Continue.png");
 
 		BEGINNING = createImage(picPath + "Beginning.png");
 		NAMESCREEN = createImage(picPath + "Namescreen.png");
 
-		FONT_A = createImage(fontPath + "A.png");
-		FONT_B = createImage(fontPath + "B.png");
-		FONT_C = createImage(fontPath + "C.png");
-		FONT_D = createImage(fontPath + "D.png");
-		FONT_E = createImage(fontPath + "E.png");
-		FONT_F = createImage(fontPath + "F.png");
-		FONT_G = createImage(fontPath + "G.png");
-		FONT_H = createImage(fontPath + "H.png");
-		FONT_I = createImage(fontPath + "I.png");
-		FONT_J = createImage(fontPath + "J.png");
-		FONT_K = createImage(fontPath + "K.png");
-		FONT_L = createImage(fontPath + "L.png");
-		FONT_M = createImage(fontPath + "M.png");
-		FONT_N = createImage(fontPath + "N.png");
-		FONT_O = createImage(fontPath + "O.png");
-		FONT_P = createImage(fontPath + "P.png");
-		FONT_Q = createImage(fontPath + "Q.png");
-		FONT_R = createImage(fontPath + "R.png");
-		FONT_S = createImage(fontPath + "S.png");
-		FONT_T = createImage(fontPath + "T.png");
-		FONT_U = createImage(fontPath + "U.png");
-		FONT_V = createImage(fontPath + "V.png");
-		FONT_W = createImage(fontPath + "W.png");
-		FONT_X = createImage(fontPath + "X.png");
-		FONT_Y = createImage(fontPath + "Y.png");
-		FONT_Z = createImage(fontPath + "Z.png");
-		FONT_QUESTION = createImage(fontPath + "QUESTION.png");
-		FONT_EXCLAMATION = createImage(fontPath + "!.png");
 		FONT_UNDERSCORE = createImage(fontPath + "_.png");
-		FONT_SPACE = createImage(fontPath + "SPACE.png");
-		FONT_PERIOD = createImage(fontPath + "PERIOD.png");
 		FONT_CURSOR = createImage(fontPath + "CURSOR.png");
-
-		fontMap.put('A', FONT_A);
-		fontMap.put('B', FONT_B);
-		fontMap.put('C', FONT_C);
-		fontMap.put('D', FONT_D);
-		fontMap.put('E', FONT_E);
-		fontMap.put('F', FONT_F);
-		fontMap.put('G', FONT_G);
-		fontMap.put('H', FONT_H);
-		fontMap.put('I', FONT_I);
-		fontMap.put('J', FONT_J);
-		fontMap.put('K', FONT_K);
-		fontMap.put('L', FONT_L);
-		fontMap.put('M', FONT_M);
-		fontMap.put('N', FONT_N);
-		fontMap.put('O', FONT_O);
-		fontMap.put('P', FONT_P);
-		fontMap.put('Q', FONT_Q);
-		fontMap.put('R', FONT_R);
-		fontMap.put('S', FONT_S);
-		fontMap.put('T', FONT_T);
-		fontMap.put('U', FONT_U);
-		fontMap.put('V', FONT_V);
-		fontMap.put('W', FONT_W);
-		fontMap.put('X', FONT_X);
-		fontMap.put('Y', FONT_Y);
-		fontMap.put('Z', FONT_Z);
-		fontMap.put('?', FONT_QUESTION);
-		fontMap.put('!', FONT_EXCLAMATION);
-		fontMap.put(' ', FONT_SPACE);
-		fontMap.put('.', FONT_PERIOD);
+		fontMap.put('A', createImage(fontPath + "A.png"));
+		fontMap.put('B', createImage(fontPath + "B.png"));
+		fontMap.put('C', createImage(fontPath + "C.png"));
+		fontMap.put('D', createImage(fontPath + "D.png"));
+		fontMap.put('E', createImage(fontPath + "E.png"));
+		fontMap.put('F', createImage(fontPath + "F.png"));
+		fontMap.put('G', createImage(fontPath + "G.png"));
+		fontMap.put('H', createImage(fontPath + "H.png"));
+		fontMap.put('I', createImage(fontPath + "I.png"));
+		fontMap.put('J', createImage(fontPath + "J.png"));
+		fontMap.put('K', createImage(fontPath + "K.png"));
+		fontMap.put('L', createImage(fontPath + "L.png"));
+		fontMap.put('M', createImage(fontPath + "M.png"));
+		fontMap.put('N', createImage(fontPath + "N.png"));
+		fontMap.put('O', createImage(fontPath + "O.png"));
+		fontMap.put('P', createImage(fontPath + "P.png"));
+		fontMap.put('Q', createImage(fontPath + "Q.png"));
+		fontMap.put('R', createImage(fontPath + "R.png"));
+		fontMap.put('S', createImage(fontPath + "S.png"));
+		fontMap.put('T', createImage(fontPath + "T.png"));
+		fontMap.put('U', createImage(fontPath + "U.png"));
+		fontMap.put('V', createImage(fontPath + "V.png"));
+		fontMap.put('W', createImage(fontPath + "W.png"));
+		fontMap.put('X', createImage(fontPath + "X.png"));
+		fontMap.put('Y', createImage(fontPath + "Y.png"));
+		fontMap.put('Z', createImage(fontPath + "Z.png"));
+		fontMap.put('?', createImage(fontPath + "QUESTION.png"));
+		fontMap.put('!', createImage(fontPath + "!.png"));
+		fontMap.put(' ', createImage(fontPath + "SPACE.png"));
+		fontMap.put('.', createImage(fontPath + "PERIOD.png"));
 
 		PLAYER_DOWN = createImage(playerPath + "Down.png");
 		PLAYER_DOWN1 = createImage(playerPath + "Down1.png");
@@ -181,38 +149,7 @@ public class SpriteFactory {
 		POKEGEARPHONE = createImage(picPath + "PokegearPhone.png");
 		POKEGEAREXIT = createImage(picPath + "PokegearExit.png");
 
-		BALDMAN = createImage(npcPath + "Baldman.png");
-		BEAUTY = createImage(npcPath + "Beauty.png");
-		BILL = createImage(npcPath + "Bill.png");
-		BIRDKEEPER_LEFT = createImage(npcPath + "BirdKeeperL.png");
-		BIRDKEEPER_RIGHT = createImage(npcPath + "BirdKeeperR.png");
-
-		BOY_DOWN = createImage(npcPath + "Boy/Down.png");
-		BOY_DOWN1 = createImage(npcPath + "Boy/Down1.png");
-		BOY_DOWN2 = createImage(npcPath + "Boy/Down2.png");
-		BOY_RIGHT = createImage(npcPath + "Boy/Right.png");
-		BOY_LEFT = createImage(npcPath + "Boy/Left.png");
-		BOY_LEFT1 = createImage(npcPath + "Boy/Left1.png");
-		BOY_LEFT2 = createImage(npcPath + "Boy/Left2.png");
-		BOY_UP = createImage(npcPath + "Boy/Up.png");
-		BOY_UP1 = createImage(npcPath + "Boy/Up1.png");
-		BOY_UP2 = createImage(npcPath + "Boy/Up2.png");
-
-		CAMPER_LEFT = createImage(npcPath + "CamperD.png");
-		CAMPER_DOWN = createImage(npcPath + "CamperL.png");
-		BUGCATCHER = createImage(npcPath + "BugCatcher.png");
-		FALKNER = createImage(npcPath + "Falkner.png");
-		FATMAN = createImage(npcPath + "FatMan.png");
-		FISHER = createImage(npcPath + "Fisher.png");
-		GUIDEGENT = createImage(npcPath + "GuideGent.png");
-		MOM = createImage(npcPath + "Mom.png");
-		LASS = createImage(npcPath + "Lass.png");
-		MR_POKEMON = createImage(npcPath + "MrPokemon.png");
-		NURSE = createImage(npcPath + "Nurse.png");
-		PICKNICKER = createImage(npcPath + "Picknicker.png");
 		PROFOAK = createImage(npcPath + "ProfOak.png");
 		PROFOAK_LARGE = createImage(charPath + "trainer9001.png");
-		SHOPKEEP = createImage(npcPath + "ShopKeep.png");
-		YOUNGSTER = createImage(npcPath + "Youngster.png");
 	}
 }

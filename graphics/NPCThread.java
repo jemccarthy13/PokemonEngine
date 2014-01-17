@@ -10,7 +10,7 @@ public class NPCThread extends Thread {
 	public boolean stop;
 
 	public NPCThread(Player gold) {
-		this.NPCs = EnumsAndConstants.npc_lib.JOHTO_NPC;
+		this.NPCs = EnumsAndConstants.npc_lib.getAll();
 		this.user = gold;
 	}
 

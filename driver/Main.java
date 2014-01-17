@@ -70,7 +70,7 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 	public int map_width;
 	public int map_height;
 	// ====================== NPC Information ==============================//
-	public NPC[] currentMapNPC = EnumsAndConstants.npc_lib.NEWBARKTOWN_NPC;
+	public NPC[] currentMapNPC = EnumsAndConstants.npc_lib.getAll();
 	public static NPCThread NPCTHREAD;
 	// ======================= Battle information ==========================//
 	public boolean inBattle = false;
@@ -356,7 +356,7 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 			}
 			if (keyCode == KeyEvent.VK_Z) {
 				introScreen.stage += 2;
-				if (introScreen.stage > EnumsAndConstants.npc_lib.PROFESSOROAK.getTextLength() - 1) {
+				if (introScreen.stage > EnumsAndConstants.npc_lib.get("PROFESSOROAK").getTextLength() - 1) {
 					Utils.playBackgroundMusic(MUSIC.NEWBARKTOWN);
 					inIntro = !inIntro;
 				}

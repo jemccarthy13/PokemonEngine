@@ -1,26 +1,22 @@
 package graphics;
 
 import java.awt.Image;
+import java.util.ArrayList;
 
 import utilities.EnumsAndConstants;
+import utilities.EnumsAndConstants.DIR;
+import data_structures.NPCData;
 import data_structures.Player;
-import data_structures.Trainer;
 
-public class NPC extends Trainer {
+public class NPC {
 	private static final long serialVersionUID = 1L;
-	private String name;
 	private EnumsAndConstants.DIR dir;
-	private Image sprite;
-	private boolean stationary;
 	public boolean trainer;
+	public NPCData nData;
+	public Image sprite;
 
-	public NPC(int x, int y, String n, String[] text, EnumsAndConstants.SPRITENAMES s, Image bs, boolean t) {
-		super(x, y, n, text, s, null, 0);
-		this.name = n;
-		this.text = text;
-		this.loc_x = x;
-		this.loc_y = y;
-		this.trainer = t;
+	public NPC(NPCData npcData) {
+		nData = npcData;
 	}
 
 	public void setDirection(EnumsAndConstants.DIR dir) {
@@ -31,32 +27,24 @@ public class NPC extends Trainer {
 		return this.dir;
 	}
 
-	public int getWidth() {
-		return this.sprite.getWidth(null) / 4;
-	}
-
-	public int getHeight() {
-		return this.sprite.getHeight(null) / 4;
-	}
-
 	public void moveUp() {
-		this.loc_y -= 1;
+		this.nData.location.move(DIR.NORTH);
 	}
 
 	public void moveDown() {
-		this.loc_y += 1;
+		this.nData.location.move(DIR.SOUTH);
 	}
 
 	public void moveLeft() {
-		this.loc_x -= 1;
+		this.nData.location.move(DIR.WEST);
 	}
 
 	public void moveRight() {
-		this.loc_x += 1;
+		this.nData.location.move(DIR.EAST);
 	}
 
 	public String getName() {
-		return this.name;
+		return this.nData.name;
 	}
 
 	public Image getSprite() {
@@ -68,105 +56,81 @@ public class NPC extends Trainer {
 	}
 
 	public boolean getTalkable(Player other) {
-		if (other.getCurrentY() + 1 == getCurrentY()) {
-			if (other.getCurrentX() == getCurrentX()) {
+		if (other.getCurrentY() + 1 == nData.location.getY()) {
+			if (other.getCurrentX() == nData.location.getX()) {
 				return true;
 			}
 		}
-		if (other.getCurrentY() - 1 == getCurrentY()) {
-			if (other.getCurrentX() == getCurrentX()) {
+		if (other.getCurrentY() - 1 == nData.location.getY()) {
+			if (other.getCurrentX() == nData.location.getX()) {
 				return true;
 			}
 		}
-		if (other.getCurrentX() + 1 == getCurrentX()) {
-			if (other.getCurrentY() == getCurrentY()) {
+		if (other.getCurrentX() + 1 == nData.location.getX()) {
+			if (other.getCurrentY() == nData.location.getY()) {
 				return true;
 			}
 		}
-		if (other.getCurrentX() - 1 == getCurrentX()) {
-			if (other.getCurrentY() == getCurrentY()) {
+		if (other.getCurrentX() - 1 == nData.location.getX()) {
+			if (other.getCurrentY() == nData.location.getY()) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public String[] getText() {
-		return this.text;
-	}
-
-	public String[] getText(Player other) {
-		if (other.getCurrentY() + 1 == getCurrentY()) {
-			if (other.getCurrentX() == getCurrentX()) {
-				return this.text;
-			}
-		}
-		if (other.getCurrentY() - 1 == getCurrentY()) {
-			if (other.getCurrentX() == getCurrentX()) {
-				return this.text;
-			}
-		}
-		if (other.getCurrentX() + 1 == getCurrentX()) {
-			if (other.getCurrentY() == getCurrentY()) {
-				return this.text;
-			}
-		}
-		if (other.getCurrentX() - 1 == getCurrentX()) {
-			if (other.getCurrentY() == getCurrentY()) {
-				return this.text;
-			}
-		}
-		return new String[] {};
+	public ArrayList<String> getText() {
+		return this.nData.conversationText;
 	}
 
 	public int getTextLength() {
-		return this.text.length;
+		return this.nData.conversationText.size();
 	}
 
 	public void setSpriteFacing(EnumsAndConstants.DIR dir) {
 		setDirection(dir);
 		if (dir.equals(EnumsAndConstants.DIR.NORTH)) {
-			setSprite(this.sprites[0]);
+			setSprite(this.nData.sprites.get(9));
 		}
 		if (dir.equals(EnumsAndConstants.DIR.SOUTH)) {
-			setSprite(this.sprites[3]);
+			setSprite(this.nData.sprites.get(0));
 		}
 		if (dir.equals(EnumsAndConstants.DIR.EAST)) {
-			setSprite(this.sprites[6]);
+			setSprite(this.nData.sprites.get(6));
 		}
 		if (dir.equals(EnumsAndConstants.DIR.WEST)) {
-			setSprite(this.sprites[9]);
+			setSprite(this.nData.sprites.get(3));
 		}
 	}
 
 	public void setStationary(boolean b) {
-		this.stationary = b;
+		this.nData.stationary = b;
 	}
 
 	public boolean isStationary() {
-		return this.stationary;
+		return this.nData.stationary;
 	}
 
 	public void changeLoc(int dir, int loc) {
 		if (dir == 0) {
 			if (loc == 0) {
-				setCurrentX(getCurrentX() + 1);
+				moveRight();
 			}
 			if (loc == 1) {
-				setCurrentY(getCurrentY() + 1);
+				moveDown();
 			}
 		}
 		if (dir == 1) {
 			if (loc == 0) {
-				setCurrentX(getCurrentX() - 1);
+				moveLeft();
 			}
 			if (loc == 1) {
-				setCurrentY(getCurrentY() - 1);
+				moveRight();
 			}
 		}
 	}
 
 	public String getText(int stage) {
-		return text[stage];
+		return this.nData.conversationText.get(stage);
 	}
 }

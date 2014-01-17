@@ -4,7 +4,6 @@ import java.awt.Image;
 import java.io.Serializable;
 
 import utilities.EnumsAndConstants;
-import utilities.EnumsAndConstants.SPRITENAMES;
 import utilities.Utils;
 
 public class Trainer implements Serializable {
@@ -21,7 +20,7 @@ public class Trainer implements Serializable {
 	protected Location curLoc;
 	protected int loc_x, loc_y;
 
-	public Trainer(int x, int y, String n, String[] t, SPRITENAMES s, Image bs, int i) {
+	public Trainer(int x, int y, String n, String[] t, String sprite, Image bs, int i) {
 		this.name = n;
 		this.text = t;
 		this.loc_x = x;
@@ -29,21 +28,7 @@ public class Trainer implements Serializable {
 		setBattleText(t);
 		this.battleSprite = bs;
 		this.money = i;
-		if (s.equals(SPRITENAMES.BOY)) {
-			this.sprite = EnumsAndConstants.sprite_lib.BOY_DOWN;
-			this.sprites[0] = EnumsAndConstants.sprite_lib.BOY_UP;
-			this.sprites[1] = EnumsAndConstants.sprite_lib.BOY_UP1;
-			this.sprites[2] = EnumsAndConstants.sprite_lib.BOY_UP2;
-			this.sprites[3] = EnumsAndConstants.sprite_lib.BOY_DOWN;
-			this.sprites[4] = EnumsAndConstants.sprite_lib.BOY_DOWN1;
-			this.sprites[5] = EnumsAndConstants.sprite_lib.BOY_DOWN2;
-			this.sprites[6] = EnumsAndConstants.sprite_lib.BOY_RIGHT;
-			this.sprites[7] = EnumsAndConstants.sprite_lib.BOY_RIGHT1;
-			this.sprites[8] = EnumsAndConstants.sprite_lib.BOY_RIGHT2;
-			this.sprites[9] = EnumsAndConstants.sprite_lib.BOY_LEFT;
-			this.sprites[10] = EnumsAndConstants.sprite_lib.BOY_LEFT1;
-			this.sprites[11] = EnumsAndConstants.sprite_lib.BOY_LEFT2;
-		} else if (s.equals(SPRITENAMES.PLAYER)) {
+		if (sprite.equals("PLAYER")) {
 			this.sprite = EnumsAndConstants.sprite_lib.PLAYER_DOWN;
 			this.sprites[0] = EnumsAndConstants.sprite_lib.PLAYER_UP;
 			this.sprites[1] = EnumsAndConstants.sprite_lib.PLAYER_UP1;
