@@ -2,7 +2,6 @@ package driver;
 
 import javax.swing.JFrame;
 
-import driver.Main;
 import utilities.EnumsAndConstants;
 import utilities.Utils;
 
@@ -12,7 +11,7 @@ public class PokemonGameFrame extends JFrame {
 
 	public PokemonGameFrame() {
 		setTitle("Pokemon: Metallic Silver");
-		setIconImage(EnumsAndConstants.sprite_lib.POKEBALL);
+		setIconImage(EnumsAndConstants.sprite_lib.ICON);
 		Main pokemon = new Main();
 		pokemon.setFocusable(true);
 		pokemon.requestFocus();

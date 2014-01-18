@@ -7,6 +7,7 @@ import java.util.StringTokenizer;
 
 import utilities.EnumsAndConstants;
 import utilities.Utils;
+import data_structures.Player;
 import data_structures.Pokemon;
 
 public class GameInitializer {
@@ -26,27 +27,19 @@ public class GameInitializer {
 		}
 		if (continued) {
 			String name = "Gold";
-			game.gold.setName(name);
-			game.gold.createTrainerID();
-			game.gold.setCurrentX(34);
-			game.gold.setCurrentY(15);
+			game.gold = new Player(34, 15, name);
+			game.gold.setID(Utils.createTrainerID());
 			Pokemon charmander = EnumsAndConstants.pokemon_generator.createPokemon("Charmander", 9);
 			game.gold.caughtPokemon(charmander);
 			game.gold.setMoney(1000000);
 			Utils.playBackgroundMusic(EnumsAndConstants.MUSIC.NEWBARKTOWN);
-			// game.gold.setCurLoc(new
-			// Location(EnumsAndConstants.loc_lib.getLocation("New Bark Town").name));
 		} else {
 			String name = "Gold";
-			game.gold.setName(name);
-			game.gold.createTrainerID();
-			game.gold.setCurrentX(36);
-			game.gold.setCurrentY(4);
+			game.gold = new Player(36, 4, name);
+			game.gold.setID(Utils.createTrainerID());
 			Pokemon charmander = EnumsAndConstants.pokemon_generator.createPokemon("Rattatta", 5);
 			game.gold.caughtPokemon(charmander);
 			game.gold.setMoney(2000);
-			// game.gold.setCurLoc(new
-			// Location(EnumsAndConstants.loc_lib.getLocation("New Bark Town").name));
 			game.introScreen.Start();
 		}
 		game.start_coorX = (EnumsAndConstants.TILESIZE * (8 - game.gold.getCurrentX()));
@@ -55,6 +48,7 @@ public class GameInitializer {
 		game.atContinueScreen = false;
 		game.movable = true;
 		game.timeStarted = System.currentTimeMillis();
+		game.NPCTHREAD.start();
 	}
 
 	public static void loadMap(String loadedMap) throws IOException {

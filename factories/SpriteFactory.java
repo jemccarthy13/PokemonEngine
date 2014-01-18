@@ -16,7 +16,7 @@ public class SpriteFactory {
 	public String picPath = libPath + "Pictures/";
 	public String fontPath = libPath + "Font/";
 
-	public Image CONTINUESCREEN, START_SYMBOL, TITLESCREEN, ARROW, MAIN_MENU, MESSAGE_BOX, PROFOAK_LARGE;
+	public Image CONTINUESCREEN, START_SYMBOL, TITLESCREEN, ARROW, MAIN_MENU, MESSAGE_BOX;// PROFOAK_LARGE;
 
 	public Image POKEDEX, POKESEL, BAGSCREEN, POKEGEAR, TRAINERCARD, SAVE, OPTION, TRAINER_FOR_CARD;
 
@@ -24,7 +24,7 @@ public class SpriteFactory {
 
 	public Image POKEGEARMAP, POKEGEARRADIO, POKEGEARPHONE, POKEGEAREXIT;
 
-	public Image BEGINNING, POKEBALL, NAMESCREEN;
+	public Image BEGINNING, ICON, NAMESCREEN;
 	public Image FONT_UNDERSCORE, FONT_CURSOR;
 
 	HashMap<Character, Image> fontMap = new HashMap<Character, Image>();
@@ -65,7 +65,7 @@ public class SpriteFactory {
 			spriteMap.put(x, sprites);
 		}
 
-		POKEBALL = createImage(picPath + "Pokeball.png");
+		ICON = createImage(titlePath + "Icon.png");
 		TITLESCREEN = createImage(titlePath + "Title.png");
 		START_SYMBOL = createImage(titlePath + "Start.png");
 		CONTINUESCREEN = createImage(picPath + "Continue.png");

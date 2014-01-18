@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import utilities.EnumsAndConstants.DIR;
-import data_structures.NPCData;
+import data_structures.TrainerData;
 
 public class NPCFactory {
 
@@ -17,7 +17,7 @@ public class NPCFactory {
 
 	// public NPC PROFESSOROAK;
 
-	class NPCDataMap extends HashMap<String, NPCData> {
+	class NPCDataMap extends HashMap<String, TrainerData> {
 		private static final long serialVersionUID = 1L;
 		String spritePath = "graphics_lib/Characters/NPC";
 
@@ -27,7 +27,7 @@ public class NPCFactory {
 			File[] listOfFiles = folder.listFiles();
 			for (int i = 0; i < listOfFiles.length; i++) {
 				if (listOfFiles[i].isFile()) {
-					NPCData pd = new NPCData(listOfFiles[i].getPath());
+					TrainerData pd = new TrainerData(listOfFiles[i].getPath());
 					put(pd.name, pd);
 				}
 			}

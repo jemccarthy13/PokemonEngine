@@ -70,7 +70,7 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 	public int map_width;
 	public int map_height;
 	// ====================== NPC Information ==============================//
-	public static NPCThread NPCTHREAD;
+	public static NPCThread NPCTHREAD = new NPCThread();
 	// ======================= Battle information ==========================//
 	public boolean inBattle = false;
 	public boolean playerWin = false;
@@ -93,7 +93,7 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 	public int start_coorX, start_coorY; // teleportation graphics variables
 	public int menuSelection = 0;
 	// ======================== User Data ==================================//
-	public Player gold = new Player(0, 0, "Gold"); // User's character
+	public Player gold; // User's character
 
 	// //////////////////////////////////////////////////////////////////////
 	// ==================== END VARIABLE DECLARATIONS =====================//
@@ -111,8 +111,6 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 		addKeyListener(this);
 		gameTimer = new Timer(100 - EnumsAndConstants.PLAYERSPEED, this);
 		gameTimer.start();
-		NPCTHREAD = new NPCThread(gold);
-		NPCTHREAD.start();
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -128,7 +126,7 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 			if (!encounter.playerTurn) {
 				encounter.enemyTurn();
 			}
-		} else {
+		} else if (!atTitle && !inIntro && !inNameScreen && !inMenu && !atContinueScreen) {
 			handleMovement();
 		}
 		repaint();
@@ -285,7 +283,6 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 			while (curNPC.getCurrentY() < gold.getCurrentY() - 1) {
 				tileMap[curNPC.getCurrentY()][curNPC.getCurrentX()] = EnumsAndConstants.TILE;
 				curNPC.moveDown();
-				System.out.println("NPC moved South");
 				paintComponent(getGraphics());
 				try {
 					Thread.sleep(500L);

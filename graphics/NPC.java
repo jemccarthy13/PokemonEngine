@@ -5,17 +5,17 @@ import java.util.ArrayList;
 
 import utilities.EnumsAndConstants;
 import utilities.EnumsAndConstants.DIR;
-import data_structures.NPCData;
 import data_structures.Player;
 import data_structures.PokemonList;
+import data_structures.TrainerData;
 
 public class NPC {
 	private static final long serialVersionUID = 1L;
 	private EnumsAndConstants.DIR dir;
-	public NPCData nData;
+	public TrainerData nData;
 	public Image sprite;
 
-	public NPC(NPCData npcData) {
+	public NPC(TrainerData npcData) {
 		nData = npcData;
 		setSpriteFacing(DIR.SOUTH);
 	}
@@ -33,27 +33,27 @@ public class NPC {
 	}
 
 	public int getCurrentX() {
-		return nData.location.getX();
+		return nData.position.getX();
 	}
 
 	public int getCurrentY() {
-		return nData.location.getY();
+		return nData.position.getY();
 	}
 
 	public void moveUp() {
-		this.nData.location.move(DIR.NORTH);
+		this.nData.position.move(DIR.NORTH);
 	}
 
 	public void moveDown() {
-		this.nData.location.move(DIR.SOUTH);
+		this.nData.position.move(DIR.SOUTH);
 	}
 
 	public void moveLeft() {
-		this.nData.location.move(DIR.WEST);
+		this.nData.position.move(DIR.WEST);
 	}
 
 	public void moveRight() {
-		this.nData.location.move(DIR.EAST);
+		this.nData.position.move(DIR.EAST);
 	}
 
 	public String getName() {
@@ -69,23 +69,23 @@ public class NPC {
 	}
 
 	public boolean getTalkable(Player other) {
-		if (other.getCurrentY() + 1 == nData.location.getY()) {
-			if (other.getCurrentX() == nData.location.getX()) {
+		if (other.getCurrentY() + 1 == nData.position.getY()) {
+			if (other.getCurrentX() == nData.position.getX()) {
 				return true;
 			}
 		}
-		if (other.getCurrentY() - 1 == nData.location.getY()) {
-			if (other.getCurrentX() == nData.location.getX()) {
+		if (other.getCurrentY() - 1 == nData.position.getY()) {
+			if (other.getCurrentX() == nData.position.getX()) {
 				return true;
 			}
 		}
-		if (other.getCurrentX() + 1 == nData.location.getX()) {
-			if (other.getCurrentY() == nData.location.getY()) {
+		if (other.getCurrentX() + 1 == nData.position.getX()) {
+			if (other.getCurrentY() == nData.position.getY()) {
 				return true;
 			}
 		}
-		if (other.getCurrentX() - 1 == nData.location.getX()) {
-			if (other.getCurrentY() == nData.location.getY()) {
+		if (other.getCurrentX() - 1 == nData.position.getX()) {
+			if (other.getCurrentY() == nData.position.getY()) {
 				return true;
 			}
 		}
@@ -124,23 +124,15 @@ public class NPC {
 		return this.nData.stationary;
 	}
 
-	public void changeLoc(int dir, int loc) {
-		if (dir == 0) {
-			if (loc == 0) {
-				nData.location.setX(getCurrentX() + 1);
-			}
-			if (loc == 1) {
-				nData.location.setY(getCurrentY() + 1);
-			}
-		}
-		if (dir == 1) {
-			if (loc == 0) {
-				nData.location.setX(getCurrentX() - 1);
-			}
-			if (loc == 1) {
-				nData.location.setY(getCurrentY() - 1);
-			}
-		}
+	public void changeLoc(DIR dir) {
+		if (dir == DIR.EAST)
+			nData.position.setX(getCurrentX() + 1);
+		else if (dir == DIR.SOUTH)
+			nData.position.setY(getCurrentY() + 1);
+		else if (dir == DIR.WEST)
+			nData.position.setX(getCurrentX() - 1);
+		else if (dir == DIR.EAST)
+			nData.position.setY(getCurrentY() - 1);
 	}
 
 	public String getText(int stage) {
@@ -149,5 +141,9 @@ public class NPC {
 
 	public boolean isTrainer() {
 		return nData.trainer;
+	}
+
+	public void setName(String n) {
+		nData.name = n;
 	}
 }

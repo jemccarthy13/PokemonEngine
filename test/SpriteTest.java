@@ -13,7 +13,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import utilities.EnumsAndConstants;
-import data_structures.Player;
 
 public class SpriteTest extends JFrame {
 
@@ -55,7 +54,7 @@ public class SpriteTest extends JFrame {
 
 	public SpriteTest() {
 		SpriteFactory s = new SpriteFactory();
-		NPCThread npct = new NPCThread(new Player());
+		NPCThread npct = new NPCThread();
 		npct.start();
 		gameThread.start();
 		sam = EnumsAndConstants.npc_lib.getNPC("Joey");

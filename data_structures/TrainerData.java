@@ -7,19 +7,22 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import utilities.EnumsAndConstants;
+import utilities.EnumsAndConstants.DIR;
 
-public class NPCData {
+public class TrainerData {
 
 	public String name = "";
-	public Coordinate location = new Coordinate();
+	public Coordinate position = new Coordinate();
 	public ArrayList<Image> sprites = new ArrayList<Image>();
 	public PokemonList pokemon = new PokemonList();
-	public int moneyWon = 0;
+	public int money = 0;
 	public ArrayList<String> conversationText = new ArrayList<String>();
 	public boolean stationary = false;
 	public boolean trainer = false;
+	public DIR dir = DIR.SOUTH;
+	public Image sprite;
 
-	public NPCData(String path) {
+	public TrainerData(String path) {
 		FileInputStream fs = null;
 		try {
 			fs = new FileInputStream(path);
@@ -30,8 +33,8 @@ public class NPCData {
 		System.out.println(path);
 		name = s.nextLine();
 		String[] nextLine = s.nextLine().split(" ");
-		location.setX(Integer.parseInt(nextLine[0]));
-		location.setY(Integer.parseInt(nextLine[1]));
+		position.setX(Integer.parseInt(nextLine[0]));
+		position.setY(Integer.parseInt(nextLine[1]));
 
 		String text = s.nextLine();
 		stationary = text.replace(" ", "").equals("true");
@@ -50,10 +53,10 @@ public class NPCData {
 				pokemon.add(EnumsAndConstants.pokemon_generator.createPokemon(datasplit[0],
 						Integer.parseInt(datasplit[1])));
 			}
-			moneyWon = Integer.parseInt(s.nextLine());
+			money = Integer.parseInt(s.nextLine());
 
 		}
 	}
 
-	public NPCData() {}
+	public TrainerData() {}
 }

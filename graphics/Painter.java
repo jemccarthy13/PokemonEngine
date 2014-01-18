@@ -187,7 +187,7 @@ public class Painter extends JPanel {
 	private void paintIntroScreen(Graphics g, Main game) {
 		g.setFont(EnumsAndConstants.POKEFONT);
 		g.drawImage(EnumsAndConstants.sprite_lib.BEGINNING, 0, 0, null);
-		g.drawImage(EnumsAndConstants.sprite_lib.PROFOAK_LARGE, 150, 20, null);
+		g.drawImage(EnumsAndConstants.sprite_lib.getSprites("Professor Oak").get(0), 150, 20, null);
 		if (EnumsAndConstants.npc_lib.getNPC("Professor Oak").getText().size() > game.introScreen.stage) {
 			Utils.messageBox(g,
 					EnumsAndConstants.npc_lib.getNPC("Professor Oak").getText().get(game.introScreen.stage - 1),

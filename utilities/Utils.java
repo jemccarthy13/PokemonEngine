@@ -29,6 +29,15 @@ public class Utils {
 		return EnumsAndConstants.DIR.SOUTH;
 	}
 
+	public static int createTrainerID() {
+		int a = Utils.generateRandom(0, 9);
+		int b = Utils.generateRandom(0, 9);
+		int c = Utils.generateRandom(0, 9);
+		int d = Utils.generateRandom(0, 9);
+		int e = Utils.generateRandom(0, 9);
+		return (10000 * a + 1000 * b + 100 * c + 10 * d + e);
+	}
+
 	public static void playCollisionSound() {
 		EnumsAndConstants.col.playClip("COLLISION");
 	}

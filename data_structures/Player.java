@@ -1,5 +1,7 @@
 package data_structures;
 
+import graphics.NPC;
+
 import java.awt.Image;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -7,57 +9,67 @@ import java.util.ArrayList;
 import utilities.EnumsAndConstants;
 import utilities.EnumsAndConstants.DIR;
 
-public class Player extends Trainer implements Serializable {
-	private int gameState = 0;
-	Trainer rival = new Trainer("???", 50);
-	public ArrayList<String> beatenTrainers = new ArrayList<String>();
+public class Player implements Serializable {
+
 	private static final long serialVersionUID = 1L;
-	private int pokemonowned = 1;
+	TrainerData pData = new TrainerData();
+
+	NPC rival;
+	public ArrayList<String> beatenTrainers = new ArrayList<String>();
 	private int badges = 0;
-	DIR dir;
-	ArrayList<Image> sprites;
+	private int id;
+	Location curLoc;
 
 	public Player(int x, int y, String n) {
-		super(x, y, n, 2000);
-		sprites = EnumsAndConstants.sprite_lib.getSprites("PLAYER");
+		pData.name = n;
+		pData.position.setX(x);
+		pData.position.setY(y);
+		pData.sprites = EnumsAndConstants.sprite_lib.getSprites("PLAYER");
+		curLoc = new Location("New Bark Town");
 		setSpriteFacing(DIR.SOUTH);
 	}
 
 	public Player(String n) {
-		super(0, 0, n, 2000);
-		sprites = EnumsAndConstants.sprite_lib.getSprites("PLAYER");
+		pData.name = n;
+		pData.position = new Coordinate(0, 0);
+		pData.money = 2000;
+		pData.sprites = EnumsAndConstants.sprite_lib.getSprites("PLAYER");
 		this.setSpriteFacing(DIR.SOUTH);
 	}
 
-	public Player() {
-		super();
+	public Location getCurLoc() {
+		return curLoc;
 	}
 
 	public void setDirection(DIR direction) {
-		dir = direction;
+		pData.dir = direction;
+	}
+
+	public void caughtPokemon(Pokemon p) {
+		pData.pokemon.add(p);
+	}
+
+	public PokemonList getPokemon() {
+		return pData.pokemon;
 	}
 
 	public void setSpriteFacing(DIR dir) {
 		setDirection(dir);
 		if (dir.equals(DIR.NORTH)) {
-			setSprite(sprites.get(9));
+			setSprite(pData.sprites.get(9));
 		}
 		if (dir.equals(DIR.SOUTH)) {
-			setSprite(sprites.get(0));
+			setSprite(pData.sprites.get(0));
 		}
 		if (dir.equals(DIR.EAST)) {
-			setSprite(sprites.get(6));
+			setSprite(pData.sprites.get(6));
 		}
 		if (dir.equals(DIR.WEST)) {
-			setSprite(sprites.get(3));
+			setSprite(pData.sprites.get(3));
 		}
 	}
 
-	public int getPokemonOwned() {
-		return this.pokemonowned;
-	}
-
-	public void beatTrainer(Trainer t) {
+	public void beatTrainer(NPC t) {
 		this.beatenTrainers.add(t.getName());
 	}
 
@@ -69,14 +81,6 @@ public class Player extends Trainer implements Serializable {
 		return this.rival.getName();
 	}
 
-	public void setGameState(int i) {
-		this.gameState = i;
-	}
-
-	public int getGameState() {
-		return this.gameState;
-	}
-
 	public int getBadges() {
 		return this.badges;
 	}
@@ -86,19 +90,19 @@ public class Player extends Trainer implements Serializable {
 	}
 
 	public void setMoney(int m) {
-		this.money = m;
+		pData.money = m;
 	}
 
 	public int getMoney() {
-		return this.money;
+		return pData.money;
 	}
 
 	public void setDir(DIR dir) {
-		this.dir = dir;
+		pData.dir = dir;
 	}
 
 	public DIR getDir() {
-		return this.dir;
+		return pData.dir;
 	}
 
 	public void changeLoc(int dir, int loc) {
@@ -120,17 +124,32 @@ public class Player extends Trainer implements Serializable {
 		}
 	}
 
-	public void setCurrentX(int X) {
-		this.loc_x = X;
+	public int getCurrentX() {
+		return pData.position.getX();
 	}
 
-	public void setCurrentY(int Y) {
-		this.loc_y = Y;
+	public int getCurrentY() {
+		return pData.position.getY();
 	}
 
-	public void setLoc(int X, int Y) {
-		setCurrentX(X);
-		setCurrentY(Y);
+	public void setCurrentX(int x) {
+		pData.position.setX(x);
+	}
+
+	public void setCurrentY(int y) {
+		pData.position.setY(y);
+	}
+
+	public void setLoc(Coordinate c) {
+		pData.position = c;
+	}
+
+	public void setSprite(Image m) {
+		pData.sprite = m;
+	}
+
+	public Image getSprite() {
+		return pData.sprite;
 	}
 
 	public void changeSprite(int pixels, boolean rightFoot) {
@@ -138,23 +157,43 @@ public class Player extends Trainer implements Serializable {
 		int direction = 3 * getDir().ordinal();
 
 		if ((pixels >= 0) && (pixels < 4)) {
-			setSprite(sprites.get(direction));
+			setSprite(pData.sprites.get(direction));
 		} else if ((pixels > 4) && (pixels < 8)) {
-			setSprite(sprites.get(direction));
+			setSprite(pData.sprites.get(direction));
 		} else if ((pixels > 8) && (pixels < 12)) {
 			if (!rightFoot) {
-				setSprite(sprites.get(direction + 1));
+				setSprite(pData.sprites.get(direction + 1));
 			} else {
-				setSprite(sprites.get(direction + 2));
+				setSprite(pData.sprites.get(direction + 2));
 			}
 		} else if ((pixels >= 12) && (pixels < 15)) {
 			if (!rightFoot) {
-				setSprite(sprites.get(direction + 1));
+				setSprite(pData.sprites.get(direction + 1));
 			} else {
-				setSprite(sprites.get(direction + 2));
+				setSprite(pData.sprites.get(direction + 2));
 			}
 		} else {
-			setSprite(sprites.get(direction));
+			setSprite(pData.sprites.get(direction));
 		}
+	}
+
+	public String getName() {
+		return pData.name;
+	}
+
+	public void setName(String nameSelected) {
+		pData.name = nameSelected;
+	}
+
+	public void setID(int input) {
+		this.id = input;
+	}
+
+	public int getID() {
+		return this.id;
+	}
+
+	public String getPokemonOwned() {
+		return String.valueOf(pData.pokemon.size());
 	}
 }
