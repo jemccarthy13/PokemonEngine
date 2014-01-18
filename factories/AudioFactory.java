@@ -1,6 +1,6 @@
 package factories;
 
-import audio.MidiPlayer;
+import utilities.MidiPlayer;
 
 public class AudioFactory {
 	public MidiPlayer TITLE = new MidiPlayer("/audio_lib/BGM/Title.mid", true);

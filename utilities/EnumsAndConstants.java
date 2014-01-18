@@ -4,11 +4,9 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.io.Serializable;
 
-import audio.JukeBox;
-import audio.MidiPlayer;
-import data_structures.NormalTile;
-import data_structures.ObstacleTile;
-import data_structures.TileSet;
+import tiles.NormalTile;
+import tiles.ObstacleTile;
+import tiles.TileSet;
 import factories.AudioFactory;
 import factories.LocationFactory;
 import factories.MoveFactory;

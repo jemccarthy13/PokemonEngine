@@ -6,8 +6,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import trainers.TrainerData;
 import utilities.EnumsAndConstants.DIR;
-import data_structures.TrainerData;
 
 public class NPCFactory {
 

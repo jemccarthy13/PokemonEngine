@@ -1,4 +1,4 @@
-package data_structures;
+package pokedex;
 
 import java.awt.Image;
 import java.io.Serializable;

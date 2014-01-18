@@ -1,4 +1,4 @@
-package data_structures;
+package trainers;
 
 import graphics.NPC;
 
@@ -6,6 +6,10 @@ import java.awt.Image;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import location.Location;
+import pokedex.Pokemon;
+import pokedex.PokemonList;
+import tiles.Coordinate;
 import utilities.EnumsAndConstants;
 import utilities.EnumsAndConstants.DIR;
 

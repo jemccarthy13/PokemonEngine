@@ -5,11 +5,11 @@ import graphics.NPC;
 import java.awt.event.KeyEvent;
 import java.util.Random;
 
+import pokedex.Move;
+import pokedex.Pokemon;
 import utilities.EnumsAndConstants;
 import utilities.EnumsAndConstants.DIR;
 import utilities.Utils;
-import data_structures.Move;
-import data_structures.Pokemon;
 
 public class EventHandler {
 

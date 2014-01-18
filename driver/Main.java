@@ -20,16 +20,16 @@ import java.util.Set;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import pokedex.Pokemon;
+import tiles.Coordinate;
+import tiles.ObstacleTile;
+import tiles.Tile;
+import trainers.Player;
 import utilities.EnumsAndConstants;
+import utilities.TimeStruct;
 import utilities.EnumsAndConstants.DIR;
 import utilities.EnumsAndConstants.MUSIC;
 import utilities.Utils;
-import data_structures.Coordinate;
-import data_structures.ObstacleTile;
-import data_structures.Player;
-import data_structures.Pokemon;
-import data_structures.Tile;
-import data_structures.TimeStruct;
 
 public class Main extends JPanel implements KeyListener, ActionListener {
 

@@ -1,3 +1,4 @@
-package data_structures;
+package tiles;
+
 
 public class NormalTile extends Tile {}

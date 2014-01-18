@@ -1,4 +1,4 @@
-package audio;
+package utilities;
 
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequence;

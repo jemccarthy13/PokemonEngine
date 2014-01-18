@@ -1,4 +1,4 @@
-package data_structures;
+package tiles;
 
 import utilities.EnumsAndConstants.DIR;
 

@@ -3,11 +3,11 @@ package graphics;
 import java.awt.Image;
 import java.util.ArrayList;
 
+import pokedex.PokemonList;
+import trainers.Player;
+import trainers.TrainerData;
 import utilities.EnumsAndConstants;
 import utilities.EnumsAndConstants.DIR;
-import data_structures.Player;
-import data_structures.PokemonList;
-import data_structures.TrainerData;
 
 public class NPC {
 	private static final long serialVersionUID = 1L;

@@ -1,4 +1,4 @@
-package data_structures;
+package utilities;
 
 public class GameData {
 

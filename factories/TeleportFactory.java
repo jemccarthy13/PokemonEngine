@@ -3,7 +3,7 @@ package factories;
 import java.util.HashMap;
 import java.util.Map;
 
-import data_structures.Coordinate;
+import tiles.Coordinate;
 
 public class TeleportFactory {
 

@@ -1,4 +1,4 @@
-package data_structures;
+package trainers;
 
 import java.awt.Image;
 import java.io.FileInputStream;
@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import pokedex.PokemonList;
+import tiles.Coordinate;
 import utilities.EnumsAndConstants;
 import utilities.EnumsAndConstants.DIR;
 

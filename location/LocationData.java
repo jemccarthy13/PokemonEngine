@@ -1,4 +1,4 @@
-package data_structures;
+package location;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

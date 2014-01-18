@@ -1,4 +1,4 @@
-package data_structures;
+package pokedex;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

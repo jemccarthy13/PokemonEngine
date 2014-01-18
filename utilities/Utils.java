@@ -6,10 +6,9 @@ import java.io.ObjectOutputStream;
 import java.text.DecimalFormat;
 import java.util.Random;
 
-import data_structures.Location;
-import data_structures.Player;
-import data_structures.Pokemon;
-import data_structures.TimeStruct;
+import location.Location;
+import pokedex.Pokemon;
+import trainers.Player;
 
 public class Utils {
 	static Random randomGenerator = new Random();

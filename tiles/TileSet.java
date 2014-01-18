@@ -1,4 +1,4 @@
-package data_structures;
+package tiles;
 
 import java.awt.Image;
 import java.io.InputStreamReader;

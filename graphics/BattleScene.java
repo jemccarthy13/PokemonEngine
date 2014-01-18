@@ -4,11 +4,11 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.Random;
 
+import pokedex.Move;
+import pokedex.Pokemon;
+import pokedex.PokemonList;
 import utilities.EnumsAndConstants;
 import utilities.Utils;
-import data_structures.Move;
-import data_structures.Pokemon;
-import data_structures.PokemonList;
 import driver.Main;
 
 public class BattleScene {

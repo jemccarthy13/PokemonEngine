@@ -3,7 +3,7 @@ package factories;
 import java.io.File;
 import java.util.HashMap;
 
-import data_structures.LocationData;
+import location.LocationData;
 
 public class LocationFactory {
 	class LocationDataMap extends HashMap<String, LocationData> {

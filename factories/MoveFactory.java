@@ -5,8 +5,8 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import data_structures.Move;
-import data_structures.MoveData;
+import pokedex.Move;
+import pokedex.MoveData;
 
 public class MoveFactory {
 	class MoveDataMap extends HashMap<String, MoveData> {

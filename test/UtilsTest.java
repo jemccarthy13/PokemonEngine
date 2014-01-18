@@ -2,8 +2,8 @@ package test;
 
 import java.util.ArrayList;
 
+import pokedex.Pokemon;
 import utilities.Utils;
-import data_structures.Pokemon;
 
 public class UtilsTest {
 

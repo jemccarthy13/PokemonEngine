@@ -3,8 +3,8 @@ package factories;
 import java.io.File;
 import java.util.HashMap;
 
-import data_structures.Pokemon;
-import data_structures.PokemonData;
+import pokedex.Pokemon;
+import pokedex.PokemonData;
 
 public class PokemonFactory {
 
