@@ -1,4 +1,4 @@
-package factories;
+package libraries;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -8,14 +8,23 @@ import trainers.NPC;
 import trainers.TrainerData;
 import utilities.EnumsAndConstants.DIR;
 
-public class NPCFactory {
+//////////////////////////////////////////////////////////////////////////
+//
+//Look through the NPC data files, creating each NPC and adding them to 
+// the list of active NPCs
+//
+//////////////////////////////////////////////////////////////////////////
+public class NPCLibrary {
 
 	public NPCDataMap npcData = new NPCDataMap();
 
 	public ArrayList<NPC> npcs = new ArrayList<NPC>();
 
-	// public NPC PROFESSOROAK;
-
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Maps NPC Name->Data
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	class NPCDataMap extends HashMap<String, TrainerData> {
 		private static final long serialVersionUID = 1L;
 		String spritePath = "graphics_lib/Characters/NPC";
@@ -37,7 +46,12 @@ public class NPCFactory {
 		return new NPC(npcData.get(name));
 	}
 
-	public NPCFactory() {
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Default constructor initializes the NPC list
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public NPCLibrary() {
 		for (String key : npcData.keySet()) {
 			NPC newNPC = new NPC(npcData.get(key));
 			newNPC.setDirection(DIR.SOUTH);

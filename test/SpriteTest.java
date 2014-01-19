@@ -1,6 +1,5 @@
 package test;
 
-import factories.SpriteFactory;
 import graphics.NPCThread;
 
 import java.awt.Color;
@@ -11,6 +10,7 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import libraries.SpriteLibrary;
 import trainers.NPC;
 import utilities.EnumsAndConstants;
 
@@ -53,7 +53,7 @@ public class SpriteTest extends JFrame {
 	};
 
 	public SpriteTest() {
-		SpriteFactory s = new SpriteFactory();
+		SpriteLibrary s = new SpriteLibrary();
 		NPCThread npct = new NPCThread();
 		npct.start();
 		gameThread.start();

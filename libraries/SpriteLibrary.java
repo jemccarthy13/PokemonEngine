@@ -1,4 +1,4 @@
-package factories;
+package libraries;
 
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -7,7 +7,13 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class SpriteFactory {
+// ////////////////////////////////////////////////////////////////////////
+//
+// Create all images used in game for reference.  Defaults + going through
+// the characters directory to map TrainerType->Image[]
+//
+// ////////////////////////////////////////////////////////////////////////
+public class SpriteLibrary {
 	public Toolkit tk;
 	public String libPath = "graphics_lib/";
 	public String charPath = libPath + "Characters/Battle/";
@@ -16,7 +22,7 @@ public class SpriteFactory {
 	public String picPath = libPath + "Pictures/";
 	public String fontPath = libPath + "Font/";
 
-	public Image CONTINUESCREEN, START_SYMBOL, TITLESCREEN, ARROW, MAIN_MENU, MESSAGE_BOX;// PROFOAK_LARGE;
+	public Image CONTINUESCREEN, START_SYMBOL, TITLESCREEN, ARROW, MAIN_MENU, MESSAGE_BOX;
 
 	public Image POKEDEX, POKESEL, BAGSCREEN, POKEGEAR, TRAINERCARD, SAVE, OPTION, TRAINER_FOR_CARD;
 
@@ -30,22 +36,41 @@ public class SpriteFactory {
 	HashMap<Character, Image> fontMap = new HashMap<Character, Image>();
 	HashMap<String, ArrayList<Image>> spriteMap = new HashMap<String, ArrayList<Image>>();
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Loads an image from a given path
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public Image createImage(String path) {
 		tk = Toolkit.getDefaultToolkit();
-		Class<SpriteFactory> o = SpriteFactory.class;
 
-		return tk.createImage(o.getResource("/" + path));
+		return tk.createImage(SpriteLibrary.class.getResource("/" + path));
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Returns the Font character Image corresponding to the given char
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public Image getFontChar(char c) {
 		return fontMap.get(c);
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Get the set of 12 directional spries that correspond to the given name
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public ArrayList<Image> getSprites(String name) {
 		return spriteMap.get(name);
 	}
 
-	public SpriteFactory() {
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Default constructor intializes all sprites from the graphics_lib folder
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public SpriteLibrary() {
 
 		File file = new File(spritePath);
 		String[] directories = file.list(new FilenameFilter() {

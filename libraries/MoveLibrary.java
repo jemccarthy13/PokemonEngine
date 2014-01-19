@@ -1,4 +1,4 @@
-package factories;
+package libraries;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -8,11 +8,22 @@ import java.util.Scanner;
 import pokedex.Move;
 import pokedex.MoveData;
 
-public class MoveFactory {
+// ////////////////////////////////////////////////////////////////////////
+//
+// Look through the Move data file, map move Name->Data for each move
+// in that file
+//
+// ////////////////////////////////////////////////////////////////////////
+public class MoveLibrary {
 	class MoveDataMap extends HashMap<String, MoveData> {
 
 		private static final long serialVersionUID = 1L;
 
+		// ////////////////////////////////////////////////////////////////////////
+		//
+		// Maps location Name->Data
+		//
+		// ////////////////////////////////////////////////////////////////////////
 		public MoveDataMap() {
 			String filePath = "Data/MOVES.MDAT";
 			FileInputStream fs = null;

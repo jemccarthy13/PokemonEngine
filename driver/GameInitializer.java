@@ -49,7 +49,7 @@ public class GameInitializer {
 			String name = "GOLD";
 			game.gData.player = new Player(34, 15, name);
 			game.gData.player.setID(Utils.createTrainerID());
-			Pokemon charmander = EnumsAndConstants.pokemon_generator.createPokemon("Charmander", 9);
+			Pokemon charmander = EnumsAndConstants.pokemon_generator.createPokemon("Charmander", 90);
 			game.gData.player.caughtPokemon(charmander);
 			game.gData.player.setMoney(1000000);
 			game.gData.timeStarted = System.currentTimeMillis();

@@ -1,15 +1,20 @@
-package factories;
+package libraries;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import tiles.Coordinate;
 
-public class TeleportFactory {
+//////////////////////////////////////////////////////////////////////////
+//
+// Populates a map of 
+//
+//////////////////////////////////////////////////////////////////////////
+public class TeleportLibrary {
 
 	Map<Coordinate, Coordinate> teleports = new HashMap<Coordinate, Coordinate>();
 
-	public TeleportFactory() {
+	public TeleportLibrary() {
 		/*
 		 * Coordinate first = new Coordinate(15, 7); Coordinate second = new
 		 * Coordinate(EnumsAndConstants.MOMSHOUSEX,

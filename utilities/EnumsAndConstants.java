@@ -1,21 +1,22 @@
 package utilities;
 
+import graphics.MessageBox;
+import graphics.Painter;
+
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.io.Serializable;
 
+import libraries.AudioLibrary;
+import libraries.LocationLibrary;
+import libraries.MoveLibrary;
+import libraries.NPCLibrary;
+import libraries.PokemonFactory;
+import libraries.SpriteLibrary;
+import libraries.TeleportLibrary;
 import tiles.NormalTile;
 import tiles.ObstacleTile;
 import tiles.TileSet;
-import factories.AudioFactory;
-import factories.LocationFactory;
-import factories.MoveFactory;
-import factories.NPCFactory;
-import factories.PokemonFactory;
-import factories.SpriteFactory;
-import factories.TeleportFactory;
-import graphics.MessageBox;
-import graphics.Painter;
 
 public class EnumsAndConstants {
 
@@ -39,14 +40,14 @@ public class EnumsAndConstants {
 
 	public static final Toolkit tk = Toolkit.getDefaultToolkit();
 
-	// TODO change "Factory" to "Map" where most appropriate
-	public static final SpriteFactory sprite_lib = new SpriteFactory();
-	public static final AudioFactory audio_lib = new AudioFactory();
-	public static final LocationFactory loc_lib = new LocationFactory();
-	public static final MoveFactory move_lib = new MoveFactory();
+	public static final String BGMUSICPATH = "/audio_lib/BGM/";
+	public static final SpriteLibrary sprite_lib = new SpriteLibrary();
+	public static final AudioLibrary audio_lib = new AudioLibrary();
+	public static final LocationLibrary loc_lib = new LocationLibrary();
+	public static final MoveLibrary move_lib = new MoveLibrary();
 	public static final PokemonFactory pokemon_generator = new PokemonFactory();
-	public static final NPCFactory npc_lib = new NPCFactory();
-	public static final TeleportFactory TELEPORTS = new TeleportFactory();
+	public static final NPCLibrary npc_lib = new NPCLibrary();
+	public static final TeleportLibrary TELEPORTS = new TeleportLibrary();
 	public static final MessageBox msg_box = new MessageBox();
 	public static final Font POKEFONT = new Font("pokesl1", 0, 18);
 	public static final ObstacleTile OBSTACLE = new ObstacleTile();

@@ -1,4 +1,4 @@
-package factories;
+package libraries;
 
 import java.io.File;
 import java.util.HashMap;
@@ -6,6 +6,14 @@ import java.util.HashMap;
 import pokedex.Pokemon;
 import pokedex.PokemonData;
 
+// ////////////////////////////////////////////////////////////////////////
+//
+// Look through the Pokemon data directory, map name->data
+//
+// called "factory" because it can create pokemon from this data given
+// a level
+//
+// ////////////////////////////////////////////////////////////////////////
 public class PokemonFactory {
 
 	class PokemonDataMap extends HashMap<String, PokemonData> {
@@ -27,8 +35,12 @@ public class PokemonFactory {
 
 	PokemonDataMap pokemonData = new PokemonDataMap();
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Get the data from the Pokemon map, and create a new pokemon at given lvl
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public Pokemon createPokemon(String name, int level) {
-
 		return new Pokemon(pokemonData.get(name), level);
 	}
 }
