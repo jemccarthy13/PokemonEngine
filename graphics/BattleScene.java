@@ -119,14 +119,18 @@ public class BattleScene {
 		((Pokemon) this.enemyPokemon.get(0)).statusEffect = 0;
 
 		this.game.gData.inBattle = false;
-		this.game.gData.playerWin = true;
+
+		Utils.pauseBackgrondMusic();
+		Utils.playBackgroundMusic(game.gData.player.getCurLoc());
+		game.gData.player.beatenTrainers.add(enemy.getName());
+		game.gData.playerWin = false;
+		game.movable = true;
 	}
 
 	public void Lose() {
 		this.inMain = false;
 		this.inRun = true;
 		((Pokemon) this.enemyPokemon.get(0)).statusEffect = 0;
-
 		this.game.gData.inBattle = false;
 	}
 

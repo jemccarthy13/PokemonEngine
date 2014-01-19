@@ -32,7 +32,6 @@ public class TrainerData {
 			e.printStackTrace();
 		}
 		Scanner s = new Scanner(fs);
-		System.out.println(path);
 		name = s.nextLine();
 		String[] nextLine = s.nextLine().split(" ");
 		position.setX(Integer.parseInt(nextLine[0]));

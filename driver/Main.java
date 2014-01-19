@@ -36,7 +36,7 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 	// ================= Movement control variables =========================//
 	boolean walking = false;
 	private int movespritepixels = 0; // movement (animation) counter
-	boolean movable = true;
+	public boolean movable = true;
 	boolean[] moveable_dir = new boolean[4];
 	boolean rightFoot = false;
 	// ====================== NPC Random movement controller ================//
@@ -127,13 +127,15 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 					: gData.offsetX;
 			gData.offsetX = ((playerDir == DIR.EAST) && (moveable_dir[DIR.EAST.ordinal()])) ? gData.offsetX - 2
 					: gData.offsetX;
+
+			gData.player.changeSprite(movespritepixels, rightFoot);
 		}
 
-		// check for scripted door teleport event tiles
+		// prep for door teleportation event check
 		Map<Coordinate, Coordinate> dict = EnumsAndConstants.TELEPORTS.getListofTeleports();
 		Set<Coordinate> k = dict.keySet();
-
 		boolean teleported = false;
+
 		for (Coordinate x : k) {
 			if (x.equals(playerPos)) {
 				gData.player.setLoc(dict.get(x));
@@ -145,53 +147,28 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 			}
 		}
 
+		// finally, the animation is done, handle the movement logic
 		if (movespritepixels >= 16 && !teleported) {
-			movespritepixels = 0;
-			walking = false;
-			if (moveable_dir[playerDir.ordinal()]) {
-				gData.player.move(playerDir);
-			}
+			movespritepixels = 0; // reset animation counter
+			walking = false; // player is no longer in animation
 			rightFoot = (!rightFoot);
-			for (Pokemon p : playerPokemon) {
-				if ((p.statusEffect == 2) || (p.statusEffect == 3)) {
+			if (moveable_dir[playerDir.ordinal()])
+				gData.player.move(playerDir);
+			for (Pokemon p : playerPokemon) { // deal PZN/BRN damage
+				if ((p.statusEffect == 2) || (p.statusEffect == 3))
 					p.doDamageWithoutSound(1);
-				}
 			}
 		}
-		if (moveable_dir[playerDir.ordinal()]) {
-			gData.player.changeSprite(movespritepixels, rightFoot);
-		}
-		for (NPC curNPC : EnumsAndConstants.npc_lib.npcs) {
-			boolean doBattle = !gData.noBattle;
-			if (curNPC.isTrainer() && !walking) {
-				if (!gData.inBattle) {
-					checkForTrainerEncounter(curNPC, doBattle);
-				} else {
-					movable = true;
-				}
-			}
-			if (gData.playerWin) {
-				Utils.pauseBackgrondMusic();
-				Utils.playBackgroundMusic(gData.player.getCurLoc());
-				gData.player.beatenTrainers.add(encounter.enemy.getName());
-				gData.playerWin = false;
-				movable = true;
-			}
-		}
-	}
 
-	private void checkForTrainerEncounter(NPC curNPC, boolean doBattle) {
-		boolean NPC_SEES_PLAYER = playerInRange(curNPC);
-		if (NPC_SEES_PLAYER) {
-			for (int x = 0; x < gData.player.beatenTrainers.size(); x++) {
-				if (curNPC.getName().equals(gData.player.beatenTrainers.get(x))) {
-					doBattle = false;
-				}
-			}
-			if (doBattle && !gData.inBattle && !gData.inMenu) {
+		// check for trainer encounter with any NPC
+		for (NPC curNPC : EnumsAndConstants.npc_lib.npcs) {
+			boolean beaten = gData.player.beatenTrainers.contains(curNPC.getName());
+			if (curNPC.isTrainer() && !walking && !gData.noBattle && !beaten && playerInRange(curNPC) && !gData.inMenu) {
 				NPCTHREAD.stop = true;
 				enemyTrainerAnimation(curNPC);
 				doTrainerBattle(curNPC);
+			} else {
+				movable = true;
 			}
 		}
 	}
