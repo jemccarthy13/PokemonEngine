@@ -18,10 +18,23 @@ import utilities.GameData;
 import utilities.Utils;
 import driver.Game;
 
+// ////////////////////////////////////////////////////////////////////////////
+//
+// Painter class paints all grahpics
+//
+// TODO - add badges printing
+// TODO - only paint the visible portions of the map
+//
+// ////////////////////////////////////////////////////////////////////////////
 public class Painter extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// paintComponent - main painting logic from which submethods are called
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public void paintComponent(Graphics g, Game game) {
 		Graphics2D g2 = (Graphics2D) g;
 		AffineTransform at = new AffineTransform();
@@ -62,10 +75,11 @@ public class Painter extends JPanel {
 		}
 	}
 
-	private Image getNameSprite(String tbn) {
-		return EnumsAndConstants.sprite_lib.getSprites(tbn).get(0);
-	}
-
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Paint all components of the name input screen
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	private void paintNameInputScreen(Graphics g, Game game) {
 		g.drawImage(EnumsAndConstants.sprite_lib.NAMESCREEN, 0, 0, null);
 
@@ -92,9 +106,14 @@ public class Painter extends JPanel {
 			g.drawImage(EnumsAndConstants.sprite_lib.FONT_CURSOR, 150 + EnumsAndConstants.TILESIZE * name.length(), 40,
 					null);
 		}
-		g.drawImage(getNameSprite(game.nameScreen.toBeNamed), 80, 30, null);
+		g.drawImage(EnumsAndConstants.sprite_lib.getSprites(game.nameScreen.toBeNamed).get(0), 80, 30, null);
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Paint a given string to a given location of the screen
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public void paintString(Graphics g, String string, int startX, int startY) {
 		for (int x = 0; x < string.toCharArray().length; x++) {
 			g.drawImage(EnumsAndConstants.sprite_lib.getFontChar(string.toCharArray()[x]), startX
@@ -102,9 +121,14 @@ public class Painter extends JPanel {
 		}
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Paint all components of a battle scene
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	private void paintBattle(Graphics g, Game game) {
 		g.setFont(EnumsAndConstants.POKEFONT);
-		g.drawImage(game.encounter.BG, 0, 0, null);
+		g.drawImage(EnumsAndConstants.sprite_lib.BG, 0, 0, null);
 
 		Pokemon playerPokemon = game.encounter.playerPokemon;
 		Pokemon enemyPokemon = game.encounter.enemyPokemon.get(0);
@@ -114,7 +138,7 @@ public class Painter extends JPanel {
 		g.drawImage(enemyPokemon.getFrontSprite(), 310, 25, null);
 
 		if (game.encounter.inMain) {
-			g.drawImage(game.encounter.battleMainBG, 0, 0, null);
+			g.drawImage(EnumsAndConstants.sprite_lib.BATTLE_BG, 0, 0, null);
 			g.drawString("Wild " + enemyPokemon.getName() + " Appeared!", 30, 260);
 			g.drawString("FIGHT", 290, 260);
 			g.drawString("PKMN", 400, 260);
@@ -132,8 +156,7 @@ public class Painter extends JPanel {
 		}
 		if (game.encounter.inFight) {
 
-			g.drawImage(game.encounter.battleFightBG, 0, 0, null);
-			g.drawString("Select a Move", 30, 260);
+			g.drawImage(EnumsAndConstants.sprite_lib.BATTLE_FIGHTBG, 0, 0, null);
 			g.drawString(playerPokemon.getMove(0).getName(), 200, 260);
 			if (playerPokemon.getNumMoves() > 1) {
 				g.drawString(playerPokemon.getMove(1).getName(), 345, 260);
@@ -156,38 +179,48 @@ public class Painter extends JPanel {
 			}
 		}
 
+		// player status effect information
 		if (playerPokemon.statusEffect == 1) {
-			g.drawImage(game.encounter.statusPAR, 415, 140, null);
+			g.drawImage(EnumsAndConstants.sprite_lib.STATUS_PAR, 415, 140, null);
 		} else if (playerPokemon.statusEffect == 2) {
-			g.drawImage(game.encounter.statusBRN, 415, 140, null);
+			g.drawImage(EnumsAndConstants.sprite_lib.STATUS_BRN, 415, 140, null);
 		} else if (playerPokemon.statusEffect == 3) {
-			g.drawImage(game.encounter.statusPSN, 415, 140, null);
+			g.drawImage(EnumsAndConstants.sprite_lib.STATUS_PSN, 415, 140, null);
 		} else if (playerPokemon.statusEffect == 4) {
-			g.drawImage(game.encounter.statusSLP, 415, 140, null);
+			g.drawImage(EnumsAndConstants.sprite_lib.STATUS_SLP, 415, 140, null);
 		} else if (playerPokemon.statusEffect == 5) {
-			g.drawImage(game.encounter.statusFRZ, 415, 140, null);
+			g.drawImage(EnumsAndConstants.sprite_lib.STATUS_FRZ, 415, 140, null);
 		}
+
+		// enemy status effect information
 		if (enemyPokemon.statusEffect == 1) {
-			g.drawImage(game.encounter.statusPAR, 18, 60, null);
+			g.drawImage(EnumsAndConstants.sprite_lib.STATUS_PAR, 18, 60, null);
 		} else if (enemyPokemon.statusEffect == 2) {
-			g.drawImage(game.encounter.statusBRN, 18, 60, null);
+			g.drawImage(EnumsAndConstants.sprite_lib.STATUS_BRN, 18, 60, null);
 		} else if (enemyPokemon.statusEffect == 3) {
-			g.drawImage(game.encounter.statusPSN, 18, 60, null);
+			g.drawImage(EnumsAndConstants.sprite_lib.STATUS_PSN, 18, 60, null);
 		} else if (enemyPokemon.statusEffect == 4) {
-			g.drawImage(game.encounter.statusSLP, 18, 60, null);
+			g.drawImage(EnumsAndConstants.sprite_lib.STATUS_SLP, 18, 60, null);
 		} else if (enemyPokemon.statusEffect == 5) {
-			g.drawImage(game.encounter.statusFRZ, 18, 60, null);
+			g.drawImage(EnumsAndConstants.sprite_lib.STATUS_FRZ, 18, 60, null);
 		}
+		// player pokemon information
 		g.drawString(playerPokemon.getName(), 300, 175);
-		g.drawString(((Integer) playerPokemon.getLevel()).toString(), 435, 175);
-		g.drawString(((Integer) playerPokemon.getStat(EnumsAndConstants.STATS.HP)).toString(), 361, 207);
-		g.drawString(((Integer) playerPokemon.getMaxStat(EnumsAndConstants.STATS.HP)).toString(), 403, 207);
+		g.drawString(String.valueOf(playerPokemon.getLevel()), 435, 175);
+		g.drawString(String.valueOf(playerPokemon.getStat(EnumsAndConstants.STATS.HP)), 361, 207);
+		g.drawString(String.valueOf(playerPokemon.getMaxStat(EnumsAndConstants.STATS.HP)), 403, 207);
+		// enemy pokemon information
 		g.drawString(enemyPokemon.getName(), 20, 25);
-		g.drawString(((Integer) enemyPokemon.getLevel()).toString(), 145, 25);
-		g.drawString(((Integer) enemyPokemon.getStat(EnumsAndConstants.STATS.HP)).toString(), 70, 45);
-		g.drawString(((Integer) enemyPokemon.getMaxStat(EnumsAndConstants.STATS.HP)).toString(), 112, 45);
+		g.drawString(String.valueOf(enemyPokemon.getLevel()), 145, 25);
+		g.drawString(String.valueOf(enemyPokemon.getStat(EnumsAndConstants.STATS.HP)), 70, 45);
+		g.drawString(String.valueOf(enemyPokemon.getMaxStat(EnumsAndConstants.STATS.HP)), 112, 45);
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Paint all components of the intro screen
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	private void paintIntroScreen(Graphics g, GameData gameData) {
 		g.setFont(EnumsAndConstants.POKEFONT);
 		g.drawImage(EnumsAndConstants.sprite_lib.BEGINNING, 0, 0, null);
@@ -199,11 +232,21 @@ public class Painter extends JPanel {
 		}
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Paint all components of the options screen
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	private void paintOptionScreen(Graphics g, MenuScene menu) {
 		g.drawImage(EnumsAndConstants.sprite_lib.OPTION, 0, 0, null);
 		g.drawImage(EnumsAndConstants.sprite_lib.ARROW, 22, 85 + 32 * menu.MENU_currentSelectionOption, null);
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Paint all components of the save menu
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	private void paintSaveMenu(Graphics g, Game game) {
 		g.setFont(EnumsAndConstants.POKEFONT);
 		g.setColor(Color.BLACK);
@@ -219,6 +262,11 @@ public class Painter extends JPanel {
 		}
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Pad a given string with appropriate spacing
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public String getPadding(String toBePadded) {
 		int numSpaces = 12 - toBePadded.length();
 		String retStr = "";
@@ -228,6 +276,11 @@ public class Painter extends JPanel {
 		return retStr;
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Paint all components of the Trainer Card
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	private void paintTrainerCard(Graphics g, GameData gameData) {
 		g.setFont(EnumsAndConstants.POKEFONT);
 		g.setColor(Color.BLACK);
@@ -239,30 +292,44 @@ public class Painter extends JPanel {
 		g.drawString("Money:" + getPadding("Money:") + "$" + gameData.player.getMoney(), 64, 150);
 		g.drawString("Pokedex:" + getPadding("Pokedex:") + gameData.player.getPokemonOwned(), 64, 183);
 		g.drawString("Time:  " + getPadding("Time:") + Utils.formatTime(gameData.gameTimeStruct), 64, 213);
-		// @TODO add badges printing
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Paint all components of the pokegear screen
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	private void paintPokegearScreen(Graphics g, MenuScene menu) {
 		g.setFont(EnumsAndConstants.POKEFONT);
 		g.setColor(Color.BLACK);
 		g.drawImage(EnumsAndConstants.sprite_lib.POKEGEAR, 0, 0, null);
 		if (menu.MENU_currentSelectionPokeGear == 0) {
-			g.drawImage(EnumsAndConstants.sprite_lib.POKEGEARMAP, 0, 0, null);
+			g.drawImage(EnumsAndConstants.sprite_lib.POKEGEAR_MAP, 0, 0, null);
 		} else if (menu.MENU_currentSelectionPokeGear == 1) {
-			g.drawImage(EnumsAndConstants.sprite_lib.POKEGEARRADIO, 0, 0, null);
+			g.drawImage(EnumsAndConstants.sprite_lib.POKEGEAR_RADIO, 0, 0, null);
 		} else if (menu.MENU_currentSelectionPokeGear == 2) {
-			g.drawImage(EnumsAndConstants.sprite_lib.POKEGEARPHONE, 0, 0, null);
+			g.drawImage(EnumsAndConstants.sprite_lib.POKEGEAR_PHONE, 0, 0, null);
 		} else if (menu.MENU_currentSelectionPokeGear == 3) {
-			g.drawImage(EnumsAndConstants.sprite_lib.POKEGEAREXIT, 0, 0, null);
+			g.drawImage(EnumsAndConstants.sprite_lib.POKEGEAR_EXIT, 0, 0, null);
 		}
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Paint all components of the bag screen
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	private void paintBagScreen(Graphics g) {
 		g.setFont(EnumsAndConstants.POKEFONT);
 		g.setColor(Color.BLACK);
 		g.drawImage(EnumsAndConstants.sprite_lib.BAGSCREEN, 0, 0, null);
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Paint all components of the party screen
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	private void paintPartyScreen(Graphics g, Player p) {
 		g.setFont(EnumsAndConstants.POKEFONT);
 		g.setColor(Color.BLACK);
@@ -283,19 +350,42 @@ public class Painter extends JPanel {
 		}
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Paint a conversation on the screen as a series of message boxes
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	private void paintConversation(Graphics g, MenuScene menu) {
 		Utils.messageBox(g, menu.MENU_conversation.getText(menu.MENU_stage));
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Paint all components of the pokedex screen
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	private void paintPokedexScreen(Graphics g) {
 		g.drawImage(EnumsAndConstants.sprite_lib.POKEDEX, 0, 0, null);
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Paint all components of the pause menu
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	private void paintPauseMenu(Graphics g, MenuScene menu) {
 		g.drawImage(EnumsAndConstants.sprite_lib.MAIN_MENU, 0, 0, null);
 		g.drawImage(EnumsAndConstants.sprite_lib.ARROW, 335, 20 + 32 * menu.MENU_currentSelectionMain, null);
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Paint the overworld -
+	// include all NPCs, obstacles, map, interactive objects, and player
+	//
+	// TODO - update to paint only visible areas + 1 row + 1 column
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	private void paintWorld(Graphics g, GameData gameData, Graphics2D g2, AffineTransform at) {
 		g.setFont(EnumsAndConstants.POKEFONT);
 		g.setColor(Color.BLACK);
@@ -339,11 +429,21 @@ public class Painter extends JPanel {
 		g.drawString(gameData.player.getCurrentX() + "," + gameData.player.getCurrentY(), 10, 25);
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Paint all components of the continue screen
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	private void paintContinueScreen(Graphics g, GameData gameData) {
 		g.drawImage(EnumsAndConstants.sprite_lib.CONTINUESCREEN, 0, 0, null);
 		g.drawImage(EnumsAndConstants.sprite_lib.ARROW, 13, 20 + 32 * gameData.menuSelection, null);
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Paint all components of the title screen
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	private void paintTitle(Graphics g) {
 		g.drawImage(EnumsAndConstants.sprite_lib.TITLESCREEN, 0, 0, null);
 		g.drawImage(EnumsAndConstants.sprite_lib.START_SYMBOL, 0, 260, null);

@@ -2,6 +2,12 @@ package graphics;
 
 import trainers.NPC;
 
+// ////////////////////////////////////////////////////////////////////////
+//
+// MenuScene holds variables related to menu printing. On each key press,
+// the variables are adjusted accordingly
+//
+// ////////////////////////////////////////////////////////////////////////
 public class MenuScene {
 
 	public boolean MENU_inMain = false;

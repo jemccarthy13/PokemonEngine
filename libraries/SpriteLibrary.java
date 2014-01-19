@@ -1,5 +1,7 @@
 package libraries;
 
+import graphics.BattleScene;
+
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.File;
@@ -28,7 +30,10 @@ public class SpriteLibrary {
 
 	public Image PARTYFIRST, PARTYBOX, PARTYCANCEL, PARTYCANCELSEL;
 
-	public Image POKEGEARMAP, POKEGEARRADIO, POKEGEARPHONE, POKEGEAREXIT;
+	public Image POKEGEAR_MAP, POKEGEAR_RADIO, POKEGEAR_PHONE, POKEGEAR_EXIT;
+
+	public Image BATTLE_BG, BATTLE_FIGHTBG, BG;
+	public Image STATUS_PSN, STATUS_FRZ, STATUS_BRN, STATUS_SLP, STATUS_PAR;
 
 	public Image BEGINNING, ICON, NAMESCREEN;
 	public Image FONT_UNDERSCORE, FONT_CURSOR;
@@ -134,6 +139,8 @@ public class SpriteLibrary {
 		MESSAGE_BOX = createImage(picPath + "Message_Text.png");
 		ARROW = createImage(picPath + "Arrow.png");
 		MAIN_MENU = createImage(picPath + "Menu.png");
+
+		// MENU graphics
 		POKEDEX = createImage(picPath + "pokedexbg.png");
 		POKESEL = createImage(picPath + "pokeselbg.png");
 		BAGSCREEN = createImage(picPath + "BagScreen.png");
@@ -141,14 +148,35 @@ public class SpriteLibrary {
 		TRAINER_FOR_CARD = createImage(picPath + "Male.png");
 		SAVE = createImage(picPath + "Save.png");
 		OPTION = createImage(picPath + "OptionBG.png");
+
+		// PARTY graphics
 		PARTYFIRST = createImage(picPath + "Box.png");
 		PARTYBOX = createImage(picPath + "SelectionBar.png");
 		PARTYCANCEL = createImage(picPath + "pokeselcancel.png");
 		PARTYCANCELSEL = createImage(picPath + "pokeselcancelsel.png");
+
+		// POKEGEAR graphics
 		POKEGEAR = createImage(picPath + "PokegearBG.png");
-		POKEGEARMAP = createImage(picPath + "PokegearMap.png");
-		POKEGEARRADIO = createImage(picPath + "PokegearRadio.png");
-		POKEGEARPHONE = createImage(picPath + "PokegearPhone.png");
-		POKEGEAREXIT = createImage(picPath + "PokegearExit.png");
+		POKEGEAR_MAP = createImage(picPath + "PokegearMap.png");
+		POKEGEAR_RADIO = createImage(picPath + "PokegearRadio.png");
+		POKEGEAR_PHONE = createImage(picPath + "PokegearPhone.png");
+		POKEGEAR_EXIT = createImage(picPath + "PokegearExit.png");
+
+		// BATTLE graphics
+		BG = Toolkit.getDefaultToolkit().getImage(BattleScene.class.getResource("/graphics_lib/Pictures/BG.png"));
+		BATTLE_BG = Toolkit.getDefaultToolkit().getImage(
+				BattleScene.class.getResource("/graphics_lib/Pictures/Battle.png"));
+		BATTLE_FIGHTBG = Toolkit.getDefaultToolkit().getImage(
+				BattleScene.class.getResource("/graphics_lib/Pictures/Battle2.png"));
+		STATUS_PAR = Toolkit.getDefaultToolkit().getImage(
+				BattleScene.class.getResource("/graphics_lib/Pictures/StatusPAR.png"));
+		STATUS_BRN = Toolkit.getDefaultToolkit().getImage(
+				BattleScene.class.getResource("/graphics_lib/Pictures/StatusBRN.png"));
+		STATUS_PSN = Toolkit.getDefaultToolkit().getImage(
+				BattleScene.class.getResource("/graphics_lib/Pictures/StatusPSN.png"));
+		STATUS_SLP = Toolkit.getDefaultToolkit().getImage(
+				BattleScene.class.getResource("/graphics_lib/Pictures/StatusSLP.png"));
+		STATUS_FRZ = Toolkit.getDefaultToolkit().getImage(
+				BattleScene.class.getResource("/graphics_lib/Pictures/StatusFRZ.png"));
 	}
 }

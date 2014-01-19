@@ -2,6 +2,12 @@ package graphics;
 
 import utilities.EnumsAndConstants;
 
+// ////////////////////////////////////////////////////////////////////////
+//
+// NameScene holds all variables for printing a name selection screen
+// can name any NPC, player, or Pokemon with this screen
+//
+// ////////////////////////////////////////////////////////////////////////
 public class NameScene {
 
 	// name that and shrinks dynamically according to user's choices
