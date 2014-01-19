@@ -3,7 +3,6 @@ package driver;
 import graphics.BattleScene;
 import graphics.IntroScene;
 import graphics.MenuScene;
-import graphics.NPC;
 import graphics.NPCThread;
 import graphics.NameScene;
 
@@ -21,102 +20,70 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import pokedex.Pokemon;
+import pokedex.PokemonList;
 import tiles.Coordinate;
-import tiles.ObstacleTile;
-import tiles.Tile;
-import trainers.Player;
+import trainers.NPC;
 import utilities.EnumsAndConstants;
-import utilities.TimeStruct;
 import utilities.EnumsAndConstants.DIR;
 import utilities.EnumsAndConstants.MUSIC;
+import utilities.GameData;
 import utilities.Utils;
 
 public class Main extends JPanel implements KeyListener, ActionListener {
 
-	// //////////////////////////////////////////////////////////////////////
-	// ================== BEGIN VARIABLE DECLARATIONS =====================//
-	// //////////////////////////////////////////////////////////////////////
-
-	// TODO make a gameData struct to hold some of this information
-	// which'll make it easier for saving - and bc not everything needs to be
-	// public
-	private static final long serialVersionUID = 1L;
-
-	// VERSION is used in validating .sav files
-	// Orange save files are only compatible with Orange engine
-	// as per nature of "scripted events"
-	// private static String VERSION = "Orange";
-
-	// =========================== CHEATS ===================================//
-	private boolean noClip = false; // walk anywhere
-	private boolean noBattle = false; // no wild/trainer battles
-	// ==================== Game Timing Data ================================//
-	// holds how long the game has been played
-	public TimeStruct gameTimeStruct = new TimeStruct();
-	public long timeStarted; // time the game was started
-	private Timer gameTimer; // time difference between game events
+	// ////////////////////////////////////////////////////////////////////////
+	// ======================== VARIABLE DECLARATIONS =======================//
 	// ================= Movement control variables =========================//
 	boolean walking = false;
 	private int movespritepixels = 0; // movement (animation) counter
 	boolean movable = true;
-	boolean movable_up = true;
-	boolean movable_down = true;
-	boolean movable_left = true;
-	boolean movable_right = true;
+	boolean[] moveable_dir = new boolean[4];
 	boolean rightFoot = false;
-	// ======================== Map Data ===================================//
-	public int[][] currentMap = new int[3][16500];
-	public Tile[][] tileMap = new Tile[200][200];
-	public int map_width;
-	public int map_height;
-	// ====================== NPC Information ==============================//
+	// ====================== NPC Random movement controller ================//
 	public static NPCThread NPCTHREAD = new NPCThread();
-	// ======================= Battle information ==========================//
-	public boolean inBattle = false;
-	public boolean playerWin = false;
-	// ==================== Graphics Logic Controllers =====================//
+	// ===================== Graphics Logic Controllers =====================//
 	public BattleScene encounter;
 	public MenuScene menuScreen;
 	public IntroScene introScreen;
 	public NameScene nameScreen;
+	public EventHandler eventHandler;
+	// ======================== Game logic Data =============================//
+	public GameData gData = new GameData();
 
-	EventHandler eventHandler;
-
-	public boolean inMenu = false;
-	public boolean inIntro = false;
-	public boolean inNameScreen = false;
-	public boolean atTitle = true;
-	public boolean atContinueScreen = false;
-
-	public int offsetX = 0;
-	public int offsetY = 0;
-	public int start_coorX, start_coorY; // teleportation graphics variables
-	public int menuSelection = 0;
-	// ======================== User Data ==================================//
-	public Player gold; // User's character
-
-	// //////////////////////////////////////////////////////////////////////
-	// ==================== END VARIABLE DECLARATIONS =====================//
-	// //////////////////////////////////////////////////////////////////////
-
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Default constructor for Main panel. This is the panel that all
+	// aspects of the game are painted to / from.
+	//
+	// Constructor initializes event handler, all the scenes that get
+	// painted during gameplay, and the timer that handles sprite movement
+	// speeds. Also sets up input controller (key listener).
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public Main() {
-		menuScreen = new MenuScene(this);
-		nameScreen = new NameScene();
-		introScreen = new IntroScene(this);
-
 		eventHandler = new EventHandler(this);
+		menuScreen = new MenuScene(gData);
+		introScreen = new IntroScene(gData);
+		nameScreen = new NameScene();
 
 		setBackground(Color.BLACK);
 		setPreferredSize(new Dimension(480, 320));
 		addKeyListener(this);
-		gameTimer = new Timer(100 - EnumsAndConstants.PLAYERSPEED, this);
-		gameTimer.start();
+		gData.gameTimer = new Timer(100 - EnumsAndConstants.PLAYERSPEED, this);
+		gData.gameTimer.start();
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Any time an action is performed in the frame, this method is called.
+	// In Pokemon game, this method is constantly listening for actions
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public void actionPerformed(ActionEvent e) {
-		gameTimeStruct.updateTime(timeStarted);
 
-		if (inBattle) {
+		gData.updateTime(); // update the time played
+
+		if (gData.inBattle) {
 			if (encounter.playerPokemon.getStat(EnumsAndConstants.STATS.HP) <= 0) {
 				handleWhiteOut();
 			}
@@ -126,102 +93,88 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 			if (!encounter.playerTurn) {
 				encounter.enemyTurn();
 			}
-		} else if (!atTitle && !inIntro && !inNameScreen && !inMenu && !atContinueScreen) {
+		} else if (!gData.atTitle && !gData.inIntro && !gData.inNameScreen && !gData.inMenu && !gData.atContinueScreen) {
 			handleMovement();
 		}
-		repaint();
-		validate();
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Handles player movement on keyboard input
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	private void handleMovement() {
-		int playerCurX = gold.getCurrentX();
-		int playerCurY = gold.getCurrentY();
-		EnumsAndConstants.DIR playerDir = gold.getDir();
-		Pokemon playerPokemon1 = gold.getPokemon().size() > 0 ? (Pokemon) gold.getPokemon().get(0) : null;
+		// get all comparison variables up front
+		int playerCurX = gData.player.getCurrentX();
+		int playerCurY = gData.player.getCurrentY();
+		DIR playerDir = gData.player.getDir();
+		PokemonList playerPokemon = gData.player.getPokemon();
+		Coordinate playerPos = gData.player.pData.position;
 
-		if (!noClip) { // if noClip default true - else check for collisions
-			movable_up = ((playerCurY == 0)) ? false : true;
-			movable_left = ((playerCurX == 0)) ? false : true;
-			movable_right = ((playerCurX == map_width - 1)) ? false : true;
-			movable_down = ((playerCurY == map_height - 1)) ? false : true;
-
-			if ((playerCurY > 0) && (playerCurX >= 0)) {
-				movable_up = (tileMap[(playerCurY - 1)][playerCurX] instanceof ObstacleTile) ? false : true;
-			}
-			if ((playerCurY >= 0) && (playerCurX > 0)) {
-				movable_left = (tileMap[playerCurY][(playerCurX - 1)] instanceof ObstacleTile) ? false : true;
-			}
-			if ((playerCurY >= 0) && (playerCurX >= 0)) {
-				movable_down = (tileMap[(playerCurY + 1)][playerCurX] instanceof ObstacleTile) ? false : true;
-				movable_right = (tileMap[playerCurY][(playerCurX + 1)] instanceof ObstacleTile) ? false : true;
-			}
-		}
+		// check for collisions in each direction
+		moveable_dir[DIR.NORTH.ordinal()] = gData.tm.canMoveInDir(playerPos, DIR.NORTH, gData) || gData.noClip;
+		moveable_dir[DIR.WEST.ordinal()] = gData.tm.canMoveInDir(playerPos, DIR.WEST, gData) || gData.noClip;
+		moveable_dir[DIR.SOUTH.ordinal()] = gData.tm.canMoveInDir(playerPos, DIR.SOUTH, gData) || gData.noClip;
+		moveable_dir[DIR.EAST.ordinal()] = gData.tm.canMoveInDir(playerPos, DIR.EAST, gData) || gData.noClip;
 
 		if (walking) { // take care of walking animation graphics logic
 			movespritepixels += 1;
-			offsetY = ((playerDir == EnumsAndConstants.DIR.NORTH) && (movable_up)) ? offsetY + 2 : offsetY;
-			offsetY = ((playerDir == EnumsAndConstants.DIR.SOUTH) && (movable_down)) ? offsetY - 2 : offsetY;
-			offsetX = ((playerDir == EnumsAndConstants.DIR.WEST) && (movable_left)) ? offsetX + 2 : offsetX;
-			offsetX = ((playerDir == EnumsAndConstants.DIR.EAST) && (movable_right)) ? offsetX - 2 : offsetX;
+			gData.offsetY = ((playerDir == DIR.NORTH) && (moveable_dir[DIR.NORTH.ordinal()])) ? gData.offsetY + 2
+					: gData.offsetY;
+			gData.offsetY = ((playerDir == DIR.SOUTH) && (moveable_dir[DIR.SOUTH.ordinal()])) ? gData.offsetY - 2
+					: gData.offsetY;
+			gData.offsetX = ((playerDir == DIR.WEST) && (moveable_dir[DIR.WEST.ordinal()])) ? gData.offsetX + 2
+					: gData.offsetX;
+			gData.offsetX = ((playerDir == DIR.EAST) && (moveable_dir[DIR.EAST.ordinal()])) ? gData.offsetX - 2
+					: gData.offsetX;
 		}
 
-		Coordinate curPos = new Coordinate(playerCurX, playerCurY);
+		// check for scripted door teleport event tiles
 		Map<Coordinate, Coordinate> dict = EnumsAndConstants.TELEPORTS.getListofTeleports();
 		Set<Coordinate> k = dict.keySet();
 
 		boolean teleported = false;
 		for (Coordinate x : k) {
-			if (x.equals(curPos)) {
-				gold.setCurrentX(dict.get(x).getX());
-				gold.setCurrentY(dict.get(x).getY());
+			if (x.equals(playerPos)) {
+				gData.player.setLoc(dict.get(x));
 
-				start_coorX = (gold.getCurrentX() - x.getX()) * -1 * EnumsAndConstants.TILESIZE;
-				start_coorY = (gold.getCurrentY() - x.getY()) * -1 * EnumsAndConstants.TILESIZE;
+				gData.start_coorX = (gData.player.getCurrentX() - x.getX()) * -1 * EnumsAndConstants.TILESIZE;
+				gData.start_coorY = (gData.player.getCurrentY() - x.getY()) * -1 * EnumsAndConstants.TILESIZE;
 				teleported = true;
-				gold.setDir(EnumsAndConstants.DIR.NORTH);
+				gData.player.setDir(EnumsAndConstants.DIR.NORTH);
 			}
 		}
+
 		if (movespritepixels >= 16 && !teleported) {
 			movespritepixels = 0;
 			walking = false;
-			if ((playerDir == EnumsAndConstants.DIR.NORTH) && (movable_up)) {
-				gold.changeLoc(1, 1);
-			}
-			if ((playerDir == EnumsAndConstants.DIR.SOUTH) && (movable_down)) {
-				gold.changeLoc(0, 1);
-			}
-			if ((playerDir == EnumsAndConstants.DIR.WEST) && (movable_left)) {
-				gold.changeLoc(1, 0);
-			}
-			if ((playerDir == EnumsAndConstants.DIR.EAST) && (movable_right)) {
-				gold.changeLoc(0, 0);
+			if (moveable_dir[playerDir.ordinal()]) {
+				gData.player.move(playerDir);
 			}
 			rightFoot = (!rightFoot);
-			if ((playerPokemon1.statusEffect == 2) || (playerPokemon1.statusEffect == 3)) {
-				playerPokemon1.doDamageWithoutSound(1);
+			for (Pokemon p : playerPokemon) {
+				if ((p.statusEffect == 2) || (p.statusEffect == 3)) {
+					p.doDamageWithoutSound(1);
+				}
 			}
 		}
-		if (((playerDir == EnumsAndConstants.DIR.NORTH) && (movable_up))
-				|| ((playerDir == EnumsAndConstants.DIR.SOUTH) && (movable_down))
-				|| ((playerDir == EnumsAndConstants.DIR.WEST) && (movable_left))
-				|| ((playerDir == EnumsAndConstants.DIR.EAST) && (movable_right))) {
-			gold.changeSprite(movespritepixels, rightFoot);
+		if (moveable_dir[playerDir.ordinal()]) {
+			gData.player.changeSprite(movespritepixels, rightFoot);
 		}
-		for (int i = 0; i < EnumsAndConstants.npc_lib.npcs.size(); i++) {
-			NPC curNPC = EnumsAndConstants.npc_lib.npcs.get(i);
-			boolean doBattle = !noBattle;
-			if (curNPC.isTrainer()) {
-				if ((curNPC.getCurrentX() < map_height) && (curNPC.getCurrentY() < map_width) && (!inBattle)) {
+		for (NPC curNPC : EnumsAndConstants.npc_lib.npcs) {
+			boolean doBattle = !gData.noBattle;
+			if (curNPC.isTrainer() && !walking) {
+				if (!gData.inBattle) {
 					checkForTrainerEncounter(curNPC, doBattle);
 				} else {
 					movable = true;
 				}
 			}
-			if (playerWin) {
+			if (gData.playerWin) {
 				Utils.pauseBackgrondMusic();
-				Utils.playBackgroundMusic(gold.getCurLoc());
-				gold.beatenTrainers.add(encounter.enemy.getName());
-				playerWin = false;
+				Utils.playBackgroundMusic(gData.player.getCurLoc());
+				gData.player.beatenTrainers.add(encounter.enemy.getName());
+				gData.playerWin = false;
 				movable = true;
 			}
 		}
@@ -230,12 +183,12 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 	private void checkForTrainerEncounter(NPC curNPC, boolean doBattle) {
 		boolean NPC_SEES_PLAYER = playerInRange(curNPC);
 		if (NPC_SEES_PLAYER) {
-			for (int x = 0; x < gold.beatenTrainers.size(); x++) {
-				if (curNPC.getName().equals(gold.beatenTrainers.get(x))) {
+			for (int x = 0; x < gData.player.beatenTrainers.size(); x++) {
+				if (curNPC.getName().equals(gData.player.beatenTrainers.get(x))) {
 					doBattle = false;
 				}
 			}
-			if (doBattle && !inBattle && !inMenu) {
+			if (doBattle && !gData.inBattle && !gData.inMenu) {
 				NPCTHREAD.stop = true;
 				enemyTrainerAnimation(curNPC);
 				doTrainerBattle(curNPC);
@@ -244,8 +197,8 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 	}
 
 	private boolean playerInRange(NPC curNPC) {
-		int playerCurY = gold.getCurrentY();
-		int playerCurX = gold.getCurrentX();
+		int playerCurY = gData.player.getCurrentY();
+		int playerCurX = gData.player.getCurrentX();
 		int NPC_X = curNPC.getCurrentX();
 		int NPC_Y = curNPC.getCurrentY();
 		DIR NPC_DIR = curNPC.getDirection();
@@ -262,16 +215,14 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {}
-		int NPC_Y = curNPC.getCurrentY();
-		int NPC_X = curNPC.getCurrentX();
 		DIR NPC_DIR = curNPC.getDirection();
 
-		tileMap[NPC_Y][NPC_X] = EnumsAndConstants.TILE;
+		gData.tm.set(curNPC.nData.position, EnumsAndConstants.TILE);
 		if (NPC_DIR == DIR.NORTH) {
-			gold.setSpriteFacing(DIR.SOUTH);
-			while (curNPC.getCurrentY() > gold.getCurrentY() + 1) {
-				tileMap[curNPC.getCurrentY()][curNPC.getCurrentX()] = EnumsAndConstants.TILE;
-				curNPC.moveUp();
+			gData.player.setSpriteFacing(DIR.SOUTH);
+			while (curNPC.getCurrentY() > gData.player.getCurrentY() + 1) {
+				gData.tm.set(curNPC.nData.position, EnumsAndConstants.TILE);
+				curNPC.move(DIR.NORTH);
 				paintComponent(getGraphics());
 				try {
 					Thread.sleep(1000);
@@ -279,10 +230,10 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 			}
 		}
 		if (NPC_DIR == DIR.SOUTH) {
-			gold.setSpriteFacing(DIR.NORTH);
-			while (curNPC.getCurrentY() < gold.getCurrentY() - 1) {
-				tileMap[curNPC.getCurrentY()][curNPC.getCurrentX()] = EnumsAndConstants.TILE;
-				curNPC.moveDown();
+			gData.player.setSpriteFacing(DIR.NORTH);
+			while (curNPC.getCurrentY() < gData.player.getCurrentY() - 1) {
+				gData.tm.set(curNPC.nData.position, EnumsAndConstants.TILE);
+				curNPC.move(DIR.SOUTH);
 				paintComponent(getGraphics());
 				try {
 					Thread.sleep(500L);
@@ -290,10 +241,10 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 			}
 		}
 		if (NPC_DIR == DIR.EAST) {
-			gold.setSpriteFacing(DIR.WEST);
-			while (curNPC.getCurrentX() < gold.getCurrentX() - 1) {
-				tileMap[curNPC.getCurrentY()][curNPC.getCurrentX()] = EnumsAndConstants.TILE;
-				curNPC.moveRight();
+			gData.player.setSpriteFacing(DIR.WEST);
+			while (curNPC.getCurrentX() < gData.player.getCurrentX() - 1) {
+				gData.tm.set(curNPC.nData.position, EnumsAndConstants.TILE);
+				curNPC.move(DIR.EAST);
 				paintComponent(getGraphics());
 				try {
 					Thread.sleep(1000L);
@@ -301,10 +252,10 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 			}
 		}
 		if (NPC_DIR == DIR.WEST) {
-			gold.setSpriteFacing(DIR.EAST);
-			while (curNPC.getCurrentX() > gold.getCurrentX() + 1) {
-				tileMap[curNPC.getCurrentY()][curNPC.getCurrentX()] = EnumsAndConstants.TILE;
-				curNPC.moveLeft();
+			gData.player.setSpriteFacing(DIR.EAST);
+			while (curNPC.getCurrentX() > gData.player.getCurrentX() + 1) {
+				gData.tm.set(curNPC.nData.position, EnumsAndConstants.TILE);
+				curNPC.move(DIR.WEST);
 				paintComponent(getGraphics());
 				try {
 					Thread.sleep(1000L);
@@ -318,17 +269,17 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 		System.out.println("Wild Pokemon has fainted");
 		encounter.Win();
 		if (encounter.enemy.getName() != null) {
-			gold.beatenTrainers.add(encounter.enemy.getName());
+			gData.player.beatenTrainers.add(encounter.enemy.getName());
 		}
 	}
 
 	private void handleWhiteOut() {
 		System.out.println("Player Pokemon has fainted");
-		System.out.println(gold.getName() + " is all out of usable Pokemon!");
-		System.out.println(gold.getName() + " whited out.");
+		System.out.println(gData.player.getName() + " is all out of usable Pokemon!");
+		System.out.println(gData.player.getName() + " whited out.");
 		encounter.whiteOut();
-		gold.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(9));
-		gold.getPokemon().get(0).heal(-1);
+		gData.player.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(9));
+		gData.player.getPokemon().get(0).heal(-1);
 	}
 
 	public void paintComponent(Graphics g) {
@@ -342,19 +293,19 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 		movable = false;
 		Utils.playBackgroundMusic(MUSIC.TRAINER_BATTLE);
 		encounter = new BattleScene(this, curNPC);
-		inBattle = true;
+		gData.inBattle = true;
 		encounter.Start();
 	}
 
 	public void keyPressed(KeyEvent e) {
 		int keyCode = e.getKeyCode();
-		if (atTitle) {
+		if (gData.atTitle) {
 			if (keyCode == KeyEvent.VK_ENTER) {
-				atTitle = false;
+				gData.atTitle = false;
 				Utils.playBackgroundMusic(MUSIC.CONTINUE);
-				atContinueScreen = true;
+				gData.atContinueScreen = true;
 			}
-		} else if (inIntro) {
+		} else if (gData.inIntro) {
 			if (keyCode == KeyEvent.VK_X) {
 				nameScreen.removeChar();
 			}
@@ -362,25 +313,25 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 				introScreen.stage += 2;
 				if (introScreen.stage > EnumsAndConstants.npc_lib.getNPC("Professor Oak").getTextLength() - 1) {
 					Utils.playBackgroundMusic(MUSIC.NEWBARKTOWN);
-					inIntro = !inIntro;
+					gData.inIntro = !gData.inIntro;
 				}
 				if (introScreen.stage == 15) {
-					inNameScreen = true;
+					gData.inNameScreen = true;
 					nameScreen.setToBeNamed("PLAYER");
-					inIntro = false;
+					gData.inIntro = false;
 				}
 			}
-		} else if (inNameScreen) {
+		} else if (gData.inNameScreen) {
 			if (keyCode == KeyEvent.VK_X) {
 				nameScreen.removeChar();
 			}
 			if ((keyCode == KeyEvent.VK_Z)) {
 				if (nameScreen.rowSelection == 5) {
 					if (nameScreen.colSelection == 1 && nameScreen.getNameSelected().length() > 0) {
-						gold.setName(nameScreen.getNameSelected());
+						gData.player.setName(nameScreen.getNameSelected());
 						nameScreen.reset();
-						inNameScreen = false;
-						inIntro = true;
+						gData.inNameScreen = false;
+						gData.inIntro = true;
 					}
 					if (nameScreen.colSelection == 0) {
 						nameScreen.removeChar();
@@ -406,34 +357,34 @@ public class Main extends JPanel implements KeyListener, ActionListener {
 			} else if (keyCode == KeyEvent.VK_RIGHT && nameScreen.rowSelection < 5 && nameScreen.colSelection < 5) {
 				nameScreen.colSelection++;
 			}
-		} else if ((atContinueScreen) && (!atTitle)) {
+		} else if ((gData.atContinueScreen) && (!gData.atTitle)) {
 			if (keyCode == KeyEvent.VK_UP) {
 				Utils.playSelectSound();
-				if (menuSelection > 0) {
-					menuSelection -= 1;
+				if (gData.menuSelection > 0) {
+					gData.menuSelection -= 1;
 				}
 			} else if (keyCode == KeyEvent.VK_DOWN) {
 				Utils.playSelectSound();
-				if (menuSelection < 2) {
-					menuSelection += 1;
+				if (gData.menuSelection < 2) {
+					gData.menuSelection += 1;
 				}
 			}
 			if (keyCode == KeyEvent.VK_Z) {
 				Utils.playSelectSound();
-				if (menuSelection == 0) {
+				if (gData.menuSelection == 0) {
 					GameInitializer.startgame(true, this);
-				} else if (menuSelection == 1) {
+				} else if (gData.menuSelection == 1) {
 					GameInitializer.startgame(false, this);
 				}
 			}
 		} else {
-			if ((!inMenu) && (movable) && (!inBattle) && (!walking)) {
+			if ((!gData.inMenu) && (movable) && (!gData.inBattle) && (!walking)) {
 				eventHandler.handleWorldEvent(keyCode);
 			}
-			if (inMenu) {
+			if (gData.inMenu) {
 				eventHandler.handleMenuEvent(keyCode);
 			}
-			if (inBattle) {
+			if (gData.inBattle) {
 				eventHandler.handleBattleEvent(keyCode);
 			}
 		}

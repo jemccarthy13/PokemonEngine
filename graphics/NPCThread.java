@@ -1,5 +1,6 @@
 package graphics;
 
+import trainers.NPC;
 import utilities.EnumsAndConstants;
 import utilities.Utils;
 

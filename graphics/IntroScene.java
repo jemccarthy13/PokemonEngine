@@ -1,19 +1,19 @@
 package graphics;
 
 import utilities.EnumsAndConstants.MUSIC;
+import utilities.GameData;
 import utilities.Utils;
-import driver.Main;
 
 public class IntroScene {
-	Main game;
+	GameData gData;
 	public int stage = 1;
 
-	public IntroScene(Main theGame) {
-		game = theGame;
+	public IntroScene(GameData theGame) {
+		gData = theGame;
 	}
 
 	public void Start() {
-		game.inIntro = true;
+		gData.inIntro = true;
 		Utils.playBackgroundMusic(MUSIC.INTRO);
 	}
 }

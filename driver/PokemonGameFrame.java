@@ -9,8 +9,17 @@ public class PokemonGameFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Default initializer for game.
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public PokemonGameFrame() {
-		setTitle("Pokemon: Metallic Silver");
+		// Title changes with each game release (along with version)
+		setTitle("Pokemon: " + EnumsAndConstants.VERSION);
+
+		// No matter the version, the Icon is always located in the same place
+		// and these attributes of the game do not change.
 		setIconImage(EnumsAndConstants.sprite_lib.ICON);
 		Main pokemon = new Main();
 		pokemon.setFocusable(true);
@@ -23,6 +32,12 @@ public class PokemonGameFrame extends JFrame {
 		Utils.playBackgroundMusic(EnumsAndConstants.MUSIC.TITLE);
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// The absolute main starting point for the Pokemon game.
+	// Creates the JFrame that houses all game logic.
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public static void main(String[] args) {
 		PokemonGameFrame pf = new PokemonGameFrame();
 		pf.setVisible(true);

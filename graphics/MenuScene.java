@@ -1,9 +1,10 @@
 package graphics;
 
-import driver.Main;
+import trainers.NPC;
+import utilities.GameData;
 
 public class MenuScene {
-	private Main game;
+	private GameData game;
 
 	public boolean inMain = false;
 	public boolean inPokeDex = false;
@@ -26,8 +27,8 @@ public class MenuScene {
 	public NPC conversation;
 	public int stage = 0;
 
-	public MenuScene(Main theGame) {
-		this.game = theGame;
+	public MenuScene(GameData theGame) {
+		game = theGame;
 		this.currentSelectionMain = 2;
 		this.currentSelectionItemX = 0;
 		this.currentSelectionItemY = 0;

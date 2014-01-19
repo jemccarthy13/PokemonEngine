@@ -1,11 +1,10 @@
 package factories;
 
-import graphics.NPC;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import trainers.NPC;
 import trainers.TrainerData;
 import utilities.EnumsAndConstants.DIR;
 

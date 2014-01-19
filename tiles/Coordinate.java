@@ -7,21 +7,21 @@ public class Coordinate {
 	int y;
 
 	public Coordinate(int X, int Y) {
-		x = X;
-		y = Y;
+		this.x = X;
+		this.y = Y;
 	}
 
 	public Coordinate() {
-		x = 0;
-		y = 0;
+		this.x = 0;
+		this.y = 0;
 	}
 
 	public int getX() {
-		return x;
+		return this.x;
 	}
 
 	public int getY() {
-		return y;
+		return this.y;
 	}
 
 	public boolean equals(Coordinate another) {
@@ -33,22 +33,24 @@ public class Coordinate {
 	}
 
 	public void setX(int locX) {
-		x = locX;
+		this.x = locX;
 	}
 
 	public void setY(int locY) {
-		y = locY;
+		this.y = locY;
 	}
 
-	public void move(DIR dir) {
+	public Coordinate move(DIR dir) {
+		Coordinate nCoor = new Coordinate(x, y);
 		if (dir == DIR.NORTH) {
-			y -= 1;
+			nCoor.y -= 1;
 		} else if (dir == DIR.SOUTH) {
-			y += 1;
+			nCoor.y += 1;
 		} else if (dir == DIR.WEST) {
-			x -= 1;
+			nCoor.x -= 1;
 		} else if (dir == DIR.EAST) {
-			x += 1;
+			nCoor.x += 1;
 		}
+		return nCoor;
 	}
 }

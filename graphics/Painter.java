@@ -10,7 +10,11 @@ import java.awt.geom.AffineTransform;
 import javax.swing.JPanel;
 
 import pokedex.Pokemon;
+import pokedex.PokemonList;
+import trainers.NPC;
+import trainers.Player;
 import utilities.EnumsAndConstants;
+import utilities.GameData;
 import utilities.Utils;
 import driver.Main;
 
@@ -22,36 +26,36 @@ public class Painter extends JPanel {
 		Graphics2D g2 = (Graphics2D) g;
 		AffineTransform at = new AffineTransform();
 		g2.setTransform(at);
-		if (game.atTitle) {
+		if (game.gData.atTitle) {
 			paintTitle(g);
-		} else if (game.atContinueScreen) {
-			paintContinueScreen(g, game);
-		} else if (game.inIntro) {
-			paintIntroScreen(g, game);
-		} else if (game.inNameScreen) {
+		} else if (game.gData.atContinueScreen) {
+			paintContinueScreen(g, game.gData);
+		} else if (game.gData.inIntro) {
+			paintIntroScreen(g, game.introScreen);
+		} else if (game.gData.inNameScreen) {
 			paintNameInputScreen(g, game);
 		} else if (game.menuScreen.inPokeDex) {
 			paintPokedexScreen(g);
 		} else if (game.menuScreen.inPokemon) {
-			paintPartyScreen(g, game);
+			paintPartyScreen(g, game.gData.player);
 		} else if (game.menuScreen.inBag) {
 			paintBagScreen(g);
 		} else if (game.menuScreen.inPokeGear) {
-			paintPokegearScreen(g, game);
+			paintPokegearScreen(g, game.menuScreen);
 		} else if (game.menuScreen.inTrainerCard) {
-			paintTrainerCard(g, game);
+			paintTrainerCard(g, game.gData);
 		} else if (game.menuScreen.inOption) {
-			paintOptionScreen(g, game);
-		} else if (game.inBattle) {
+			paintOptionScreen(g, game.menuScreen);
+		} else if (game.gData.inBattle) {
 			paintBattle(g, game);
-		} else if (!game.inBattle) {
-			paintWorld(g, game, g2, at);
+		} else if (!game.gData.inBattle) {
+			paintWorld(g, game.gData, g2, at);
 		}
 		if (game.menuScreen.inMain) {
-			paintPauseMenu(g, game);
+			paintPauseMenu(g, game.menuScreen);
 		}
 		if (game.menuScreen.inConversation) {
-			paintConversation(g, game);
+			paintConversation(g, game.menuScreen);
 		}
 		if (game.menuScreen.inSave) {
 			paintSaveMenu(g, game);
@@ -117,13 +121,13 @@ public class Painter extends JPanel {
 			g.drawString("ITEM", 290, 290);
 			g.drawString("RUN", 400, 290);
 			if ((game.encounter.currentSelectionMainX == 0) && (game.encounter.currentSelectionMainY == 0)) {
-				g.drawImage(game.encounter.arrow, 274, 240, null);
+				g.drawImage(EnumsAndConstants.sprite_lib.ARROW, 274, 240, null);
 			} else if ((game.encounter.currentSelectionMainX == 0) && (game.encounter.currentSelectionMainY == 1)) {
-				g.drawImage(game.encounter.arrow, 274, 270, null);
+				g.drawImage(EnumsAndConstants.sprite_lib.ARROW, 274, 270, null);
 			} else if ((game.encounter.currentSelectionMainX == 1) && (game.encounter.currentSelectionMainY == 0)) {
-				g.drawImage(game.encounter.arrow, 384, 240, null);
+				g.drawImage(EnumsAndConstants.sprite_lib.ARROW, 384, 240, null);
 			} else if ((game.encounter.currentSelectionMainX == 1) && (game.encounter.currentSelectionMainY == 1)) {
-				g.drawImage(game.encounter.arrow, 384, 270, null);
+				g.drawImage(EnumsAndConstants.sprite_lib.ARROW, 384, 270, null);
 			}
 		}
 		if (game.encounter.inFight) {
@@ -142,13 +146,13 @@ public class Painter extends JPanel {
 			}
 
 			if ((game.encounter.currentSelectionFightX == 0) && (game.encounter.currentSelectionFightY == 0)) {
-				g.drawImage(game.encounter.arrow, 184, 240, null);
+				g.drawImage(EnumsAndConstants.sprite_lib.ARROW, 184, 240, null);
 			} else if ((game.encounter.currentSelectionFightX == 0) && (game.encounter.currentSelectionFightY == 1)) {
-				g.drawImage(game.encounter.arrow, 184, 270, null);
+				g.drawImage(EnumsAndConstants.sprite_lib.ARROW, 184, 270, null);
 			} else if ((game.encounter.currentSelectionFightX == 1) && (game.encounter.currentSelectionFightY == 0)) {
-				g.drawImage(game.encounter.arrow, 329, 240, null);
+				g.drawImage(EnumsAndConstants.sprite_lib.ARROW, 329, 240, null);
 			} else if ((game.encounter.currentSelectionFightX == 1) && (game.encounter.currentSelectionFightY == 1)) {
-				g.drawImage(game.encounter.arrow, 329, 270, null);
+				g.drawImage(EnumsAndConstants.sprite_lib.ARROW, 329, 270, null);
 			}
 		}
 
@@ -184,30 +188,29 @@ public class Painter extends JPanel {
 		g.drawString(((Integer) enemyPokemon.getMaxStat(EnumsAndConstants.STATS.HP)).toString(), 112, 45);
 	}
 
-	private void paintIntroScreen(Graphics g, Main game) {
+	private void paintIntroScreen(Graphics g, IntroScene intro) {
 		g.setFont(EnumsAndConstants.POKEFONT);
 		g.drawImage(EnumsAndConstants.sprite_lib.BEGINNING, 0, 0, null);
 		g.drawImage(EnumsAndConstants.sprite_lib.getSprites("Professor Oak").get(0), 150, 20, null);
-		if (EnumsAndConstants.npc_lib.getNPC("Professor Oak").getText().size() > game.introScreen.stage) {
-			Utils.messageBox(g,
-					EnumsAndConstants.npc_lib.getNPC("Professor Oak").getText().get(game.introScreen.stage - 1),
-					EnumsAndConstants.npc_lib.getNPC("Professor Oak").getText().get(game.introScreen.stage));
+		if (EnumsAndConstants.npc_lib.getNPC("Professor Oak").getText().size() > intro.stage) {
+			Utils.messageBox(g, EnumsAndConstants.npc_lib.getNPC("Professor Oak").getText().get(intro.stage - 1),
+					EnumsAndConstants.npc_lib.getNPC("Professor Oak").getText().get(intro.stage));
 		}
 	}
 
-	private void paintOptionScreen(Graphics g, Main game) {
+	private void paintOptionScreen(Graphics g, MenuScene menu) {
 		g.drawImage(EnumsAndConstants.sprite_lib.OPTION, 0, 0, null);
-		g.drawImage(EnumsAndConstants.sprite_lib.ARROW, 22, 85 + 32 * game.menuScreen.currentSelectionOption, null);
+		g.drawImage(EnumsAndConstants.sprite_lib.ARROW, 22, 85 + 32 * menu.currentSelectionOption, null);
 	}
 
 	private void paintSaveMenu(Graphics g, Main game) {
 		g.setFont(EnumsAndConstants.POKEFONT);
 		g.setColor(Color.BLACK);
 		g.drawImage(EnumsAndConstants.sprite_lib.SAVE, 0, 0, null);
-		g.drawString(game.gold.getName(), 100, 68);
-		g.drawString(((Integer) game.gold.getBadges()).toString(), 100, 101);
+		g.drawString(game.gData.player.getName(), 100, 68);
+		g.drawString(((Integer) game.gData.player.getBadges()).toString(), 100, 101);
 		g.drawString("1", 110, 134);
-		g.drawString(Utils.formatTime(game.gameTimeStruct), 76, 166);
+		g.drawString(Utils.formatTime(game.gData.gameTimeStruct), 76, 166);
 		if (game.menuScreen.currentSelectionSave == 0) {
 			g.drawImage(EnumsAndConstants.sprite_lib.ARROW, 394, 148, null);
 		} else if (game.menuScreen.currentSelectionSave == 1) {
@@ -224,31 +227,31 @@ public class Painter extends JPanel {
 		return retStr;
 	}
 
-	private void paintTrainerCard(Graphics g, Main game) {
+	private void paintTrainerCard(Graphics g, GameData gameData) {
 		g.setFont(EnumsAndConstants.POKEFONT);
 		g.setColor(Color.BLACK);
 		g.drawImage(EnumsAndConstants.sprite_lib.TRAINERCARD, 0, 0, null);
 		g.drawImage(EnumsAndConstants.sprite_lib.TRAINER_FOR_CARD, 320, 100, null);
 
-		g.drawString("ID:  " + game.gold.getID(), 295, 54);
-		g.drawString("Name:" + getPadding("Name:") + game.gold.getName(), 64, 93);
-		g.drawString("Money:" + getPadding("Money:") + "$" + game.gold.getMoney(), 64, 150);
-		g.drawString("Pokedex:" + getPadding("Pokedex:") + game.gold.getPokemonOwned(), 64, 183);
-		g.drawString("Time:  " + getPadding("Time:") + Utils.formatTime(game.gameTimeStruct), 64, 213);
+		g.drawString("ID:  " + gameData.player.getID(), 295, 54);
+		g.drawString("Name:" + getPadding("Name:") + gameData.player.getName(), 64, 93);
+		g.drawString("Money:" + getPadding("Money:") + "$" + gameData.player.getMoney(), 64, 150);
+		g.drawString("Pokedex:" + getPadding("Pokedex:") + gameData.player.getPokemonOwned(), 64, 183);
+		g.drawString("Time:  " + getPadding("Time:") + Utils.formatTime(gameData.gameTimeStruct), 64, 213);
 		// @TODO add badges printing
 	}
 
-	private void paintPokegearScreen(Graphics g, Main game) {
+	private void paintPokegearScreen(Graphics g, MenuScene menu) {
 		g.setFont(EnumsAndConstants.POKEFONT);
 		g.setColor(Color.BLACK);
 		g.drawImage(EnumsAndConstants.sprite_lib.POKEGEAR, 0, 0, null);
-		if (game.menuScreen.currentSelectionPokeGear == 0) {
+		if (menu.currentSelectionPokeGear == 0) {
 			g.drawImage(EnumsAndConstants.sprite_lib.POKEGEARMAP, 0, 0, null);
-		} else if (game.menuScreen.currentSelectionPokeGear == 1) {
+		} else if (menu.currentSelectionPokeGear == 1) {
 			g.drawImage(EnumsAndConstants.sprite_lib.POKEGEARRADIO, 0, 0, null);
-		} else if (game.menuScreen.currentSelectionPokeGear == 2) {
+		} else if (menu.currentSelectionPokeGear == 2) {
 			g.drawImage(EnumsAndConstants.sprite_lib.POKEGEARPHONE, 0, 0, null);
-		} else if (game.menuScreen.currentSelectionPokeGear == 3) {
+		} else if (menu.currentSelectionPokeGear == 3) {
 			g.drawImage(EnumsAndConstants.sprite_lib.POKEGEAREXIT, 0, 0, null);
 		}
 	}
@@ -259,7 +262,7 @@ public class Painter extends JPanel {
 		g.drawImage(EnumsAndConstants.sprite_lib.BAGSCREEN, 0, 0, null);
 	}
 
-	private void paintPartyScreen(Graphics g, Main game) {
+	private void paintPartyScreen(Graphics g, Player p) {
 		g.setFont(EnumsAndConstants.POKEFONT);
 		g.setColor(Color.BLACK);
 		g.drawImage(EnumsAndConstants.sprite_lib.POKESEL, 0, 0, null);
@@ -269,41 +272,44 @@ public class Painter extends JPanel {
 		g.drawImage(EnumsAndConstants.sprite_lib.PARTYBOX, 190, 120, null);
 		g.drawImage(EnumsAndConstants.sprite_lib.PARTYBOX, 190, 170, null);
 		g.drawImage(EnumsAndConstants.sprite_lib.PARTYBOX, 190, 220, null);
-		if (game.gold.getPokemon().size() == 2) {
+		if (p.getPokemon().size() == 2) {
 			g.drawImage(EnumsAndConstants.sprite_lib.PARTYBOX, 190, 20, null);
 		}
-		g.drawImage((game.gold.getPokemon().get(0)).getIcon(), 75, 40, null);
-		g.drawString((game.gold.getPokemon().get(0)).getName(), 65, 130);
+		PokemonList playerPokemon = p.getPokemon();
+		if (playerPokemon.size() > 0) {
+			g.drawImage((playerPokemon.get(0)).getIcon(), 75, 40, null);
+			g.drawString((playerPokemon.get(0)).getName(), 65, 130);
+		}
 	}
 
-	private void paintConversation(Graphics g, Main game) {
-		Utils.messageBox(g, game.menuScreen.conversation.getText(game.menuScreen.stage));
+	private void paintConversation(Graphics g, MenuScene menu) {
+		Utils.messageBox(g, menu.conversation.getText(menu.stage));
 	}
 
 	private void paintPokedexScreen(Graphics g) {
 		g.drawImage(EnumsAndConstants.sprite_lib.POKEDEX, 0, 0, null);
 	}
 
-	private void paintPauseMenu(Graphics g, Main game) {
+	private void paintPauseMenu(Graphics g, MenuScene menu) {
 		g.drawImage(EnumsAndConstants.sprite_lib.MAIN_MENU, 0, 0, null);
-		g.drawImage(EnumsAndConstants.sprite_lib.ARROW, 335, 20 + 32 * game.menuScreen.currentSelectionMain, null);
+		g.drawImage(EnumsAndConstants.sprite_lib.ARROW, 335, 20 + 32 * menu.currentSelectionMain, null);
 	}
 
-	private void paintWorld(Graphics g, Main game, Graphics2D g2, AffineTransform at) {
+	private void paintWorld(Graphics g, GameData gameData, Graphics2D g2, AffineTransform at) {
 		g.setFont(EnumsAndConstants.POKEFONT);
 		g.setColor(Color.BLACK);
 		g2.setClip(new Rectangle(-16, -42, 704, 438));
 
-		g2.translate(game.offsetX - 32, game.offsetY - 64);
+		g2.translate(gameData.offsetX - 32, gameData.offsetY - 64);
 
 		for (int layer = 1; layer < 3; layer++) {
-			int x_coor = game.start_coorX;
-			int y_coor = game.start_coorY;
+			int x_coor = gameData.start_coorX;
+			int y_coor = gameData.start_coorY;
 
 			int tile_number = 0;
-			for (int y = 1; y <= game.map_height; y++) {
-				for (int x = 1; x <= game.map_width; x++) {
-					int tilePicNum = game.currentMap[layer][tile_number];
+			for (int y = 1; y <= gameData.map_height; y++) {
+				for (int x = 1; x <= gameData.map_width; x++) {
+					int tilePicNum = gameData.currentMap[layer][tile_number];
 
 					if (!(layer == 2 && tilePicNum == 0)) {
 						g.drawImage((Image) EnumsAndConstants.tileset.get(tilePicNum), x_coor, y_coor, null);
@@ -311,29 +317,30 @@ public class Painter extends JPanel {
 					x_coor += EnumsAndConstants.TILESIZE;
 					tile_number++;
 				}
-				x_coor = game.start_coorX;
+				x_coor = gameData.start_coorX;
 				y_coor += EnumsAndConstants.TILESIZE;
 			}
 		}
 
 		for (int i = 0; i < EnumsAndConstants.npc_lib.npcs.size(); i++) {
 			NPC curNPC = EnumsAndConstants.npc_lib.npcs.get(i);
-			g.drawImage(curNPC.getSprite(), curNPC.getCurrentX() * 32 + game.start_coorX, curNPC.getCurrentY() * 32
-					+ game.start_coorY - 10, null);
-			game.tileMap[curNPC.getCurrentY()][curNPC.getCurrentX()] = EnumsAndConstants.OBSTACLE;
+			g.drawImage(curNPC.getSprite(), curNPC.getCurrentX() * 32 + gameData.start_coorX, curNPC.getCurrentY() * 32
+					+ gameData.start_coorY - 10, null);
+
+			gameData.tm.set(curNPC.nData.position, EnumsAndConstants.OBSTACLE);
 		}
-		g2.translate(-game.offsetX, -game.offsetY);
+		g2.translate(-gameData.offsetX, -gameData.offsetY);
 
 		g2.setTransform(at);
-		g.drawImage(game.gold.getSprite(), 224, 118, null);
+		g.drawImage(gameData.player.getSprite(), 224, 118, null);
 		g.setFont(EnumsAndConstants.POKEFONT);
 		g.setColor(Color.WHITE);
-		g.drawString(game.gold.getCurrentX() + "," + game.gold.getCurrentY(), 10, 25);
+		g.drawString(gameData.player.getCurrentX() + "," + gameData.player.getCurrentY(), 10, 25);
 	}
 
-	private void paintContinueScreen(Graphics g, Main game) {
+	private void paintContinueScreen(Graphics g, GameData gameData) {
 		g.drawImage(EnumsAndConstants.sprite_lib.CONTINUESCREEN, 0, 0, null);
-		g.drawImage(EnumsAndConstants.sprite_lib.ARROW, 13, 20 + 32 * game.menuSelection, null);
+		g.drawImage(EnumsAndConstants.sprite_lib.ARROW, 13, 20 + 32 * gameData.menuSelection, null);
 	}
 
 	private void paintTitle(Graphics g) {

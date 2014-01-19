@@ -1,12 +1,11 @@
 package driver;
 
-import graphics.NPC;
-
 import java.awt.event.KeyEvent;
 import java.util.Random;
 
 import pokedex.Move;
 import pokedex.Pokemon;
+import trainers.NPC;
 import utilities.EnumsAndConstants;
 import utilities.EnumsAndConstants.DIR;
 import utilities.Utils;
@@ -283,7 +282,7 @@ public class EventHandler {
 			if (keyCode == KeyEvent.VK_Z) {
 				if (game.menuScreen.currentSelectionSave == 0) {
 					// Utils.saveGame(game.gold);
-					System.out.println(game.gold.getName() + "'s Game has been saved! (Not really though)");
+					System.out.println(game.gData.player.getName() + "'s Game has been saved! (Not really though)");
 				} else {
 					game.menuScreen.inSave = false;
 					game.menuScreen.inMain = true;
@@ -320,49 +319,49 @@ public class EventHandler {
 
 	void handleWorldEvent(int keyCode) {
 		if (keyCode == KeyEvent.VK_UP) {
-			game.gold.setDir(DIR.NORTH);
-			if (game.movable_up) {
+			game.gData.player.setDir(DIR.NORTH);
+			if (game.moveable_dir[game.gData.player.getDir().ordinal()]) {
 				game.walking = true;
 			} else {
-				game.gold.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(9));
+				game.gData.player.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(9));
 				Utils.playCollisionSound();
 			}
 		} else if (keyCode == KeyEvent.VK_DOWN) {
-			game.gold.setDir(DIR.SOUTH);
-			if (game.movable_down) {
+			game.gData.player.setDir(DIR.SOUTH);
+			if (game.moveable_dir[game.gData.player.getDir().ordinal()]) {
 				game.walking = true;
 			} else {
-				game.gold.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(0));
+				game.gData.player.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(0));
 				Utils.playCollisionSound();
 			}
 		} else if (keyCode == KeyEvent.VK_LEFT) {
-			game.gold.setDir(DIR.WEST);
-			if (game.movable_left) {
+			game.gData.player.setDir(DIR.WEST);
+			if (game.moveable_dir[game.gData.player.getDir().ordinal()]) {
 				game.walking = true;
 			} else {
-				game.gold.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(3));
+				game.gData.player.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(3));
 				Utils.playCollisionSound();
 			}
 		} else if (keyCode == KeyEvent.VK_RIGHT) {
-			game.gold.setDir(DIR.EAST);
-			if (game.movable_right) {
+			game.gData.player.setDir(DIR.EAST);
+			if (game.moveable_dir[game.gData.player.getDir().ordinal()]) {
 				game.walking = true;
 			} else {
-				game.gold.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(6));
+				game.gData.player.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(6));
 				Utils.playCollisionSound();
 			}
 		} else if (keyCode == KeyEvent.VK_ENTER) {
 			Utils.playMenuSound();
 			game.menuScreen.inMain = true;
-			game.inMenu = true;
+			game.gData.inMenu = true;
 		}
 		if (keyCode == KeyEvent.VK_Z) {
 			System.out.println("Action Button");
 			Utils.playSelectSound();
 			NPC borderNPC = null;
-			DIR playerDir = game.gold.getDir();
-			int playerCurX = game.gold.getCurrentX();
-			int playerCurY = game.gold.getCurrentY();
+			DIR playerDir = game.gData.player.getDir();
+			int playerCurX = game.gData.player.getCurrentX();
+			int playerCurY = game.gData.player.getCurrentY();
 			for (int i = 0; i < EnumsAndConstants.npc_lib.npcs.size(); i++) {
 				NPC curNPC = EnumsAndConstants.npc_lib.npcs.get(i);
 				int NPC_X = curNPC.getCurrentX();
@@ -390,12 +389,11 @@ public class EventHandler {
 				}
 			}
 			if (borderNPC != null) {
-				game.inMenu = true;
+				game.gData.inMenu = true;
 				game.menuScreen.Message(borderNPC);
 			}
 		} else if (keyCode == KeyEvent.VK_X) {
 			System.out.println("Cancel Button");
 		}
 	}
-
 }

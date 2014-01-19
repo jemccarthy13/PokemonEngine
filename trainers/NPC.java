@@ -1,19 +1,15 @@
-package graphics;
+package trainers;
 
 import java.awt.Image;
 import java.util.ArrayList;
 
 import pokedex.PokemonList;
-import trainers.Player;
-import trainers.TrainerData;
 import utilities.EnumsAndConstants;
 import utilities.EnumsAndConstants.DIR;
 
 public class NPC {
 	private static final long serialVersionUID = 1L;
-	private EnumsAndConstants.DIR dir;
 	public TrainerData nData;
-	public Image sprite;
 
 	public NPC(TrainerData npcData) {
 		nData = npcData;
@@ -21,11 +17,11 @@ public class NPC {
 	}
 
 	public void setDirection(EnumsAndConstants.DIR dir) {
-		this.dir = dir;
+		nData.dir = dir;
 	}
 
-	public EnumsAndConstants.DIR getDirection() {
-		return this.dir;
+	public DIR getDirection() {
+		return nData.dir;
 	}
 
 	public PokemonList getPokemon() {
@@ -40,32 +36,16 @@ public class NPC {
 		return nData.position.getY();
 	}
 
-	public void moveUp() {
-		this.nData.position.move(DIR.NORTH);
-	}
-
-	public void moveDown() {
-		this.nData.position.move(DIR.SOUTH);
-	}
-
-	public void moveLeft() {
-		this.nData.position.move(DIR.WEST);
-	}
-
-	public void moveRight() {
-		this.nData.position.move(DIR.EAST);
-	}
-
 	public String getName() {
 		return this.nData.name;
 	}
 
 	public Image getSprite() {
-		return sprite;
+		return nData.sprite;
 	}
 
 	public void setSprite(Image i) {
-		sprite = i;
+		nData.sprite = i;
 	}
 
 	public boolean getTalkable(Player other) {
@@ -124,15 +104,8 @@ public class NPC {
 		return this.nData.stationary;
 	}
 
-	public void changeLoc(DIR dir) {
-		if (dir == DIR.EAST)
-			nData.position.setX(getCurrentX() + 1);
-		else if (dir == DIR.SOUTH)
-			nData.position.setY(getCurrentY() + 1);
-		else if (dir == DIR.WEST)
-			nData.position.setX(getCurrentX() - 1);
-		else if (dir == DIR.EAST)
-			nData.position.setY(getCurrentY() - 1);
+	public void move(DIR dir) {
+		nData.position = nData.position.move(dir);
 	}
 
 	public String getText(int stage) {

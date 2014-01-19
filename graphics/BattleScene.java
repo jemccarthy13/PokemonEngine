@@ -7,6 +7,7 @@ import java.util.Random;
 import pokedex.Move;
 import pokedex.Pokemon;
 import pokedex.PokemonList;
+import trainers.NPC;
 import utilities.EnumsAndConstants;
 import utilities.Utils;
 import driver.Main;
@@ -35,8 +36,6 @@ public class BattleScene {
 			BattleScene.class.getResource("/graphics_lib/Pictures/Battle.png"));
 	Image battleFightBG = Toolkit.getDefaultToolkit().getImage(
 			BattleScene.class.getResource("/graphics_lib/Pictures/Battle2.png"));
-	Image arrow = Toolkit.getDefaultToolkit().getImage(
-			BattleScene.class.getResource("/graphics_lib/Pictures/Arrow.png"));
 	Image statusPAR = Toolkit.getDefaultToolkit().getImage(
 			BattleScene.class.getResource("/graphics_lib/Pictures/StatusPAR.png"));
 	Image statusBRN = Toolkit.getDefaultToolkit().getImage(
@@ -50,7 +49,7 @@ public class BattleScene {
 
 	public BattleScene(Main pkmn, NPC curNPC) {
 		this.game = pkmn;
-		this.playerPokemon = ((Pokemon) pkmn.gold.getPokemon().get(0));
+		this.playerPokemon = ((Pokemon) pkmn.gData.player.getPokemon().get(0));
 		playerPokemon.setParticipated();
 		this.enemyPokemon = curNPC.getPokemon();
 		this.enemy = curNPC;
@@ -94,8 +93,8 @@ public class BattleScene {
 
 	public void giveEXP() {
 		int s = 0;
-		for (int x = 0; x < this.game.gold.getPokemon().size(); x++) {
-			if (((Pokemon) this.game.gold.getPokemon().get(x)).hasParticipated()) {
+		for (int x = 0; x < this.game.gData.player.getPokemon().size(); x++) {
+			if (((Pokemon) this.game.gData.player.getPokemon().get(x)).hasParticipated()) {
 				s++;
 			}
 		}
@@ -108,7 +107,7 @@ public class BattleScene {
 			this.inRun = true;
 			((Pokemon) this.enemyPokemon.get(0)).statusEffect = 0;
 
-			this.game.inBattle = false;
+			this.game.gData.inBattle = false;
 			System.out.println("Got away safely!");
 		}
 	}
@@ -119,8 +118,8 @@ public class BattleScene {
 		this.inRun = true;
 		((Pokemon) this.enemyPokemon.get(0)).statusEffect = 0;
 
-		this.game.inBattle = false;
-		this.game.playerWin = true;
+		this.game.gData.inBattle = false;
+		this.game.gData.playerWin = true;
 	}
 
 	public void Lose() {
@@ -128,7 +127,7 @@ public class BattleScene {
 		this.inRun = true;
 		((Pokemon) this.enemyPokemon.get(0)).statusEffect = 0;
 
-		this.game.inBattle = false;
+		this.game.gData.inBattle = false;
 	}
 
 	public void whiteOut() {

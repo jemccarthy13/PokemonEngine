@@ -46,7 +46,8 @@ public class EnumsAndConstants {
 	public static final PokemonFactory pokemon_generator = new PokemonFactory();
 	public static final SpriteFactory sprite_lib = new SpriteFactory();
 	public static final NPCFactory npc_lib = new NPCFactory();
-
+	public static final TeleportFactory TELEPORTS = new TeleportFactory();
+	public static final MessageBox msg_box = new MessageBox();
 	public static final Font POKEFONT = new Font("pokesl1", 0, 18);
 	public static final ObstacleTile OBSTACLE = new ObstacleTile();
 	public static final NormalTile TILE = new NormalTile();
@@ -61,7 +62,7 @@ public class EnumsAndConstants {
 	public static final int PLAYERSPEED_RUN = 90;
 	public static final int PLAYERSPEED_BIKE = 95;
 
-	public static TeleportFactory TELEPORTS = new TeleportFactory();
+	public static final String VERSION = "Metallic Silver";
 
 	public static final TileSet tileset = new TileSet();
 	public static final int[] impassible = { 0, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 18, 20, 21, 22, 23, 24, 25,
@@ -79,13 +80,12 @@ public class EnumsAndConstants {
 	public static final String MENU_SOUND = "MENU";
 	public static final String DAMAGE_SOUND = "DAMAGE";
 	public static MidiPlayer BACKGROUND_MUSIC = null;
-	public static MessageBox msg_box = new MessageBox();
 
 	public static void initializeJukeBox() {
-		col.loadClip("/audio_lib/SE/Select.wav", "SELECT", 1);
-		col.loadClip("/audio_lib/SE/Collision.wav", "COLLISION", 1);
-		col.loadClip("/audio_lib/SE/Menu.wav", "MENU", 1);
-		col.loadClip("/audio_lib/SE/Damage.wav", "DAMAGE", 1);
+		col.loadClip(SOUNDEFFECTPATH + "Select.wav", SELECT_SOUND, 1);
+		col.loadClip(SOUNDEFFECTPATH + "Collision.wav", COLLISION_SOUND, 1);
+		col.loadClip(SOUNDEFFECTPATH + "Menu.wav", MENU_SOUND, 1);
+		col.loadClip(SOUNDEFFECTPATH + "Damage.wav", DAMAGE_SOUND, 1);
 	}
 
 	public static void initializeMidiPlayer() {

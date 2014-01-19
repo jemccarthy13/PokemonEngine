@@ -1,7 +1,5 @@
 package trainers;
 
-import graphics.NPC;
-
 import java.awt.Image;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,7 +14,7 @@ import utilities.EnumsAndConstants.DIR;
 public class Player implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	TrainerData pData = new TrainerData();
+	public TrainerData pData = new TrainerData();
 
 	NPC rival;
 	public ArrayList<String> beatenTrainers = new ArrayList<String>();
@@ -39,6 +37,10 @@ public class Player implements Serializable {
 		pData.money = 2000;
 		pData.sprites = EnumsAndConstants.sprite_lib.getSprites("PLAYER");
 		this.setSpriteFacing(DIR.SOUTH);
+	}
+
+	public void move(DIR dir) {
+		pData.position = pData.position.move(dir);
 	}
 
 	public Location getCurLoc() {
@@ -109,25 +111,6 @@ public class Player implements Serializable {
 		return pData.dir;
 	}
 
-	public void changeLoc(int dir, int loc) {
-		if (dir == 0) {
-			if (loc == 0) {
-				setCurrentX(getCurrentX() + 1);
-			}
-			if (loc == 1) {
-				setCurrentY(getCurrentY() + 1);
-			}
-		}
-		if (dir == 1) {
-			if (loc == 0) {
-				setCurrentX(getCurrentX() - 1);
-			}
-			if (loc == 1) {
-				setCurrentY(getCurrentY() - 1);
-			}
-		}
-	}
-
 	public int getCurrentX() {
 		return pData.position.getX();
 	}
@@ -136,13 +119,11 @@ public class Player implements Serializable {
 		return pData.position.getY();
 	}
 
-	public void setCurrentX(int x) {
-		pData.position.setX(x);
-	}
-
-	public void setCurrentY(int y) {
-		pData.position.setY(y);
-	}
+	/*
+	 * public void setCurrentX(int x) { pData.position.setX(x); }
+	 * 
+	 * public void setCurrentY(int y) { pData.position.setY(y); }
+	 */
 
 	public void setLoc(Coordinate c) {
 		pData.position = c;
