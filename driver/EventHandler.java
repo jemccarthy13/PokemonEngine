@@ -10,30 +10,46 @@ import utilities.EnumsAndConstants;
 import utilities.EnumsAndConstants.DIR;
 import utilities.Utils;
 
+// ////////////////////////////////////////////////////////////////////////
+//
+// EventHandler handles all input events, menu changes, logic switching 
+// and battle actions
+//
+// TODO - implement Bag, pokegear, party, save, options, and pokedex events
+//
+// ////////////////////////////////////////////////////////////////////////
 public class EventHandler {
 
-	Main game;
+	Game game;
 
-	public EventHandler(Main theGame) {
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Default constructor for EventHandler. Makes a "pointer" to the Game
+	// so it has all the logic references
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public EventHandler(Game theGame) {
 		game = theGame;
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// handleBattleEvent handles a battle event - gets choices, deals damage
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	void handleBattleEvent(int keyCode) {
 		if (game.encounter.inFight) {
+			// at move selection menu
 			Pokemon playerPokemon = game.encounter.playerPokemon;
 			if (game.encounter.playerTurn) {
 				if (keyCode == KeyEvent.VK_UP) {
 					game.encounter.currentSelectionFightY = 0;
-					Utils.playSelectSound();
 				} else if (keyCode == KeyEvent.VK_DOWN) {
 					game.encounter.currentSelectionFightY = 1;
-					Utils.playSelectSound();
 				} else if (keyCode == KeyEvent.VK_LEFT) {
 					game.encounter.currentSelectionFightX = 0;
-					Utils.playSelectSound();
 				} else if (keyCode == KeyEvent.VK_RIGHT) {
 					game.encounter.currentSelectionFightX = 1;
-					Utils.playSelectSound();
 				} else if (keyCode == KeyEvent.VK_Z) {
 
 					checkIfThawed(playerPokemon);
@@ -54,30 +70,27 @@ public class EventHandler {
 						System.out.println(playerPokemon.getName() + " has been hurt by its poison");
 					}
 					resetBattleVars();
-				} else {
-					System.out.println("Can't Attack");
+					game.encounter.playerTurn = false;
 				}
 				Utils.playSelectSound();
 			}
 			if (keyCode == KeyEvent.VK_X) {
+				// cancel == exit to main battle menu
 				resetBattleVars();
 				Utils.playSelectSound();
 			}
 		}
 		if (game.encounter.inMain) {
+			// at main battle menu
 			if (game.encounter.playerTurn) {
 				if (keyCode == KeyEvent.VK_UP) {
 					game.encounter.currentSelectionMainY = 0;
-					Utils.playSelectSound();
 				} else if (keyCode == KeyEvent.VK_DOWN) {
 					game.encounter.currentSelectionMainY = 1;
-					Utils.playSelectSound();
 				} else if (keyCode == KeyEvent.VK_LEFT) {
 					game.encounter.currentSelectionMainX = 0;
-					Utils.playSelectSound();
 				} else if (keyCode == KeyEvent.VK_RIGHT) {
 					game.encounter.currentSelectionMainX = 1;
-					Utils.playSelectSound();
 				}
 				if (keyCode == KeyEvent.VK_Z) {
 					if ((game.encounter.currentSelectionMainX == 0) && (game.encounter.currentSelectionMainY == 0)) {
@@ -92,22 +105,61 @@ public class EventHandler {
 					if ((game.encounter.currentSelectionMainX == 1) && (game.encounter.currentSelectionMainY == 1)) {
 						game.encounter.Run();
 					}
-					Utils.playSelectSound();
 				}
+				Utils.playSelectSound();
 			}
 		}
 	}
 
-	private void resetBattleVars() {
-		game.encounter.playerTurn = false;
-		game.encounter.inMain = true;
-		game.encounter.inFight = false;
-		game.encounter.currentSelectionMainX = 0;
-		game.encounter.currentSelectionMainY = 0;
-		game.encounter.currentSelectionFightX = 0;
-		game.encounter.currentSelectionFightY = 0;
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// checkIfThawed - a random proability of being woken or thawed during
+	// a battle
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	private void checkIfThawed(Pokemon p) {
+		Random rr = new Random();
+		int wakeupthaw = rr.nextInt(5);
+		if (wakeupthaw <= 1) {
+			if (p.statusEffect == 4) {
+				System.out.println(p.getName() + " has woken up.");
+			}
+			if (p.statusEffect == 5) {
+				System.out.println(p.getName() + " has broken free from the ice.");
+			}
+			p.statusEffect = 0;
+		}
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// getSelectedMove - returns the currently selected move based on
+	// user's highlighted choice
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	private int getSelectedMove(int move) {
+		if ((game.encounter.currentSelectionFightX == 0) && (game.encounter.currentSelectionFightY == 0)) {
+			move = 0;
+		}
+		if ((game.encounter.currentSelectionFightX == 1) && (game.encounter.currentSelectionFightY == 0)) {
+			move = 1;
+		}
+		if ((game.encounter.currentSelectionFightX == 0) && (game.encounter.currentSelectionFightY == 1)) {
+			move = 2;
+		}
+		if ((game.encounter.currentSelectionFightX == 1) && (game.encounter.currentSelectionFightY == 1)) {
+			move = 3;
+		}
+		return move;
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// evaluateAndDealDamage - based on the seleted move and whether or not
+	// the pokemon was parlyzed, calculate the damage and deal it
+	//
+	// TODO - make this usable by the enemy as well. Possibly move to Utils
+	// ////////////////////////////////////////////////////////////////////////
 	private void evaluateAndDealDamage(boolean checkPar, Pokemon playerPokemon, int move) {
 		Random r = new Random();
 		boolean par = (checkPar) ? r.nextInt(2) < 0 : false;
@@ -131,192 +183,191 @@ public class EventHandler {
 						* Utils.generateRandom(85, 100) / 100.0);
 				((Pokemon) game.encounter.enemyPokemon.get(0)).doDamage(damage);
 			}
-			System.out.println(((Pokemon) game.encounter.enemyPokemon.get(0)).getStat(EnumsAndConstants.STATS.HP));
 		} else {
 			System.out.println(playerPokemon.getName() + " is paralyzed. It can't move.");
 		}
 	}
 
-	private void checkIfThawed(Pokemon playerPokemon) {
-		Random rr = new Random();
-		int wakeupthaw = rr.nextInt(5);
-		if (wakeupthaw <= 1) {
-			if (playerPokemon.statusEffect == 4) {
-				System.out.println(playerPokemon.getName() + " has woken up.");
-			}
-			if (playerPokemon.statusEffect == 5) {
-				System.out.println(playerPokemon.getName() + " has broken free from the ice.");
-			}
-			playerPokemon.statusEffect = 0;
-		}
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// resetBattleVars upon Return to main battle menu, or exiting a battle
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	private void resetBattleVars() {
+		game.encounter.inMain = true;
+		game.encounter.inFight = false;
+		game.encounter.currentSelectionMainX = 0;
+		game.encounter.currentSelectionMainY = 0;
+		game.encounter.currentSelectionFightX = 0;
+		game.encounter.currentSelectionFightY = 0;
 	}
 
-	private int getSelectedMove(int move) {
-		if ((game.encounter.currentSelectionFightX == 0) && (game.encounter.currentSelectionFightY == 0)) {
-			move = 0;
-		}
-		if ((game.encounter.currentSelectionFightX == 1) && (game.encounter.currentSelectionFightY == 0)) {
-			move = 1;
-		}
-		if ((game.encounter.currentSelectionFightX == 0) && (game.encounter.currentSelectionFightY == 1)) {
-			move = 2;
-		}
-		if ((game.encounter.currentSelectionFightX == 1) && (game.encounter.currentSelectionFightY == 1)) {
-			move = 3;
-		}
-		return move;
-	}
-
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// handleMenuEvent handles a menu event - bag, options, party, save, etc
+	// Pretty much just a large batch of logic switching to control graphics
+	//
+	// TODO - implement save feature
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	void handleMenuEvent(int keyCode) {
-		if (game.menuScreen.inConversation) {
+		if (game.menuScreen.MENU_inConversation) {
+			// exit a conversation
 			if (keyCode == KeyEvent.VK_X) {
 				game.menuScreen.Exit();
+				game.gData.inMenu = false;
 			}
-		} else if (game.menuScreen.inMain) {
+		} else if (game.menuScreen.MENU_inMain) {
+			// main pause menu screen
 			if (keyCode == KeyEvent.VK_UP) {
-				if (game.menuScreen.currentSelectionMain > 0) {
-					game.menuScreen.currentSelectionMain -= 1;
+				if (game.menuScreen.MENU_currentSelectionMain > 0) {
+					game.menuScreen.MENU_currentSelectionMain -= 1;
 				}
 				Utils.playSelectSound();
 			} else if (keyCode == KeyEvent.VK_DOWN) {
-				if (game.menuScreen.currentSelectionMain < 7) {
-					game.menuScreen.currentSelectionMain += 1;
+				if (game.menuScreen.MENU_currentSelectionMain < 7) {
+					game.menuScreen.MENU_currentSelectionMain += 1;
 				}
 				Utils.playSelectSound();
-			}
-			if (keyCode == KeyEvent.VK_Z) {
-				if (game.menuScreen.currentSelectionMain == 0) {
+			} else if (keyCode == KeyEvent.VK_Z) {
+				if (game.menuScreen.MENU_currentSelectionMain == 0) {
 					game.menuScreen.PokeDex();
 				}
-				if (game.menuScreen.currentSelectionMain == 1) {
+				if (game.menuScreen.MENU_currentSelectionMain == 1) {
 					game.menuScreen.Pokemon();
 				}
-				if (game.menuScreen.currentSelectionMain == 2) {
+				if (game.menuScreen.MENU_currentSelectionMain == 2) {
 					game.menuScreen.Bag();
 				}
-				if (game.menuScreen.currentSelectionMain == 3) {
+				if (game.menuScreen.MENU_currentSelectionMain == 3) {
 					game.menuScreen.PokeGear();
 				}
-				if (game.menuScreen.currentSelectionMain == 4) {
+				if (game.menuScreen.MENU_currentSelectionMain == 4) {
 					game.menuScreen.TrainerCard();
 				}
-				if (game.menuScreen.currentSelectionMain == 5) {
+				if (game.menuScreen.MENU_currentSelectionMain == 5) {
 					game.menuScreen.Save();
 				}
-				if (game.menuScreen.currentSelectionMain == 6) {
+				if (game.menuScreen.MENU_currentSelectionMain == 6) {
 					game.menuScreen.Option();
 				}
-				if (game.menuScreen.currentSelectionMain == 7) {
+				if (game.menuScreen.MENU_currentSelectionMain == 7) {
 					game.menuScreen.Exit();
+					game.gData.inMenu = false;
 				}
 				Utils.playSelectSound();
-			}
-			if (keyCode == KeyEvent.VK_X) {
+			} else if (keyCode == KeyEvent.VK_X) {
 				game.menuScreen.Exit();
+				game.gData.inMenu = false;
 				Utils.playSelectSound();
 			}
-		} else if (game.menuScreen.inPokeDex) {
+		} else if (game.menuScreen.MENU_inPokeDex) {
 			if (keyCode == KeyEvent.VK_X) {
-				game.menuScreen.inPokeDex = false;
-				game.menuScreen.inMain = true;
+				game.menuScreen.MENU_inPokeDex = false;
+				game.menuScreen.MENU_inMain = true;
 				Utils.playSelectSound();
 			}
-		} else if (game.menuScreen.inPokemon) {
+		} else if (game.menuScreen.MENU_inPokemon) {
 			if (keyCode == KeyEvent.VK_X) {
-				game.menuScreen.inPokemon = false;
-				game.menuScreen.inMain = true;
+				game.menuScreen.MENU_inPokemon = false;
+				game.menuScreen.MENU_inMain = true;
 				Utils.playSelectSound();
 			}
-		} else if (game.menuScreen.inBag) {
+		} else if (game.menuScreen.MENU_inBag) {
 			if (keyCode == KeyEvent.VK_X) {
-				game.menuScreen.inBag = false;
-				game.menuScreen.inMain = true;
+				game.menuScreen.MENU_inBag = false;
+				game.menuScreen.MENU_inMain = true;
 				Utils.playSelectSound();
 			}
-		} else if (game.menuScreen.inPokeGear) {
+		} else if (game.menuScreen.MENU_inPokeGear) {
 			if (keyCode == KeyEvent.VK_UP) {
-				if (game.menuScreen.currentSelectionPokeGear > 0) {
-					game.menuScreen.currentSelectionPokeGear -= 1;
+				if (game.menuScreen.MENU_currentSelectionPokeGear > 0) {
+					game.menuScreen.MENU_currentSelectionPokeGear -= 1;
 				}
 				Utils.playSelectSound();
 			} else if (keyCode == KeyEvent.VK_DOWN) {
-				if (game.menuScreen.currentSelectionPokeGear < 3) {
-					game.menuScreen.currentSelectionPokeGear += 1;
+				if (game.menuScreen.MENU_currentSelectionPokeGear < 3) {
+					game.menuScreen.MENU_currentSelectionPokeGear += 1;
 				}
 				Utils.playSelectSound();
-			}
-			if (keyCode == KeyEvent.VK_Z) {
-				if (game.menuScreen.currentSelectionPokeGear == 0) {
+			} else if (keyCode == KeyEvent.VK_Z) {
+				if (game.menuScreen.MENU_currentSelectionPokeGear == 0) {
 					System.out.println("Map");
-				} else if (game.menuScreen.currentSelectionPokeGear == 1) {
+				} else if (game.menuScreen.MENU_currentSelectionPokeGear == 1) {
 					System.out.println("Radio");
-				} else if (game.menuScreen.currentSelectionPokeGear == 2) {
+				} else if (game.menuScreen.MENU_currentSelectionPokeGear == 2) {
 					System.out.println("Phone");
-				} else if (game.menuScreen.currentSelectionPokeGear == 3) {
+				} else if (game.menuScreen.MENU_currentSelectionPokeGear == 3) {
 					System.out.println("Exit");
-					game.menuScreen.currentSelectionPokeGear = 0;
-					game.menuScreen.inPokeGear = false;
-					game.menuScreen.inMain = true;
+					game.menuScreen.MENU_currentSelectionPokeGear = 0;
+					game.menuScreen.MENU_inPokeGear = false;
+					game.menuScreen.MENU_inMain = true;
 				}
 				Utils.playSelectSound();
-			}
-			if (keyCode == KeyEvent.VK_X) {
-				game.menuScreen.inPokeGear = false;
-				game.menuScreen.inMain = true;
+			} else if (keyCode == KeyEvent.VK_X) {
+				game.menuScreen.MENU_inPokeGear = false;
+				game.menuScreen.MENU_inMain = true;
 				Utils.playSelectSound();
 			}
-		} else if (game.menuScreen.inTrainerCard) {
+		} else if (game.menuScreen.MENU_inTrainerCard) {
 			if (keyCode == KeyEvent.VK_X) {
-				game.menuScreen.inTrainerCard = false;
-				game.menuScreen.inMain = true;
+				game.menuScreen.MENU_inTrainerCard = false;
+				game.menuScreen.MENU_inMain = true;
 				Utils.playSelectSound();
 			}
-		} else if (game.menuScreen.inSave) {
+		} else if (game.menuScreen.MENU_inSave) {
 			if (keyCode == KeyEvent.VK_UP) {
-				game.menuScreen.currentSelectionSave = 0;
+				game.menuScreen.MENU_currentSelectionSave = 0;
 				Utils.playSelectSound();
 			} else if (keyCode == KeyEvent.VK_DOWN) {
-				game.menuScreen.currentSelectionSave = 1;
+				game.menuScreen.MENU_currentSelectionSave = 1;
 				Utils.playSelectSound();
-			}
-			if (keyCode == KeyEvent.VK_Z) {
-				if (game.menuScreen.currentSelectionSave == 0) {
+			} else if (keyCode == KeyEvent.VK_Z) {
+				if (game.menuScreen.MENU_currentSelectionSave == 0) {
 					// Utils.saveGame(game.gold);
 					System.out.println(game.gData.player.getName() + "'s Game has been saved! (Not really though)");
 				} else {
-					game.menuScreen.inSave = false;
-					game.menuScreen.inMain = true;
+					game.menuScreen.MENU_inSave = false;
+					game.menuScreen.MENU_inMain = true;
 				}
 				Utils.playSelectSound();
-			}
-			if (keyCode == KeyEvent.VK_X) {
-				game.menuScreen.inSave = false;
-				game.menuScreen.inMain = true;
+			} else if (keyCode == KeyEvent.VK_X) {
+				game.menuScreen.MENU_inSave = false;
+				game.menuScreen.MENU_inMain = true;
 				Utils.playSelectSound();
 			}
-		} else if (game.menuScreen.inOption) {
+		} else if (game.menuScreen.MENU_inOption) {
 			if (keyCode == KeyEvent.VK_UP) {
-				if (game.menuScreen.currentSelectionOption > 0) {
-					game.menuScreen.currentSelectionOption -= 1;
+				if (game.menuScreen.MENU_currentSelectionOption > 0) {
+					game.menuScreen.MENU_currentSelectionOption -= 1;
 				}
 				Utils.playSelectSound();
 			} else if (keyCode == KeyEvent.VK_DOWN) {
-				if (game.menuScreen.currentSelectionOption < 5) {
-					game.menuScreen.currentSelectionOption += 1;
+				if (game.menuScreen.MENU_currentSelectionOption < 5) {
+					game.menuScreen.MENU_currentSelectionOption += 1;
 				}
 				Utils.playSelectSound();
-			}
-			if (keyCode == KeyEvent.VK_Z) {
+			} else if (keyCode == KeyEvent.VK_Z) {
 				Utils.playSelectSound();
-			}
-			if (keyCode == KeyEvent.VK_X) {
-				game.menuScreen.inOption = false;
-				game.menuScreen.inMain = true;
+			} else if (keyCode == KeyEvent.VK_X) {
+				game.menuScreen.MENU_inOption = false;
+				game.menuScreen.MENU_inMain = true;
 				Utils.playSelectSound();
 			}
 		}
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// handleWorldEvent handles all world events - moveing the sprite, pausing
+	// interacting with the environment, and conversing with characters
+	//
+	// TODO - add interactive environment (say, items on the ground, message
+	// signs, surfing / water, etc
+	// TODO - look into shortening or method-izing the arrow key world events
+	// TODO - look into shortening or method-izing the border NPC check
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	void handleWorldEvent(int keyCode) {
 		if (keyCode == KeyEvent.VK_UP) {
 			game.gData.player.setDir(DIR.NORTH);
@@ -352,18 +403,16 @@ public class EventHandler {
 			}
 		} else if (keyCode == KeyEvent.VK_ENTER) {
 			Utils.playMenuSound();
-			game.menuScreen.inMain = true;
+			game.menuScreen.MENU_inMain = true;
 			game.gData.inMenu = true;
-		}
-		if (keyCode == KeyEvent.VK_Z) {
-			System.out.println("Action Button");
+		} else if (keyCode == KeyEvent.VK_Z) {
 			Utils.playSelectSound();
 			NPC borderNPC = null;
+			// overhead cost for following logic
 			DIR playerDir = game.gData.player.getDir();
 			int playerCurX = game.gData.player.getCurrentX();
 			int playerCurY = game.gData.player.getCurrentY();
-			for (int i = 0; i < EnumsAndConstants.npc_lib.npcs.size(); i++) {
-				NPC curNPC = EnumsAndConstants.npc_lib.npcs.get(i);
+			for (NPC curNPC : EnumsAndConstants.npc_lib.npcs) {
 				int NPC_X = curNPC.getCurrentX();
 				int NPC_Y = curNPC.getCurrentY();
 				if (playerDir == DIR.WEST) {
@@ -392,8 +441,6 @@ public class EventHandler {
 				game.gData.inMenu = true;
 				game.menuScreen.Message(borderNPC);
 			}
-		} else if (keyCode == KeyEvent.VK_X) {
-			System.out.println("Cancel Button");
 		}
 	}
 }

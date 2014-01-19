@@ -9,11 +9,12 @@ import pokedex.Pokemon;
 import pokedex.PokemonList;
 import trainers.NPC;
 import utilities.EnumsAndConstants;
+import utilities.EnumsAndConstants.STATS;
 import utilities.Utils;
-import driver.Main;
+import driver.Game;
 
 public class BattleScene {
-	private Main game;
+	private Game game;
 	public boolean playerTurn;
 	public int elapsedTurns;
 	public boolean inMain = true;
@@ -47,23 +48,16 @@ public class BattleScene {
 	Image statusFRZ = Toolkit.getDefaultToolkit().getImage(
 			BattleScene.class.getResource("/graphics_lib/Pictures/StatusFRZ.png"));
 
-	public BattleScene(Main pkmn, NPC curNPC) {
-		this.game = pkmn;
-		this.playerPokemon = ((Pokemon) pkmn.gData.player.getPokemon().get(0));
+	public BattleScene(Game pkmnGame, NPC curNPC) {
+		game = pkmnGame;
+		playerPokemon = pkmnGame.gData.player.getPokemon().get(0);
 		playerPokemon.setParticipated();
-		this.enemyPokemon = curNPC.getPokemon();
-		this.enemy = curNPC;
-		this.playerTurn = true;
+		enemyPokemon = curNPC.getPokemon();
+		enemy = curNPC;
+		playerTurn = true;
 	}
 
 	public void Start() {
-		System.out.println("Player's Pokemon: " + this.playerPokemon.getName() + " Level: "
-				+ this.playerPokemon.getLevel() + " HP: " + this.playerPokemon.getStat(EnumsAndConstants.STATS.HP)
-				+ " / " + this.playerPokemon.getMaxStat(EnumsAndConstants.STATS.HP));
-		System.out.println("Wild Pokemon: " + ((Pokemon) this.enemyPokemon.get(0)).getName() + " Level: "
-				+ ((Pokemon) this.enemyPokemon.get(0)).getLevel() + " HP: "
-				+ ((Pokemon) this.enemyPokemon.get(0)).getStat(EnumsAndConstants.STATS.HP) + " / "
-				+ ((Pokemon) this.enemyPokemon.get(0)).getMaxStat(EnumsAndConstants.STATS.HP));
 		this.currentSelectionMainX = 0;
 		this.currentSelectionFightX = 0;
 		this.currentSelectionMainY = 0;
@@ -74,7 +68,6 @@ public class BattleScene {
 	public void Fight() {
 		this.inMain = false;
 		this.inFight = true;
-		System.out.println("Fight");
 	}
 
 	public void Item() {
@@ -87,7 +80,18 @@ public class BattleScene {
 		System.out.println("Pokemon");
 	}
 
-	public void playerSwitchPokemon() {}
+	public void playerSwitchPokemon() {
+		boolean loss = true;
+		for (Pokemon p : game.gData.player.getPokemon()) {
+			if (p.getStat(STATS.HP) > 0) {
+				loss = false;
+			}
+		}
+		if (loss)
+			Lose();
+
+		// TODO - else switch pokemon
+	}
 
 	public void enemySwitchPokemon() {}
 
@@ -131,12 +135,12 @@ public class BattleScene {
 		this.inMain = false;
 		this.inRun = true;
 		((Pokemon) this.enemyPokemon.get(0)).statusEffect = 0;
+		System.out.println("Player Pokemon has fainted");
+		System.out.println(game.gData.player.getName() + " is all out of usable Pokemon!");
+		System.out.println(game.gData.player.getName() + " whited out.");
+		game.gData.player.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(9));
+		game.gData.player.getPokemon().get(0).heal(-1);
 		this.game.gData.inBattle = false;
-	}
-
-	public void whiteOut() {
-		this.pokemonfainted = true;
-		Lose();
 	}
 
 	public void enemyTurn() {
@@ -212,7 +216,6 @@ public class BattleScene {
 							* Utils.generateRandom(85, 100) / 100.0D);
 				}
 				this.playerPokemon.doDamage(damage);
-				System.out.println("Enemy's turn is over");
 			}
 			if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 2) {
 				((Pokemon) this.enemyPokemon.get(0)).doDamage(2);

@@ -21,10 +21,10 @@ public class PokemonGameFrame extends JFrame {
 		// No matter the version, the Icon is always located in the same place
 		// and these attributes of the game do not change.
 		setIconImage(EnumsAndConstants.sprite_lib.ICON);
-		Main pokemon = new Main();
-		pokemon.setFocusable(true);
-		pokemon.requestFocus();
-		add(pokemon);
+		Game pokemonGame = new Game();
+		pokemonGame.setFocusable(true);
+		pokemonGame.requestFocus();
+		add(pokemonGame);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setResizable(false);
 		pack();

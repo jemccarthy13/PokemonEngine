@@ -16,13 +16,13 @@ import trainers.Player;
 import utilities.EnumsAndConstants;
 import utilities.GameData;
 import utilities.Utils;
-import driver.Main;
+import driver.Game;
 
 public class Painter extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	public void paintComponent(Graphics g, Main game) {
+	public void paintComponent(Graphics g, Game game) {
 		Graphics2D g2 = (Graphics2D) g;
 		AffineTransform at = new AffineTransform();
 		g2.setTransform(at);
@@ -31,33 +31,33 @@ public class Painter extends JPanel {
 		} else if (game.gData.atContinueScreen) {
 			paintContinueScreen(g, game.gData);
 		} else if (game.gData.inIntro) {
-			paintIntroScreen(g, game.introScreen);
+			paintIntroScreen(g, game.gData);
 		} else if (game.gData.inNameScreen) {
 			paintNameInputScreen(g, game);
-		} else if (game.menuScreen.inPokeDex) {
+		} else if (game.menuScreen.MENU_inPokeDex) {
 			paintPokedexScreen(g);
-		} else if (game.menuScreen.inPokemon) {
+		} else if (game.menuScreen.MENU_inPokemon) {
 			paintPartyScreen(g, game.gData.player);
-		} else if (game.menuScreen.inBag) {
+		} else if (game.menuScreen.MENU_inBag) {
 			paintBagScreen(g);
-		} else if (game.menuScreen.inPokeGear) {
+		} else if (game.menuScreen.MENU_inPokeGear) {
 			paintPokegearScreen(g, game.menuScreen);
-		} else if (game.menuScreen.inTrainerCard) {
+		} else if (game.menuScreen.MENU_inTrainerCard) {
 			paintTrainerCard(g, game.gData);
-		} else if (game.menuScreen.inOption) {
+		} else if (game.menuScreen.MENU_inOption) {
 			paintOptionScreen(g, game.menuScreen);
 		} else if (game.gData.inBattle) {
 			paintBattle(g, game);
 		} else if (!game.gData.inBattle) {
 			paintWorld(g, game.gData, g2, at);
 		}
-		if (game.menuScreen.inMain) {
+		if (game.menuScreen.MENU_inMain) {
 			paintPauseMenu(g, game.menuScreen);
 		}
-		if (game.menuScreen.inConversation) {
+		if (game.menuScreen.MENU_inConversation) {
 			paintConversation(g, game.menuScreen);
 		}
-		if (game.menuScreen.inSave) {
+		if (game.menuScreen.MENU_inSave) {
 			paintSaveMenu(g, game);
 		}
 	}
@@ -66,7 +66,7 @@ public class Painter extends JPanel {
 		return EnumsAndConstants.sprite_lib.getSprites(tbn).get(0);
 	}
 
-	private void paintNameInputScreen(Graphics g, Main game) {
+	private void paintNameInputScreen(Graphics g, Game game) {
 		g.drawImage(EnumsAndConstants.sprite_lib.NAMESCREEN, 0, 0, null);
 
 		if (game.nameScreen.rowSelection < 5) {
@@ -80,7 +80,7 @@ public class Painter extends JPanel {
 					null);
 		}
 
-		String name = game.nameScreen.getNameSelected();
+		String name = game.nameScreen.getChosenName();
 
 		for (int x = 0; x < EnumsAndConstants.MAX_NAME_SIZE; x++) {
 			g.drawImage(EnumsAndConstants.sprite_lib.FONT_UNDERSCORE, 150 + EnumsAndConstants.TILESIZE * x, 40, null);
@@ -102,7 +102,7 @@ public class Painter extends JPanel {
 		}
 	}
 
-	private void paintBattle(Graphics g, Main game) {
+	private void paintBattle(Graphics g, Game game) {
 		g.setFont(EnumsAndConstants.POKEFONT);
 		g.drawImage(game.encounter.BG, 0, 0, null);
 
@@ -188,22 +188,23 @@ public class Painter extends JPanel {
 		g.drawString(((Integer) enemyPokemon.getMaxStat(EnumsAndConstants.STATS.HP)).toString(), 112, 45);
 	}
 
-	private void paintIntroScreen(Graphics g, IntroScene intro) {
+	private void paintIntroScreen(Graphics g, GameData gameData) {
 		g.setFont(EnumsAndConstants.POKEFONT);
 		g.drawImage(EnumsAndConstants.sprite_lib.BEGINNING, 0, 0, null);
-		g.drawImage(EnumsAndConstants.sprite_lib.getSprites("Professor Oak").get(0), 150, 20, null);
-		if (EnumsAndConstants.npc_lib.getNPC("Professor Oak").getText().size() > intro.stage) {
-			Utils.messageBox(g, EnumsAndConstants.npc_lib.getNPC("Professor Oak").getText().get(intro.stage - 1),
-					EnumsAndConstants.npc_lib.getNPC("Professor Oak").getText().get(intro.stage));
+		g.drawImage(EnumsAndConstants.sprite_lib.getSprites("PROFESSOROAK_LARGE").get(0), 150, 20, null);
+		if (EnumsAndConstants.npc_lib.getNPC("Professor Oak").getText().size() > gameData.introStage) {
+			Utils.messageBox(g, EnumsAndConstants.npc_lib.getNPC("Professor Oak").getText()
+					.get(gameData.introStage - 1),
+					EnumsAndConstants.npc_lib.getNPC("Professor Oak").getText().get(gameData.introStage));
 		}
 	}
 
 	private void paintOptionScreen(Graphics g, MenuScene menu) {
 		g.drawImage(EnumsAndConstants.sprite_lib.OPTION, 0, 0, null);
-		g.drawImage(EnumsAndConstants.sprite_lib.ARROW, 22, 85 + 32 * menu.currentSelectionOption, null);
+		g.drawImage(EnumsAndConstants.sprite_lib.ARROW, 22, 85 + 32 * menu.MENU_currentSelectionOption, null);
 	}
 
-	private void paintSaveMenu(Graphics g, Main game) {
+	private void paintSaveMenu(Graphics g, Game game) {
 		g.setFont(EnumsAndConstants.POKEFONT);
 		g.setColor(Color.BLACK);
 		g.drawImage(EnumsAndConstants.sprite_lib.SAVE, 0, 0, null);
@@ -211,9 +212,9 @@ public class Painter extends JPanel {
 		g.drawString(((Integer) game.gData.player.getBadges()).toString(), 100, 101);
 		g.drawString("1", 110, 134);
 		g.drawString(Utils.formatTime(game.gData.gameTimeStruct), 76, 166);
-		if (game.menuScreen.currentSelectionSave == 0) {
+		if (game.menuScreen.MENU_currentSelectionSave == 0) {
 			g.drawImage(EnumsAndConstants.sprite_lib.ARROW, 394, 148, null);
-		} else if (game.menuScreen.currentSelectionSave == 1) {
+		} else if (game.menuScreen.MENU_currentSelectionSave == 1) {
 			g.drawImage(EnumsAndConstants.sprite_lib.ARROW, 394, 180, null);
 		}
 	}
@@ -245,13 +246,13 @@ public class Painter extends JPanel {
 		g.setFont(EnumsAndConstants.POKEFONT);
 		g.setColor(Color.BLACK);
 		g.drawImage(EnumsAndConstants.sprite_lib.POKEGEAR, 0, 0, null);
-		if (menu.currentSelectionPokeGear == 0) {
+		if (menu.MENU_currentSelectionPokeGear == 0) {
 			g.drawImage(EnumsAndConstants.sprite_lib.POKEGEARMAP, 0, 0, null);
-		} else if (menu.currentSelectionPokeGear == 1) {
+		} else if (menu.MENU_currentSelectionPokeGear == 1) {
 			g.drawImage(EnumsAndConstants.sprite_lib.POKEGEARRADIO, 0, 0, null);
-		} else if (menu.currentSelectionPokeGear == 2) {
+		} else if (menu.MENU_currentSelectionPokeGear == 2) {
 			g.drawImage(EnumsAndConstants.sprite_lib.POKEGEARPHONE, 0, 0, null);
-		} else if (menu.currentSelectionPokeGear == 3) {
+		} else if (menu.MENU_currentSelectionPokeGear == 3) {
 			g.drawImage(EnumsAndConstants.sprite_lib.POKEGEAREXIT, 0, 0, null);
 		}
 	}
@@ -283,7 +284,7 @@ public class Painter extends JPanel {
 	}
 
 	private void paintConversation(Graphics g, MenuScene menu) {
-		Utils.messageBox(g, menu.conversation.getText(menu.stage));
+		Utils.messageBox(g, menu.MENU_conversation.getText(menu.MENU_stage));
 	}
 
 	private void paintPokedexScreen(Graphics g) {
@@ -292,7 +293,7 @@ public class Painter extends JPanel {
 
 	private void paintPauseMenu(Graphics g, MenuScene menu) {
 		g.drawImage(EnumsAndConstants.sprite_lib.MAIN_MENU, 0, 0, null);
-		g.drawImage(EnumsAndConstants.sprite_lib.ARROW, 335, 20 + 32 * menu.currentSelectionMain, null);
+		g.drawImage(EnumsAndConstants.sprite_lib.ARROW, 335, 20 + 32 * menu.MENU_currentSelectionMain, null);
 	}
 
 	private void paintWorld(Graphics g, GameData gameData, Graphics2D g2, AffineTransform at) {

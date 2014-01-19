@@ -46,7 +46,7 @@ public class Utils {
 	}
 
 	public static void playSelectSound() {
-		EnumsAndConstants.col.playClip("SELECT");
+		EnumsAndConstants.col.playClip(EnumsAndConstants.SE_SELECT);
 	}
 
 	public static void playDamageSound() {

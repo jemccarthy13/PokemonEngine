@@ -40,11 +40,11 @@ public class EnumsAndConstants {
 	public static final Toolkit tk = Toolkit.getDefaultToolkit();
 
 	// TODO change "Factory" to "Map" where most appropriate
+	public static final SpriteFactory sprite_lib = new SpriteFactory();
 	public static final AudioFactory audio_lib = new AudioFactory();
 	public static final LocationFactory loc_lib = new LocationFactory();
 	public static final MoveFactory move_lib = new MoveFactory();
 	public static final PokemonFactory pokemon_generator = new PokemonFactory();
-	public static final SpriteFactory sprite_lib = new SpriteFactory();
 	public static final NPCFactory npc_lib = new NPCFactory();
 	public static final TeleportFactory TELEPORTS = new TeleportFactory();
 	public static final MessageBox msg_box = new MessageBox();
@@ -57,10 +57,12 @@ public class EnumsAndConstants {
 	public static final int MAX_NAME_SIZE = 7;
 
 	// on a scale of 0-100, slow - fast
-	public static final int PLAYERSPEED = 80;
-	public static final int PLAYERSPEED_WALK = 80;
-	public static final int PLAYERSPEED_RUN = 90;
-	public static final int PLAYERSPEED_BIKE = 95;
+	public static final int PLAYER_SPEED = 80;
+	public static final int PLAYER_SPEED_WALK = 80;
+	public static final int PLAYER_SPEED_RUN = 90;
+	public static final int PLAYER_SPEED_BIKE = 95;
+
+	public static final int NPC_SIGHT_DISTANCE = 5;
 
 	public static final String VERSION = "Metallic Silver";
 
@@ -75,17 +77,17 @@ public class EnumsAndConstants {
 	public static Painter PAINTER = new Painter();
 
 	public static final String SOUNDEFFECTPATH = "/audio_lib/SE/";
-	public static final String COLLISION_SOUND = "COLLISION";
-	public static final String SELECT_SOUND = "SELECT";
-	public static final String MENU_SOUND = "MENU";
-	public static final String DAMAGE_SOUND = "DAMAGE";
+	public static final String SE_COLLISION = "COLLISION";
+	public static final String SE_SELECT = "SELECT";
+	public static final String SE_MENU = "MENU";
+	public static final String SE_DAMAGE = "DAMAGE";
 	public static MidiPlayer BACKGROUND_MUSIC = null;
 
 	public static void initializeJukeBox() {
-		col.loadClip(SOUNDEFFECTPATH + "Select.wav", SELECT_SOUND, 1);
-		col.loadClip(SOUNDEFFECTPATH + "Collision.wav", COLLISION_SOUND, 1);
-		col.loadClip(SOUNDEFFECTPATH + "Menu.wav", MENU_SOUND, 1);
-		col.loadClip(SOUNDEFFECTPATH + "Damage.wav", DAMAGE_SOUND, 1);
+		col.loadClip(SOUNDEFFECTPATH + "Select.wav", SE_SELECT, 1);
+		col.loadClip(SOUNDEFFECTPATH + "Collision.wav", SE_COLLISION, 1);
+		col.loadClip(SOUNDEFFECTPATH + "Menu.wav", SE_MENU, 1);
+		col.loadClip(SOUNDEFFECTPATH + "Damage.wav", SE_DAMAGE, 1);
 	}
 
 	public static void initializeMidiPlayer() {

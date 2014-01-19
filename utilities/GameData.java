@@ -33,6 +33,7 @@ public class GameData implements Serializable {
 	public boolean inNameScreen = false;
 	public boolean atTitle = true;
 	public boolean atContinueScreen = false;
+	public int introStage = 1;
 
 	public int offsetX = 0;
 	public int offsetY = 0;
@@ -43,6 +44,11 @@ public class GameData implements Serializable {
 	// ======================== Version ====================================//
 	public String version = EnumsAndConstants.VERSION;
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Update the game time according to the time started
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public void updateTime() {
 		gameTimeStruct.updateTime(timeStarted);
 	}

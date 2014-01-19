@@ -1,94 +1,92 @@
 package graphics;
 
 import trainers.NPC;
-import utilities.GameData;
 
 public class MenuScene {
-	private GameData game;
 
-	public boolean inMain = false;
-	public boolean inPokeDex = false;
-	public boolean inPokemon = false;
-	public boolean inBag = false;
-	public boolean inPokeGear = false;
-	public boolean inTrainerCard = false;
-	public boolean inSave = false;
-	public boolean inOption = false;
-	public boolean inExit = false;
-	public boolean inConversation = false;
+	public boolean MENU_inMain = false;
+	public boolean MENU_inPokeDex = false;
+	public boolean MENU_inPokemon = false;
+	public boolean MENU_inBag = false;
+	public boolean MENU_inPokeGear = false;
+	public boolean MENU_inTrainerCard = false;
+	public boolean MENU_inSave = false;
+	public boolean MENU_inOption = false;
+	public boolean MENU_inExit = false;
+	public boolean MENU_inConversation = false;
 
-	public int currentSelectionMain;
-	public int currentSelectionItemX;
-	public int currentSelectionItemY;
-	public int currentSelectionPokeGear;
-	public int currentSelectionSave;
-	public int currentSelectionOption;
+	public int MENU_currentSelectionMain;
+	public int MENU_currentSelectionItemX;
+	public int MENU_currentSelectionItemY;
+	public int MENU_currentSelectionPokeGear;
+	public int MENU_currentSelectionSave;
+	public int MENU_currentSelectionOption;
 
-	public NPC conversation;
-	public int stage = 0;
+	public int MENU_stage = 0;
 
-	public MenuScene(GameData theGame) {
-		game = theGame;
-		this.currentSelectionMain = 2;
-		this.currentSelectionItemX = 0;
-		this.currentSelectionItemY = 0;
-		this.currentSelectionPokeGear = 0;
-		this.currentSelectionSave = 0;
-		this.currentSelectionOption = 0;
+	public NPC MENU_conversation;
+
+	public MenuScene() {
+		this.MENU_currentSelectionMain = 2;
+		this.MENU_currentSelectionItemX = 0;
+		this.MENU_currentSelectionItemY = 0;
+		this.MENU_currentSelectionPokeGear = 0;
+		this.MENU_currentSelectionSave = 0;
+		this.MENU_currentSelectionOption = 0;
 	}
 
 	public void PokeDex() {
-		this.inMain = false;
-		this.inPokeDex = true;
+		this.MENU_inMain = false;
+		this.MENU_inPokeDex = true;
 	}
 
 	public void Pokemon() {
-		this.inMain = false;
-		this.inPokemon = true;
+		this.MENU_inMain = false;
+		this.MENU_inPokemon = true;
 	}
 
 	public void Bag() {
-		this.inMain = false;
-		this.inBag = true;
+		this.MENU_inMain = false;
+		this.MENU_inBag = true;
 	}
 
 	public void PokeGear() {
-		this.inMain = false;
-		this.inPokeGear = true;
+		this.MENU_inMain = false;
+		this.MENU_inPokeGear = true;
 	}
 
 	public void TrainerCard() {
-		this.inMain = false;
-		this.inTrainerCard = true;
+		this.MENU_inMain = false;
+		this.MENU_inTrainerCard = true;
 	}
 
 	public void Save() {
-		this.inMain = false;
-		this.inSave = true;
+		this.MENU_inMain = false;
+		this.MENU_inSave = true;
 	}
 
 	public void Option() {
-		this.inMain = false;
-		this.inOption = true;
+		this.MENU_inMain = false;
+		this.MENU_inOption = true;
 	}
 
 	public void Exit() {
-		this.currentSelectionMain = 2;
-		this.currentSelectionItemX = 0;
-		this.currentSelectionItemY = 0;
-		this.currentSelectionSave = 0;
-		this.inMain = false;
-		this.inConversation = false;
-		this.game.inMenu = false;
-		if (this.conversation != null) {
-			this.conversation.setStationary(false);
+		this.MENU_currentSelectionMain = 2;
+		this.MENU_currentSelectionItemX = 0;
+		this.MENU_currentSelectionItemY = 0;
+		this.MENU_currentSelectionSave = 0;
+		this.MENU_inMain = false;
+		this.MENU_inConversation = false;
+
+		if (this.MENU_conversation != null) {
+			this.MENU_conversation.setStationary(false);
 		}
 	}
 
 	public void Message(NPC borderNPC) {
-		this.inMain = false;
-		this.inConversation = true;
-		this.conversation = borderNPC;
-		this.conversation.setStationary(true);
+		this.MENU_inMain = false;
+		this.MENU_inConversation = true;
+		this.MENU_conversation = borderNPC;
+		this.MENU_conversation.setStationary(true);
 	}
 }
