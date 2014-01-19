@@ -13,16 +13,16 @@ import utilities.EnumsAndConstants.DIR;
 
 public class TrainerData {
 
-	public String name = "";
-	public Coordinate position = new Coordinate();
-	public ArrayList<Image> sprites = new ArrayList<Image>();
-	public PokemonList pokemon = new PokemonList();
+	public String name = null;
+	public Coordinate position = null;
+	public ArrayList<Image> sprites = null;
+	public PokemonList pokemon = null;
 	public int money = 0;
-	public ArrayList<String> conversationText = new ArrayList<String>();
+	public ArrayList<String> conversationText = null;
 	public boolean stationary = false;
 	public boolean trainer = false;
 	public DIR dir = DIR.SOUTH;
-	public Image sprite;
+	public Image sprite = null;
 
 	public TrainerData(String path) {
 		FileInputStream fs = null;
@@ -32,19 +32,29 @@ public class TrainerData {
 			e.printStackTrace();
 		}
 		Scanner s = new Scanner(fs);
-		name = s.nextLine();
-		String[] nextLine = s.nextLine().split(" ");
-		position.setX(Integer.parseInt(nextLine[0]));
-		position.setY(Integer.parseInt(nextLine[1]));
+		if (s.hasNext())
+			name = s.nextLine();
 
-		String text = s.nextLine();
-		stationary = text.replace(" ", "").equals("true");
-		sprites = EnumsAndConstants.sprite_lib.getSprites(s.nextLine().trim());
-		String[] conversation = s.nextLine().split("%");
-
-		for (String x : conversation) {
-			conversationText.add(x.trim());
+		if (s.hasNext()) {
+			String[] nextLine = s.nextLine().split(" ");
+			position.setX(Integer.parseInt(nextLine[0]));
+			position.setY(Integer.parseInt(nextLine[1]));
 		}
+		if (s.hasNext()) {
+			String text = s.nextLine();
+			stationary = text.replace(" ", "").equals("true");
+		}
+		if (s.hasNext()) {
+			sprites = EnumsAndConstants.sprite_lib.getSprites(s.nextLine().trim());
+			sprite = sprites.get(0);
+		}
+		String[] conversation = null;
+		if (s.hasNext()) {
+			conversation = s.nextLine().split("%");
+			for (String x : conversation)
+				conversationText.add(x.trim());
+		}
+
 		if (s.hasNext()) {
 			trainer = true;
 
@@ -57,6 +67,11 @@ public class TrainerData {
 			money = Integer.parseInt(s.nextLine());
 
 		}
+	}
+
+	public boolean isValidData() {
+		return (name != null && position != null && sprites != null && pokemon != null && conversationText != null
+				&& money != 0 && sprite != null);
 	}
 
 	public TrainerData() {}

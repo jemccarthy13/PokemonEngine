@@ -1,7 +1,5 @@
 Route 29
-canFlyOutOf false	
-coords a,b,c,d
-pokemon:
-	Arcticuno 10
-	Spearow 90
-level 2 4
+true	
+0,0,10,10
+Arcticuno 10,Spearow 90
+2,4

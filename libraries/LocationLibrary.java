@@ -12,6 +12,8 @@ import location.LocationData;
 // ////////////////////////////////////////////////////////////////////////
 public class LocationLibrary {
 
+	LocationDataMap locationData = new LocationDataMap();
+
 	// ////////////////////////////////////////////////////////////////////////
 	//
 	// Location Map maps Name->Data
@@ -22,20 +24,24 @@ public class LocationLibrary {
 		private static final long serialVersionUID = 1L;
 
 		public LocationDataMap() {
-			String path = "Data/Pokemon";
+			String path = "Data/Locations";
 			File folder = new File(path);
 			File[] listOfFiles = folder.listFiles();
 			for (int i = 0; i < listOfFiles.length; i++) {
 				if (listOfFiles[i].isFile()) {
 					LocationData ld = new LocationData(listOfFiles[i].getPath());
-					put(ld.name, ld);
+					if (ld.isValidData())
+						put(ld.name, ld);
 				}
 			}
 		}
 	}
 
-	LocationDataMap locationData = new LocationDataMap();
-
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// getLocation - retrieve a location from the Map
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public LocationData getLocation(String locKey) {
 		return locationData.get(locKey);
 	}

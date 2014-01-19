@@ -16,6 +16,13 @@ import pokedex.PokemonData;
 // ////////////////////////////////////////////////////////////////////////
 public class PokemonFactory {
 
+	PokemonDataMap pokemonData = new PokemonDataMap();
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Maps Pokemon Name->Data
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	class PokemonDataMap extends HashMap<String, PokemonData> {
 
 		private static final long serialVersionUID = 1L;
@@ -27,13 +34,12 @@ public class PokemonFactory {
 			for (int i = 0; i < listOfFiles.length; i++) {
 				if (listOfFiles[i].isFile()) {
 					PokemonData pd = new PokemonData(listOfFiles[i].getPath());
-					put(pd.evolution_stages.get(0), pd);
+					if (pd.isValidData())
+						put(pd.evolution_stages.get(0), pd);
 				}
 			}
 		}
 	}
-
-	PokemonDataMap pokemonData = new PokemonDataMap();
 
 	// ////////////////////////////////////////////////////////////////////////
 	//

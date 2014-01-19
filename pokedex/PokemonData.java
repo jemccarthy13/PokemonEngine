@@ -7,16 +7,16 @@ import java.util.Scanner;
 
 public class PokemonData {
 
-	public String type;
-	public String pokedexNumber;
+	public String type = null;
+	public String pokedexNumber = null;
 
-	public ArrayList<String> evolution_stages;
-	public ArrayList<Integer> evolution_levels;
+	public ArrayList<String> evolution_stages = null;
+	public ArrayList<Integer> evolution_levels = null;
 
-	public int baseExp;
+	public int baseExp = 0;
 
-	public ArrayList<String> moves;
-	public ArrayList<Integer> levelsLearned;
+	public ArrayList<String> moves = null;
+	public ArrayList<Integer> levelsLearned = null;
 
 	public String toString() {
 		String retStr = "";
@@ -47,26 +47,41 @@ public class PokemonData {
 			e.printStackTrace();
 		}
 		Scanner s = new Scanner(fs);
-		pokedexNumber = s.nextLine();
-		evolution_stages = new ArrayList<String>();
-		for (String x : s.nextLine().split(","))
-			evolution_stages.add(x);
-		evolution_levels = new ArrayList<Integer>();
-		for (String x : s.nextLine().split(","))
-			evolution_levels.add(Integer.parseInt(x));
-		type = s.nextLine();
-		baseExp = Integer.parseInt(s.nextLine());
-		moves = new ArrayList<String>();
-		levelsLearned = new ArrayList<Integer>();
-		for (String x : s.nextLine().split(",")) {
-			String[] y = x.split(" ");
-			String moveName = "";
-			for (int z = 0; z < y.length - 1; z++) {
-				moveName += " " + y[z];
+		if (s.hasNext())
+			pokedexNumber = s.nextLine();
+		if (s.hasNext()) {
+			evolution_stages = new ArrayList<String>();
+			for (String x : s.nextLine().split(","))
+				evolution_stages.add(x);
+		}
+		if (s.hasNext()) {
+			evolution_levels = new ArrayList<Integer>();
+			for (String x : s.nextLine().split(","))
+				evolution_levels.add(Integer.parseInt(x));
+		}
+		if (s.hasNext())
+			type = s.nextLine();
+		if (s.hasNext())
+			baseExp = Integer.parseInt(s.nextLine());
+
+		if (s.hasNext()) {
+			moves = new ArrayList<String>();
+			levelsLearned = new ArrayList<Integer>();
+			for (String x : s.nextLine().split(",")) {
+				String[] y = x.split(" ");
+				String moveName = "";
+				for (int z = 0; z < y.length - 1; z++) {
+					moveName += " " + y[z];
+				}
+				moves.add(moveName.trim().toUpperCase());
+				levelsLearned.add(Integer.parseInt(y[y.length - 1]));
 			}
-			moves.add(moveName.trim().toUpperCase());
-			levelsLearned.add(Integer.parseInt(y[y.length - 1]));
 		}
 		s.close();
+	}
+
+	public boolean isValidData() {
+		return (type != null && pokedexNumber != null && evolution_stages != null && evolution_levels != null
+				&& baseExp != 0 && moves != null && levelsLearned != null);
 	}
 }

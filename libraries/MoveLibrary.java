@@ -15,7 +15,10 @@ import pokedex.MoveData;
 //
 // ////////////////////////////////////////////////////////////////////////
 public class MoveLibrary {
-	class MoveDataMap extends HashMap<String, MoveData> {
+
+	MoveDataMap moveData = new MoveDataMap();
+
+	class MoveDataMap extends HashMap<String, Move> {
 
 		private static final long serialVersionUID = 1L;
 
@@ -34,17 +37,20 @@ public class MoveLibrary {
 			}
 			Scanner s = new Scanner(fs);
 			while (s.hasNext()) {
-				MoveData md = new MoveData(s.nextLine());
-				this.put(md.name, md);
+				Move m = new Move(new MoveData(s.nextLine()));
+				this.put(m.getName(), m);
 			}
 			s.close();
 		}
 	}
 
-	MoveDataMap moveData = new MoveDataMap();
-
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// make new Move from the data in the dictionary
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public Move getMove(String name) {
 
-		return new Move(moveData.get(name));
+		return moveData.get(name);
 	}
 }

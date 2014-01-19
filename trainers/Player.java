@@ -119,12 +119,6 @@ public class Player implements Serializable {
 		return pData.position.getY();
 	}
 
-	/*
-	 * public void setCurrentX(int x) { pData.position.setX(x); }
-	 * 
-	 * public void setCurrentY(int y) { pData.position.setY(y); }
-	 */
-
 	public void setLoc(Coordinate c) {
 		pData.position = c;
 	}

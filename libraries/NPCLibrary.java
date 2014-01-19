@@ -17,7 +17,6 @@ import utilities.EnumsAndConstants.DIR;
 public class NPCLibrary {
 
 	public NPCDataMap npcData = new NPCDataMap();
-
 	public ArrayList<NPC> npcs = new ArrayList<NPC>();
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -36,12 +35,18 @@ public class NPCLibrary {
 			for (int i = 0; i < listOfFiles.length; i++) {
 				if (listOfFiles[i].isFile()) {
 					TrainerData pd = new TrainerData(listOfFiles[i].getPath());
-					put(pd.name, pd);
+					if (pd.isValidData())
+						put(pd.name, pd);
 				}
 			}
 		}
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// getNPC - retrieve a NPC by name from the map
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public NPC getNPC(String name) {
 		return new NPC(npcData.get(name));
 	}
