@@ -58,8 +58,8 @@ public class Utils {
 		return df.format(time.getHours()) + ": " + df.format(time.getMinutes()) + ": " + df.format(time.getSeconds());
 	}
 
-	public static void playBackgroundMusic(Location l) {
-		switch (l.getName()) {
+	public static void playBackgroundMusic(String l) {
+		switch (l) {
 		case "New Bark Town": {
 			playBackgroundMusic(EnumsAndConstants.MUSIC.NEWBARKTOWN);
 			break;

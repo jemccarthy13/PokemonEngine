@@ -7,6 +7,12 @@ import utilities.EnumsAndConstants;
 import utilities.EnumsAndConstants.STATS;
 import utilities.Utils;
 
+// ////////////////////////////////////////////////////////////////////////
+//
+// Pokemon - generated from PokemonData, calculates stats based on a level
+// and holds moves + sprite data
+//
+// ////////////////////////////////////////////////////////////////////////
 public class Pokemon implements Serializable {
 	private static final long serialVersionUID = 1L;
 	int evolution_stage = 0;
@@ -24,6 +30,66 @@ public class Pokemon implements Serializable {
 
 	PokemonData pData;
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Constructor - given PokemonData and a level, fill in the blanks
+	// (stats, evolution stage, moves, sprites)
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public Pokemon(PokemonData pData, int lev) {
+		this.pData = pData;
+		this.level = lev;
+		for (Integer x : pData.evolution_levels) {
+			if (level > x && x != 0) {
+				evolution_stage++;
+			}
+		}
+		this.stats[STATS.HP.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
+		this.stats[STATS.ATTACK.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
+		this.stats[STATS.DEFENSE.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
+		this.stats[STATS.SP_ATTACK.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
+		this.stats[STATS.SP_DEFENSE.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
+		this.stats[STATS.SPEED.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
+		this.stats[STATS.ACCURACY.ordinal()] = Integer.valueOf(100);
+		this.curExp = (this.level * this.level * this.level);
+
+		int idx = -1;
+		for (int x = 0; x < pData.moves.size(); x++) {
+
+			if (level > pData.levelsLearned.get(x)) {
+				idx++;
+			}
+		}
+		for (int y = 0; y < 4; y++) {
+			if (idx - y <= pData.moves.size() && idx - y >= 0) {
+				moves[y] = EnumsAndConstants.move_lib.getMove(pData.moves.get(idx - y));
+			}
+		}
+
+		for (int x = 0; x < this.stats.length; x++) {
+			if (this.stats[x].intValue() < 5) {
+				this.stats[x] = Integer.valueOf(5);
+			}
+			this.max_stats[x] = this.stats[x];
+		}
+
+		this.party_icon = EnumsAndConstants.tk.createImage(getClass().getResource(
+				EnumsAndConstants.GRAPHICS_ICONPATH + formatPokedexNumber(0) + ".png"));
+		this.back_sprite = EnumsAndConstants.tk.createImage(getClass().getResource(
+				EnumsAndConstants.GRAPHICS_BATTLEPATH + formatPokedexNumber(evolution_stage) + "b.png"));
+		this.front_sprite = EnumsAndConstants.tk.createImage(getClass().getResource(
+				EnumsAndConstants.GRAPHICS_BATTLEPATH + formatPokedexNumber(evolution_stage) + ".png"));
+	}
+
+	public String formatPokedexNumber(int evolutionStage) {
+		return String.format("%03d", Integer.parseInt(this.pData.pokedexNumber) + evolutionStage);
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// levelUp - if at enough EXP, level up (also checks for evolution)
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public void levelUp() {
 		if (this.level < 100) {
 			this.level += 1;
@@ -61,57 +127,6 @@ public class Pokemon implements Serializable {
 
 	public int getMaxStat(EnumsAndConstants.STATS hp) {
 		return this.max_stats[hp.ordinal()].intValue();
-	}
-
-	public Pokemon(PokemonData pData, int lev) {
-		this.pData = pData;
-		this.level = lev;
-		for (Integer x : pData.evolution_levels) {
-			if (level > x && x != 0) {
-				evolution_stage++;
-			}
-		}
-		this.stats[STATS.HP.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
-		this.stats[STATS.ATTACK.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
-		this.stats[STATS.DEFENSE.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
-		this.stats[STATS.SP_ATTACK.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
-		this.stats[STATS.SP_DEFENSE.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
-		this.stats[STATS.SPEED.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
-		this.stats[STATS.ACCURACY.ordinal()] = Integer.valueOf(100);
-		this.curExp = (this.level * this.level * this.level);
-
-		int idx = -1;
-		for (int x = 0; x < pData.moves.size(); x++) {
-
-			if (level > pData.levelsLearned.get(x)) {
-				idx++;
-			}
-		}
-		for (int y = 0; y < 4; y++) {
-			if (idx - y <= pData.moves.size() && idx - y >= 0) {
-				moves[y] = EnumsAndConstants.move_lib.getMove(pData.moves.get(idx - y));
-			}
-		}
-
-		for (int x = 0; x < this.stats.length; x++) {
-			if (this.stats[x].intValue() < 5) {
-				this.stats[x] = Integer.valueOf(5);
-			}
-			this.max_stats[x] = this.stats[x];
-		}
-		this.party_icon = EnumsAndConstants.tk.createImage(getClass().getResource(
-				"../graphics_lib/Icons/icon" + String.format("%03d", Integer.parseInt(this.pData.pokedexNumber))
-						+ ".png"));
-		this.back_sprite = EnumsAndConstants.tk.createImage(getClass()
-				.getResource(
-						"../graphics_lib/Battlers/"
-								+ String.format("%03d", Integer.parseInt(this.pData.pokedexNumber) + evolution_stage)
-								+ "b.png"));
-		this.front_sprite = EnumsAndConstants.tk
-				.createImage(getClass().getResource(
-						"../graphics_lib/Battlers/"
-								+ String.format("%03d", Integer.parseInt(this.pData.pokedexNumber) + evolution_stage)
-								+ ".png"));
 	}
 
 	public String toString() {

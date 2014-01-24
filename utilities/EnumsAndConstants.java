@@ -41,6 +41,8 @@ public class EnumsAndConstants {
 	public static final Toolkit tk = Toolkit.getDefaultToolkit();
 
 	public static final String BGMUSICPATH = "/audio_lib/BGM/";
+	public static final String GRAPHICS_BATTLEPATH = "../graphics_lib/Battlers/";
+	public static final String GRAPHICS_ICONPATH = "../graphics_lib/Icons/icon";
 	public static final SpriteLibrary sprite_lib = new SpriteLibrary();
 	public static final AudioLibrary audio_lib = new AudioLibrary();
 	public static final LocationLibrary loc_lib = new LocationLibrary();

@@ -37,8 +37,7 @@ public class TrainerData {
 
 		if (s.hasNext()) {
 			String[] nextLine = s.nextLine().split(" ");
-			position.setX(Integer.parseInt(nextLine[0]));
-			position.setY(Integer.parseInt(nextLine[1]));
+			position = new Coordinate(Integer.parseInt(nextLine[0]), Integer.parseInt(nextLine[1]));
 		}
 		if (s.hasNext()) {
 			String text = s.nextLine();
@@ -50,6 +49,7 @@ public class TrainerData {
 		}
 		String[] conversation = null;
 		if (s.hasNext()) {
+			conversationText = new ArrayList<String>();
 			conversation = s.nextLine().split("%");
 			for (String x : conversation)
 				conversationText.add(x.trim());
@@ -57,7 +57,7 @@ public class TrainerData {
 
 		if (s.hasNext()) {
 			trainer = true;
-
+			pokemon = new PokemonList();
 			String[] pokemonData = s.nextLine().split(",");
 			for (String x : pokemonData) {
 				String[] datasplit = x.split(" ");
@@ -70,8 +70,7 @@ public class TrainerData {
 	}
 
 	public boolean isValidData() {
-		return (name != null && position != null && sprites != null && pokemon != null && conversationText != null
-				&& money != 0 && sprite != null);
+		return (name != null && position != null && sprites != null);
 	}
 
 	public TrainerData() {}

@@ -24,10 +24,9 @@ public class Player implements Serializable {
 
 	public Player(int x, int y, String n) {
 		pData.name = n;
-		pData.position.setX(x);
-		pData.position.setY(y);
+		pData.position = new Coordinate(x, y);
 		pData.sprites = EnumsAndConstants.sprite_lib.getSprites("PLAYER");
-		curLoc = new Location("New Bark Town");
+		curLoc = new Location(EnumsAndConstants.loc_lib.getLocation("New Bark Town"));
 		setSpriteFacing(DIR.SOUTH);
 	}
 

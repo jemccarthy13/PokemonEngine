@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import pokedex.Pokemon;
+import pokedex.PokemonList;
 import tiles.Coordinate;
 import tiles.Tile;
 import trainers.Player;
@@ -50,6 +51,7 @@ public class GameInitializer {
 			game.gData.player = new Player(34, 15, name);
 			game.gData.player.setID(Utils.createTrainerID());
 			Pokemon charmander = EnumsAndConstants.pokemon_generator.createPokemon("Charmander", 90);
+			game.gData.player.pData.pokemon = new PokemonList();
 			game.gData.player.caughtPokemon(charmander);
 			game.gData.player.setMoney(1000000);
 			game.gData.timeStarted = System.currentTimeMillis();
@@ -59,6 +61,7 @@ public class GameInitializer {
 			game.gData.player = new Player(36, 4, name);
 			game.gData.player.setID(Utils.createTrainerID());
 			Pokemon charmander = EnumsAndConstants.pokemon_generator.createPokemon("Rattatta", 5);
+			game.gData.player.pData.pokemon = new PokemonList();
 			game.gData.player.caughtPokemon(charmander);
 			game.gData.player.setMoney(2000);
 			game.gData.inIntro = true;

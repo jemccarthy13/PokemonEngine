@@ -165,7 +165,7 @@ public class BattleScene {
 
 		// reset the music, add to beaten trainers
 		Utils.pauseBackgrondMusic();
-		Utils.playBackgroundMusic(game.gData.player.getCurLoc());
+		Utils.playBackgroundMusic("New Bark Town");
 		game.gData.player.beatenTrainers.add(enemy.getName());
 		game.gData.playerWin = false;
 		game.movable = true;

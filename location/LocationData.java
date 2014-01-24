@@ -15,11 +15,17 @@ import tiles.Coordinate;
 public class LocationData {
 
 	public String name = null;
-	Boolean canFlyOutOf = null;
-	Coordinate topLeft = null, bottomRight = null;
-	ArrayList<String> pokemon = null;
-	ArrayList<Integer> probabilities = null;
+	public Boolean canFlyOutOf = null;
+	public Coordinate topLeft = null, bottomRight = null;
+	public ArrayList<String> pokemon = null;
+	public ArrayList<Integer> probabilities = null;
+	public ArrayList<Integer> minLevels = null, maxLevels = null;
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Constructs a LocationData object from a given path
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public LocationData(String path) {
 		FileInputStream fs = null;
 		try {
@@ -52,10 +58,20 @@ public class LocationData {
 				probabilities.add(Integer.parseInt(pokemonData[1]));
 			}
 		}
+		if (s.hasNext()) {
+			minLevels = new ArrayList<Integer>();
+			maxLevels = new ArrayList<Integer>();
+			String[] levelInfo = s.nextLine().split(",");
+			for (String x : levelInfo) {
+				String[] levels = x.split(" ");
+				minLevels.add(Integer.parseInt(levels[0]));
+				maxLevels.add(Integer.parseInt(levels[1]));
+			}
+		}
 		s.close();
 	}
 
 	public boolean isValidData() {
-		return (name != null && canFlyOutOf != null && topLeft != null && bottomRight != null);
+		return (name != null && canFlyOutOf != null && topLeft != null && bottomRight != null && minLevels != null && maxLevels != null);
 	}
 }

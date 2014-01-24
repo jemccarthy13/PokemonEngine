@@ -5,6 +5,12 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+// ////////////////////////////////////////////////////////////////////////
+//
+// PokemonData - holds all the data needed to construct a Pokmon:
+// name, number, evolution stages + levels, baseExp, moves + levels learned
+//
+// ////////////////////////////////////////////////////////////////////////
 public class PokemonData {
 
 	public String type = null;
@@ -18,27 +24,11 @@ public class PokemonData {
 	public ArrayList<String> moves = null;
 	public ArrayList<Integer> levelsLearned = null;
 
-	public String toString() {
-		String retStr = "";
-		retStr += pokedexNumber + "\n";
-		for (String x : evolution_stages) {
-			retStr += x + " ";
-		}
-		retStr += "\n" + baseExp + "\n";
-		for (Integer x : evolution_levels) {
-			retStr += x + " ";
-		}
-		retStr += "\n";
-		for (String x : moves) {
-			retStr += x + " ";
-		}
-		retStr += "\n";
-		for (Integer x : levelsLearned) {
-			retStr += x + " ";
-		}
-		return retStr;
-	}
-
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Constructor - generates PokemonData from a given file + validates input
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public PokemonData(String filePath) {
 		FileInputStream fs = null;
 		try {

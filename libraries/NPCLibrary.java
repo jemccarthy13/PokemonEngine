@@ -48,7 +48,12 @@ public class NPCLibrary {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public NPC getNPC(String name) {
-		return new NPC(npcData.get(name));
+		for (NPC curNPC : npcs) {
+			if (curNPC.getName().equals(name)) {
+				return curNPC;
+			}
+		}
+		return null;
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
