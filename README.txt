@@ -4,29 +4,26 @@ For now this will be the location of any @TODO action items, desired features, a
 
 Also documented will be known bugs.
 
+
 ===================================================================
-Version 1.0.0                                           11 Jan 2014
+Version 1.1.0                                           23 Jan 2014
 ===================================================================
-- Initial clean "working" version.
 Features:
-- New Game Intro Scene w/ name selection
-- Battle Engine works (hard coded battle)
-- "Continue" hard coded values work
-- Sprites library half cleaned
+- Version 1.0.1 +
+- Restructured framework, with run time enhancements
+- Fully commented
 
 TODO:
-- battle engine picks default move for every turn
 - Options don't work
 - pause menu selections only bare skeletons
 - need world map sprite for pokegear
-- sprites in battles collide with frame b/c of sizing difference
 - wild encounters don't work
 - need grass animation when walking through wild
 - map should be expanded and should include indoors locations
 - interact with world map (e.g. items, signs)
 - prof elm's intro scenes
 
-BUGS:
+KNOWN BUGS:
 - occasionally the player will be in the process of moving
 	when a trainer sees them.  The behavior is a glitch, 
 	the trainer should not move in to battle
@@ -52,11 +49,36 @@ TODO:
 - prof elm's intro scenes
 - ADD COMMENTS before it's too late!
 
-BUGS:
+KNOWN BUGS:
+- occasionally the player will be in the process of moving
+	when a trainer sees them.  The behavior is a glitch, 
+	the trainer should not move in to battle	
+===================================================================
+Version 1.0.0                                           11 Jan 2014
+===================================================================
+- Initial clean "working" version.
+Features:
+- New Game Intro Scene w/ name selection
+- Battle Engine works (hard coded battle)
+- "Continue" hard coded values work
+- Sprites library half cleaned
+
+TODO:
+- battle engine picks default move for every turn
+- Options don't work
+- pause menu selections only bare skeletons
+- need world map sprite for pokegear
+- sprites in battles collide with frame b/c of sizing difference
+- wild encounters don't work
+- need grass animation when walking through wild
+- map should be expanded and should include indoors locations
+- interact with world map (e.g. items, signs)
+- prof elm's intro scenes
+
+KNOWN BUGS:
 - occasionally the player will be in the process of moving
 	when a trainer sees them.  The behavior is a glitch, 
 	the trainer should not move in to battle
-	
 ===================================================================
-Version 1.0.2         ==> Scheduled for 15 Jan 2014
+                     END RELEASE NOTES
 ===================================================================
