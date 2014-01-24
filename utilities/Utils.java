@@ -10,9 +10,19 @@ import location.Location;
 import pokedex.Pokemon;
 import trainers.Player;
 
+// ////////////////////////////////////////////////////////////////////////
+//
+// Utils - some utility functions used during gameplay
+//
+// ////////////////////////////////////////////////////////////////////////
 public class Utils {
 	static Random randomGenerator = new Random();
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// randomDirection - generates a random direction for NPCs
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public static EnumsAndConstants.DIR randomDirection() {
 		int dir = generateRandom(1, 4);
 		switch (dir) {
@@ -28,6 +38,11 @@ public class Utils {
 		return EnumsAndConstants.DIR.SOUTH;
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// createTrainerID - creates a random Trainer ID for the player
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public static int createTrainerID() {
 		int a = Utils.generateRandom(0, 9);
 		int b = Utils.generateRandom(0, 9);
@@ -37,6 +52,21 @@ public class Utils {
 		return (10000 * a + 1000 * b + 100 * c + 10 * d + e);
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// formatTime - formats the system time into a readable format
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public static String formatTime(TimeStruct time) {
+		DecimalFormat df = new DecimalFormat("00");
+		return df.format(time.getHours()) + ": " + df.format(time.getMinutes()) + ": " + df.format(time.getSeconds());
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// sound effect utility functions to play different sound effects
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public static void playCollisionSound() {
 		EnumsAndConstants.col.playClip("COLLISION");
 	}
@@ -53,11 +83,12 @@ public class Utils {
 		EnumsAndConstants.col.playClip("DAMAGE");
 	}
 
-	public static String formatTime(TimeStruct time) {
-		DecimalFormat df = new DecimalFormat("00");
-		return df.format(time.getHours()) + ": " + df.format(time.getMinutes()) + ": " + df.format(time.getSeconds());
-	}
-
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// playBackgroundMusic - switches the background music to the current
+	// location's music
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public static void playBackgroundMusic(String l) {
 		switch (l) {
 		case "New Bark Town": {
@@ -67,6 +98,12 @@ public class Utils {
 		}
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// pickTrainerMusic - when an enemy sees the player, pick a random
+	// "I see you" music
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public static void pickTrainerMusic() {
 		int choice = generateRandom(6, 1);
 		switch (choice) {
@@ -99,9 +136,14 @@ public class Utils {
 			break;
 		}
 		}
-
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// playBackgroundMusic - plays different background music according to the
+	// scenario
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public static void playBackgroundMusic(EnumsAndConstants.MUSIC song) {
 		if (EnumsAndConstants.BACKGROUND_MUSIC != null) {
 			EnumsAndConstants.BACKGROUND_MUSIC.stop();
@@ -135,12 +177,23 @@ public class Utils {
 		}
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// pauseBackgroundMusic - pauses the background music, typically to
+	// interrupt the music thread with another song
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public static void pauseBackgrondMusic() {
 		if (EnumsAndConstants.BACKGROUND_MUSIC != null) {
 			EnumsAndConstants.BACKGROUND_MUSIC.stop();
 		}
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// generateRandom - the heart of random number generation in game
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public static int generateRandom(int start, int end) {
 		double range = end - start + 1.0;
 		double fraction = (range * randomGenerator.nextDouble());
@@ -148,28 +201,56 @@ public class Utils {
 		return num;
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// for an enemy pokemon, pick a random move
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public static int getMove(Pokemon p) {
 		return generateRandom(0, p.getNumMoves() - 1);
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// randomLevel - generates a random level between start and end, inclusive
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public static int randomLevel(int start, int end) {
 		return generateRandom(start + 1, end - 1);
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// randomBaseStat - generates a random base stat based on the given level
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public static int randomBaseStat(int level) {
 		int start = (int) (2.4D * level) - 5;
 		int end = (int) (2.4D * level) + 5;
 		return generateRandom(start, end);
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// randomStatIncr - generates a number to incrase a stat by:
+	// 75% chance of +2
+	// 25% chance of +3
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public static int randomStatIncr() {
-		double fraction = (99.0D * randomGenerator.nextDouble());
-		if (fraction < 75L) {
+		double fraction = (100 * randomGenerator.nextDouble());
+		if (fraction < 75) {
 			return 2;
 		}
 		return 3;
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// randomPokemon - given a location, generate a random pokemon from the
+	// wild pokemon chart in that region
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public static Pokemon randomPokemon(Location location) {
 		Pokemon p = null;
 		long name_number = generateRandom(0, 100);
@@ -181,6 +262,11 @@ public class Utils {
 		return p;
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// saveGame - writes a player object to a .SAV file
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public static void saveGame(Player you) {
 		FileOutputStream fout = null;
 		ObjectOutputStream oos = null;
@@ -198,6 +284,13 @@ public class Utils {
 		System.out.println("Game saved!");
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// accessComputer
+	//
+	// TODO - move to HandleEvent and graphics Painter
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public static void accessComputer(Player you) {
 		System.out.println("Saving game...");
 		saveGame(you);
@@ -205,7 +298,11 @@ public class Utils {
 		System.out.println("computer menu here.");
 	}
 
-	// Conversation dialog boxes (PokemonMessageBox)
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// methods for conversation dialog boxes
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public static void messageBox(Graphics g, String string) {
 		EnumsAndConstants.msg_box.Message(g, string);
 	}

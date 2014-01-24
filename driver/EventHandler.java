@@ -63,10 +63,10 @@ public class EventHandler {
 					evaluateAndDealDamage(checkPar, playerPokemon, move);
 
 					if (playerPokemon.statusEffect == 2) { // burned
-						playerPokemon.doDamage(2);
+						playerPokemon.doDamage(2, true);
 						System.out.println(playerPokemon.getName() + " has been hurt by its burn");
 					} else if (playerPokemon.statusEffect == 3) { // PSN
-						playerPokemon.doDamage(2);
+						playerPokemon.doDamage(2, true);
 						System.out.println(playerPokemon.getName() + " has been hurt by its poison");
 					}
 					resetBattleVars();
@@ -181,7 +181,7 @@ public class EventHandler {
 				damage = (int) (((2 * playerPokemon.getLevel() / 5 + 2) * chosen.getStrength() * attackStat / defStat
 						/ 50 + 2)
 						* Utils.generateRandom(85, 100) / 100.0);
-				((Pokemon) game.encounter.enemyPokemon.get(0)).doDamage(damage);
+				((Pokemon) game.encounter.enemyPokemon.get(0)).doDamage(damage, true);
 			}
 		} else {
 			System.out.println(playerPokemon.getName() + " is paralyzed. It can't move.");

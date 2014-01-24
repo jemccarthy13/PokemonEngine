@@ -14,6 +14,13 @@ import libraries.SpriteLibrary;
 import trainers.NPC;
 import utilities.EnumsAndConstants;
 
+//////////////////////////////////////////////////////////////////////////
+//
+// Unit testing for sprite generation.
+//
+// TODO - needs updating
+//
+//////////////////////////////////////////////////////////////////////////
 public class SpriteTest extends JFrame {
 
 	static ArrayList<Image> sprites = new ArrayList<Image>();

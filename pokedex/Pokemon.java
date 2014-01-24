@@ -81,8 +81,29 @@ public class Pokemon implements Serializable {
 				EnumsAndConstants.GRAPHICS_BATTLEPATH + formatPokedexNumber(evolution_stage) + ".png"));
 	}
 
-	public String formatPokedexNumber(int evolutionStage) {
-		return String.format("%03d", Integer.parseInt(this.pData.pokedexNumber) + evolutionStage);
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// getExpGain - calculate the exp gained from defeating a pokemon in the
+	// current battle
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public int getExpGain(boolean trainerOwned, int numParticipants) {
+		double a = trainerOwned ? 1.5 : 1;
+		int b = pData.baseExp;
+		return (int) (a * b * level) / (7 * numParticipants);
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// gainExp - give the pokemon the calculated exp
+	// if it's over the next level amount, level up
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public void gainExp(int expGain) {
+		this.curExp += expGain;
+		if (this.curExp >= (this.level + 1) * (this.level + 1) * (this.level + 1)) {
+			levelUp();
+		}
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -121,18 +142,13 @@ public class Pokemon implements Serializable {
 		}
 	}
 
-	public int getStat(EnumsAndConstants.STATS stat) {
-		return this.stats[stat.ordinal()].intValue();
-	}
-
-	public int getMaxStat(EnumsAndConstants.STATS hp) {
-		return this.max_stats[hp.ordinal()].intValue();
-	}
-
-	public String toString() {
-		return pData.toString() + "\n" + level;
-	}
-
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// doDamage - deals a given amount of damage to this Pokemon
+	// playSound flags whether or not to play damage sound (for poison vs
+	// in battle)
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public void doDamage(int damage, boolean playSound) {
 		setStat(STATS.HP, getStat(STATS.HP) - damage);
 		if (getStat(STATS.HP) < 0) {
@@ -143,43 +159,82 @@ public class Pokemon implements Serializable {
 		}
 	}
 
-	public void doDamageWithoutSound(int damage) {
-		doDamage(damage, false);
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// heal - restore the given amount of health
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public void heal(int amount) {
+		if (amount == -1) {
+			this.stats[STATS.HP.ordinal()] = this.max_stats[STATS.HP.ordinal()];
+		} else {
+			int hp = STATS.HP.ordinal();
+			stats[hp] = Integer.valueOf(stats[hp].intValue() + amount);
+			if (this.stats[STATS.HP.ordinal()].intValue() > this.max_stats[STATS.HP.ordinal()].intValue()) {
+				heal(-1);
+			}
+		}
 	}
 
-	public void doDamage(int damage) {
-		doDamage(damage, true);
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// getStat - given a STAT get the current value
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public int getStat(EnumsAndConstants.STATS stat) {
+		return this.stats[stat.ordinal()].intValue();
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// getMaxStat - given a STAT return the highest value that stat could be
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public int getMaxStat(EnumsAndConstants.STATS hp) {
+		return this.max_stats[hp.ordinal()].intValue();
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// setStat - set the given stat to the given value
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	private void setStat(EnumsAndConstants.STATS hp, int i) {
 		this.stats[hp.ordinal()] = Integer.valueOf(i);
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// getName - return the name of this pokemon
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public String getName() {
 		return pData.evolution_stages.get(evolution_stage);
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// getLevel - return the level of this pokemon
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public int getLevel() {
 		return level;
 	}
 
-	public boolean hasParticipated() {
-		return this.participated;
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// getMove - return the chosen move
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public Move getMove(int choice) {
+		return moves[choice];
 	}
 
-	public int getExpGain(boolean trainerOwned, int numParticipants) {
-		double a = trainerOwned ? 1.5 : 1;
-		int b = pData.baseExp;
-		return (int) (a * b * level) / (7 * numParticipants);
-	}
-
-	public void gainExp(int expGain) {
-		this.curExp += expGain;
-		if (this.curExp >= (this.level + 1) * (this.level + 1) * (this.level + 1)) {
-			levelUp();
-		}
-	}
-
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// getNumMoves - return the number of moves the pokemon knows
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public int getNumMoves() {
 		int count = 0;
 		for (Move x : moves) {
@@ -187,41 +242,72 @@ public class Pokemon implements Serializable {
 				count++;
 			}
 		}
-
 		return count;
 	}
 
-	public Move getMove(int choice) {
-		return moves[choice];
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// hasParticipated - return whether or not this pokemon has participated
+	// in the current battle
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public boolean hasParticipated() {
+		return this.participated;
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// setParticipated - set whether or not the pokemon has participated in
+	// the current battle
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public void setParticipated() {
 		this.participated = true;
 	}
 
-	public void heal(int amount) {
-		if (amount == -1) {
-			this.stats[STATS.HP.ordinal()] = this.max_stats[STATS.HP.ordinal()];
-		} else {
-			int tmp40_37 = STATS.HP.ordinal();
-			Integer[] tmp40_31 = this.stats;
-			tmp40_31[tmp40_37] = Integer.valueOf(tmp40_31[tmp40_37].intValue() + amount);
-			if (this.stats[STATS.HP.ordinal()].intValue() > this.max_stats[STATS.HP.ordinal()].intValue()) {
-				heal(-1);
-			}
-		}
-	}
-
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// getIcon - return the image used as the party icon for this pokemon
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public Image getIcon() {
 		return this.party_icon;
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// getBackSprite - return the image used as the back battle sprite
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public Image getBackSprite() {
 		return this.back_sprite;
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// getFrontSprite - return the image used as the front battle sprite
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public Image getFrontSprite() {
 		return this.front_sprite;
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// toString - debug information related to Pokemon
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public String toString() {
+		return pData.toString() + "\n" + level;
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// formatPokedexNumber - takes the base number, adds the stage, and then
+	// formats it to 3 digits
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public String formatPokedexNumber(int evolutionStage) {
+		return String.format("%03d", Integer.parseInt(this.pData.pokedexNumber) + evolutionStage);
+	}
 }

@@ -7,6 +7,11 @@ import javax.swing.Timer;
 import tiles.TileMap;
 import trainers.Player;
 
+// ////////////////////////////////////////////////////////////////////////
+//
+// GameData - holds data related to gameplay logic control
+//
+// ////////////////////////////////////////////////////////////////////////
 public class GameData implements Serializable {
 	// ======================= Serialization ================================//
 	public static final long serialVersionUID = 1L;

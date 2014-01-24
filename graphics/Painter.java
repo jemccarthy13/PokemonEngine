@@ -418,7 +418,7 @@ public class Painter extends JPanel {
 			g.drawImage(curNPC.getSprite(), curNPC.getCurrentX() * 32 + gameData.start_coorX, curNPC.getCurrentY() * 32
 					+ gameData.start_coorY - 10, null);
 
-			gameData.tm.set(curNPC.nData.position, EnumsAndConstants.OBSTACLE);
+			gameData.tm.set(curNPC.tData.position, EnumsAndConstants.OBSTACLE);
 		}
 		g2.translate(-gameData.offsetX, -gameData.offsetY);
 

@@ -19,6 +19,11 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+// ////////////////////////////////////////////////////////////////////////
+//
+// Jukebox - handles playing clips
+//
+// ////////////////////////////////////////////////////////////////////////
 public class JukeBox {
 	private BackgroundSound bs;
 	private HashMap<String, LinkedList<Sound>> availableClips;

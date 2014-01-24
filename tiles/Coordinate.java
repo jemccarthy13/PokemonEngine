@@ -2,10 +2,20 @@ package tiles;
 
 import utilities.EnumsAndConstants.DIR;
 
+//////////////////////////////////////////////////////////////////////////
+//
+// Coordinate class - holds x,y pair data for graphics and location data
+//
+//////////////////////////////////////////////////////////////////////////
 public class Coordinate {
 	int x;
 	int y;
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Constructors - initializes or creates an empty coordinate at (0,0)
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public Coordinate(int X, int Y) {
 		this.x = X;
 		this.y = Y;
@@ -16,20 +26,17 @@ public class Coordinate {
 		this.y = 0;
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// accessors and mutators for x and y
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public int getX() {
 		return this.x;
 	}
 
 	public int getY() {
 		return this.y;
-	}
-
-	public boolean equals(Coordinate another) {
-		if (another.getX() == getX() && another.getY() == getY()) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	public void setX(int locX) {
@@ -40,6 +47,24 @@ public class Coordinate {
 		this.y = locY;
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// equals - checks if one coordinate's x,y pair is equal to another's
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public boolean equals(Coordinate another) {
+		if (another.getX() == getX() && another.getY() == getY()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// move - moves the coordinate in a specified direction
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public Coordinate move(DIR dir) {
 		Coordinate nCoor = new Coordinate(x, y);
 		if (dir == DIR.NORTH) {

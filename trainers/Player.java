@@ -1,20 +1,20 @@
 package trainers;
 
-import java.awt.Image;
 import java.io.Serializable;
 import java.util.ArrayList;
 
 import location.Location;
-import pokedex.Pokemon;
-import pokedex.PokemonList;
-import tiles.Coordinate;
 import utilities.EnumsAndConstants;
-import utilities.EnumsAndConstants.DIR;
+import utilities.Utils;
 
-public class Player implements Serializable {
+//////////////////////////////////////////////////////////////////////////
+//
+// Player - holds data for the current user
+//
+// ////////////////////////////////////////////////////////////////////////
+public class Player extends Actor implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	public TrainerData pData = new TrainerData();
 
 	NPC rival;
 	public ArrayList<String> beatenTrainers = new ArrayList<String>();
@@ -22,60 +22,44 @@ public class Player implements Serializable {
 	private int id;
 	Location curLoc;
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Player constructor given location and a name
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public Player(int x, int y, String n) {
-		pData.name = n;
-		pData.position = new Coordinate(x, y);
-		pData.sprites = EnumsAndConstants.sprite_lib.getSprites("PLAYER");
+		super(x, y, n);
 		curLoc = new Location(EnumsAndConstants.loc_lib.getLocation("New Bark Town"));
-		setSpriteFacing(DIR.SOUTH);
+		id = Utils.createTrainerID();
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Player constructor given a name - typically for unit tests
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public Player(String n) {
-		pData.name = n;
-		pData.position = new Coordinate(0, 0);
-		pData.money = 2000;
-		pData.sprites = EnumsAndConstants.sprite_lib.getSprites("PLAYER");
-		this.setSpriteFacing(DIR.SOUTH);
+		super(0, 0, n);
+		curLoc = new Location(EnumsAndConstants.loc_lib.getLocation("New Bark Town"));
+		id = Utils.createTrainerID();
 	}
 
-	public void move(DIR dir) {
-		pData.position = pData.position.move(dir);
-	}
-
-	public Location getCurLoc() {
-		return curLoc;
-	}
-
-	public void setDirection(DIR direction) {
-		pData.dir = direction;
-	}
-
-	public void caughtPokemon(Pokemon p) {
-		pData.pokemon.add(p);
-	}
-
-	public PokemonList getPokemon() {
-		return pData.pokemon;
-	}
-
-	public void setSpriteFacing(DIR dir) {
-		setDirection(dir);
-		if (dir.equals(DIR.NORTH)) {
-			setSprite(pData.sprites.get(9));
-		}
-		if (dir.equals(DIR.SOUTH)) {
-			setSprite(pData.sprites.get(0));
-		}
-		if (dir.equals(DIR.EAST)) {
-			setSprite(pData.sprites.get(6));
-		}
-		if (dir.equals(DIR.WEST)) {
-			setSprite(pData.sprites.get(3));
-		}
-	}
-
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// beatTrainer - adds the beaten NPC to the list of beaten trainers
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public void beatTrainer(NPC t) {
 		this.beatenTrainers.add(t.getName());
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// accessors and mutators for member variables
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public Location getCurLoc() {
+		return curLoc;
 	}
 
 	public void setRivalName(String n) {
@@ -94,84 +78,11 @@ public class Player implements Serializable {
 		this.badges = badges;
 	}
 
-	public void setMoney(int m) {
-		pData.money = m;
-	}
-
-	public int getMoney() {
-		return pData.money;
-	}
-
-	public void setDir(DIR dir) {
-		pData.dir = dir;
-	}
-
-	public DIR getDir() {
-		return pData.dir;
-	}
-
-	public int getCurrentX() {
-		return pData.position.getX();
-	}
-
-	public int getCurrentY() {
-		return pData.position.getY();
-	}
-
-	public void setLoc(Coordinate c) {
-		pData.position = c;
-	}
-
-	public void setSprite(Image m) {
-		pData.sprite = m;
-	}
-
-	public Image getSprite() {
-		return pData.sprite;
-	}
-
-	public void changeSprite(int pixels, boolean rightFoot) {
-
-		int direction = 3 * getDir().ordinal();
-
-		if ((pixels >= 0) && (pixels < 4)) {
-			setSprite(pData.sprites.get(direction));
-		} else if ((pixels > 4) && (pixels < 8)) {
-			setSprite(pData.sprites.get(direction));
-		} else if ((pixels > 8) && (pixels < 12)) {
-			if (!rightFoot) {
-				setSprite(pData.sprites.get(direction + 1));
-			} else {
-				setSprite(pData.sprites.get(direction + 2));
-			}
-		} else if ((pixels >= 12) && (pixels < 15)) {
-			if (!rightFoot) {
-				setSprite(pData.sprites.get(direction + 1));
-			} else {
-				setSprite(pData.sprites.get(direction + 2));
-			}
-		} else {
-			setSprite(pData.sprites.get(direction));
-		}
-	}
-
-	public String getName() {
-		return pData.name;
-	}
-
-	public void setName(String nameSelected) {
-		pData.name = nameSelected;
-	}
-
 	public void setID(int input) {
 		this.id = input;
 	}
 
 	public int getID() {
 		return this.id;
-	}
-
-	public String getPokemonOwned() {
-		return String.valueOf(pData.pokemon.size());
 	}
 }

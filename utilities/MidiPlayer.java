@@ -4,6 +4,11 @@ import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
 
+// ////////////////////////////////////////////////////////////////////////
+//
+// MidiPlayer - handles playing the back ground music
+//
+// ////////////////////////////////////////////////////////////////////////
 public class MidiPlayer {
 	private Sequencer sequencer;
 	private String filename;

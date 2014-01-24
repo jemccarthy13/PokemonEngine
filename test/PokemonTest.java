@@ -5,6 +5,13 @@ import org.junit.Assert;
 import pokedex.Pokemon;
 import pokedex.PokemonData;
 
+// ////////////////////////////////////////////////////////////////////////
+//
+// Unit testing for Pokemon constructors and information
+// 
+// TODO - needs updating
+//
+// ////////////////////////////////////////////////////////////////////////
 public class PokemonTest {
 	public static void testPokemon() {
 
@@ -45,11 +52,3 @@ public class PokemonTest {
 		testPokemon();
 	}
 }
-
-/*
- * Location: C:\eclipse\workspace\PokemonOrange.jar
- * 
- * Qualified Name: test.PokemonTest
- * 
- * JD-Core Version: 0.7.0.1
- */

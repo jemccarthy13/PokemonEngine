@@ -120,7 +120,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 		int playerCurY = gData.player.getCurrentY();
 		DIR playerDir = gData.player.getDir();
 		PokemonList playerPokemon = gData.player.getPokemon();
-		Coordinate playerPos = gData.player.pData.position;
+		Coordinate playerPos = gData.player.tData.position;
 
 		// check for collisions in each direction
 		moveable_dir[DIR.NORTH.ordinal()] = gData.tm.canMoveInDir(playerPos, DIR.NORTH, gData) || gData.noClip;
@@ -167,7 +167,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 				gData.player.move(playerDir);
 			for (Pokemon p : playerPokemon) { // deal PZN/BRN damage
 				if ((p.statusEffect == 2) || (p.statusEffect == 3))
-					p.doDamageWithoutSound(1);
+					p.doDamage(1, false);
 			}
 		}
 
@@ -244,7 +244,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 
 		// until NPC reaches player, place tile, move NPC, repaint
 		for (int x = 0; x < distToTravel; x++) {
-			gData.tm.set(curNPC.nData.position, EnumsAndConstants.TILE);
+			gData.tm.set(curNPC.tData.position, EnumsAndConstants.TILE);
 			curNPC.move(NPC_DIR);
 			paintComponent(getGraphics());
 			try {

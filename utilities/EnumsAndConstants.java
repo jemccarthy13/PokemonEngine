@@ -18,6 +18,11 @@ import tiles.NormalTile;
 import tiles.ObstacleTile;
 import tiles.TileSet;
 
+// ////////////////////////////////////////////////////////////////////////
+//
+// Holds enumerations and constants for use during gameplay
+//
+// ////////////////////////////////////////////////////////////////////////
 public class EnumsAndConstants {
 
 	public static enum STATS {

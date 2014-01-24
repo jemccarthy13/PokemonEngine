@@ -11,6 +11,11 @@ import tiles.Coordinate;
 import utilities.EnumsAndConstants;
 import utilities.EnumsAndConstants.DIR;
 
+// ////////////////////////////////////////////////////////////////////////
+//
+// Holds data variables common to all trainers
+//
+// ////////////////////////////////////////////////////////////////////////
 public class TrainerData {
 
 	public String name = null;
@@ -24,6 +29,11 @@ public class TrainerData {
 	public DIR dir = DIR.SOUTH;
 	public Image sprite = null;
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Initializes data based on a given file
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public TrainerData(String path) {
 		FileInputStream fs = null;
 		try {
