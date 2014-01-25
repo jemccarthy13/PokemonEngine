@@ -16,4 +16,8 @@ public class NPC extends Actor {
 	public NPC(TrainerData npcData) {
 		super(npcData);
 	}
+
+	public String toString() {
+		return this.tData.toString();
+	}
 }

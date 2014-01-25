@@ -29,6 +29,14 @@ public class TrainerData {
 	public DIR dir = DIR.SOUTH;
 	public Image sprite = null;
 
+	public String toString() {
+		String retStr = "Name: " + this.name + "\n";
+		retStr += "Pokemon: " + this.pokemon + "\n";
+		retStr += "Money: " + this.money + "\n";
+		retStr += this.conversationText.toString() + "\n";
+		return retStr;
+	}
+
 	// ////////////////////////////////////////////////////////////////////////
 	//
 	// Initializes data based on a given file
@@ -43,44 +51,45 @@ public class TrainerData {
 		}
 		Scanner s = new Scanner(fs);
 		if (s.hasNext())
-			name = s.nextLine();
+			this.name = s.nextLine();
 
 		if (s.hasNext()) {
 			String[] nextLine = s.nextLine().split(" ");
-			position = new Coordinate(Integer.parseInt(nextLine[0]), Integer.parseInt(nextLine[1]));
+			this.position = new Coordinate(Integer.parseInt(nextLine[0]), Integer.parseInt(nextLine[1]));
 		}
 		if (s.hasNext()) {
 			String text = s.nextLine();
-			stationary = text.replace(" ", "").equals("true");
+			this.stationary = text.replace(" ", "").equals("true");
 		}
 		if (s.hasNext()) {
-			sprites = EnumsAndConstants.sprite_lib.getSprites(s.nextLine().trim());
-			sprite = sprites.get(0);
+			this.sprites = EnumsAndConstants.sprite_lib.getSprites(s.nextLine().trim());
+			this.sprite = this.sprites.get(0);
 		}
 		String[] conversation = null;
 		if (s.hasNext()) {
-			conversationText = new ArrayList<String>();
+			this.conversationText = new ArrayList<String>();
 			conversation = s.nextLine().split("%");
 			for (String x : conversation)
-				conversationText.add(x.trim());
+				this.conversationText.add(x.trim());
 		}
 
 		if (s.hasNext()) {
-			trainer = true;
-			pokemon = new PokemonList();
+			this.trainer = true;
+			this.pokemon = new PokemonList();
 			String[] pokemonData = s.nextLine().split(",");
 			for (String x : pokemonData) {
 				String[] datasplit = x.split(" ");
-				pokemon.add(EnumsAndConstants.pokemon_generator.createPokemon(datasplit[0],
+				this.pokemon.add(EnumsAndConstants.pokemon_generator.createPokemon(datasplit[0],
 						Integer.parseInt(datasplit[1])));
+
 			}
-			money = Integer.parseInt(s.nextLine());
+			this.money = Integer.parseInt(s.nextLine());
 
 		}
 	}
 
 	public boolean isValidData() {
-		return (name != null && position != null && sprites != null);
+		return (this.name != null && this.position != null && this.sprites != null);
 	}
 
 	public TrainerData() {}

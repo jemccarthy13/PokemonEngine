@@ -24,6 +24,13 @@ public class PokemonData {
 	public ArrayList<String> moves = null;
 	public ArrayList<Integer> levelsLearned = null;
 
+	public String toString() {
+		String retStr = "Name: " + this.evolution_stages.get(0) + "\n";
+		retStr += "PokedexNumber: " + this.pokedexNumber + "\n";
+		retStr += "Base exp: " + this.baseExp + "\n";
+		return retStr;
+	}
+
 	// ////////////////////////////////////////////////////////////////////////
 	//
 	// Constructor - generates PokemonData from a given file + validates input
@@ -38,40 +45,40 @@ public class PokemonData {
 		}
 		Scanner s = new Scanner(fs);
 		if (s.hasNext())
-			pokedexNumber = s.nextLine();
+			this.pokedexNumber = s.nextLine();
 		if (s.hasNext()) {
-			evolution_stages = new ArrayList<String>();
+			this.evolution_stages = new ArrayList<String>();
 			for (String x : s.nextLine().split(","))
-				evolution_stages.add(x);
+				this.evolution_stages.add(x);
 		}
 		if (s.hasNext()) {
-			evolution_levels = new ArrayList<Integer>();
+			this.evolution_levels = new ArrayList<Integer>();
 			for (String x : s.nextLine().split(","))
-				evolution_levels.add(Integer.parseInt(x));
+				this.evolution_levels.add(Integer.parseInt(x));
 		}
 		if (s.hasNext())
-			type = s.nextLine();
+			this.type = s.nextLine();
 		if (s.hasNext())
-			baseExp = Integer.parseInt(s.nextLine());
+			this.baseExp = Integer.parseInt(s.nextLine());
 
 		if (s.hasNext()) {
-			moves = new ArrayList<String>();
-			levelsLearned = new ArrayList<Integer>();
+			this.moves = new ArrayList<String>();
+			this.levelsLearned = new ArrayList<Integer>();
 			for (String x : s.nextLine().split(",")) {
 				String[] y = x.split(" ");
 				String moveName = "";
 				for (int z = 0; z < y.length - 1; z++) {
 					moveName += " " + y[z];
 				}
-				moves.add(moveName.trim().toUpperCase());
-				levelsLearned.add(Integer.parseInt(y[y.length - 1]));
+				this.moves.add(moveName.trim().toUpperCase());
+				this.levelsLearned.add(Integer.parseInt(y[y.length - 1]));
 			}
 		}
 		s.close();
 	}
 
 	public boolean isValidData() {
-		return (type != null && pokedexNumber != null && evolution_stages != null && evolution_levels != null
-				&& baseExp != 0 && moves != null && levelsLearned != null);
+		return (this.type != null && this.pokedexNumber != null && this.evolution_stages != null
+				&& this.evolution_levels != null && this.baseExp != 0 && this.moves != null && this.levelsLearned != null);
 	}
 }
