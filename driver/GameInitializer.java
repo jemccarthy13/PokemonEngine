@@ -47,7 +47,7 @@ public class GameInitializer {
 		}
 		if (continued) {
 			String name = "GOLD";
-			game.gData.player = new Player(34, 15, name);
+			game.gData.player = new Player(34, 6, name);
 			Pokemon charmander = EnumsAndConstants.pokemon_generator.createPokemon("Charmander", 90);
 			game.gData.player.caughtPokemon(charmander);
 			game.gData.player.setMoney(1000000);
@@ -55,7 +55,7 @@ public class GameInitializer {
 			Utils.playBackgroundMusic(EnumsAndConstants.MUSIC.NEWBARKTOWN);
 		} else {
 			String name = "GOLD";
-			game.gData.player = new Player(36, 4, name);
+			game.gData.player = new Player(34, 6, name);
 			Pokemon charmander = EnumsAndConstants.pokemon_generator.createPokemon("Rattatta", 5);
 			game.gData.player.caughtPokemon(charmander);
 			game.gData.player.setMoney(2000);

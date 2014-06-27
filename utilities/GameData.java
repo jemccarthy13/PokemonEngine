@@ -24,7 +24,7 @@ public class GameData implements Serializable {
 	public long timeStarted; // time the game was started
 	public Timer gameTimer; // time difference between game events
 	// ======================== Map Data ===================================//
-	public int[][] currentMap = new int[3][16500];
+	public int[][] currentMap = new int[3][21400];
 	// public Tile[][] tileMap = new Tile[200][200];
 	public TileMap tm = new TileMap();
 	public int map_width;
