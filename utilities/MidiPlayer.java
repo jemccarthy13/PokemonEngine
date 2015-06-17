@@ -29,6 +29,8 @@ public class MidiPlayer {
 	}
 
 	public void start() {
+		if (true)
+			return;
 		try {
 			this.sequencer.start();
 		} catch (Exception e) {}

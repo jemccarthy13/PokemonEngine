@@ -58,7 +58,7 @@ public class Painter extends JPanel {
 		} else if (game.menuScreen.MENU_inTrainerCard) {
 			paintTrainerCard(g, game.gData);
 		} else if (game.menuScreen.MENU_inOption) {
-			paintOptionScreen(g, game.menuScreen);
+			paintOptionScreen(g, game);
 		} else if (game.gData.inBattle) {
 			paintBattle(g, game);
 		} else if (!game.gData.inBattle) {
@@ -237,9 +237,12 @@ public class Painter extends JPanel {
 	// Paint all components of the options screen
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private void paintOptionScreen(Graphics g, MenuScene menu) {
-		g.drawImage(EnumsAndConstants.sprite_lib.OPTION, 0, 0, null);
-		g.drawImage(EnumsAndConstants.sprite_lib.ARROW, 22, 85 + 32 * menu.MENU_currentSelectionOption, null);
+	private void paintOptionScreen(Graphics g, Game game) {
+		Image optionBG = (game.gData.option_sound) ? EnumsAndConstants.sprite_lib.OPTION_SOUND_ON
+				: EnumsAndConstants.sprite_lib.OPTION_SOUND_OFF;
+
+		g.drawImage(optionBG, 0, 0, null);
+		g.drawImage(EnumsAndConstants.sprite_lib.ARROW, 22, 85 + 32 * game.menuScreen.MENU_currentSelectionOption, null);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////

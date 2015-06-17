@@ -26,7 +26,8 @@ public class SpriteLibrary {
 
 	public Image CONTINUESCREEN, START_SYMBOL, TITLESCREEN, ARROW, MAIN_MENU, MESSAGE_BOX;
 
-	public Image POKEDEX, POKESEL, BAGSCREEN, POKEGEAR, TRAINERCARD, SAVE, OPTION, TRAINER_FOR_CARD;
+	public Image POKEDEX, POKESEL, BAGSCREEN, POKEGEAR, TRAINERCARD, SAVE, OPTION_SOUND_ON, OPTION_SOUND_OFF,
+			TRAINER_FOR_CARD;
 
 	public Image PARTYFIRST, PARTYBOX, PARTYCANCEL, PARTYCANCELSEL;
 
@@ -147,7 +148,8 @@ public class SpriteLibrary {
 		TRAINERCARD = createImage(picPath + "TrainerCard.png");
 		TRAINER_FOR_CARD = createImage(picPath + "Male.png");
 		SAVE = createImage(picPath + "Save.png");
-		OPTION = createImage(picPath + "OptionBG.png");
+		OPTION_SOUND_ON = createImage(picPath + "OptionBG_SoundOn.png");
+		OPTION_SOUND_OFF = createImage(picPath + "OptionBG_SoundOff.png");
 
 		// PARTY graphics
 		PARTYFIRST = createImage(picPath + "Box.png");

@@ -348,6 +348,9 @@ public class EventHandler {
 				}
 				Utils.playSelectSound();
 			} else if (keyCode == KeyEvent.VK_Z) {
+				if (game.menuScreen.MENU_currentSelectionOption == 5) {
+					game.gData.option_sound = !game.gData.option_sound;
+				}
 				Utils.playSelectSound();
 			} else if (keyCode == KeyEvent.VK_X) {
 				game.menuScreen.MENU_inOption = false;

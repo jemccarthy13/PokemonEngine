@@ -47,7 +47,7 @@ public class GameInitializer {
 		}
 		if (continued) {
 			String name = "GOLD";
-			game.gData.player = new Player(34, 6, name);
+			game.gData.player = new Player(6, 10, name);
 			Pokemon charmander = EnumsAndConstants.pokemon_generator.createPokemon("Charmander", 90);
 			game.gData.player.caughtPokemon(charmander);
 			game.gData.player.setMoney(1000000);
@@ -55,7 +55,7 @@ public class GameInitializer {
 			Utils.playBackgroundMusic(EnumsAndConstants.MUSIC.NEWBARKTOWN);
 		} else {
 			String name = "GOLD";
-			game.gData.player = new Player(34, 6, name);
+			game.gData.player = new Player(50, 20, name);
 			Pokemon charmander = EnumsAndConstants.pokemon_generator.createPokemon("Rattatta", 5);
 			game.gData.player.caughtPokemon(charmander);
 			game.gData.player.setMoney(2000);
@@ -86,6 +86,9 @@ public class GameInitializer {
 		// read the dimensions, and skip additional data until map data
 		game.gData.map_width = Integer.parseInt(tokens.nextToken());
 		game.gData.map_height = Integer.parseInt(tokens.nextToken());
+
+		System.out.println(game.gData.map_height);
+		System.out.println(game.gData.map_width);
 		line = reader.readLine();
 		tokens = new StringTokenizer(line);
 		while (!line.equals(".")) {

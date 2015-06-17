@@ -112,6 +112,9 @@ public class JukeBox {
 	}
 
 	public synchronized int playClip(String name, int numberOfLoops) {
+		if (true) {
+			return 1;
+		}
 		name = trimExtension(name);
 		if (!this.availableClips.containsKey(name)) {
 			return -1;
