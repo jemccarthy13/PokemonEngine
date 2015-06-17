@@ -243,7 +243,8 @@ public class BattleScene {
 								* chosen.getStrength() * attackStat / 50 / defStat + 2)
 								* Utils.generateRandom(85, 100) / 100.0);
 					}
-					this.playerPokemon.doDamage(damage, true);
+					this.playerPokemon.doDamage(damage);
+					EnumsAndConstants.col.playClip("DAMAGE", this.game.gData.option_sound);
 					System.out.println("Enemy's turn is over");
 				} else {
 					System.out
@@ -270,14 +271,14 @@ public class BattleScene {
 							* chosen.getStrength() * attackStat / defStat / 50 + 2)
 							* Utils.generateRandom(85, 100) / 100.0D);
 				}
-				this.playerPokemon.doDamage(damage, true);
+				EnumsAndConstants.col.playClip("DAMAGE", this.game.gData.option_sound);
 			}
 			if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 2) {
-				((Pokemon) this.enemyPokemon.get(0)).doDamage(2, true);
+				EnumsAndConstants.col.playClip("DAMAGE", this.game.gData.option_sound);
 				System.out.println(((Pokemon) this.enemyPokemon.get(0)).getName() + " has been hurt by its burn");
 			}
 			if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 3) {
-				((Pokemon) this.enemyPokemon.get(0)).doDamage(2, true);
+				EnumsAndConstants.col.playClip("DAMAGE", this.game.gData.option_sound);
 				System.out.println(((Pokemon) this.enemyPokemon.get(0)).getName() + " has been hurt by its poison");
 			}
 			this.playerTurn = true;

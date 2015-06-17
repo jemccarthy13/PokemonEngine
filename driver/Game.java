@@ -167,7 +167,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 				gData.player.move(playerDir);
 			for (Pokemon p : playerPokemon) { // deal PZN/BRN damage
 				if ((p.statusEffect == 2) || (p.statusEffect == 3))
-					p.doDamage(1, false);
+					p.doDamage(1);
 			}
 		}
 
@@ -298,22 +298,20 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 		} else if (gData.atContinueScreen) {
 			// continue screen choice select
 			if (keyCode == KeyEvent.VK_UP) {
-				Utils.playSelectSound();
 				if (gData.menuSelection > 0)
 					gData.menuSelection -= 1;
 			} else if (keyCode == KeyEvent.VK_DOWN) {
-				Utils.playSelectSound();
 				if (gData.menuSelection < 2)
 					gData.menuSelection += 1;
 			}
 			if (keyCode == KeyEvent.VK_Z) {
-				Utils.playSelectSound();
 				if (gData.menuSelection == 0) {
 					GameInitializer.startGame(true, this);
 				} else if (gData.menuSelection == 1) {
 					GameInitializer.startGame(false, this);
 				}
 			}
+			EnumsAndConstants.col.playClip("SELECT", gData.option_sound);
 		} else if (gData.inIntro) {
 			// intro screen, advance oak's text
 			if (keyCode == KeyEvent.VK_X)

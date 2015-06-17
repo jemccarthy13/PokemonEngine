@@ -107,34 +107,32 @@ public class JukeBox {
 		return name;
 	}
 
-	public int playClip(String name) {
-		return playClip(name, 1);
+	public void playClip(String name, boolean option_sound) {
+		if (option_sound)
+			playClip(name, 1);
 	}
 
-	public synchronized int playClip(String name, int numberOfLoops) {
-		if (true) {
-			return 1;
-		}
+	public synchronized void playClip(String name, int numberOfLoops) {
 		name = trimExtension(name);
 		if (!this.availableClips.containsKey(name)) {
-			return -1;
+			return;
 		}
 		List<?> clips = (List<Sound>) this.availableClips.get(name);
-		print("gonna playClip " + name + " from the " + clips.size() + " available copies");
 
-		print("-1");
 		if (clips.isEmpty()) {
-			return -1;
+			return;
 		}
+
 		Sound clip = (Sound) clips.remove(0);
 		this.playingClips.put(new Integer(clip.getID()), clip);
+
 		if (numberOfLoops == 1) {
 			clip.play();
 		} else {
-			print("continuous looping call");
 			clip.loop(numberOfLoops);
 		}
-		return clip.getID();
+
+		return;
 	}
 
 	public static int getSoundLength(InputStream is) {
@@ -221,12 +219,6 @@ public class JukeBox {
 		while (it.hasNext()) {
 			Sound s = (Sound) this.playingClips.get((Integer) it.next());
 			s.stop();
-		}
-	}
-
-	private void print(String message) {
-		if (this.debug) {
-			print(message);
 		}
 	}
 

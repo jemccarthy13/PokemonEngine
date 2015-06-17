@@ -63,21 +63,23 @@ public class EventHandler {
 					evaluateAndDealDamage(checkPar, playerPokemon, move);
 
 					if (playerPokemon.statusEffect == 2) { // burned
-						playerPokemon.doDamage(2, true);
+						playerPokemon.doDamage(2);
+						EnumsAndConstants.col.playClip("DAMAGE", this.game.gData.option_sound);
 						System.out.println(playerPokemon.getName() + " has been hurt by its burn");
 					} else if (playerPokemon.statusEffect == 3) { // PSN
-						playerPokemon.doDamage(2, true);
+						playerPokemon.doDamage(2);
+						EnumsAndConstants.col.playClip("DAMAGE", this.game.gData.option_sound);
 						System.out.println(playerPokemon.getName() + " has been hurt by its poison");
 					}
 					resetBattleVars();
 					game.encounter.playerTurn = false;
 				}
-				Utils.playSelectSound();
+				EnumsAndConstants.col.playClip("SELECT", game.gData.option_sound);
 			}
 			if (keyCode == KeyEvent.VK_X) {
 				// cancel == exit to main battle menu
 				resetBattleVars();
-				Utils.playSelectSound();
+				EnumsAndConstants.col.playClip("SELECT", game.gData.option_sound);
 			}
 		}
 		if (game.encounter.inMain) {
@@ -106,7 +108,7 @@ public class EventHandler {
 						game.encounter.Run();
 					}
 				}
-				Utils.playSelectSound();
+				EnumsAndConstants.col.playClip("SELECT", game.gData.option_sound);
 			}
 		}
 	}
@@ -181,7 +183,8 @@ public class EventHandler {
 				damage = (int) (((2 * playerPokemon.getLevel() / 5 + 2) * chosen.getStrength() * attackStat / defStat
 						/ 50 + 2)
 						* Utils.generateRandom(85, 100) / 100.0);
-				((Pokemon) game.encounter.enemyPokemon.get(0)).doDamage(damage, true);
+				((Pokemon) game.encounter.enemyPokemon.get(0)).doDamage(damage);
+				EnumsAndConstants.col.playClip("DAMAGE", this.game.gData.option_sound);
 			}
 		} else {
 			System.out.println(playerPokemon.getName() + " is paralyzed. It can't move.");
@@ -223,12 +226,10 @@ public class EventHandler {
 				if (game.menuScreen.MENU_currentSelectionMain > 0) {
 					game.menuScreen.MENU_currentSelectionMain -= 1;
 				}
-				Utils.playSelectSound();
 			} else if (keyCode == KeyEvent.VK_DOWN) {
 				if (game.menuScreen.MENU_currentSelectionMain < 7) {
 					game.menuScreen.MENU_currentSelectionMain += 1;
 				}
-				Utils.playSelectSound();
 			} else if (keyCode == KeyEvent.VK_Z) {
 				if (game.menuScreen.MENU_currentSelectionMain == 0) {
 					game.menuScreen.PokeDex();
@@ -255,41 +256,35 @@ public class EventHandler {
 					game.menuScreen.Exit();
 					game.gData.inMenu = false;
 				}
-				Utils.playSelectSound();
 			} else if (keyCode == KeyEvent.VK_X) {
 				game.menuScreen.Exit();
 				game.gData.inMenu = false;
-				Utils.playSelectSound();
 			}
+
 		} else if (game.menuScreen.MENU_inPokeDex) {
 			if (keyCode == KeyEvent.VK_X) {
 				game.menuScreen.MENU_inPokeDex = false;
 				game.menuScreen.MENU_inMain = true;
-				Utils.playSelectSound();
 			}
 		} else if (game.menuScreen.MENU_inPokemon) {
 			if (keyCode == KeyEvent.VK_X) {
 				game.menuScreen.MENU_inPokemon = false;
 				game.menuScreen.MENU_inMain = true;
-				Utils.playSelectSound();
 			}
 		} else if (game.menuScreen.MENU_inBag) {
 			if (keyCode == KeyEvent.VK_X) {
 				game.menuScreen.MENU_inBag = false;
 				game.menuScreen.MENU_inMain = true;
-				Utils.playSelectSound();
 			}
 		} else if (game.menuScreen.MENU_inPokeGear) {
 			if (keyCode == KeyEvent.VK_UP) {
 				if (game.menuScreen.MENU_currentSelectionPokeGear > 0) {
 					game.menuScreen.MENU_currentSelectionPokeGear -= 1;
 				}
-				Utils.playSelectSound();
 			} else if (keyCode == KeyEvent.VK_DOWN) {
 				if (game.menuScreen.MENU_currentSelectionPokeGear < 3) {
 					game.menuScreen.MENU_currentSelectionPokeGear += 1;
 				}
-				Utils.playSelectSound();
 			} else if (keyCode == KeyEvent.VK_Z) {
 				if (game.menuScreen.MENU_currentSelectionPokeGear == 0) {
 					System.out.println("Map");
@@ -303,25 +298,20 @@ public class EventHandler {
 					game.menuScreen.MENU_inPokeGear = false;
 					game.menuScreen.MENU_inMain = true;
 				}
-				Utils.playSelectSound();
 			} else if (keyCode == KeyEvent.VK_X) {
 				game.menuScreen.MENU_inPokeGear = false;
 				game.menuScreen.MENU_inMain = true;
-				Utils.playSelectSound();
 			}
 		} else if (game.menuScreen.MENU_inTrainerCard) {
 			if (keyCode == KeyEvent.VK_X) {
 				game.menuScreen.MENU_inTrainerCard = false;
 				game.menuScreen.MENU_inMain = true;
-				Utils.playSelectSound();
 			}
 		} else if (game.menuScreen.MENU_inSave) {
 			if (keyCode == KeyEvent.VK_UP) {
 				game.menuScreen.MENU_currentSelectionSave = 0;
-				Utils.playSelectSound();
 			} else if (keyCode == KeyEvent.VK_DOWN) {
 				game.menuScreen.MENU_currentSelectionSave = 1;
-				Utils.playSelectSound();
 			} else if (keyCode == KeyEvent.VK_Z) {
 				if (game.menuScreen.MENU_currentSelectionSave == 0) {
 					// Utils.saveGame(game.gold);
@@ -330,34 +320,30 @@ public class EventHandler {
 					game.menuScreen.MENU_inSave = false;
 					game.menuScreen.MENU_inMain = true;
 				}
-				Utils.playSelectSound();
 			} else if (keyCode == KeyEvent.VK_X) {
 				game.menuScreen.MENU_inSave = false;
 				game.menuScreen.MENU_inMain = true;
-				Utils.playSelectSound();
 			}
 		} else if (game.menuScreen.MENU_inOption) {
 			if (keyCode == KeyEvent.VK_UP) {
 				if (game.menuScreen.MENU_currentSelectionOption > 0) {
 					game.menuScreen.MENU_currentSelectionOption -= 1;
 				}
-				Utils.playSelectSound();
 			} else if (keyCode == KeyEvent.VK_DOWN) {
 				if (game.menuScreen.MENU_currentSelectionOption < 5) {
 					game.menuScreen.MENU_currentSelectionOption += 1;
 				}
-				Utils.playSelectSound();
 			} else if (keyCode == KeyEvent.VK_Z) {
 				if (game.menuScreen.MENU_currentSelectionOption == 5) {
 					game.gData.option_sound = !game.gData.option_sound;
 				}
-				Utils.playSelectSound();
 			} else if (keyCode == KeyEvent.VK_X) {
 				game.menuScreen.MENU_inOption = false;
 				game.menuScreen.MENU_inMain = true;
-				Utils.playSelectSound();
 			}
 		}
+
+		EnumsAndConstants.col.playClip("SELECT", game.gData.option_sound);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -378,7 +364,7 @@ public class EventHandler {
 				game.walking = true;
 			} else {
 				game.gData.player.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(9));
-				Utils.playCollisionSound();
+				EnumsAndConstants.col.playClip("COLLISION", game.gData.option_sound);
 			}
 		} else if (keyCode == KeyEvent.VK_DOWN) {
 			game.gData.player.setDir(DIR.SOUTH);
@@ -386,7 +372,7 @@ public class EventHandler {
 				game.walking = true;
 			} else {
 				game.gData.player.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(0));
-				Utils.playCollisionSound();
+				EnumsAndConstants.col.playClip("COLLISION", game.gData.option_sound);
 			}
 		} else if (keyCode == KeyEvent.VK_LEFT) {
 			game.gData.player.setDir(DIR.WEST);
@@ -394,7 +380,7 @@ public class EventHandler {
 				game.walking = true;
 			} else {
 				game.gData.player.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(3));
-				Utils.playCollisionSound();
+				EnumsAndConstants.col.playClip("COLLISION", game.gData.option_sound);
 			}
 		} else if (keyCode == KeyEvent.VK_RIGHT) {
 			game.gData.player.setDir(DIR.EAST);
@@ -402,14 +388,14 @@ public class EventHandler {
 				game.walking = true;
 			} else {
 				game.gData.player.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(6));
-				Utils.playCollisionSound();
+				EnumsAndConstants.col.playClip("COLLISION", game.gData.option_sound);
 			}
 		} else if (keyCode == KeyEvent.VK_ENTER) {
-			Utils.playMenuSound();
+			EnumsAndConstants.col.playClip("MENU", game.gData.option_sound);
 			game.menuScreen.MENU_inMain = true;
 			game.gData.inMenu = true;
 		} else if (keyCode == KeyEvent.VK_Z) {
-			Utils.playSelectSound();
+			EnumsAndConstants.col.playClip("SELECT", game.gData.option_sound);
 			NPC borderNPC = null;
 			// overhead cost for following logic
 			DIR playerDir = game.gData.player.getDir();

@@ -12,25 +12,24 @@ import javax.sound.midi.Sequencer;
 public class MidiPlayer {
 	private Sequencer sequencer;
 	private String filename;
-	private boolean bgm;
 
 	public MidiPlayer(String file, boolean b) {
 		this.filename = file;
-		this.bgm = b;
+		// this.bgm = b;
 		try {
 			Sequence sequence = MidiSystem.getSequence(MidiPlayer.class.getResourceAsStream(this.filename));
 			sequencer = MidiSystem.getSequencer();
 			this.sequencer.open();
 			this.sequencer.setSequence(sequence);
-			if (this.bgm) {
-				this.sequencer.setLoopCount(999);
-			}
+			// if (this.bgm) {
+			this.sequencer.setLoopCount(999);
+			// }
 		} catch (Exception e) {}
 	}
 
 	public void start() {
-		if (true)
-			return;
+		// if (this.bgm)
+		// return;
 		try {
 			this.sequencer.start();
 		} catch (Exception e) {}

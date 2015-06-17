@@ -149,13 +149,10 @@ public class Pokemon implements Serializable {
 	// in battle)
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public void doDamage(int damage, boolean playSound) {
+	public void doDamage(int damage) {
 		setStat(STATS.HP, getStat(STATS.HP) - damage);
 		if (getStat(STATS.HP) < 0) {
 			setStat(STATS.HP, 0);
-		}
-		if (playSound) {
-			Utils.playDamageSound();
 		}
 	}
 

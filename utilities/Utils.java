@@ -64,27 +64,6 @@ public class Utils {
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// sound effect utility functions to play different sound effects
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	public static void playCollisionSound() {
-		EnumsAndConstants.col.playClip("COLLISION");
-	}
-
-	public static void playMenuSound() {
-		EnumsAndConstants.col.playClip("MENU");
-	}
-
-	public static void playSelectSound() {
-		EnumsAndConstants.col.playClip(EnumsAndConstants.SE_SELECT);
-	}
-
-	public static void playDamageSound() {
-		EnumsAndConstants.col.playClip("DAMAGE");
-	}
-
-	// ////////////////////////////////////////////////////////////////////////
-	//
 	// playBackgroundMusic - switches the background music to the current
 	// location's music
 	//
