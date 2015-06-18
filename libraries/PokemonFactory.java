@@ -47,6 +47,7 @@ public class PokemonFactory {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public Pokemon createPokemon(String name, int level) {
+		System.out.println(pokemonData);
 		return new Pokemon(pokemonData.get(name), level);
 	}
 }

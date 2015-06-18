@@ -29,6 +29,7 @@ public class PokemonGameFrame extends JFrame {
 		setResizable(false);
 		pack();
 		setLocationRelativeTo(null);
+
 		Utils.playBackgroundMusic(EnumsAndConstants.MUSIC.TITLE);
 	}
 

@@ -152,7 +152,8 @@ public class Utils {
 			EnumsAndConstants.BACKGROUND_MUSIC = EnumsAndConstants.audio_lib.TRAINER6;
 		}
 		if (EnumsAndConstants.BACKGROUND_MUSIC != null) {
-			EnumsAndConstants.BACKGROUND_MUSIC.start();
+			/** TODO uncomment for music */
+			// EnumsAndConstants.BACKGROUND_MUSIC.start();
 		}
 	}
 
@@ -233,7 +234,9 @@ public class Utils {
 	public static Pokemon randomPokemon(Location location) {
 		Pokemon p = null;
 		long name_number = generateRandom(0, 100);
+		System.out.println(name_number);
 		String name = location.getPokemon(name_number);
+		System.out.println(name);
 		int level_start = location.getMinLevel(name);
 		int level_end = location.getMaxLevel(name);
 		int level = randomLevel(level_start, level_end);

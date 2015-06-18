@@ -36,7 +36,7 @@ public class GameInitializer {
 	// ////////////////////////////////////////////////////////////////////////
 	public static void startGame(boolean continued, Game theGame) {
 		game = theGame;
-		String loadedMap = "/mapmaker/Maps/Johto.map";
+		String loadedMap = "/mapmaker/Maps/NewBarkTown.map";
 
 		EnumsAndConstants.initializeJukeBox();
 
