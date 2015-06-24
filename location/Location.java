@@ -39,14 +39,14 @@ public class Location implements Serializable {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public String getPokemon(long name_number) {
-		String retStr = null;
-		if (name_number < this.lData.probabilities.get(0)) {
-			return this.lData.pokemon.get(0);
-		}
+		String retStr = "Error in getting Pokemon from location";
+		int total = 0;
+
 		for (int x = 0; x < this.lData.probabilities.size(); x++) {
-			if ((name_number >= this.lData.probabilities.get(x))
-					&& (name_number <= this.lData.probabilities.get(x + 1))) {
-				return this.lData.pokemon.get(x + 1);
+			total += this.lData.probabilities.get(x);
+
+			if (name_number <= total) {
+				return this.lData.pokemon.get(x);
 			}
 		}
 		return retStr;

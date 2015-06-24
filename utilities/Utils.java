@@ -234,9 +234,7 @@ public class Utils {
 	public static Pokemon randomPokemon(Location location) {
 		Pokemon p = null;
 		long name_number = generateRandom(0, 100);
-		System.out.println(name_number);
 		String name = location.getPokemon(name_number);
-		System.out.println(name);
 		int level_start = location.getMinLevel(name);
 		int level_end = location.getMaxLevel(name);
 		int level = randomLevel(level_start, level_end);
