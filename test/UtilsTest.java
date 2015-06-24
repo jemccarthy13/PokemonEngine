@@ -1,5 +1,7 @@
 package test;
 
+import java.util.ArrayList;
+
 import location.Location;
 import location.LocationData;
 import pokedex.Pokemon;
@@ -63,17 +65,18 @@ public class UtilsTest {
 
 		System.out.println();
 
-		//
-		// ArrayList<Pokemon> trainer = new ArrayList<Pokemon>();
-		// /for (int y = 0; y < 5; y++) {
-		// trainer.add(Utils.randomPokemon(loc));
-		// }
-		// System.out.println();
-		// System.out.println("Trainer's Random Pokemon");
-		// for (int y = 0; y < trainer.size(); y++) {
-		// System.out.println(trainer.get(y));
-		// }
-		// System.out.println();
+		ArrayList<Pokemon> trainer = new ArrayList<Pokemon>();
+		for (int y = 0; y < 5; y++) {
+			trainer.add(Utils.randomPokemon(loc));
+		}
+		System.out.println();
+		System.out.println("Trainer's Random Pokemon");
+		System.out.println("============================");
+		for (int y = 1; y <= trainer.size(); y++) {
+			System.out.println("Trainer Pkmn #" + y);
+			System.out.println(trainer.get(y - 1));
+		}
+		System.out.println();
 	}
 
 	public static void main(String[] args) {
