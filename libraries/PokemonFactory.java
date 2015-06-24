@@ -16,7 +16,12 @@ import pokedex.PokemonData;
 // ////////////////////////////////////////////////////////////////////////
 public class PokemonFactory {
 
-	PokemonDataMap pokemonData = new PokemonDataMap();
+	/** TODO - convert to singleton map - utils createPokemon combined with this */
+	PokemonDataMap pokemonData;
+
+	public PokemonFactory() {
+		pokemonData = new PokemonDataMap();
+	}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//

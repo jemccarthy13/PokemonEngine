@@ -235,9 +235,9 @@ public class Utils {
 		Pokemon p = null;
 		long name_number = generateRandom(0, 100);
 		String name = location.getPokemon(name_number);
-		int level_start = location.getMinLevel(name);
-		int level_end = location.getMaxLevel(name);
-		int level = randomLevel(level_start, level_end);
+		int level_low = location.getMinLevel(name);
+		int level_high = location.getMaxLevel(name);
+		int level = randomLevel(level_high, level_low);
 		p = EnumsAndConstants.pokemon_generator.createPokemon(name, level);
 		return p;
 	}
