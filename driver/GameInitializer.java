@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import pokedex.Pokemon;
+import pokedex.PokemonFactory;
 import tiles.Coordinate;
 import tiles.Tile;
 import trainers.Player;
 import utilities.EnumsAndConstants;
-import utilities.EnumsAndConstants.MUSIC;
-import utilities.Utils;
+import audio.AudioLibrary;
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -38,7 +38,8 @@ public class GameInitializer {
 		game = theGame;
 		String loadedMap = "/mapmaker/Maps/NewBarkTown.map";
 
-		EnumsAndConstants.initializeJukeBox();
+		// TODO verify juke box is initialized properly
+		// EnumsAndConstants.initializeJukeBox();
 
 		try {
 			loadMap(loadedMap);
@@ -48,20 +49,20 @@ public class GameInitializer {
 		if (continued) {
 			String name = "GOLD";
 			game.gData.player = new Player(6, 10, name);
-			Pokemon charmander = EnumsAndConstants.pokemon_generator.createPokemon("Charmander", 90);
+			Pokemon charmander = PokemonFactory.getInstance().createPokemon("Charmander", 90);
 			game.gData.player.caughtPokemon(charmander);
 			game.gData.player.setMoney(1000000);
 			game.gData.timeStarted = System.currentTimeMillis();
-			Utils.playBackgroundMusic(EnumsAndConstants.MUSIC.NEWBARKTOWN);
+			AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown");
 		} else {
 			String name = "GOLD";
 			game.gData.player = new Player(50, 20, name);
-			Pokemon charmander = EnumsAndConstants.pokemon_generator.createPokemon("Rattatta", 5);
+			Pokemon charmander = PokemonFactory.getInstance().createPokemon("Rattatta", 5);
 			game.gData.player.caughtPokemon(charmander);
 			game.gData.player.setMoney(2000);
 			game.gData.inIntro = true;
 			game.gData.timeStarted = System.currentTimeMillis();
-			Utils.playBackgroundMusic(MUSIC.INTRO);
+			AudioLibrary.getInstance().playBackgroundMusic("Intro");
 		}
 		game.gData.start_coorX = (EnumsAndConstants.TILESIZE * (8 - game.gData.player.getCurrentX()));
 		game.gData.start_coorY = (EnumsAndConstants.TILESIZE * (6 - game.gData.player.getCurrentY()));

@@ -257,7 +257,7 @@ public class Painter extends JPanel {
 		g.drawString(game.gData.player.getName(), 100, 68);
 		g.drawString(((Integer) game.gData.player.getBadges()).toString(), 100, 101);
 		g.drawString("1", 110, 134);
-		g.drawString(Utils.formatTime(game.gData.gameTimeStruct), 76, 166);
+		g.drawString(game.gData.gameTimeStruct.formatTime(), 76, 166);
 		if (game.menuScreen.MENU_currentSelectionSave == 0) {
 			g.drawImage(EnumsAndConstants.sprite_lib.ARROW, 394, 148, null);
 		} else if (game.menuScreen.MENU_currentSelectionSave == 1) {
@@ -294,7 +294,7 @@ public class Painter extends JPanel {
 		g.drawString("Name:" + getPadding("Name:") + gameData.player.getName(), 64, 93);
 		g.drawString("Money:" + getPadding("Money:") + "$" + gameData.player.getMoney(), 64, 150);
 		g.drawString("Pokedex:" + getPadding("Pokedex:") + gameData.player.getPokemonOwned(), 64, 183);
-		g.drawString("Time:  " + getPadding("Time:") + Utils.formatTime(gameData.gameTimeStruct), 64, 213);
+		g.drawString("Time:  " + getPadding("Time:") + gameData.gameTimeStruct.formatTime(), 64, 213);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////

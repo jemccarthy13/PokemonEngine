@@ -2,7 +2,7 @@ package graphics;
 
 import trainers.NPC;
 import utilities.EnumsAndConstants;
-import utilities.Utils;
+import utilities.RandomNumUtils;
 
 // ////////////////////////////////////////////////////////////////////////////
 //
@@ -23,7 +23,7 @@ public class NPCThread extends Thread {
 			// otherwise move each NPC
 			for (NPC other : EnumsAndConstants.npc_lib.npcs) {
 				if ((other != null) && (!other.isStationary())) {
-					other.setSpriteFacing(Utils.randomDirection());
+					other.setSpriteFacing(RandomNumUtils.randomDirection());
 				}
 			}
 			try {

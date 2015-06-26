@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import location.Location;
 import utilities.EnumsAndConstants;
-import utilities.Utils;
+import utilities.RandomNumUtils;
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -30,7 +30,7 @@ public class Player extends Actor implements Serializable {
 	public Player(int x, int y, String n) {
 		super(x, y, n);
 		curLoc = new Location(EnumsAndConstants.loc_lib.getLocation("New Bark Town"));
-		id = Utils.createTrainerID();
+		id = RandomNumUtils.createTrainerID();
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -41,7 +41,7 @@ public class Player extends Actor implements Serializable {
 	public Player(String n) {
 		super(0, 0, n);
 		curLoc = new Location(EnumsAndConstants.loc_lib.getLocation("New Bark Town"));
-		id = Utils.createTrainerID();
+		id = RandomNumUtils.createTrainerID();
 	}
 
 	// ////////////////////////////////////////////////////////////////////////

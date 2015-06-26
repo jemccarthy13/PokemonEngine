@@ -8,7 +8,8 @@ import pokedex.PokemonList;
 import trainers.NPC;
 import utilities.EnumsAndConstants;
 import utilities.EnumsAndConstants.STATS;
-import utilities.Utils;
+import utilities.RandomNumUtils;
+import audio.AudioLibrary;
 import driver.Game;
 
 //////////////////////////////////////////////////////////////////////////
@@ -164,8 +165,8 @@ public class BattleScene {
 		this.game.gData.inBattle = false;
 
 		// reset the music, add to beaten trainers
-		Utils.pauseBackgrondMusic();
-		Utils.playBackgroundMusic("New Bark Town");
+		AudioLibrary.getInstance().pauseBackgrondMusic();
+		AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown");
 		game.gData.player.beatenTrainers.add(enemy.getName());
 		game.gData.playerWin = false;
 		game.movable = true;
@@ -225,7 +226,8 @@ public class BattleScene {
 				Random r = new Random();
 				int rand = r.nextInt(2);
 				if (rand <= 0) {
-					int choice = Utils.generateRandom(0, ((Pokemon) this.enemyPokemon.get(0)).getNumMoves() - 1);
+					int choice = RandomNumUtils.generateRandom(0,
+							((Pokemon) this.enemyPokemon.get(0)).getNumMoves() - 1);
 					Move chosen = ((Pokemon) this.enemyPokemon.get(0)).getMove(choice);
 					int attackStat = 0;
 					int defStat = 0;
@@ -241,10 +243,10 @@ public class BattleScene {
 					if (!chosen.getType().equals("STAT")) {
 						damage = (int) (((2 * ((Pokemon) this.enemyPokemon.get(0)).getLevel() / 5 + 2)
 								* chosen.getStrength() * attackStat / 50 / defStat + 2)
-								* Utils.generateRandom(85, 100) / 100.0);
+								* RandomNumUtils.generateRandom(85, 100) / 100.0);
 					}
 					this.playerPokemon.doDamage(damage);
-					EnumsAndConstants.col.playClip("DAMAGE", this.game.gData.option_sound);
+					AudioLibrary.getInstance().playClip("DAMAGE", this.game.gData.option_sound);
 					System.out.println("Enemy's turn is over");
 				} else {
 					System.out
@@ -252,7 +254,7 @@ public class BattleScene {
 				}
 			} else {
 				// otherwise do nomral battle order of events
-				int choice = Utils.generateRandom(0, ((Pokemon) this.enemyPokemon.get(0)).getNumMoves() - 1);
+				int choice = RandomNumUtils.generateRandom(0, ((Pokemon) this.enemyPokemon.get(0)).getNumMoves() - 1);
 				Move chosen = ((Pokemon) this.enemyPokemon.get(0)).getMove(choice);
 
 				int attackStat = 0;
@@ -269,16 +271,16 @@ public class BattleScene {
 				if (!chosen.getType().equals("STAT")) {
 					damage = (int) (((2 * ((Pokemon) this.enemyPokemon.get(0)).getLevel() / 5 + 2)
 							* chosen.getStrength() * attackStat / defStat / 50 + 2)
-							* Utils.generateRandom(85, 100) / 100.0D);
+							* RandomNumUtils.generateRandom(85, 100) / 100.0D);
 				}
-				EnumsAndConstants.col.playClip("DAMAGE", this.game.gData.option_sound);
+				AudioLibrary.getInstance().playClip("DAMAGE", this.game.gData.option_sound);
 			}
 			if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 2) {
-				EnumsAndConstants.col.playClip("DAMAGE", this.game.gData.option_sound);
+				AudioLibrary.getInstance().playClip("DAMAGE", this.game.gData.option_sound);
 				System.out.println(((Pokemon) this.enemyPokemon.get(0)).getName() + " has been hurt by its burn");
 			}
 			if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 3) {
-				EnumsAndConstants.col.playClip("DAMAGE", this.game.gData.option_sound);
+				AudioLibrary.getInstance().playClip("DAMAGE", this.game.gData.option_sound);
 				System.out.println(((Pokemon) this.enemyPokemon.get(0)).getName() + " has been hurt by its poison");
 			}
 			this.playerTurn = true;

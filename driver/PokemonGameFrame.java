@@ -3,7 +3,7 @@ package driver;
 import javax.swing.JFrame;
 
 import utilities.EnumsAndConstants;
-import utilities.Utils;
+import audio.AudioLibrary;
 
 public class PokemonGameFrame extends JFrame {
 
@@ -30,7 +30,7 @@ public class PokemonGameFrame extends JFrame {
 		pack();
 		setLocationRelativeTo(null);
 
-		Utils.playBackgroundMusic(EnumsAndConstants.MUSIC.TITLE);
+		AudioLibrary.getInstance().playBackgroundMusic("Title");
 	}
 
 	// ////////////////////////////////////////////////////////////////////////

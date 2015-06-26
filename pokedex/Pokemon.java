@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 import utilities.EnumsAndConstants;
 import utilities.EnumsAndConstants.STATS;
-import utilities.Utils;
+import utilities.RandomNumUtils;
 
 // ////////////////////////////////////////////////////////////////////////
 //
@@ -44,12 +44,12 @@ public class Pokemon implements Serializable {
 				evolution_stage++;
 			}
 		}
-		this.stats[STATS.HP.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
-		this.stats[STATS.ATTACK.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
-		this.stats[STATS.DEFENSE.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
-		this.stats[STATS.SP_ATTACK.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
-		this.stats[STATS.SP_DEFENSE.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
-		this.stats[STATS.SPEED.ordinal()] = Integer.valueOf(Utils.randomBaseStat(this.level));
+		this.stats[STATS.HP.ordinal()] = Integer.valueOf(RandomNumUtils.randomBaseStat(this.level));
+		this.stats[STATS.ATTACK.ordinal()] = Integer.valueOf(RandomNumUtils.randomBaseStat(this.level));
+		this.stats[STATS.DEFENSE.ordinal()] = Integer.valueOf(RandomNumUtils.randomBaseStat(this.level));
+		this.stats[STATS.SP_ATTACK.ordinal()] = Integer.valueOf(RandomNumUtils.randomBaseStat(this.level));
+		this.stats[STATS.SP_DEFENSE.ordinal()] = Integer.valueOf(RandomNumUtils.randomBaseStat(this.level));
+		this.stats[STATS.SPEED.ordinal()] = Integer.valueOf(RandomNumUtils.randomBaseStat(this.level));
 		this.stats[STATS.ACCURACY.ordinal()] = Integer.valueOf(100);
 		this.curExp = (this.level * this.level * this.level);
 
@@ -110,6 +110,8 @@ public class Pokemon implements Serializable {
 	//
 	// levelUp - if at enough EXP, level up (also checks for evolution)
 	//
+	// TODO - fix tmp variables strangeness
+	//
 	// ////////////////////////////////////////////////////////////////////////
 	public void levelUp() {
 		if (this.level < 100) {
@@ -117,7 +119,7 @@ public class Pokemon implements Serializable {
 			System.out.println(pData.evolution_stages.get(evolution_stage) + " grew to level " + level + "!");
 		}
 		for (int x = 0; x < 6; x++) {
-			int incr = Utils.randomStatIncr();
+			int incr = RandomNumUtils.randomStatIncr();
 			if (this.stats[x].intValue() + incr == 240) {
 				incr = 0;
 			}

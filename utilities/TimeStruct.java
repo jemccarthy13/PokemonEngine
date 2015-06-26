@@ -1,14 +1,18 @@
 package utilities;
 
+import java.text.DecimalFormat;
+
 // ////////////////////////////////////////////////////////////////////////
 //
 // TimeStruct - easier way to manipulate and update system time 
 //
+// TODO will need to adjust for saved/loaded games - running total + offset
+//
 // ////////////////////////////////////////////////////////////////////////
 public class TimeStruct {
-	private int seconds = 0;
-	private int hours = 0;
-	private int minutes = 0;
+	private static int seconds = 0;
+	private static int hours = 0;
+	private static int minutes = 0;
 
 	public void updateTime(long timeStarted) {
 		setSeconds(((int) ((System.currentTimeMillis() - timeStarted) / 1000L)));
@@ -17,7 +21,17 @@ public class TimeStruct {
 		setSeconds((getSeconds() - getHours() * 3600 - getMinutes() * 60));
 	}
 
-	public int getHours() {
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// formatTime - formats the system time into a readable format
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public static String formatTime() {
+		DecimalFormat df = new DecimalFormat("00");
+		return df.format(getHours()) + ": " + df.format(getMinutes()) + ": " + df.format(getSeconds());
+	}
+
+	public static int getHours() {
 		return hours;
 	}
 
@@ -25,7 +39,7 @@ public class TimeStruct {
 		this.hours = hours;
 	}
 
-	public int getMinutes() {
+	public static int getMinutes() {
 		return minutes;
 	}
 
@@ -33,7 +47,7 @@ public class TimeStruct {
 		this.minutes = minutes;
 	}
 
-	public int getSeconds() {
+	public static int getSeconds() {
 		return seconds;
 	}
 

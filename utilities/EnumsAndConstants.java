@@ -7,11 +7,9 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.io.Serializable;
 
-import libraries.AudioLibrary;
 import libraries.LocationLibrary;
 import libraries.MoveLibrary;
 import libraries.NPCLibrary;
-import libraries.PokemonFactory;
 import libraries.SpriteLibrary;
 import libraries.TeleportLibrary;
 import tiles.NormalTile;
@@ -33,10 +31,6 @@ public class EnumsAndConstants {
 		SOUTH, WEST, EAST, NORTH;
 	}
 
-	public static enum MUSIC {
-		NEWBARKTOWN, CHERRYGROVE, TITLE, CONTINUE, TRAINER_BATTLE, INTRO, TRAINER1, TRAINER2, TRAINER3, TRAINER4, TRAINER5, TRAINER6;
-	}
-
 	// TODO determine if this enum is necessary with new NPC data files
 	// (once implemented)
 	public enum SPRITENAMES {
@@ -45,21 +39,17 @@ public class EnumsAndConstants {
 
 	public static final Toolkit tk = Toolkit.getDefaultToolkit();
 
-	public static final String BGMUSICPATH = "/audio_lib/BGM/";
 	public static final String GRAPHICS_BATTLEPATH = "../graphics_lib/Battlers/";
 	public static final String GRAPHICS_ICONPATH = "../graphics_lib/Icons/icon";
 	public static final SpriteLibrary sprite_lib = new SpriteLibrary();
-	public static final AudioLibrary audio_lib = new AudioLibrary();
 	public static final LocationLibrary loc_lib = new LocationLibrary();
 	public static final MoveLibrary move_lib = new MoveLibrary();
-	public static final PokemonFactory pokemon_generator = new PokemonFactory();
 	public static final NPCLibrary npc_lib = new NPCLibrary();
 	public static final TeleportLibrary TELEPORTS = new TeleportLibrary();
 	public static final MessageBox msg_box = new MessageBox();
 	public static final Font POKEFONT = new Font("pokesl1", 0, 18);
 	public static final ObstacleTile OBSTACLE = new ObstacleTile();
 	public static final NormalTile TILE = new NormalTile();
-	public static final JukeBox col = new JukeBox();
 
 	public static final int TILESIZE = 32;
 	public static final int MAX_NAME_SIZE = 7;
@@ -84,22 +74,9 @@ public class EnumsAndConstants {
 
 	public static Painter PAINTER = new Painter();
 
-	public static final String SOUNDEFFECTPATH = "/audio_lib/SE/";
 	public static final String SE_COLLISION = "COLLISION";
 	public static final String SE_SELECT = "SELECT";
 	public static final String SE_MENU = "MENU";
 	public static final String SE_DAMAGE = "DAMAGE";
-	public static MidiPlayer BACKGROUND_MUSIC = null;
 
-	public static void initializeJukeBox() {
-		col.loadClip(SOUNDEFFECTPATH + "Select.wav", SE_SELECT, 1);
-		col.loadClip(SOUNDEFFECTPATH + "Collision.wav", SE_COLLISION, 1);
-		col.loadClip(SOUNDEFFECTPATH + "Menu.wav", SE_MENU, 1);
-		col.loadClip(SOUNDEFFECTPATH + "Damage.wav", SE_DAMAGE, 1);
-	}
-
-	public static void initializeMidiPlayer() {
-		BACKGROUND_MUSIC = audio_lib.TITLE;
-		BACKGROUND_MUSIC.start();
-	}
 }

@@ -1,4 +1,4 @@
-package utilities;
+package audio;
 
 import java.io.IOException;
 import java.io.InputStream;

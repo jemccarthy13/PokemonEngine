@@ -24,9 +24,8 @@ import tiles.Coordinate;
 import trainers.NPC;
 import utilities.EnumsAndConstants;
 import utilities.EnumsAndConstants.DIR;
-import utilities.EnumsAndConstants.MUSIC;
 import utilities.GameData;
-import utilities.Utils;
+import audio.AudioLibrary;
 
 // ////////////////////////////////////////////////////////////////////////
 //
@@ -218,7 +217,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 	// ////////////////////////////////////////////////////////////////////////
 	private void enemyTrainerAnimation(NPC curNPC) {
 
-		Utils.pickTrainerMusic(); // pick random "I see you" music
+		AudioLibrary.getInstance().pickTrainerMusic();
 
 		try { // wait for ! before moving
 			Thread.sleep(2000);
@@ -260,7 +259,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 	// ////////////////////////////////////////////////////////////////////////
 	public void doTrainerBattle(NPC curNPC) {
 		movable = false;
-		Utils.playBackgroundMusic(MUSIC.TRAINER_BATTLE);
+		AudioLibrary.getInstance().playBackgroundMusic("TrainerBattle");
 		encounter = new BattleScene(this, curNPC);
 		gData.inBattle = true;
 		encounter.Start();
@@ -292,7 +291,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 			// title screen "press enter"
 			if (keyCode == KeyEvent.VK_ENTER) {
 				gData.atTitle = false;
-				Utils.playBackgroundMusic(MUSIC.CONTINUE);
+				AudioLibrary.getInstance().playBackgroundMusic("Continue");
 				gData.atContinueScreen = true;
 			}
 		} else if (gData.atContinueScreen) {
@@ -311,7 +310,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 					GameInitializer.startGame(false, this);
 				}
 			}
-			EnumsAndConstants.col.playClip("SELECT", gData.option_sound);
+			AudioLibrary.getInstance().playClip("SELECT", gData.option_sound);
 		} else if (gData.inIntro) {
 			// intro screen, advance oak's text
 			if (keyCode == KeyEvent.VK_X)
@@ -319,7 +318,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 			if (keyCode == KeyEvent.VK_Z) {
 				gData.introStage += 2;
 				if (gData.introStage > EnumsAndConstants.npc_lib.getNPC("Professor Oak").getTextLength() - 1) {
-					Utils.playBackgroundMusic(MUSIC.NEWBARKTOWN);
+					AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown");
 					gData.inIntro = !gData.inIntro;
 				} else if (gData.introStage == 15) {
 					gData.inNameScreen = true;

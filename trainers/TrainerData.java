@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import pokedex.PokemonFactory;
 import pokedex.PokemonList;
 import tiles.Coordinate;
 import utilities.EnumsAndConstants;
@@ -79,9 +80,8 @@ public class TrainerData {
 			String[] pokemonData = s.nextLine().split(",");
 			for (String x : pokemonData) {
 				String[] datasplit = x.split(" ");
-				this.pokemon.add(EnumsAndConstants.pokemon_generator.createPokemon(datasplit[0],
+				this.pokemon.add(PokemonFactory.getInstance().createPokemon(datasplit[0],
 						Integer.parseInt(datasplit[1])));
-
 			}
 			this.money = Integer.parseInt(s.nextLine());
 
