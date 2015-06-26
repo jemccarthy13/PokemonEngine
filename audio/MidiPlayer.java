@@ -17,14 +17,18 @@ public class MidiPlayer {
 		this.filename = file;
 		// this.bgm = b;
 		try {
+			System.out.println(this.filename);
+			System.out.println(MidiPlayer.class.getResourceAsStream(this.filename));
 			Sequence sequence = MidiSystem.getSequence(MidiPlayer.class.getResourceAsStream(this.filename));
-			sequencer = MidiSystem.getSequencer();
+			this.sequencer = MidiSystem.getSequencer();
 			this.sequencer.open();
 			this.sequencer.setSequence(sequence);
 			// if (this.bgm) {
 			this.sequencer.setLoopCount(999);
 			// }
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void start() {
@@ -32,10 +36,17 @@ public class MidiPlayer {
 		// return;
 		try {
 			this.sequencer.start();
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void stop() {
 		this.sequencer.stop();
+	}
+
+	public String toString() {
+		String retStr = this.filename;
+		return retStr;
 	}
 }

@@ -46,12 +46,12 @@ public class JukeBox {
 				InputStream is = JukeBox.class.getResourceAsStream(resourcePath);
 				URL item = JukeBox.class.getResource(resourcePath);
 				if (is == null) {
-					System.out.println("Can't find sound");
+					System.out.println("Can't find sound " + resourcePath);
 					return false;
 				}
 				boolean loaded = loadClip(is, soundName, item);
 				if (!loaded) {
-					System.out.println("Can't load sound");
+					System.out.println("Can't load sound" + resourcePath);
 					return false;
 				}
 			} catch (Exception e) {
@@ -115,6 +115,7 @@ public class JukeBox {
 	public synchronized void playClip(String name, int numberOfLoops) {
 		name = trimExtension(name);
 		if (!this.availableClips.containsKey(name)) {
+			System.err.println("Cannot play sound " + name);
 			return;
 		}
 		List<?> clips = (List<Sound>) this.availableClips.get(name);

@@ -246,7 +246,8 @@ public class BattleScene {
 								* RandomNumUtils.generateRandom(85, 100) / 100.0);
 					}
 					this.playerPokemon.doDamage(damage);
-					AudioLibrary.getInstance().playClip("DAMAGE", this.game.gData.option_sound);
+					AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_DAMAGE,
+							this.game.gData.option_sound);
 					System.out.println("Enemy's turn is over");
 				} else {
 					System.out
@@ -273,14 +274,14 @@ public class BattleScene {
 							* chosen.getStrength() * attackStat / defStat / 50 + 2)
 							* RandomNumUtils.generateRandom(85, 100) / 100.0D);
 				}
-				AudioLibrary.getInstance().playClip("DAMAGE", this.game.gData.option_sound);
+				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_SELECT, this.game.gData.option_sound);
 			}
 			if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 2) {
-				AudioLibrary.getInstance().playClip("DAMAGE", this.game.gData.option_sound);
+				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_DAMAGE, this.game.gData.option_sound);
 				System.out.println(((Pokemon) this.enemyPokemon.get(0)).getName() + " has been hurt by its burn");
 			}
 			if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 3) {
-				AudioLibrary.getInstance().playClip("DAMAGE", this.game.gData.option_sound);
+				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_DAMAGE, this.game.gData.option_sound);
 				System.out.println(((Pokemon) this.enemyPokemon.get(0)).getName() + " has been hurt by its poison");
 			}
 			this.playerTurn = true;

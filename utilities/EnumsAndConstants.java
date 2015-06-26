@@ -73,10 +73,4 @@ public class EnumsAndConstants {
 			140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154 };
 
 	public static Painter PAINTER = new Painter();
-
-	public static final String SE_COLLISION = "COLLISION";
-	public static final String SE_SELECT = "SELECT";
-	public static final String SE_MENU = "MENU";
-	public static final String SE_DAMAGE = "DAMAGE";
-
 }

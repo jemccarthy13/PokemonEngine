@@ -1,6 +1,7 @@
 package audio;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Pattern;
@@ -27,6 +28,9 @@ public class AudioLibrary {
 	private HashMap<String, MidiPlayer> m_trackList;
 
 	public String SE_SELECT = "Select";
+	public String SE_DAMAGE = "Damage";
+	public String SE_COLLISION = "Collision";
+	public String SE_MENU = "Menu";
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
@@ -40,7 +44,7 @@ public class AudioLibrary {
 		File[] listOfFiles = new File(bgMusicPath).listFiles();
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
-				MidiPlayer musicTrack = new MidiPlayer(listOfFiles[i].getName(), true);
+				MidiPlayer musicTrack = new MidiPlayer(listOfFiles[i].getAbsolutePath(), true);
 
 				// compile a list of trainer / encounter music
 				Pattern p = Pattern.compile("Encounter");
@@ -55,10 +59,17 @@ public class AudioLibrary {
 			}
 		}
 
+		System.out.println(new File(soundEffectsPath).isDirectory());
 		listOfFiles = new File(soundEffectsPath).listFiles();
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
-				m_JukeBox.loadClip(listOfFiles[i].getAbsolutePath(), listOfFiles[i].getName().replace(".wav", ""), 1);
+				try {
+					m_JukeBox.loadClip(listOfFiles[i].getCanonicalPath(), listOfFiles[i].getName().replace(".wav", ""),
+							1);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					System.out.println("Cannot load " + listOfFiles[i].getName());
+				}
 			}
 		}
 	}
@@ -81,16 +92,28 @@ public class AudioLibrary {
 
 		// stop the current track, if playing
 		if (getInstance().m_currentTrack != null) {
-			getInstance().m_currentTrack.stop();
+			try {
+				getInstance().m_currentTrack.wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// getInstance().m_currentTrack.stop();
 			getInstance().m_currentTrack = null;
 		}
 
 		// switch to the next track and play, if the track is valid
 		if (getInstance().m_trackList.containsKey(songTitle)) {
 			getInstance().m_currentTrack = getInstance().m_trackList.get(songTitle);
+			System.out.println("Playing " + songTitle);
 			if (getInstance().m_currentTrack != null) {
+				System.out.println("Starting current track");
+
+				System.out.println(getInstance().m_currentTrack.toString());
 				getInstance().m_currentTrack.start();
 			}
+		} else {
+			System.err.println("Can't play " + songTitle);
 		}
 	}
 

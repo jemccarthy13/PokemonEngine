@@ -45,7 +45,7 @@ public class GameData implements Serializable {
 	public int start_coorX, start_coorY; // teleportation graphics variables
 	public int menuSelection = 0;
 	// ==================== Setting options variables ======================//
-	public boolean option_sound = false;
+	public boolean option_sound = true;
 	// ======================== User Data ==================================//
 	public Player player;
 	// ======================== Version ====================================//

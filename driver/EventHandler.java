@@ -65,22 +65,24 @@ public class EventHandler {
 
 					if (playerPokemon.statusEffect == 2) { // burned
 						playerPokemon.doDamage(2);
-						AudioLibrary.getInstance().playClip("DAMAGE", this.game.gData.option_sound);
+						AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_DAMAGE,
+								this.game.gData.option_sound);
 						System.out.println(playerPokemon.getName() + " has been hurt by its burn");
 					} else if (playerPokemon.statusEffect == 3) { // PSN
 						playerPokemon.doDamage(2);
-						AudioLibrary.getInstance().playClip("DAMAGE", this.game.gData.option_sound);
+						AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_DAMAGE,
+								this.game.gData.option_sound);
 						System.out.println(playerPokemon.getName() + " has been hurt by its poison");
 					}
 					resetBattleVars();
 					game.encounter.playerTurn = false;
 				}
-				AudioLibrary.getInstance().playClip("SELECT", game.gData.option_sound);
+				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_SELECT, game.gData.option_sound);
 			}
 			if (keyCode == KeyEvent.VK_X) {
 				// cancel == exit to main battle menu
 				resetBattleVars();
-				AudioLibrary.getInstance().playClip("SELECT", game.gData.option_sound);
+				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_SELECT, game.gData.option_sound);
 			}
 		}
 		if (game.encounter.inMain) {
@@ -109,7 +111,7 @@ public class EventHandler {
 						game.encounter.Run();
 					}
 				}
-				AudioLibrary.getInstance().playClip("SELECT", game.gData.option_sound);
+				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_SELECT, game.gData.option_sound);
 			}
 		}
 	}
@@ -185,7 +187,7 @@ public class EventHandler {
 						/ 50 + 2)
 						* RandomNumUtils.generateRandom(85, 100) / 100.0);
 				((Pokemon) game.encounter.enemyPokemon.get(0)).doDamage(damage);
-				AudioLibrary.getInstance().playClip("DAMAGE", this.game.gData.option_sound);
+				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_DAMAGE, this.game.gData.option_sound);
 			}
 		} else {
 			System.out.println(playerPokemon.getName() + " is paralyzed. It can't move.");
@@ -349,7 +351,7 @@ public class EventHandler {
 			}
 		}
 
-		AudioLibrary.getInstance().playClip("SELECT", game.gData.option_sound);
+		AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_SELECT, game.gData.option_sound);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -370,7 +372,7 @@ public class EventHandler {
 				game.walking = true;
 			} else {
 				game.gData.player.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(9));
-				AudioLibrary.getInstance().playClip("COLLISION", game.gData.option_sound);
+				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_COLLISION, game.gData.option_sound);
 			}
 		} else if (keyCode == KeyEvent.VK_DOWN) {
 			game.gData.player.setDir(DIR.SOUTH);
@@ -378,7 +380,7 @@ public class EventHandler {
 				game.walking = true;
 			} else {
 				game.gData.player.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(0));
-				AudioLibrary.getInstance().playClip("COLLISION", game.gData.option_sound);
+				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_COLLISION, game.gData.option_sound);
 			}
 		} else if (keyCode == KeyEvent.VK_LEFT) {
 			game.gData.player.setDir(DIR.WEST);
@@ -386,7 +388,7 @@ public class EventHandler {
 				game.walking = true;
 			} else {
 				game.gData.player.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(3));
-				AudioLibrary.getInstance().playClip("COLLISION", game.gData.option_sound);
+				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_COLLISION, game.gData.option_sound);
 			}
 		} else if (keyCode == KeyEvent.VK_RIGHT) {
 			game.gData.player.setDir(DIR.EAST);
@@ -394,14 +396,14 @@ public class EventHandler {
 				game.walking = true;
 			} else {
 				game.gData.player.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(6));
-				AudioLibrary.getInstance().playClip("COLLISION", game.gData.option_sound);
+				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_COLLISION, game.gData.option_sound);
 			}
 		} else if (keyCode == KeyEvent.VK_ENTER) {
-			AudioLibrary.getInstance().playClip("MENU", game.gData.option_sound);
+			AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_MENU, game.gData.option_sound);
 			game.menuScreen.MENU_inMain = true;
 			game.gData.inMenu = true;
 		} else if (keyCode == KeyEvent.VK_Z) {
-			AudioLibrary.getInstance().playClip("SELECT", game.gData.option_sound);
+			AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_SELECT, game.gData.option_sound);
 			NPC borderNPC = null;
 			// overhead cost for following logic
 			DIR playerDir = game.gData.player.getDir();
