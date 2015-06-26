@@ -86,6 +86,7 @@ public class TrainerData {
 			this.money = Integer.parseInt(s.nextLine());
 
 		}
+		s.close();
 	}
 
 	public boolean isValidData() {

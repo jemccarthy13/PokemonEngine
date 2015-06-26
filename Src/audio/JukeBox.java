@@ -29,15 +29,10 @@ public class JukeBox {
 	private HashMap<String, LinkedList<Sound>> availableClips;
 	private HashMap<Integer, Sound> playingClips;
 	private int nextClip = 0;
-	private boolean debug;
 
 	public JukeBox() {
 		this.availableClips = new HashMap<String, LinkedList<JukeBox.Sound>>();
 		this.playingClips = new HashMap<Integer, Sound>();
-	}
-
-	public void setDebug(boolean b) {
-		this.debug = b;
 	}
 
 	public boolean loadClip(String resourcePath, String soundName, int howMany) {
@@ -46,12 +41,12 @@ public class JukeBox {
 				InputStream is = JukeBox.class.getResourceAsStream(resourcePath);
 				URL item = JukeBox.class.getResource(resourcePath);
 				if (is == null) {
-					System.out.println("Can't find sound " + resourcePath);
+					System.err.println("Can't find sound " + resourcePath);
 					return false;
 				}
 				boolean loaded = loadClip(is, soundName, item);
 				if (!loaded) {
-					System.out.println("Can't load sound" + resourcePath);
+					System.err.println("Can't load sound" + resourcePath);
 					return false;
 				}
 			} catch (Exception e) {

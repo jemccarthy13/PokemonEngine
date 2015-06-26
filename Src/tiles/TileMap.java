@@ -12,6 +12,8 @@ import utilities.GameData;
 // ////////////////////////////////////////////////////////////////////////
 public class TileMap extends ArrayList<ArrayList<Tile>> {
 
+	private static final long serialVersionUID = -5325017932787074716L;
+
 	// ////////////////////////////////////////////////////////////////////////
 	//
 	// set - sets the specified coordinate to the specified Tile type

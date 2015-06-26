@@ -15,6 +15,8 @@ import utilities.RandomNumUtils;
 // ////////////////////////////////////////////////////////////////////////
 public class PokemonFactory extends HashMap<String, PokemonData> {
 
+	private static final long serialVersionUID = 6443726917122609755L;
+
 	private static PokemonFactory m_instance = new PokemonFactory();
 
 	private PokemonFactory() {
@@ -52,7 +54,7 @@ public class PokemonFactory extends HashMap<String, PokemonData> {
 	// wild pokemon chart in that region
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public static Pokemon randomPokemon(Location location) {
+	public Pokemon randomPokemon(Location location) {
 		String name = location.getPokemon(RandomNumUtils.generateRandom(0, 100));
 		int level = RandomNumUtils.randomLevel(location.getMaxLevel(name), location.getMinLevel(name));
 		return new Pokemon(m_instance.get(name), level);

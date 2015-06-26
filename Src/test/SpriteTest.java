@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import libraries.SpriteLibrary;
 import trainers.NPC;
 import utilities.EnumsAndConstants;
 
@@ -23,11 +22,15 @@ import utilities.EnumsAndConstants;
 //////////////////////////////////////////////////////////////////////////
 public class SpriteTest extends JFrame {
 
+	private static final long serialVersionUID = -8257946860941590572L;
+
 	static ArrayList<Image> sprites = new ArrayList<Image>();
 
 	NPC sam;
 
 	JPanel p = new JPanel() {
+		private static final long serialVersionUID = 7322676857941810785L;
+
 		public void paintComponent(Graphics g) {
 			this.setBackground(Color.BLACK);
 			g.drawImage(sam.getSprite(), 0, 0, null);
@@ -60,7 +63,6 @@ public class SpriteTest extends JFrame {
 	};
 
 	public SpriteTest() {
-		SpriteLibrary s = new SpriteLibrary();
 		NPCThread npct = new NPCThread();
 		npct.start();
 		gameThread.start();

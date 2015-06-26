@@ -268,11 +268,13 @@ public class BattleScene {
 					attackStat = ((Pokemon) this.enemyPokemon.get(0)).getStat(EnumsAndConstants.STATS.SP_ATTACK);
 					defStat = this.playerPokemon.getStat(EnumsAndConstants.STATS.SP_DEFENSE);
 				}
-				int damage = 0;
 				if (!chosen.getType().equals("STAT")) {
-					damage = (int) (((2 * ((Pokemon) this.enemyPokemon.get(0)).getLevel() / 5 + 2)
+					@SuppressWarnings("unused")
+					int damage = (int) (((2 * ((Pokemon) this.enemyPokemon.get(0)).getLevel() / 5 + 2)
 							* chosen.getStrength() * attackStat / defStat / 50 + 2)
 							* RandomNumUtils.generateRandom(85, 100) / 100.0D);
+
+					// TODO implement stat damage types
 				}
 				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_SELECT, this.game.gData.option_sound);
 			}

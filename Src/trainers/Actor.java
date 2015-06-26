@@ -18,6 +18,7 @@ import utilities.EnumsAndConstants.DIR;
 //////////////////////////////////////////////////////////////////////////
 public class Actor {
 
+	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 1L;
 	public TrainerData tData = new TrainerData();
 

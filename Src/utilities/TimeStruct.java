@@ -9,6 +9,7 @@ import java.text.DecimalFormat;
 // TODO will need to adjust for saved/loaded games - running total + offset
 //
 // ////////////////////////////////////////////////////////////////////////
+@SuppressWarnings("static-access")
 public class TimeStruct {
 	private static int seconds = 0;
 	private static int hours = 0;
@@ -26,7 +27,7 @@ public class TimeStruct {
 	// formatTime - formats the system time into a readable format
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public static String formatTime() {
+	public String formatTime() {
 		DecimalFormat df = new DecimalFormat("00");
 		return df.format(getHours()) + ": " + df.format(getMinutes()) + ": " + df.format(getSeconds());
 	}

@@ -39,6 +39,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 	// ======================== VARIABLE DECLARATIONS =======================//
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
+	private static final long serialVersionUID = 5951510422984321057L;
 	// ================= Movement control variables =========================//
 	boolean walking = false; // player animation counter
 	private int movespritepixels = 0; // movement (animation) counter
@@ -46,7 +47,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 	boolean[] moveable_dir = new boolean[4]; // can move, each direction
 	boolean rightFoot = false; // animation flag
 	// ====================== NPC Random movement controller ================//
-	public static NPCThread NPCTHREAD = new NPCThread();
+	public NPCThread NPCTHREAD = new NPCThread();
 	// ===================== Graphics Logic Controllers =====================//
 	public BattleScene encounter;
 	public MenuScene menuScreen;
@@ -115,8 +116,6 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 	// ////////////////////////////////////////////////////////////////////////
 	private void handleMovement() {
 		// get all comparison variables up front
-		int playerCurX = gData.player.getCurrentX();
-		int playerCurY = gData.player.getCurrentY();
 		DIR playerDir = gData.player.getDir();
 		PokemonList playerPokemon = gData.player.getPokemon();
 		Coordinate playerPos = gData.player.tData.position;
@@ -310,7 +309,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 					GameInitializer.startGame(false, this);
 				}
 			}
-			AudioLibrary.getInstance().playClip("SELECT", gData.option_sound);
+			AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_SELECT, gData.option_sound);
 		} else if (gData.inIntro) {
 			// intro screen, advance oak's text
 			if (keyCode == KeyEvent.VK_X)
