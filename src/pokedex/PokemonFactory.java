@@ -20,7 +20,7 @@ public class PokemonFactory extends HashMap<String, PokemonData> {
 	private static PokemonFactory m_instance = new PokemonFactory();
 
 	private PokemonFactory() {
-		File[] listOfFiles = new File("Src/Data/Pokemon").listFiles();
+		File[] listOfFiles = new File("resources/data/Pokemon").listFiles();
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
 				PokemonData pd = new PokemonData(listOfFiles[i].getPath());

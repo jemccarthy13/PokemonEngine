@@ -1,7 +1,5 @@
 package test;
 
-import graphics.NPCThread;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -34,6 +32,7 @@ public class SpriteTest extends JFrame {
 		public void paintComponent(Graphics g) {
 			this.setBackground(Color.BLACK);
 			g.drawImage(sam.getSprite(), 0, 0, null);
+			g.drawImage(sam.getSprite(), 50, 50, null);
 			/*
 			 * g.drawImage(sprites.get(1), 25, 0, null);
 			 * g.drawImage(sprites.get(2), 50, 0, null);
@@ -63,13 +62,15 @@ public class SpriteTest extends JFrame {
 	};
 
 	public SpriteTest() {
-		NPCThread npct = new NPCThread();
-		npct.start();
-		gameThread.start();
+		// NPCThread npct = new NPCThread();
+		// npct.start();
+		// gameThread.start();
 		sam = EnumsAndConstants.npc_lib.getNPC("Joey");
-		setSize(400, 400);
+		setSize(200, 200);
 		add(p);
-		setLocationRelativeTo(null);
+		repaint();
+		validate();
+		// setLocationRelativeTo(null);
 		setVisible(true);
 	}
 

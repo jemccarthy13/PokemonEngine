@@ -17,8 +17,8 @@ public class AudioLibrary {
 
 	private static AudioLibrary m_audioLib = new AudioLibrary();
 
-	private static final String bgMusicPath = "audio/audio_lib/BGM/";
-	public static final String soundEffectsPath = "audio/audio_lib/SE/";
+	private static final String bgMusicPath = "/audio_lib/BGM/";
+	public static final String soundEffectsPath = "/audio_lib/SE/";
 
 	private MidiPlayer m_currentTrack = null;
 	private JukeBox m_JukeBox = new JukeBox();

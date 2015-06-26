@@ -15,7 +15,7 @@ import java.util.HashMap;
 // ////////////////////////////////////////////////////////////////////////
 public class SpriteLibrary {
 	public Toolkit tk;
-	public String libPath = "Src/graphics_lib/";
+	public String libPath = "resources/graphics_lib/";
 	public String charPath = libPath + "Characters/Battle/";
 	public String spritePath = libPath + "Characters/Sprites/";
 	public String titlePath = libPath + "Titles/";
@@ -68,7 +68,7 @@ public class SpriteLibrary {
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// Get the set of 12 directional spries that correspond to the given name
+	// Get the set of 12 directional sprites that correspond to the given name
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public ArrayList<Image> getSprites(String name) {
@@ -82,22 +82,26 @@ public class SpriteLibrary {
 	// ////////////////////////////////////////////////////////////////////////
 	public SpriteLibrary() {
 
-		File file = new File(spritePath);
-		String[] directories = file.list(new FilenameFilter() {
-			@Override
-			public boolean accept(File dir, String name) {
-				return new File(dir, name).isDirectory();
-			}
-		});
+		try {
+			File file = new File(spritePath);
+			String[] directories = file.list(new FilenameFilter() {
+				@Override
+				public boolean accept(File dir, String name) {
+					return new File(dir, name).isDirectory();
+				}
+			});
 
-		for (String x : directories) {
-			File f = new File(spritePath + x);
-			String[] files = f.list();
-			ArrayList<Image> sprites = new ArrayList<Image>();
-			for (String y : files) {
-				sprites.add(createImage(spritePath + x + "/" + y));
+			for (String x : directories) {
+				File f = new File(spritePath + x);
+				String[] files = f.list();
+				ArrayList<Image> sprites = new ArrayList<Image>();
+				for (String y : files) {
+					sprites.add(createImage(spritePath + x + "/" + y));
+				}
+				spriteMap.put(x, sprites);
 			}
-			spriteMap.put(x, sprites);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		ICON = createImage(titlePath + "Icon.png");

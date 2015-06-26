@@ -1,7 +1,6 @@
 package libraries;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -28,19 +27,20 @@ public class MoveLibrary {
 		//
 		// ////////////////////////////////////////////////////////////////////////
 		public MoveDataMap() {
-			String filePath = "Src/Data/MOVES.MDAT";
+			String filePath = "resources/data/MOVES.MDAT";
 			FileInputStream fs = null;
 			try {
 				fs = new FileInputStream(filePath);
-			} catch (FileNotFoundException e) {
+
+				Scanner s = new Scanner(fs);
+				while (s.hasNext()) {
+					Move m = new Move(new MoveData(s.nextLine()));
+					this.put(m.getName(), m);
+				}
+				s.close();
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			Scanner s = new Scanner(fs);
-			while (s.hasNext()) {
-				Move m = new Move(new MoveData(s.nextLine()));
-				this.put(m.getName(), m);
-			}
-			s.close();
 		}
 	}
 

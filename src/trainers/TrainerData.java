@@ -65,6 +65,7 @@ public class TrainerData {
 		if (s.hasNext()) {
 			this.sprites = EnumsAndConstants.sprite_lib.getSprites(s.nextLine().trim());
 			this.sprite = this.sprites.get(0);
+			System.out.println("initial sprite " + this.sprite);
 		}
 		String[] conversation = null;
 		if (s.hasNext()) {

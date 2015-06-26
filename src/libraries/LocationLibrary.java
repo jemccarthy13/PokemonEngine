@@ -24,15 +24,19 @@ public class LocationLibrary {
 		private static final long serialVersionUID = 1L;
 
 		public LocationDataMap() {
-			String path = "Src/Data/Locations";
-			File folder = new File(path);
-			File[] listOfFiles = folder.listFiles();
-			for (int i = 0; i < listOfFiles.length; i++) {
-				if (listOfFiles[i].isFile()) {
-					LocationData ld = new LocationData(listOfFiles[i].getPath());
-					if (ld.isValidData())
-						put(ld.name, ld);
+			String path = "resources/data/Locations";
+			try {
+				File folder = new File(path);
+				File[] listOfFiles = folder.listFiles();
+				for (int i = 0; i < listOfFiles.length; i++) {
+					if (listOfFiles[i].isFile()) {
+						LocationData ld = new LocationData(listOfFiles[i].getPath());
+						if (ld.isValidData())
+							put(ld.name, ld);
+					}
 				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}

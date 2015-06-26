@@ -28,15 +28,19 @@ public class NPCLibrary {
 		private static final long serialVersionUID = 1L;
 
 		public NPCDataMap() {
-			String path = "Src/Data/NPCs";
-			File folder = new File(path);
-			File[] listOfFiles = folder.listFiles();
-			for (int i = 0; i < listOfFiles.length; i++) {
-				if (listOfFiles[i].isFile()) {
-					TrainerData pd = new TrainerData(listOfFiles[i].getPath());
-					if (pd.isValidData())
-						put(pd.name, pd);
+			String path = "resources/data/NPCs";
+			try {
+				File folder = new File(path);
+				File[] listOfFiles = folder.listFiles();
+				for (int i = 0; i < listOfFiles.length; i++) {
+					if (listOfFiles[i].isFile()) {
+						TrainerData pd = new TrainerData(listOfFiles[i].getPath());
+						if (pd.isValidData())
+							put(pd.name, pd);
+					}
 				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}

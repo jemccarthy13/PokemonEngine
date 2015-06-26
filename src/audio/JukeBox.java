@@ -81,10 +81,7 @@ public class JukeBox {
 			list.add(clip);
 
 			audioInputStream.close();
-		} catch (LineUnavailableException e) {
-			e.printStackTrace();
-			return false;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
