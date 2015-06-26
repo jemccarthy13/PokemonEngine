@@ -15,7 +15,7 @@ import java.util.HashMap;
 // ////////////////////////////////////////////////////////////////////////
 public class SpriteLibrary {
 	public Toolkit tk;
-	public String libPath = "resources/graphics_lib/";
+	public String libPath = "/graphics_lib/";
 	public String charPath = libPath + "Characters/Battle/";
 	public String spritePath = libPath + "Characters/Sprites/";
 	public String titlePath = libPath + "Titles/";
@@ -83,7 +83,7 @@ public class SpriteLibrary {
 	public SpriteLibrary() {
 
 		try {
-			File file = new File(spritePath);
+			File file = new File("resources/graphics_lib/Characters/Sprites");
 			String[] directories = file.list(new FilenameFilter() {
 				@Override
 				public boolean accept(File dir, String name) {
@@ -92,7 +92,7 @@ public class SpriteLibrary {
 			});
 
 			for (String x : directories) {
-				File f = new File(spritePath + x);
+				File f = new File("resources/graphics_lib/Characters/Sprites/" + x);
 				String[] files = f.list();
 				ArrayList<Image> sprites = new ArrayList<Image>();
 				for (String y : files) {

@@ -19,13 +19,14 @@ public class TileSet extends ArrayList<Image> implements Serializable {
 
 	public TileSet() {
 		try {
-			Scanner s = new Scanner(new InputStreamReader(TileSet.class.getResourceAsStream("/mapmaker/Tiles.tileset")));
+			Scanner s = new Scanner(new InputStreamReader(TileSet.class.getResourceAsStream("/Tiles.tileset")));
 			add(null);
 			while (s.hasNext()) {
 				String line = s.nextLine();
 				if (line.split(",").length > 1) {
-					String name = line.split(",")[1].trim();
-					add(EnumsAndConstants.tk.createImage(TileSet.class.getResource("/mapmaker/" + name)));
+					String name = line.split(",")[1].trim().replace("Tiles", "").replace("\\", "");
+					Image im = EnumsAndConstants.tk.createImage(TileSet.class.getResource("/tiles/" + name));
+					add(im);
 				}
 			}
 			s.close();
@@ -33,5 +34,4 @@ public class TileSet extends ArrayList<Image> implements Serializable {
 			e.printStackTrace();
 		}
 	}
-
 }

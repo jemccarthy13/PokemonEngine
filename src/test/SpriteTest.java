@@ -24,7 +24,7 @@ public class SpriteTest extends JFrame {
 
 	static ArrayList<Image> sprites = new ArrayList<Image>();
 
-	NPC sam;
+	NPC sam = EnumsAndConstants.npc_lib.getNPC("Joey");
 
 	JPanel p = new JPanel() {
 		private static final long serialVersionUID = 7322676857941810785L;
@@ -62,11 +62,11 @@ public class SpriteTest extends JFrame {
 	};
 
 	public SpriteTest() {
+
 		// NPCThread npct = new NPCThread();
 		// npct.start();
-		// gameThread.start();
-		sam = EnumsAndConstants.npc_lib.getNPC("Joey");
-		setSize(200, 200);
+		gameThread.start();
+		setSize(1000, 1000);
 		add(p);
 		repaint();
 		validate();

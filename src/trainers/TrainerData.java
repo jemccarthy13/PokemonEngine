@@ -63,7 +63,11 @@ public class TrainerData {
 			this.stationary = text.replace(" ", "").equals("true");
 		}
 		if (s.hasNext()) {
-			this.sprites = EnumsAndConstants.sprite_lib.getSprites(s.nextLine().trim());
+			String nextLine = s.nextLine().trim();
+			System.out.println("Sprite: " + nextLine);
+			ArrayList<Image> ims = EnumsAndConstants.sprite_lib.getSprites(nextLine);
+			System.out.println(ims);
+			this.sprites = EnumsAndConstants.sprite_lib.getSprites(nextLine);
 			this.sprite = this.sprites.get(0);
 			System.out.println("initial sprite " + this.sprite);
 		}

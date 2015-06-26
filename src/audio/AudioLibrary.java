@@ -17,8 +17,8 @@ public class AudioLibrary {
 
 	private static AudioLibrary m_audioLib = new AudioLibrary();
 
-	private static final String bgMusicPath = "/audio_lib/BGM/";
-	public static final String soundEffectsPath = "/audio_lib/SE/";
+	private static final String bgMusicPath = "resources/audio_lib/BGM/";
+	public static final String soundEffectsPath = "resources/audio_lib/SE/";
 
 	private MidiPlayer m_currentTrack = null;
 	private JukeBox m_JukeBox = new JukeBox();
@@ -43,7 +43,7 @@ public class AudioLibrary {
 		File[] listOfFiles = new File(bgMusicPath).listFiles();
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
-				MidiPlayer musicTrack = new MidiPlayer("/" + bgMusicPath + listOfFiles[i].getName(), true);
+				MidiPlayer musicTrack = new MidiPlayer(bgMusicPath + listOfFiles[i].getName(), true);
 
 				// compile a list of trainer / encounter music
 				Pattern p = Pattern.compile("Encounter");
@@ -61,7 +61,7 @@ public class AudioLibrary {
 		listOfFiles = new File(soundEffectsPath).listFiles();
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
-				m_JukeBox.loadClip("/" + soundEffectsPath + listOfFiles[i].getName(),
+				m_JukeBox.loadClip(soundEffectsPath + listOfFiles[i].getName(),
 						listOfFiles[i].getName().replace(".wav", ""), 1);
 			}
 		}
