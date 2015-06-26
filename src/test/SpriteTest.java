@@ -1,5 +1,7 @@
 package test;
 
+import graphics.NPCThread;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -62,15 +64,14 @@ public class SpriteTest extends JFrame {
 	};
 
 	public SpriteTest() {
-
-		// NPCThread npct = new NPCThread();
-		// npct.start();
+		NPCThread npct = new NPCThread();
+		npct.start();
 		gameThread.start();
-		setSize(1000, 1000);
+		setSize(300, 300);
 		add(p);
 		repaint();
 		validate();
-		// setLocationRelativeTo(null);
+		setLocationRelativeTo(null);
 		setVisible(true);
 	}
 
