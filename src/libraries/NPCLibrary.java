@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import trainers.NPC;
 import trainers.TrainerData;
-import utilities.EnumsAndConstants.DIR;
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -36,7 +35,6 @@ public class NPCLibrary extends HashMap<String, NPC> {
 					// name -> NPC
 					if (pd.isValidData()) {
 						NPC newNPC = new NPC(pd);
-						newNPC.setDirection(DIR.SOUTH);
 						put(pd.name, newNPC);
 					}
 				}

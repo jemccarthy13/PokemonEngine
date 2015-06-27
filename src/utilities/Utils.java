@@ -1,5 +1,7 @@
 package utilities;
 
+import graphics.MessageBox;
+
 import java.awt.Graphics;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
@@ -12,6 +14,8 @@ import trainers.Player;
 //
 // ////////////////////////////////////////////////////////////////////////
 public class Utils {
+
+	static MessageBox msg_box = new MessageBox();
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
@@ -55,10 +59,10 @@ public class Utils {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public static void messageBox(Graphics g, String string) {
-		EnumsAndConstants.msg_box.Message(g, string);
+		msg_box.Message(g, string);
 	}
 
 	public static void messageBox(Graphics g, String string, String string2) {
-		EnumsAndConstants.msg_box.Message(g, string, string2);
+		msg_box.Message(g, string, string2);
 	}
 }

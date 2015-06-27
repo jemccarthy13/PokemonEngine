@@ -16,16 +16,21 @@ public class GameData implements Serializable {
 	// ======================= Serialization ================================//
 	public static final long serialVersionUID = 1L;
 	// =========================== CHEATS ===================================//
-	public boolean noClip = false; // walk anywhere
-	public boolean noBattle = false; // no wild/trainer battles
+	public boolean NOCLIP = false; // walk anywhere
+	public boolean NOBATTLE = false; // no wild/trainer battles
+	public static final int MAX_NAME_SIZE = 7;
+	public static final int NPC_SIGHT_DISTANCE = 5;
+	public static final String VERSION = "Metallic Silver";
+
+	public static final int PLAYER_SPEED_WALK = 80;
+	public static final int PLAYER_SPEED_RUN = 90;
+	public static final int PLAYER_SPEED_BIKE = 95;
 	// ==================== Game Timing Data ================================//
-	// holds how long the game has been played
 	public TimeStruct gameTimeStruct = new TimeStruct();
 	public long timeStarted; // time the game was started
 	public Timer gameTimer; // time difference between game events
 	// ======================== Map Data ===================================//
 	public int[][] currentMap = new int[3][21400];
-	// public Tile[][] tileMap = new Tile[200][200];
 	public TileMap tm = new TileMap();
 	public int map_width;
 	public int map_height;
@@ -44,12 +49,12 @@ public class GameData implements Serializable {
 	public int offsetY = 0;
 	public int start_coorX, start_coorY; // teleportation graphics variables
 	public int menuSelection = 0;
+
 	// ==================== Setting options variables ======================//
 	public boolean option_sound = true;
 	// ======================== User Data ==================================//
 	public Player player;
-	// ======================== Version ====================================//
-	public String version = EnumsAndConstants.VERSION;
+	public int currentSpeed = PLAYER_SPEED_WALK; // controls the speed of play
 
 	// ////////////////////////////////////////////////////////////////////////
 	//

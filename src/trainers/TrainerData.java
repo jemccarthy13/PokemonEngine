@@ -10,7 +10,7 @@ import libraries.SpriteLibrary;
 import pokedex.PokemonFactory;
 import pokedex.PokemonList;
 import tiles.Coordinate;
-import utilities.EnumsAndConstants.DIR;
+import trainers.Actor.DIR;
 
 // ////////////////////////////////////////////////////////////////////////
 //

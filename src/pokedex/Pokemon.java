@@ -5,8 +5,6 @@ import java.io.Serializable;
 
 import libraries.MoveLibrary;
 import libraries.SpriteLibrary;
-import utilities.EnumsAndConstants;
-import utilities.EnumsAndConstants.STATS;
 import utilities.RandomNumUtils;
 
 // ////////////////////////////////////////////////////////////////////////
@@ -31,6 +29,10 @@ public class Pokemon implements Serializable {
 	protected Image front_sprite;
 
 	PokemonData pData;
+
+	public static enum STATS {
+		HP, ATTACK, DEFENSE, SP_ATTACK, SP_DEFENSE, SPEED, ACCURACY;
+	}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
@@ -75,11 +77,11 @@ public class Pokemon implements Serializable {
 			this.max_stats[x] = this.stats[x];
 		}
 
-		this.party_icon = SpriteLibrary.createImage(EnumsAndConstants.GRAPHICS_ICONPATH + formatPokedexNumber(0)
+		this.party_icon = SpriteLibrary.createImage(SpriteLibrary.libPath + "Icons/icon" + formatPokedexNumber(0)
 				+ ".png");
-		this.back_sprite = SpriteLibrary.createImage(EnumsAndConstants.GRAPHICS_BATTLEPATH
+		this.back_sprite = SpriteLibrary.createImage(SpriteLibrary.libPath + "Battlers/"
 				+ formatPokedexNumber(evolution_stage) + "b.png");
-		this.front_sprite = SpriteLibrary.createImage(EnumsAndConstants.GRAPHICS_BATTLEPATH
+		this.front_sprite = SpriteLibrary.createImage(SpriteLibrary.libPath + "Battlers/"
 				+ formatPokedexNumber(evolution_stage) + ".png");
 	}
 
@@ -182,7 +184,7 @@ public class Pokemon implements Serializable {
 	// getStat - given a STAT get the current value
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public int getStat(EnumsAndConstants.STATS stat) {
+	public int getStat(STATS stat) {
 		return this.stats[stat.ordinal()].intValue();
 	}
 
@@ -191,7 +193,7 @@ public class Pokemon implements Serializable {
 	// getMaxStat - given a STAT return the highest value that stat could be
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public int getMaxStat(EnumsAndConstants.STATS hp) {
+	public int getMaxStat(STATS hp) {
 		return this.max_stats[hp.ordinal()].intValue();
 	}
 
@@ -200,7 +202,7 @@ public class Pokemon implements Serializable {
 	// setStat - set the given stat to the given value
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private void setStat(EnumsAndConstants.STATS hp, int i) {
+	private void setStat(STATS hp, int i) {
 		this.stats[hp.ordinal()] = Integer.valueOf(i);
 	}
 

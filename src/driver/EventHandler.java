@@ -7,9 +7,9 @@ import libraries.NPCLibrary;
 import libraries.SpriteLibrary;
 import pokedex.Move;
 import pokedex.Pokemon;
+import pokedex.Pokemon.STATS;
+import trainers.Actor.DIR;
 import trainers.NPC;
-import utilities.EnumsAndConstants;
-import utilities.EnumsAndConstants.DIR;
 import utilities.RandomNumUtils;
 import audio.AudioLibrary;
 
@@ -176,12 +176,12 @@ public class EventHandler {
 			int attackStat = 0;
 			int defStat = 0;
 			if (chosen.getType().equals("PHYSICAL")) {
-				attackStat = playerPokemon.getStat(EnumsAndConstants.STATS.ATTACK);
-				defStat = game.encounter.enemyPokemon.get(0).getStat(EnumsAndConstants.STATS.DEFENSE);
+				attackStat = playerPokemon.getStat(STATS.ATTACK);
+				defStat = game.encounter.enemyPokemon.get(0).getStat(STATS.DEFENSE);
 			}
 			if (chosen.getType().equals("SPECIAL")) {
-				attackStat = playerPokemon.getStat(EnumsAndConstants.STATS.SP_ATTACK);
-				defStat = game.encounter.enemyPokemon.get(0).getStat(EnumsAndConstants.STATS.SP_DEFENSE);
+				attackStat = playerPokemon.getStat(STATS.SP_ATTACK);
+				defStat = game.encounter.enemyPokemon.get(0).getStat(STATS.SP_DEFENSE);
 			}
 			int damage = 0;
 			if (!chosen.getType().equals("STAT")) {

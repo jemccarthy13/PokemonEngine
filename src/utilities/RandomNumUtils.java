@@ -3,6 +3,7 @@ package utilities;
 import java.util.Random;
 
 import pokedex.Pokemon;
+import trainers.Actor.DIR;
 
 public class RandomNumUtils {
 
@@ -39,19 +40,19 @@ public class RandomNumUtils {
 	// randomDirection - generates a random direction for NPCs
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public static EnumsAndConstants.DIR randomDirection() {
+	public static DIR randomDirection() {
 		int dir = generateRandom(1, 4);
 		switch (dir) {
 		case 1:
-			return EnumsAndConstants.DIR.NORTH;
+			return DIR.NORTH;
 		case 2:
-			return EnumsAndConstants.DIR.EAST;
+			return DIR.EAST;
 		case 3:
-			return EnumsAndConstants.DIR.SOUTH;
+			return DIR.SOUTH;
 		case 4:
-			return EnumsAndConstants.DIR.WEST;
+			return DIR.WEST;
 		}
-		return EnumsAndConstants.DIR.SOUTH;
+		return DIR.SOUTH;
 	}
 
 	// ////////////////////////////////////////////////////////////////////////

@@ -3,7 +3,6 @@ package driver;
 import javax.swing.JFrame;
 
 import libraries.SpriteLibrary;
-import utilities.EnumsAndConstants;
 import audio.AudioLibrary;
 
 public class PokemonGameFrame extends JFrame {
@@ -17,7 +16,7 @@ public class PokemonGameFrame extends JFrame {
 	// ////////////////////////////////////////////////////////////////////////
 	public PokemonGameFrame() {
 		// Title changes with each game release (along with version)
-		setTitle("Pokemon: " + EnumsAndConstants.VERSION);
+		setTitle("Pokemon: Metallic Silver");
 
 		// No matter the version, the Icon is always located in the same place
 		// and these attributes of the game do not change.

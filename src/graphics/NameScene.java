@@ -1,6 +1,6 @@
 package graphics;
 
-import utilities.EnumsAndConstants;
+import utilities.GameData;
 
 // ////////////////////////////////////////////////////////////////////////
 //
@@ -41,7 +41,7 @@ public class NameScene {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public void addSelectedChar() {
-		if (buildName.length() < EnumsAndConstants.MAX_NAME_SIZE) {
+		if (buildName.length() < GameData.MAX_NAME_SIZE) {
 			buildName.append(charArray[rowSelection][colSelection]);
 		}
 	}

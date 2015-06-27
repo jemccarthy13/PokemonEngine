@@ -4,6 +4,7 @@ import graphics.BattleScene;
 import graphics.MenuScene;
 import graphics.NPCThread;
 import graphics.NameScene;
+import graphics.Painter;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -20,11 +21,12 @@ import javax.swing.Timer;
 
 import libraries.NPCLibrary;
 import pokedex.Pokemon;
+import pokedex.Pokemon.STATS;
 import pokedex.PokemonList;
 import tiles.Coordinate;
+import trainers.Actor.DIR;
 import trainers.NPC;
 import utilities.EnumsAndConstants;
-import utilities.EnumsAndConstants.DIR;
 import utilities.GameData;
 import audio.AudioLibrary;
 
@@ -81,7 +83,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 		addKeyListener(this);
 
 		// gameTimer sets the delay between events, based on PLAYER_SPEED
-		gData.gameTimer = new Timer(100 - EnumsAndConstants.PLAYER_SPEED, this);
+		gData.gameTimer = new Timer(100 - gData.currentSpeed, this);
 		gData.gameTimer.start();
 	}
 
@@ -96,10 +98,11 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 		gData.updateTime(); // update the time played
 
 		if (gData.inBattle) {
-			if (encounter.playerPokemon.getStat(EnumsAndConstants.STATS.HP) <= 0) {
+			if (encounter.playerPokemon.getStat(STATS.HP) <= 0) {
+				// TODO - check for other todo switch pokemon
 				encounter.playerSwitchPokemon();
 			}
-			if (encounter.enemyPokemon.get(0).getStat(EnumsAndConstants.STATS.HP) <= 0) {
+			if (encounter.enemyPokemon.get(0).getStat(STATS.HP) <= 0) {
 				encounter.Win();
 			}
 			if (!encounter.playerTurn) {
@@ -122,10 +125,10 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 		Coordinate playerPos = gData.player.tData.position;
 
 		// check for collisions in each direction
-		moveable_dir[DIR.NORTH.ordinal()] = gData.tm.canMoveInDir(playerPos, DIR.NORTH, gData) || gData.noClip;
-		moveable_dir[DIR.WEST.ordinal()] = gData.tm.canMoveInDir(playerPos, DIR.WEST, gData) || gData.noClip;
-		moveable_dir[DIR.SOUTH.ordinal()] = gData.tm.canMoveInDir(playerPos, DIR.SOUTH, gData) || gData.noClip;
-		moveable_dir[DIR.EAST.ordinal()] = gData.tm.canMoveInDir(playerPos, DIR.EAST, gData) || gData.noClip;
+		moveable_dir[DIR.NORTH.ordinal()] = gData.tm.canMoveInDir(playerPos, DIR.NORTH, gData) || gData.NOCLIP;
+		moveable_dir[DIR.WEST.ordinal()] = gData.tm.canMoveInDir(playerPos, DIR.WEST, gData) || gData.NOCLIP;
+		moveable_dir[DIR.SOUTH.ordinal()] = gData.tm.canMoveInDir(playerPos, DIR.SOUTH, gData) || gData.NOCLIP;
+		moveable_dir[DIR.EAST.ordinal()] = gData.tm.canMoveInDir(playerPos, DIR.EAST, gData) || gData.NOCLIP;
 
 		if (walking) { // take care of walking animation graphics logic
 			movespritepixels += 1;
@@ -153,7 +156,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 				gData.start_coorX = (gData.player.getCurrentX() - x.getX()) * -1 * EnumsAndConstants.TILESIZE;
 				gData.start_coorY = (gData.player.getCurrentY() - x.getY()) * -1 * EnumsAndConstants.TILESIZE;
 				teleported = true;
-				gData.player.setDir(EnumsAndConstants.DIR.NORTH);
+				gData.player.setDir(DIR.NORTH);
 			}
 		}
 
@@ -173,7 +176,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 		// check for trainer encounter with any NPC
 		for (NPC curNPC : NPCLibrary.getInstance().values()) {
 			boolean beaten = gData.player.beatenTrainers.contains(curNPC.getName());
-			if (curNPC.isTrainer() && !walking && !gData.noBattle && !beaten && npcSeesPlayer(curNPC) && !gData.inMenu) {
+			if (curNPC.isTrainer() && !walking && !gData.NOBATTLE && !beaten && npcSeesPlayer(curNPC) && !gData.inMenu) {
 				NPCTHREAD.stop = true;
 				enemyTrainerAnimation(curNPC);
 				doTrainerBattle(curNPC);
@@ -202,10 +205,10 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 		DIR NPC_DIR = curNPC.getDirection();
 
 		return (((playerCurX == curNPC.getCurrentX()) && (((playerCurY < NPC_Y)
-				&& (NPC_Y - playerCurY <= EnumsAndConstants.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.NORTH)) || ((playerCurY > NPC_Y)
-				&& (playerCurY - NPC_Y <= EnumsAndConstants.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.SOUTH)))) || ((playerCurY == NPC_Y) && (((playerCurX < NPC_X)
-				&& (NPC_X - playerCurX <= EnumsAndConstants.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.WEST)) || ((playerCurX > NPC_X)
-				&& (playerCurX - NPC_X <= EnumsAndConstants.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.EAST)))));
+				&& (NPC_Y - playerCurY <= GameData.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.NORTH)) || ((playerCurY > NPC_Y)
+				&& (playerCurY - NPC_Y <= GameData.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.SOUTH)))) || ((playerCurY == NPC_Y) && (((playerCurX < NPC_X)
+				&& (NPC_X - playerCurX <= GameData.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.WEST)) || ((playerCurX > NPC_X)
+				&& (playerCurX - NPC_X <= GameData.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.EAST)))));
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -272,7 +275,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 	// ////////////////////////////////////////////////////////////////////////
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		EnumsAndConstants.PAINTER.paintComponent(g, this);
+		Painter.paintComponent(g, this);
 		repaint();
 		validate();
 	}

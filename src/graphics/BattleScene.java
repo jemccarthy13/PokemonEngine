@@ -5,10 +5,9 @@ import java.util.Random;
 import libraries.SpriteLibrary;
 import pokedex.Move;
 import pokedex.Pokemon;
+import pokedex.Pokemon.STATS;
 import pokedex.PokemonList;
 import trainers.NPC;
-import utilities.EnumsAndConstants;
-import utilities.EnumsAndConstants.STATS;
 import utilities.RandomNumUtils;
 import audio.AudioLibrary;
 import driver.Game;
@@ -233,12 +232,12 @@ public class BattleScene {
 					int attackStat = 0;
 					int defStat = 0;
 					if (chosen.getType().equals("PHYSICAL")) {
-						attackStat = ((Pokemon) this.enemyPokemon.get(0)).getStat(EnumsAndConstants.STATS.ATTACK);
-						defStat = this.playerPokemon.getStat(EnumsAndConstants.STATS.DEFENSE);
+						attackStat = ((Pokemon) this.enemyPokemon.get(0)).getStat(STATS.ATTACK);
+						defStat = this.playerPokemon.getStat(STATS.DEFENSE);
 					}
 					if (chosen.getType().equals("SPECIAL")) {
-						attackStat = ((Pokemon) this.enemyPokemon.get(0)).getStat(EnumsAndConstants.STATS.SP_ATTACK);
-						defStat = this.playerPokemon.getStat(EnumsAndConstants.STATS.SP_DEFENSE);
+						attackStat = ((Pokemon) this.enemyPokemon.get(0)).getStat(STATS.SP_ATTACK);
+						defStat = this.playerPokemon.getStat(STATS.SP_DEFENSE);
 					}
 					int damage = 0;
 					if (!chosen.getType().equals("STAT")) {
@@ -262,12 +261,12 @@ public class BattleScene {
 				int attackStat = 0;
 				int defStat = 1;
 				if (chosen.getType().equals("PHYSICAL")) {
-					attackStat = ((Pokemon) this.enemyPokemon.get(0)).getStat(EnumsAndConstants.STATS.ATTACK);
-					defStat = this.playerPokemon.getStat(EnumsAndConstants.STATS.DEFENSE);
+					attackStat = ((Pokemon) this.enemyPokemon.get(0)).getStat(STATS.ATTACK);
+					defStat = this.playerPokemon.getStat(STATS.DEFENSE);
 				}
 				if (chosen.getType().equals("SPECIAL")) {
-					attackStat = ((Pokemon) this.enemyPokemon.get(0)).getStat(EnumsAndConstants.STATS.SP_ATTACK);
-					defStat = this.playerPokemon.getStat(EnumsAndConstants.STATS.SP_DEFENSE);
+					attackStat = ((Pokemon) this.enemyPokemon.get(0)).getStat(STATS.SP_ATTACK);
+					defStat = this.playerPokemon.getStat(STATS.SP_DEFENSE);
 				}
 				if (!chosen.getType().equals("STAT")) {
 					@SuppressWarnings("unused")

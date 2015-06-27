@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import libraries.NPCLibrary;
 import libraries.SpriteLibrary;
 import pokedex.Pokemon;
+import pokedex.Pokemon.STATS;
 import pokedex.PokemonList;
 import trainers.NPC;
 import trainers.Player;
@@ -37,7 +38,7 @@ public class Painter extends JPanel {
 	// paintComponent - main painting logic from which submethods are called
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public void paintComponent(Graphics g, Game game) {
+	public static void paintComponent(Graphics g, Game game) {
 		Graphics2D g2 = (Graphics2D) g;
 		AffineTransform at = new AffineTransform();
 		g2.setTransform(at);
@@ -82,7 +83,7 @@ public class Painter extends JPanel {
 	// Paint all components of the name input screen
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private void paintNameInputScreen(Graphics g, Game game) {
+	private static void paintNameInputScreen(Graphics g, Game game) {
 		g.drawImage(SpriteLibrary.NAMESCREEN, 0, 0, null);
 
 		if (game.nameScreen.rowSelection < 5) {
@@ -98,13 +99,13 @@ public class Painter extends JPanel {
 
 		String name = game.nameScreen.getChosenName();
 
-		for (int x = 0; x < EnumsAndConstants.MAX_NAME_SIZE; x++) {
+		for (int x = 0; x < GameData.MAX_NAME_SIZE; x++) {
 			g.drawImage(SpriteLibrary.FONT_UNDERSCORE, 150 + EnumsAndConstants.TILESIZE * x, 40, null);
 		}
 		for (int x = 0; x < name.toCharArray().length; x++) {
 			paintString(g, name, 150, 40);
 		}
-		if (name.length() < EnumsAndConstants.MAX_NAME_SIZE) {
+		if (name.length() < GameData.MAX_NAME_SIZE) {
 			g.drawImage(SpriteLibrary.FONT_CURSOR, 150 + EnumsAndConstants.TILESIZE * name.length(), 40, null);
 		}
 		g.drawImage(SpriteLibrary.getInstance().getSprites(game.nameScreen.toBeNamed).get(0), 80, 30, null);
@@ -115,7 +116,7 @@ public class Painter extends JPanel {
 	// Paint a given string to a given location of the screen
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public void paintString(Graphics g, String string, int startX, int startY) {
+	public static void paintString(Graphics g, String string, int startX, int startY) {
 		for (int x = 0; x < string.toCharArray().length; x++) {
 			g.drawImage(SpriteLibrary.getInstance().getFontChar(string.toCharArray()[x]), startX
 					+ EnumsAndConstants.TILESIZE * x, startY, null);
@@ -127,8 +128,7 @@ public class Painter extends JPanel {
 	// Paint all components of a battle scene
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private void paintBattle(Graphics g, Game game) {
-		g.setFont(EnumsAndConstants.POKEFONT);
+	private static void paintBattle(Graphics g, Game game) {
 		g.drawImage(SpriteLibrary.BG, 0, 0, null);
 
 		Pokemon playerPokemon = game.encounter.playerPokemon;
@@ -208,13 +208,13 @@ public class Painter extends JPanel {
 		// player pokemon information
 		g.drawString(playerPokemon.getName(), 300, 175);
 		g.drawString(String.valueOf(playerPokemon.getLevel()), 435, 175);
-		g.drawString(String.valueOf(playerPokemon.getStat(EnumsAndConstants.STATS.HP)), 361, 207);
-		g.drawString(String.valueOf(playerPokemon.getMaxStat(EnumsAndConstants.STATS.HP)), 403, 207);
+		g.drawString(String.valueOf(playerPokemon.getStat(STATS.HP)), 361, 207);
+		g.drawString(String.valueOf(playerPokemon.getMaxStat(STATS.HP)), 403, 207);
 		// enemy pokemon information
 		g.drawString(enemyPokemon.getName(), 20, 25);
 		g.drawString(String.valueOf(enemyPokemon.getLevel()), 145, 25);
-		g.drawString(String.valueOf(enemyPokemon.getStat(EnumsAndConstants.STATS.HP)), 70, 45);
-		g.drawString(String.valueOf(enemyPokemon.getMaxStat(EnumsAndConstants.STATS.HP)), 112, 45);
+		g.drawString(String.valueOf(enemyPokemon.getStat(STATS.HP)), 70, 45);
+		g.drawString(String.valueOf(enemyPokemon.getMaxStat(STATS.HP)), 112, 45);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -222,8 +222,7 @@ public class Painter extends JPanel {
 	// Paint all components of the intro screen
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private void paintIntroScreen(Graphics g, GameData gameData) {
-		g.setFont(EnumsAndConstants.POKEFONT);
+	private static void paintIntroScreen(Graphics g, GameData gameData) {
 		g.drawImage(SpriteLibrary.BEGINNING, 0, 0, null);
 		g.drawImage(SpriteLibrary.getInstance().getSprites("PROFESSOROAK_LARGE").get(0), 150, 20, null);
 		if (NPCLibrary.getInstance().get("Professor Oak").getText().size() > gameData.introStage) {
@@ -237,7 +236,7 @@ public class Painter extends JPanel {
 	// Paint all components of the options screen
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private void paintOptionScreen(Graphics g, Game game) {
+	private static void paintOptionScreen(Graphics g, Game game) {
 		Image optionBG = (game.gData.option_sound) ? SpriteLibrary.OPTION_SOUND_ON : SpriteLibrary.OPTION_SOUND_OFF;
 
 		g.drawImage(optionBG, 0, 0, null);
@@ -249,8 +248,7 @@ public class Painter extends JPanel {
 	// Paint all components of the save menu
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private void paintSaveMenu(Graphics g, Game game) {
-		g.setFont(EnumsAndConstants.POKEFONT);
+	private static void paintSaveMenu(Graphics g, Game game) {
 		g.setColor(Color.BLACK);
 		g.drawImage(SpriteLibrary.SAVE, 0, 0, null);
 		g.drawString(game.gData.player.getName(), 100, 68);
@@ -269,7 +267,7 @@ public class Painter extends JPanel {
 	// Pad a given string with appropriate spacing
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public String getPadding(String toBePadded) {
+	public static String getPadding(String toBePadded) {
 		int numSpaces = 12 - toBePadded.length();
 		String retStr = "";
 		for (int x = 0; x < numSpaces; x++) {
@@ -283,8 +281,7 @@ public class Painter extends JPanel {
 	// Paint all components of the Trainer Card
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private void paintTrainerCard(Graphics g, GameData gameData) {
-		g.setFont(EnumsAndConstants.POKEFONT);
+	private static void paintTrainerCard(Graphics g, GameData gameData) {
 		g.setColor(Color.BLACK);
 		g.drawImage(SpriteLibrary.TRAINERCARD, 0, 0, null);
 		g.drawImage(SpriteLibrary.TRAINER_FOR_CARD, 320, 100, null);
@@ -301,8 +298,7 @@ public class Painter extends JPanel {
 	// Paint all components of the pokegear screen
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private void paintPokegearScreen(Graphics g, MenuScene menu) {
-		g.setFont(EnumsAndConstants.POKEFONT);
+	private static void paintPokegearScreen(Graphics g, MenuScene menu) {
 		g.setColor(Color.BLACK);
 		g.drawImage(SpriteLibrary.POKEGEAR, 0, 0, null);
 		if (menu.MENU_currentSelectionPokeGear == 0) {
@@ -321,8 +317,7 @@ public class Painter extends JPanel {
 	// Paint all components of the bag screen
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private void paintBagScreen(Graphics g) {
-		g.setFont(EnumsAndConstants.POKEFONT);
+	private static void paintBagScreen(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.drawImage(SpriteLibrary.BAGSCREEN, 0, 0, null);
 	}
@@ -332,8 +327,7 @@ public class Painter extends JPanel {
 	// Paint all components of the party screen
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private void paintPartyScreen(Graphics g, Player p) {
-		g.setFont(EnumsAndConstants.POKEFONT);
+	private static void paintPartyScreen(Graphics g, Player p) {
 		g.setColor(Color.BLACK);
 		g.drawImage(SpriteLibrary.POKESEL, 0, 0, null);
 		g.drawImage(SpriteLibrary.PARTYFIRST, 40, 20, null);
@@ -357,7 +351,7 @@ public class Painter extends JPanel {
 	// Paint a conversation on the screen as a series of message boxes
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private void paintConversation(Graphics g, MenuScene menu) {
+	private static void paintConversation(Graphics g, MenuScene menu) {
 		Utils.messageBox(g, menu.MENU_conversation.getText(menu.MENU_stage));
 	}
 
@@ -366,7 +360,7 @@ public class Painter extends JPanel {
 	// Paint all components of the pokedex screen
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private void paintPokedexScreen(Graphics g) {
+	private static void paintPokedexScreen(Graphics g) {
 		g.drawImage(SpriteLibrary.POKEDEX, 0, 0, null);
 	}
 
@@ -375,7 +369,7 @@ public class Painter extends JPanel {
 	// Paint all components of the pause menu
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private void paintPauseMenu(Graphics g, MenuScene menu) {
+	private static void paintPauseMenu(Graphics g, MenuScene menu) {
 		g.drawImage(SpriteLibrary.MAIN_MENU, 0, 0, null);
 		g.drawImage(SpriteLibrary.ARROW, 335, 20 + 32 * menu.MENU_currentSelectionMain, null);
 	}
@@ -388,8 +382,7 @@ public class Painter extends JPanel {
 	// TODO - update to paint only visible areas + 1 row + 1 column
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private void paintWorld(Graphics g, GameData gameData, Graphics2D g2, AffineTransform at) {
-		g.setFont(EnumsAndConstants.POKEFONT);
+	private static void paintWorld(Graphics g, GameData gameData, Graphics2D g2, AffineTransform at) {
 		g.setColor(Color.BLACK);
 		g2.setClip(new Rectangle(-16, -42, 704, 438));
 
@@ -424,7 +417,6 @@ public class Painter extends JPanel {
 
 		g2.setTransform(at);
 		g.drawImage(gameData.player.getSprite(), 224, 118, null);
-		g.setFont(EnumsAndConstants.POKEFONT);
 		g.setColor(Color.WHITE);
 		g.drawString(gameData.player.getCurrentX() + "," + gameData.player.getCurrentY(), 10, 25);
 	}
@@ -434,7 +426,7 @@ public class Painter extends JPanel {
 	// Paint all components of the continue screen
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private void paintContinueScreen(Graphics g, GameData gameData) {
+	private static void paintContinueScreen(Graphics g, GameData gameData) {
 		g.drawImage(SpriteLibrary.CONTINUESCREEN, 0, 0, null);
 		g.drawImage(SpriteLibrary.ARROW, 13, 20 + 32 * gameData.menuSelection, null);
 	}
@@ -444,7 +436,7 @@ public class Painter extends JPanel {
 	// Paint all components of the title screen
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private void paintTitle(Graphics g) {
+	private static void paintTitle(Graphics g) {
 		g.drawImage(SpriteLibrary.TITLESCREEN, 0, 0, null);
 		g.drawImage(SpriteLibrary.START_SYMBOL, 0, 260, null);
 	}

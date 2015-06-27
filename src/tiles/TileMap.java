@@ -2,7 +2,7 @@ package tiles;
 
 import java.util.ArrayList;
 
-import utilities.EnumsAndConstants.DIR;
+import trainers.Actor.DIR;
 import utilities.GameData;
 
 // ////////////////////////////////////////////////////////////////////////

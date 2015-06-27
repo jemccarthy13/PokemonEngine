@@ -1,13 +1,13 @@
 package trainers;
 
 import java.awt.Image;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import libraries.SpriteLibrary;
 import pokedex.Pokemon;
 import pokedex.PokemonList;
 import tiles.Coordinate;
-import utilities.EnumsAndConstants.DIR;
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -21,6 +21,10 @@ public class Actor {
 	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 1L;
 	public TrainerData tData = new TrainerData();
+
+	public static enum DIR implements Serializable {
+		SOUTH, WEST, EAST, NORTH;
+	}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
