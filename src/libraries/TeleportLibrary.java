@@ -12,7 +12,7 @@ import tiles.Coordinate;
 //////////////////////////////////////////////////////////////////////////
 public class TeleportLibrary {
 
-	Map<Coordinate, Coordinate> teleports = new HashMap<Coordinate, Coordinate>();
+	static Map<Coordinate, Coordinate> teleports = new HashMap<Coordinate, Coordinate>();
 
 	public TeleportLibrary() {
 		/*
@@ -25,7 +25,7 @@ public class TeleportLibrary {
 		 */
 	}
 
-	public Map<Coordinate, Coordinate> getListofTeleports() {
+	public static Map<Coordinate, Coordinate> getListofTeleports() {
 		return teleports;
 	}
 }

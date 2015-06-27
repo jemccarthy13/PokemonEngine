@@ -14,9 +14,10 @@ import libraries.SpriteLibrary;
 import pokedex.Pokemon;
 import pokedex.Pokemon.STATS;
 import pokedex.PokemonList;
+import tiles.Tile;
+import tiles.TileSet;
 import trainers.NPC;
 import trainers.Player;
-import utilities.EnumsAndConstants;
 import utilities.GameData;
 import utilities.Utils;
 import driver.Game;
@@ -87,26 +88,24 @@ public class Painter extends JPanel {
 		g.drawImage(SpriteLibrary.NAMESCREEN, 0, 0, null);
 
 		if (game.nameScreen.rowSelection < 5) {
-			g.drawImage(SpriteLibrary.ARROW,
-					(int) (40 + EnumsAndConstants.TILESIZE * 2 * game.nameScreen.colSelection), 100
-							+ EnumsAndConstants.TILESIZE * game.nameScreen.rowSelection, null);
+			g.drawImage(SpriteLibrary.ARROW, (int) (40 + Tile.TILESIZE * 2 * game.nameScreen.colSelection), 100
+					+ Tile.TILESIZE * game.nameScreen.rowSelection, null);
 		}
 		if (game.nameScreen.rowSelection == 5) {
-			g.drawImage(SpriteLibrary.ARROW,
-					(int) (100 + EnumsAndConstants.TILESIZE * 6 * game.nameScreen.colSelection), 100
-							+ EnumsAndConstants.TILESIZE * game.nameScreen.rowSelection, null);
+			g.drawImage(SpriteLibrary.ARROW, (int) (100 + Tile.TILESIZE * 6 * game.nameScreen.colSelection), 100
+					+ Tile.TILESIZE * game.nameScreen.rowSelection, null);
 		}
 
 		String name = game.nameScreen.getChosenName();
 
 		for (int x = 0; x < GameData.MAX_NAME_SIZE; x++) {
-			g.drawImage(SpriteLibrary.FONT_UNDERSCORE, 150 + EnumsAndConstants.TILESIZE * x, 40, null);
+			g.drawImage(SpriteLibrary.FONT_UNDERSCORE, 150 + Tile.TILESIZE * x, 40, null);
 		}
 		for (int x = 0; x < name.toCharArray().length; x++) {
 			paintString(g, name, 150, 40);
 		}
 		if (name.length() < GameData.MAX_NAME_SIZE) {
-			g.drawImage(SpriteLibrary.FONT_CURSOR, 150 + EnumsAndConstants.TILESIZE * name.length(), 40, null);
+			g.drawImage(SpriteLibrary.FONT_CURSOR, 150 + Tile.TILESIZE * name.length(), 40, null);
 		}
 		g.drawImage(SpriteLibrary.getInstance().getSprites(game.nameScreen.toBeNamed).get(0), 80, 30, null);
 	}
@@ -118,8 +117,8 @@ public class Painter extends JPanel {
 	// ////////////////////////////////////////////////////////////////////////
 	public static void paintString(Graphics g, String string, int startX, int startY) {
 		for (int x = 0; x < string.toCharArray().length; x++) {
-			g.drawImage(SpriteLibrary.getInstance().getFontChar(string.toCharArray()[x]), startX
-					+ EnumsAndConstants.TILESIZE * x, startY, null);
+			g.drawImage(SpriteLibrary.getInstance().getFontChar(string.toCharArray()[x]), startX + Tile.TILESIZE * x,
+					startY, null);
 		}
 	}
 
@@ -398,20 +397,20 @@ public class Painter extends JPanel {
 					int tilePicNum = gameData.currentMap[layer][tile_number];
 
 					if (!(layer == 2 && tilePicNum == 0)) {
-						g.drawImage((Image) EnumsAndConstants.tileset.get(tilePicNum), x_coor, y_coor, null);
+						g.drawImage((Image) TileSet.getInstance().get(tilePicNum), x_coor, y_coor, null);
 					}
-					x_coor += EnumsAndConstants.TILESIZE;
+					x_coor += Tile.TILESIZE;
 					tile_number++;
 				}
 				x_coor = gameData.start_coorX;
-				y_coor += EnumsAndConstants.TILESIZE;
+				y_coor += Tile.TILESIZE;
 			}
 		}
 
 		for (NPC curNPC : NPCLibrary.getInstance().values()) {
 			g.drawImage(curNPC.getSprite(), curNPC.getCurrentX() * 32 + gameData.start_coorX, curNPC.getCurrentY() * 32
 					+ gameData.start_coorY - 10, null);
-			gameData.tm.set(curNPC.tData.position, EnumsAndConstants.OBSTACLE);
+			gameData.tm.set(curNPC.tData.position, TileSet.OBSTACLE);
 		}
 		g2.translate(-gameData.offsetX, -gameData.offsetY);
 

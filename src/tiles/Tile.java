@@ -5,4 +5,6 @@ package tiles;
 // Tile - the abstract parent class for all Tiles
 //
 // ////////////////////////////////////////////////////////////////////////
-public abstract class Tile {}
+public abstract class Tile {
+	public static final int TILESIZE = 32;
+}

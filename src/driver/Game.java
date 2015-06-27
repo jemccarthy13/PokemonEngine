@@ -20,13 +20,15 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import libraries.NPCLibrary;
+import libraries.TeleportLibrary;
 import pokedex.Pokemon;
 import pokedex.Pokemon.STATS;
 import pokedex.PokemonList;
 import tiles.Coordinate;
+import tiles.Tile;
+import tiles.TileSet;
 import trainers.Actor.DIR;
 import trainers.NPC;
-import utilities.EnumsAndConstants;
 import utilities.GameData;
 import audio.AudioLibrary;
 
@@ -145,7 +147,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 		}
 
 		// prep for door teleportation event check
-		Map<Coordinate, Coordinate> dict = EnumsAndConstants.TELEPORTS.getListofTeleports();
+		Map<Coordinate, Coordinate> dict = TeleportLibrary.getListofTeleports();
 		Set<Coordinate> k = dict.keySet();
 		boolean teleported = false;
 
@@ -153,8 +155,8 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 			if (x.equals(playerPos)) {
 				gData.player.setLoc(dict.get(x));
 
-				gData.start_coorX = (gData.player.getCurrentX() - x.getX()) * -1 * EnumsAndConstants.TILESIZE;
-				gData.start_coorY = (gData.player.getCurrentY() - x.getY()) * -1 * EnumsAndConstants.TILESIZE;
+				gData.start_coorX = (gData.player.getCurrentX() - x.getX()) * -1 * Tile.TILESIZE;
+				gData.start_coorY = (gData.player.getCurrentY() - x.getY()) * -1 * Tile.TILESIZE;
 				teleported = true;
 				gData.player.setDir(DIR.NORTH);
 			}
@@ -246,7 +248,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 
 		// until NPC reaches player, place tile, move NPC, repaint
 		for (int x = 0; x < distToTravel; x++) {
-			gData.tm.set(curNPC.tData.position, EnumsAndConstants.TILE);
+			gData.tm.set(curNPC.tData.position, TileSet.NORMAL_TILE);
 			curNPC.move(NPC_DIR);
 			paintComponent(getGraphics());
 			try {

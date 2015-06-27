@@ -10,8 +10,8 @@ import pokedex.Pokemon;
 import pokedex.PokemonFactory;
 import tiles.Coordinate;
 import tiles.Tile;
+import tiles.TileSet;
 import trainers.Player;
-import utilities.EnumsAndConstants;
 import audio.AudioLibrary;
 
 //////////////////////////////////////////////////////////////////////////
@@ -64,8 +64,8 @@ public class GameInitializer {
 			game.gData.timeStarted = System.currentTimeMillis();
 			AudioLibrary.getInstance().playBackgroundMusic("Intro");
 		}
-		game.gData.start_coorX = (EnumsAndConstants.TILESIZE * (8 - game.gData.player.getCurrentX()));
-		game.gData.start_coorY = (EnumsAndConstants.TILESIZE * (6 - game.gData.player.getCurrentY()));
+		game.gData.start_coorX = (Tile.TILESIZE * (8 - game.gData.player.getCurrentX()));
+		game.gData.start_coorY = (Tile.TILESIZE * (6 - game.gData.player.getCurrentY()));
 		game.gData.atTitle = false;
 		game.gData.atContinueScreen = false;
 		game.movable = true;
@@ -101,7 +101,7 @@ public class GameInitializer {
 		for (int r = 0; r < game.gData.map_height; r++) {
 			ArrayList<Tile> row = new ArrayList<Tile>();
 			for (int c = 0; c < game.gData.map_width; c++) {
-				row.add(EnumsAndConstants.TILE);
+				row.add(TileSet.NORMAL_TILE);
 			}
 			game.gData.tm.add(row);
 		}
@@ -134,10 +134,10 @@ public class GameInitializer {
 	private static void addObstaclesToMap(int layers, int curRow, int curCol, String code) {
 		Coordinate c = new Coordinate(curCol, curRow);
 
-		for (int x = 0; x < EnumsAndConstants.impassible.length; x++) {
-			if (Integer.parseInt(code) == EnumsAndConstants.impassible[x]) {
+		for (int x = 0; x < TileSet.IMPASSIBLE_TILES.length; x++) {
+			if (Integer.parseInt(code) == TileSet.IMPASSIBLE_TILES[x]) {
 				if (layers == 1 || (layers == 2 && Integer.parseInt(code) > 0))
-					game.gData.tm.set(c, EnumsAndConstants.OBSTACLE);
+					game.gData.tm.set(c, TileSet.OBSTACLE);
 			}
 		}
 	}
