@@ -3,8 +3,8 @@ package trainers;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import libraries.LocationLibrary;
 import location.Location;
-import utilities.EnumsAndConstants;
 import utilities.RandomNumUtils;
 
 //////////////////////////////////////////////////////////////////////////
@@ -29,7 +29,7 @@ public class Player extends Actor implements Serializable {
 	// ////////////////////////////////////////////////////////////////////////
 	public Player(int x, int y, String n) {
 		super(x, y, n);
-		curLoc = new Location(EnumsAndConstants.loc_lib.getLocation("New Bark Town"));
+		curLoc = new Location(LocationLibrary.getInstance().get("New Bark Town"));
 		id = RandomNumUtils.createTrainerID();
 	}
 
@@ -40,7 +40,7 @@ public class Player extends Actor implements Serializable {
 	// ////////////////////////////////////////////////////////////////////////
 	public Player(String n) {
 		super(0, 0, n);
-		curLoc = new Location(EnumsAndConstants.loc_lib.getLocation("New Bark Town"));
+		curLoc = new Location(LocationLibrary.getInstance().get("New Bark Town"));
 		id = RandomNumUtils.createTrainerID();
 	}
 

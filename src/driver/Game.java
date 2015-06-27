@@ -18,6 +18,7 @@ import java.util.Set;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import libraries.NPCLibrary;
 import pokedex.Pokemon;
 import pokedex.PokemonList;
 import tiles.Coordinate;
@@ -170,7 +171,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 		}
 
 		// check for trainer encounter with any NPC
-		for (NPC curNPC : EnumsAndConstants.npc_lib.npcs) {
+		for (NPC curNPC : NPCLibrary.getInstance().values()) {
 			boolean beaten = gData.player.beatenTrainers.contains(curNPC.getName());
 			if (curNPC.isTrainer() && !walking && !gData.noBattle && !beaten && npcSeesPlayer(curNPC) && !gData.inMenu) {
 				NPCTHREAD.stop = true;
@@ -316,7 +317,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 				nameScreen.removeChar();
 			if (keyCode == KeyEvent.VK_Z) {
 				gData.introStage += 2;
-				if (gData.introStage > EnumsAndConstants.npc_lib.getNPC("Professor Oak").getTextLength() - 1) {
+				if (gData.introStage > NPCLibrary.getInstance().get("Professor Oak").getTextLength() - 1) {
 					AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown");
 					gData.inIntro = !gData.inIntro;
 				} else if (gData.introStage == 15) {

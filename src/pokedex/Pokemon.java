@@ -3,6 +3,8 @@ package pokedex;
 import java.awt.Image;
 import java.io.Serializable;
 
+import libraries.MoveLibrary;
+import libraries.SpriteLibrary;
 import utilities.EnumsAndConstants;
 import utilities.EnumsAndConstants.STATS;
 import utilities.RandomNumUtils;
@@ -62,7 +64,7 @@ public class Pokemon implements Serializable {
 		}
 		for (int y = 0; y < 4; y++) {
 			if (idx - y <= pData.moves.size() && idx - y >= 0) {
-				moves[y] = EnumsAndConstants.move_lib.getMove(pData.moves.get(idx - y));
+				moves[y] = MoveLibrary.getInstance().get(pData.moves.get(idx - y));
 			}
 		}
 
@@ -73,12 +75,12 @@ public class Pokemon implements Serializable {
 			this.max_stats[x] = this.stats[x];
 		}
 
-		this.party_icon = EnumsAndConstants.tk.createImage(getClass().getResource(
-				EnumsAndConstants.GRAPHICS_ICONPATH + formatPokedexNumber(0) + ".png"));
-		this.back_sprite = EnumsAndConstants.tk.createImage(getClass().getResource(
-				EnumsAndConstants.GRAPHICS_BATTLEPATH + formatPokedexNumber(evolution_stage) + "b.png"));
-		this.front_sprite = EnumsAndConstants.tk.createImage(getClass().getResource(
-				EnumsAndConstants.GRAPHICS_BATTLEPATH + formatPokedexNumber(evolution_stage) + ".png"));
+		this.party_icon = SpriteLibrary.createImage(EnumsAndConstants.GRAPHICS_ICONPATH + formatPokedexNumber(0)
+				+ ".png");
+		this.back_sprite = SpriteLibrary.createImage(EnumsAndConstants.GRAPHICS_BATTLEPATH
+				+ formatPokedexNumber(evolution_stage) + "b.png");
+		this.front_sprite = SpriteLibrary.createImage(EnumsAndConstants.GRAPHICS_BATTLEPATH
+				+ formatPokedexNumber(evolution_stage) + ".png");
 	}
 
 	// ////////////////////////////////////////////////////////////////////////

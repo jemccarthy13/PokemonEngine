@@ -13,44 +13,38 @@ import pokedex.MoveData;
 // in that file
 //
 // ////////////////////////////////////////////////////////////////////////
-public class MoveLibrary {
+public class MoveLibrary extends HashMap<String, Move> {
 
-	MoveDataMap moveData = new MoveDataMap();
+	static MoveLibrary m_instance = new MoveLibrary();
+	private static final long serialVersionUID = 1L;
 
-	class MoveDataMap extends HashMap<String, Move> {
-
-		private static final long serialVersionUID = 1L;
-
-		// ////////////////////////////////////////////////////////////////////////
-		//
-		// Maps location Name->Data
-		//
-		// ////////////////////////////////////////////////////////////////////////
-		public MoveDataMap() {
-			String filePath = "resources/data/MOVES.MDAT";
-			FileInputStream fs = null;
-			try {
-				fs = new FileInputStream(filePath);
-
-				Scanner s = new Scanner(fs);
-				while (s.hasNext()) {
-					Move m = new Move(new MoveData(s.nextLine()));
-					this.put(m.getName(), m);
-				}
-				s.close();
-			} catch (Exception e) {
-				e.printStackTrace();
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Maps location Name->Data
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	private MoveLibrary() {
+		String filePath = "resources/data/MOVES.MDAT";
+		FileInputStream fs = null;
+		try {
+			fs = new FileInputStream(filePath);
+			Scanner s = new Scanner(fs);
+			while (s.hasNext()) {
+				Move m = new Move(new MoveData(s.nextLine()));
+				put(m.getName(), m);
 			}
+			s.close();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// make new Move from the data in the dictionary
+	// get the single instance of the MoveLibrary
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public Move getMove(String name) {
-
-		return moveData.get(name);
+	public static MoveLibrary getInstance() {
+		return m_instance;
 	}
 }

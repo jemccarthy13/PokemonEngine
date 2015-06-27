@@ -2,6 +2,7 @@ package driver;
 
 import javax.swing.JFrame;
 
+import libraries.SpriteLibrary;
 import utilities.EnumsAndConstants;
 import audio.AudioLibrary;
 
@@ -20,7 +21,7 @@ public class PokemonGameFrame extends JFrame {
 
 		// No matter the version, the Icon is always located in the same place
 		// and these attributes of the game do not change.
-		setIconImage(EnumsAndConstants.sprite_lib.ICON);
+		setIconImage(SpriteLibrary.getInstance().ICON);
 		Game pokemonGame = new Game();
 		pokemonGame.setFocusable(true);
 		pokemonGame.requestFocus();

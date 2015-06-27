@@ -10,43 +10,39 @@ import location.LocationData;
 // Look through the Location data files and map Name->Data for each
 //
 // ////////////////////////////////////////////////////////////////////////
-public class LocationLibrary {
+public class LocationLibrary extends HashMap<String, LocationData> {
 
-	LocationDataMap locationData = new LocationDataMap();
+	private static final long serialVersionUID = 1L;
+	private static LocationLibrary m_instance = new LocationLibrary();
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// Location Map maps Name->Data
+	// Private constructor causes single instance behavior
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	class LocationDataMap extends HashMap<String, LocationData> {
-
-		private static final long serialVersionUID = 1L;
-
-		public LocationDataMap() {
-			String path = "resources/data/Locations";
-			try {
-				File folder = new File(path);
-				File[] listOfFiles = folder.listFiles();
-				for (int i = 0; i < listOfFiles.length; i++) {
-					if (listOfFiles[i].isFile()) {
-						LocationData ld = new LocationData(listOfFiles[i].getPath());
-						if (ld.isValidData())
-							put(ld.name, ld);
-					}
+	private LocationLibrary() {
+		String path = "resources/data/Locations";
+		try {
+			File folder = new File(path);
+			File[] listOfFiles = folder.listFiles();
+			for (int i = 0; i < listOfFiles.length; i++) {
+				if (listOfFiles[i].isFile()) {
+					LocationData ld = new LocationData(listOfFiles[i].getPath());
+					if (ld.isValidData())
+						put(ld.name, ld);
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// getLocation - retrieve a location from the Map
+	// Get instance returns the single instance of the LocationLibrary
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public LocationData getLocation(String locKey) {
-		return locationData.get(locKey);
+	public static LocationLibrary getInstance() {
+		return m_instance;
 	}
 }

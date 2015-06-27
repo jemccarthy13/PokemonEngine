@@ -1,7 +1,7 @@
 package graphics;
 
+import libraries.NPCLibrary;
 import trainers.NPC;
-import utilities.EnumsAndConstants;
 import utilities.RandomNumUtils;
 
 // ////////////////////////////////////////////////////////////////////////////
@@ -21,7 +21,7 @@ public class NPCThread extends Thread {
 				break;
 			}
 			// otherwise move each NPC
-			for (NPC other : EnumsAndConstants.npc_lib.npcs) {
+			for (NPC other : NPCLibrary.getInstance().values()) {
 				if ((other != null) && (!other.isStationary())) {
 					other.setSpriteFacing(RandomNumUtils.randomDirection());
 				}

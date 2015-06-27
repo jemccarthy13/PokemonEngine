@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import utilities.EnumsAndConstants;
+import libraries.SpriteLibrary;
 
 // ////////////////////////////////////////////////////////////////////////
 //
@@ -25,7 +25,7 @@ public class TileSet extends ArrayList<Image> implements Serializable {
 				String line = s.nextLine();
 				if (line.split(",").length > 1) {
 					String name = line.split(",")[1].trim().replace("Tiles", "").replace("\\", "");
-					Image im = EnumsAndConstants.tk.createImage(TileSet.class.getResource("/tiles/" + name));
+					Image im = SpriteLibrary.getInstance().getImage(name);
 					add(im);
 				}
 			}

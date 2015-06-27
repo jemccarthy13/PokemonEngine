@@ -1,6 +1,5 @@
 package audio;
 
-import java.io.File;
 import java.io.InputStream;
 
 import javax.sound.midi.MidiSystem;
@@ -18,11 +17,8 @@ public class MidiPlayer {
 
 	public MidiPlayer(String file, boolean b) {
 		this.filename = file;
-		System.out.println(filename);
 		try {
-			System.out.println(new File(filename).exists());
 			InputStream resource = MidiPlayer.class.getResourceAsStream(this.filename.replace("resources", ""));
-			System.out.println(resource);
 			Sequence sequence = MidiSystem.getSequence(resource);
 			this.sequencer = MidiSystem.getSequencer();
 			this.sequencer.open();

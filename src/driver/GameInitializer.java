@@ -36,7 +36,7 @@ public class GameInitializer {
 	// ////////////////////////////////////////////////////////////////////////
 	public static void startGame(boolean continued, Game theGame) {
 		game = theGame;
-		String loadedMap = "/mapmaker/Maps/NewBarkTown.map";
+		String loadedMap = "NewBarkTown";
 
 		// TODO verify juke box is initialized properly
 		// EnumsAndConstants.initializeJukeBox();
@@ -79,8 +79,9 @@ public class GameInitializer {
 	// ////////////////////////////////////////////////////////////////////////
 	public static void loadMap(String loadedMap) throws IOException {
 		// intialize file reader
+		System.err.println("Loading map...");
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				GameInitializer.class.getResourceAsStream(loadedMap)));
+				GameInitializer.class.getResourceAsStream("/maps/" + loadedMap + ".map")));
 		String line = reader.readLine();
 		StringTokenizer tokens = new StringTokenizer(line);
 
@@ -122,6 +123,7 @@ public class GameInitializer {
 				game.gData.currentMap[layers][y] = Integer.parseInt(code);
 			}
 		}
+		System.err.println("Loaded map.");
 	}
 
 	// ////////////////////////////////////////////////////////////////////////

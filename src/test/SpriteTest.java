@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import libraries.NPCLibrary;
 import trainers.NPC;
-import utilities.EnumsAndConstants;
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -26,7 +26,7 @@ public class SpriteTest extends JFrame {
 
 	static ArrayList<Image> sprites = new ArrayList<Image>();
 
-	NPC sam = EnumsAndConstants.npc_lib.getNPC("Joey");
+	NPC sam = NPCLibrary.getInstance().get("Joey");
 
 	JPanel p = new JPanel() {
 		private static final long serialVersionUID = 7322676857941810785L;

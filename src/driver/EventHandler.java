@@ -3,6 +3,8 @@ package driver;
 import java.awt.event.KeyEvent;
 import java.util.Random;
 
+import libraries.NPCLibrary;
+import libraries.SpriteLibrary;
 import pokedex.Move;
 import pokedex.Pokemon;
 import trainers.NPC;
@@ -371,7 +373,7 @@ public class EventHandler {
 			if (game.moveable_dir[game.gData.player.getDir().ordinal()]) {
 				game.walking = true;
 			} else {
-				game.gData.player.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(9));
+				game.gData.player.setSprite(SpriteLibrary.getInstance().getSprites("PLAYER").get(9));
 				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_COLLISION, game.gData.option_sound);
 			}
 		} else if (keyCode == KeyEvent.VK_DOWN) {
@@ -379,7 +381,7 @@ public class EventHandler {
 			if (game.moveable_dir[game.gData.player.getDir().ordinal()]) {
 				game.walking = true;
 			} else {
-				game.gData.player.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(0));
+				game.gData.player.setSprite(SpriteLibrary.getInstance().getSprites("PLAYER").get(0));
 				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_COLLISION, game.gData.option_sound);
 			}
 		} else if (keyCode == KeyEvent.VK_LEFT) {
@@ -387,7 +389,7 @@ public class EventHandler {
 			if (game.moveable_dir[game.gData.player.getDir().ordinal()]) {
 				game.walking = true;
 			} else {
-				game.gData.player.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(3));
+				game.gData.player.setSprite(SpriteLibrary.getInstance().getSprites("PLAYER").get(3));
 				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_COLLISION, game.gData.option_sound);
 			}
 		} else if (keyCode == KeyEvent.VK_RIGHT) {
@@ -395,7 +397,7 @@ public class EventHandler {
 			if (game.moveable_dir[game.gData.player.getDir().ordinal()]) {
 				game.walking = true;
 			} else {
-				game.gData.player.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(6));
+				game.gData.player.setSprite(SpriteLibrary.getInstance().getSprites("PLAYER").get(6));
 				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_COLLISION, game.gData.option_sound);
 			}
 		} else if (keyCode == KeyEvent.VK_ENTER) {
@@ -409,7 +411,7 @@ public class EventHandler {
 			DIR playerDir = game.gData.player.getDir();
 			int playerCurX = game.gData.player.getCurrentX();
 			int playerCurY = game.gData.player.getCurrentY();
-			for (NPC curNPC : EnumsAndConstants.npc_lib.npcs) {
+			for (NPC curNPC : NPCLibrary.getInstance().values()) {
 				int NPC_X = curNPC.getCurrentX();
 				int NPC_Y = curNPC.getCurrentY();
 				if (playerDir == DIR.WEST) {

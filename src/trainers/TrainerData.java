@@ -6,10 +6,10 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import libraries.SpriteLibrary;
 import pokedex.PokemonFactory;
 import pokedex.PokemonList;
 import tiles.Coordinate;
-import utilities.EnumsAndConstants;
 import utilities.EnumsAndConstants.DIR;
 
 // ////////////////////////////////////////////////////////////////////////
@@ -29,14 +29,6 @@ public class TrainerData {
 	public boolean trainer = false;
 	public DIR dir = DIR.SOUTH;
 	public Image sprite = null;
-
-	public String toString() {
-		String retStr = "Name: " + this.name + "\n";
-		retStr += "Pokemon: " + this.pokemon + "\n";
-		retStr += "Money: " + this.money + "\n";
-		retStr += this.conversationText.toString() + "\n";
-		return retStr;
-	}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
@@ -64,12 +56,8 @@ public class TrainerData {
 		}
 		if (s.hasNext()) {
 			String nextLine = s.nextLine().trim();
-			System.out.println("Sprite: " + nextLine);
-			ArrayList<Image> ims = EnumsAndConstants.sprite_lib.getSprites(nextLine);
-			System.out.println(ims);
-			this.sprites = EnumsAndConstants.sprite_lib.getSprites(nextLine);
+			this.sprites = SpriteLibrary.getInstance().getSprites(nextLine);
 			this.sprite = this.sprites.get(0);
-			System.out.println("initial sprite " + this.sprite);
 		}
 		String[] conversation = null;
 		if (s.hasNext()) {

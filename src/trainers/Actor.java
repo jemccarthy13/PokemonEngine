@@ -3,10 +3,10 @@ package trainers;
 import java.awt.Image;
 import java.util.ArrayList;
 
+import libraries.SpriteLibrary;
 import pokedex.Pokemon;
 import pokedex.PokemonList;
 import tiles.Coordinate;
-import utilities.EnumsAndConstants;
 import utilities.EnumsAndConstants.DIR;
 
 //////////////////////////////////////////////////////////////////////////
@@ -31,7 +31,7 @@ public class Actor {
 		this.tData.name = n;
 		this.tData.position = new Coordinate(x, y);
 		this.tData.money = 2000;
-		this.tData.sprites = EnumsAndConstants.sprite_lib.getSprites("PLAYER");
+		this.tData.sprites = SpriteLibrary.getInstance().getSprites("PLAYER");
 		this.tData.pokemon = new PokemonList();
 		setSpriteFacing(DIR.SOUTH);
 	}

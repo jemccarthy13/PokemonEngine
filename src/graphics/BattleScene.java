@@ -2,6 +2,7 @@ package graphics;
 
 import java.util.Random;
 
+import libraries.SpriteLibrary;
 import pokedex.Move;
 import pokedex.Pokemon;
 import pokedex.PokemonList;
@@ -184,7 +185,7 @@ public class BattleScene {
 		System.out.println("Player Pokemon has fainted");
 		System.out.println(game.gData.player.getName() + " is all out of usable Pokemon!");
 		System.out.println(game.gData.player.getName() + " whited out.");
-		game.gData.player.setSprite(EnumsAndConstants.sprite_lib.getSprites("PLAYER").get(9));
+		game.gData.player.setSprite(SpriteLibrary.getInstance().getSprites("PLAYER").get(9));
 		game.gData.player.getPokemon().get(0).heal(-1);
 		this.game.gData.inBattle = false;
 	}

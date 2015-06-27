@@ -37,6 +37,7 @@ public class AudioLibrary {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	private AudioLibrary() {
+		System.err.println("Loading audio library...");
 		m_encounterTracks = new ArrayList<String>();
 		m_trackList = new HashMap<String, MidiPlayer>();
 
@@ -58,13 +59,16 @@ public class AudioLibrary {
 			}
 		}
 
+		System.err.println("Loaded primary music files.");
+
 		listOfFiles = new File(soundEffectsPath).listFiles();
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
-				m_JukeBox.loadClip(soundEffectsPath + listOfFiles[i].getName(),
+				m_JukeBox.loadClip(new String(soundEffectsPath + listOfFiles[i].getName()).replace("resources", ""),
 						listOfFiles[i].getName().replace(".wav", ""), 1);
 			}
 		}
+		System.err.println("Loaded primary sound effect files.");
 	}
 
 	// ////////////////////////////////////////////////////////////////////////

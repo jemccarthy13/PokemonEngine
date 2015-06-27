@@ -4,13 +4,8 @@ import graphics.MessageBox;
 import graphics.Painter;
 
 import java.awt.Font;
-import java.awt.Toolkit;
 import java.io.Serializable;
 
-import libraries.LocationLibrary;
-import libraries.MoveLibrary;
-import libraries.NPCLibrary;
-import libraries.SpriteLibrary;
 import libraries.TeleportLibrary;
 import tiles.NormalTile;
 import tiles.ObstacleTile;
@@ -31,20 +26,8 @@ public class EnumsAndConstants {
 		SOUTH, WEST, EAST, NORTH;
 	}
 
-	// TODO determine if this enum is necessary with new NPC data files
-	// (once implemented)
-	public enum SPRITENAMES {
-		BOY, LASS, FATMAN, YOUNGSTER, BIRDKEEPER, BILL, PLAYER, NURSE, BALDMAN, CAMPER, BEAUTY, SHOPKEEP, FALKNER, GUIDE, PROF_OAK_LARGE;
-	}
-
-	public static final Toolkit tk = Toolkit.getDefaultToolkit();
-
 	public static final String GRAPHICS_BATTLEPATH = "Src/graphics_lib/Battlers/";
 	public static final String GRAPHICS_ICONPATH = "Src/graphics_lib/Icons/icon";
-	public static final SpriteLibrary sprite_lib = new SpriteLibrary();
-	public static final LocationLibrary loc_lib = new LocationLibrary();
-	public static final MoveLibrary move_lib = new MoveLibrary();
-	public static final NPCLibrary npc_lib = new NPCLibrary();
 	public static final TeleportLibrary TELEPORTS = new TeleportLibrary();
 	public static final MessageBox msg_box = new MessageBox();
 	public static final Font POKEFONT = new Font("pokesl1", 0, 18);
