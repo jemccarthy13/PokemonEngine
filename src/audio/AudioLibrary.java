@@ -88,16 +88,16 @@ public class AudioLibrary {
 	public void playBackgroundMusic(String songTitle) {
 
 		// stop the current track, if playing
-		if (getInstance().m_currentTrack != null) {
-			getInstance().m_currentTrack.stop();
-			getInstance().m_currentTrack = null;
+		if (m_currentTrack != null) {
+			m_currentTrack.stop();
+			m_currentTrack = null;
 		}
 
 		// switch to the next track and play, if the track is valid
-		if (getInstance().m_trackList.containsKey(songTitle)) {
-			getInstance().m_currentTrack = getInstance().m_trackList.get(songTitle);
-			if (getInstance().m_currentTrack != null) {
-				getInstance().m_currentTrack.start();
+		if (m_trackList.containsKey(songTitle)) {
+			m_currentTrack = getInstance().m_trackList.get(songTitle);
+			if (m_currentTrack != null) {
+				m_currentTrack.start();
 			}
 		} else {
 			System.err.println("Can't play " + songTitle);
@@ -108,11 +108,15 @@ public class AudioLibrary {
 	//
 	// Pick a random enemy encounter track
 	//
+	// TODO - Looks like no encounter tracks are loaded
+	//
 	// ////////////////////////////////////////////////////////////////////////
 	public void pickTrainerMusic() {
-		int choice = RandomNumUtils.generateRandom(getInstance().m_trackList.size(), 0);
-		String songTitle = getInstance().m_encounterTracks.get(choice);
-		this.playBackgroundMusic(songTitle);
+		if (m_encounterTracks.size() > 0) {
+			int choice = RandomNumUtils.generateRandom(m_encounterTracks.size(), 0);
+			String songTitle = m_encounterTracks.get(choice);
+			this.playBackgroundMusic(songTitle);
+		}
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -122,12 +126,12 @@ public class AudioLibrary {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public void pauseBackgrondMusic() {
-		if (getInstance().m_currentTrack != null) {
-			getInstance().m_currentTrack.stop();
+		if (m_currentTrack != null) {
+			m_currentTrack.stop();
 		}
 	}
 
 	public void playClip(String string, boolean option_sound) {
-		getInstance().m_JukeBox.playClip(string, option_sound);
+		m_JukeBox.playClip(string, option_sound);
 	}
 }

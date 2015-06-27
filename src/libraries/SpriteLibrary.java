@@ -206,7 +206,7 @@ public class SpriteLibrary extends HashMap<String, ArrayList<Image>> {
 		for (File file : listOfFiles) {
 			if (file.isFile() && name.equals(file.getName())) {
 				ArrayList<Image> spriteGroup = new ArrayList<Image>();
-				spriteGroup.add(createImage(file.getPath()));
+				spriteGroup.add(createImage(file.getPath().replace("\\", "/")));
 				put(name, spriteGroup);
 				return true;
 			}
@@ -238,13 +238,12 @@ public class SpriteLibrary extends HashMap<String, ArrayList<Image>> {
 			for (String npcCharacter : directories) {
 				// if this is the character of interest
 				if (npcCharacter.equals(name)) {
-					// gather a group of all relevant sprites, and map to that
-					// name
+					// gather a group of all relevant sprites, and map to name
 					File f = new File(npcFilePath + npcCharacter);
 					String[] files = f.list();
 					ArrayList<Image> spriteGroup = new ArrayList<Image>();
-					for (String y : files) {
-						spriteGroup.add(createImage(libPath + "Characters/Sprites/" + npcCharacter + "/" + y));
+					for (String directionImage : files) {
+						spriteGroup.add(createImage(npcFilePath + npcCharacter + "/" + directionImage));
 					}
 					put(npcCharacter, spriteGroup);
 					return true;
@@ -264,8 +263,8 @@ public class SpriteLibrary extends HashMap<String, ArrayList<Image>> {
 	public static Image createImage(String path) {
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		Image im = null;
-		im = tk.createImage(SpriteLibrary.class.getResource("/"
-				+ path.replace("resources\\", "").replace("resources/", "")));
+		path = "/" + path.replace("resources/", "").replace("resources\\", "");
+		im = tk.createImage(System.class.getResource(path));
 
 		return im;
 	}
