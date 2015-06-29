@@ -49,7 +49,7 @@ public class SpriteLibrary extends HashMap<String, ArrayList<Image>> {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	private SpriteLibrary() {
-		System.err.println("Loading primary images...");
+		System.out.println("** Loading primary images...");
 
 		FONT_UNDERSCORE = getImage("_.png");
 		FONT_CURSOR = getImage("CURSOR.png");
@@ -127,7 +127,7 @@ public class SpriteLibrary extends HashMap<String, ArrayList<Image>> {
 		STATUS_SLP = getImage("StatusSLP.png");
 		STATUS_FRZ = getImage("StatusFRZ.png");
 
-		System.err.println("Loaded primary images.");
+		System.out.println("** Loaded primary images.");
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -145,8 +145,8 @@ public class SpriteLibrary extends HashMap<String, ArrayList<Image>> {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public Image getFontChar(Character c) {
-		if (containsKey(c)) {
-			return get(c.toString()).get(0);
+		if (containsKey(c + ".png")) {
+			return get(c.toString() + ".png").get(0);
 		} else {
 			System.err.println("Cannot load font character " + c);
 			return null;
@@ -188,7 +188,6 @@ public class SpriteLibrary extends HashMap<String, ArrayList<Image>> {
 			if (containsKey(name)) {
 				return get(name).get(0);
 			} else {
-				System.out.println(name);
 				System.err.println(name + " not found in graphics library.");
 				return null;
 			}

@@ -25,20 +25,26 @@ public class MidiPlayer {
 			this.sequencer.setSequence(sequence);
 			this.sequencer.setLoopCount(999);
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.err.println("Cannot load sound " + file);
 		}
 	}
 
 	public void start() {
 		try {
-			this.sequencer.start();
+			if (this.sequencer != null) {
+				this.sequencer.start();
+			} else {
+				System.out.println("sound " + filename + " was not loaded");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void stop() {
-		this.sequencer.stop();
+		if (this.sequencer != null) {
+			this.sequencer.stop();
+		}
 	}
 
 	public String toString() {
