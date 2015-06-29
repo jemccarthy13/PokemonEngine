@@ -3,7 +3,7 @@ package test;
 import org.junit.Assert;
 
 import pokedex.Pokemon;
-import pokedex.PokemonData;
+import pokedex.PokemonFactory;
 
 // ////////////////////////////////////////////////////////////////////////
 //
@@ -15,10 +15,10 @@ import pokedex.PokemonData;
 public class PokemonTest {
 	public static void testPokemon() {
 
-		PokemonData pData = new PokemonData("Data/Pokemon/BULBASAUR.PDAT");
+		PokemonFactory pLib = PokemonFactory.getInstance();
 
-		Pokemon bulbasaur = new Pokemon(pData, 5);
-		Pokemon bulbasaur2 = new Pokemon(pData, 10);
+		Pokemon bulbasaur = pLib.createPokemon("Bulbasaur", 5);
+		Pokemon bulbasaur2 = pLib.createPokemon("Bulbasaur", 10);
 
 		System.out.println(bulbasaur.toString());
 

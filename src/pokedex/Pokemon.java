@@ -77,12 +77,12 @@ public class Pokemon implements Serializable {
 			this.max_stats[x] = this.stats[x];
 		}
 
-		this.party_icon = SpriteLibrary.createImage(SpriteLibrary.libPath + "Icons/icon" + formatPokedexNumber(0)
-				+ ".png");
-		this.back_sprite = SpriteLibrary.createImage(SpriteLibrary.libPath + "Battlers/"
-				+ formatPokedexNumber(evolution_stage) + "b.png");
-		this.front_sprite = SpriteLibrary.createImage(SpriteLibrary.libPath + "Battlers/"
-				+ formatPokedexNumber(evolution_stage) + ".png");
+		this.party_icon = SpriteLibrary
+				.createImage(SpriteLibrary.libPath + "Icons/icon" + formatPokedexNumber(0) + ".png");
+		this.back_sprite = SpriteLibrary
+				.createImage(SpriteLibrary.libPath + "Battlers/" + formatPokedexNumber(evolution_stage) + "b.png");
+		this.front_sprite = SpriteLibrary
+				.createImage(SpriteLibrary.libPath + "Battlers/" + formatPokedexNumber(evolution_stage) + ".png");
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -120,7 +120,7 @@ public class Pokemon implements Serializable {
 	public void levelUp() {
 		if (this.level < 100) {
 			this.level += 1;
-			System.out.println(pData.evolution_stages.get(evolution_stage) + " grew to level " + level + "!");
+			System.out.println(getName() + " grew to level " + level + "!");
 		}
 		for (int x = 0; x < 6; x++) {
 			int incr = RandomNumUtils.randomStatIncr();
@@ -301,7 +301,7 @@ public class Pokemon implements Serializable {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public String toString() {
-		return pData.toString() + this.level;
+		return pData.toString() + "Level: " + this.level;
 	}
 
 	// ////////////////////////////////////////////////////////////////////////

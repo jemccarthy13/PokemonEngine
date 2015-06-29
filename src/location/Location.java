@@ -29,7 +29,7 @@ public class Location implements Serializable {
 	// ////////////////////////////////////////////////////////////////////////
 	public String getName() {
 		// return this.lData.name;
-		return ("Route 29");
+		return lData.name;
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -41,7 +41,6 @@ public class Location implements Serializable {
 	public String getPokemon(long name_number) {
 		String retStr = "Error in getting Pokemon from location";
 		int total = 0;
-
 		for (int x = 0; x < this.lData.probabilities.size(); x++) {
 			total += this.lData.probabilities.get(x);
 

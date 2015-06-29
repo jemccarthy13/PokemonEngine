@@ -1,0 +1,226 @@
+{
+     "pokemon":[
+		{
+			"pName":"Bulbasaur",
+			"pokedex_num": "001",
+			"evolution_stages": [
+				{ 
+					"name":"Bulbasaur",
+					"level":0
+				},
+				{
+					"name":"Ivysaur",
+					"level":16
+				},
+				{
+					"name":"Venusaur",
+					"level":32
+				}
+			],
+			"type":"GRASS",
+			"base_exp": 64,
+			"moves": [
+				{
+					"name":"SCRATCH",
+					"level":0
+				},
+				{
+					"name":"TACKLE",
+					"level":0
+				},
+				{
+					"name":"LEER",
+					"level":0
+				},
+				{
+					"name":"VINE WHIP",
+					"level":9
+				}
+			]
+		},
+		{
+			"pName":"Caterpie",
+			"pokedex_num": "010",
+			"evolution_stages": [
+				{ 
+					"name":"Caterpie",
+					"level":0
+				},
+				{
+					"name":"Metapod",
+					"level":7
+				},
+				{
+					"name":"Butterfree",
+					"level":10
+				}
+			],
+			"type":"BUG",
+			"base_exp": 39,
+			"moves": [
+				{
+					"name":"SCRATCH",
+					"level":0
+				},
+				{
+					"name":"STRING SHOT",
+					"level":3
+				}
+			]
+		},
+		{
+			"pName":"Charmander",
+			"pokedex_num": "004",
+			"evolution_stages": [
+				{ 
+					"name":"Charmander",
+					"level":0
+				},
+				{
+					"name":"Charmeleon",
+					"level":16
+				},
+				{
+					"name":"Charizard",
+					"level":36
+				}
+			],
+			"type":"FIRE",
+			"base_exp": 62,
+			"moves": [
+				{
+					"name":"SCRATCH",
+					"level":0
+				},
+				{
+					"name":"TACKLE",
+					"level":3
+				},
+				{
+					"name":"LEER",
+					"level":6
+				},
+				{
+					"name":"EMBER",
+					"level":9
+				},
+				{
+					"name":"FLAMETHROWER",
+					"level":30
+				}
+			]
+		},		
+		{
+			"pName":"Pidgey",
+			"pokedex_num": "004",
+			"evolution_stages": [
+				{ 
+					"name":"Pidgey",
+					"level":0
+				},
+				{
+					"name":"Pidgeotto",
+					"level":18
+				},
+				{
+					"name":"Pidgeot",
+					"level":36
+				}
+			],
+			"type":"FLYING",
+			"base_exp": 50,
+			"moves": [
+				{
+					"name":"TACKLE",
+					"level":0
+				},
+				{
+					"name":"LEER",
+					"level":3
+				}
+			]
+		},
+		{
+			"pName":"Rattatta",
+			"pokedex_num": "019",
+			"evolution_stages": [
+				{ 
+					"name":"Rattatta",
+					"level":0
+				},
+				{
+					"name":"Ratticate",
+					"level":20
+				}
+			],
+			"type":"NORMAL",
+			"base_exp": 57,
+			"moves": [
+				{
+					"name":"TACKLE",
+					"level":0
+				},
+				{
+					"name":"LEER",
+					"level":3
+				}
+			]
+		},
+		{
+			"pName":"Sentret",
+			"pokedex_num": "161",
+			"evolution_stages": [
+				{ 
+					"name":"Sentret",
+					"level":0
+				},
+				{
+					"name":"Furret",
+					"level":15
+				}
+			],
+			"type":"NORMAL",
+			"base_exp": 43,
+			"moves": [
+				{
+					"name":"TACKLE",
+					"level":0
+				}
+			]
+		},
+		{
+			"pName":"Squirtle",
+			"pokedex_num": "007",
+			"evolution_stages": [
+				{ 
+					"name":"Squirtle",
+					"level":0
+				},
+				{
+					"name":"Wartotle",
+					"level":16
+				},
+				{
+					"name":"Blastoise",
+					"level":36
+				}
+			],
+			"type":"WATER",
+			"base_exp": 63,
+			"moves": [
+				{
+					"name":"TACKLE",
+					"level":0
+				},
+				{
+					"name":"WATER GUN",
+					"level":5
+				},
+				{
+					"name":"LEER",
+					"level":6
+				}
+			]
+		}
+	]
+}

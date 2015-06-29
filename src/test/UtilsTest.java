@@ -2,8 +2,8 @@ package test;
 
 import java.util.ArrayList;
 
+import libraries.LocationLibrary;
 import location.Location;
-import location.LocationData;
 import pokedex.Pokemon;
 import pokedex.PokemonFactory;
 import utilities.RandomNumUtils;
@@ -54,7 +54,7 @@ public class UtilsTest {
 	}
 
 	public static void testRandomPokemon() {
-		Location loc = new Location(new LocationData("Data/Locations/ROUTE29.LDAT"));
+		Location loc = LocationLibrary.getLocation("Route 29");
 
 		System.out.println("Random Pokemon (Route 29):");
 		for (int x = 0; x < 10; x++) {
