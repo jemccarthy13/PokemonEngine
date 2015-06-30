@@ -1,4 +1,4 @@
-package libraries;
+package graphics;
 
 import java.awt.Image;
 import java.awt.Toolkit;

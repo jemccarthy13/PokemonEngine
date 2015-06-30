@@ -9,18 +9,17 @@ import java.awt.geom.AffineTransform;
 
 import javax.swing.JPanel;
 
-import libraries.NPCLibrary;
-import libraries.SpriteLibrary;
+import driver.Game;
+import driver.GameData;
 import pokedex.Pokemon;
 import pokedex.Pokemon.STATS;
 import pokedex.PokemonList;
 import tiles.Tile;
 import tiles.TileSet;
 import trainers.NPC;
+import trainers.NPCLibrary;
 import trainers.Player;
-import utilities.GameData;
 import utilities.Utils;
-import driver.Game;
 
 // ////////////////////////////////////////////////////////////////////////////
 //
@@ -88,12 +87,12 @@ public class Painter extends JPanel {
 		g.drawImage(SpriteLibrary.NAMESCREEN, 0, 0, null);
 
 		if (game.nameScreen.rowSelection < 5) {
-			g.drawImage(SpriteLibrary.ARROW, (int) (40 + Tile.TILESIZE * 2 * game.nameScreen.colSelection), 100
-					+ Tile.TILESIZE * game.nameScreen.rowSelection, null);
+			g.drawImage(SpriteLibrary.ARROW, (int) (40 + Tile.TILESIZE * 2 * game.nameScreen.colSelection),
+					100 + Tile.TILESIZE * game.nameScreen.rowSelection, null);
 		}
 		if (game.nameScreen.rowSelection == 5) {
-			g.drawImage(SpriteLibrary.ARROW, (int) (100 + Tile.TILESIZE * 6 * game.nameScreen.colSelection), 100
-					+ Tile.TILESIZE * game.nameScreen.rowSelection, null);
+			g.drawImage(SpriteLibrary.ARROW, (int) (100 + Tile.TILESIZE * 6 * game.nameScreen.colSelection),
+					100 + Tile.TILESIZE * game.nameScreen.rowSelection, null);
 		}
 
 		String name = game.nameScreen.getChosenName();
@@ -126,35 +125,42 @@ public class Painter extends JPanel {
 	//
 	// Paint all components of a battle scene
 	//
+	// TODO - analyze function arguments for potential decrease in passing large
+	// data
+	//
 	// ////////////////////////////////////////////////////////////////////////
 	private static void paintBattle(Graphics g, Game game) {
 		g.drawImage(SpriteLibrary.BG, 0, 0, null);
 
-		Pokemon playerPokemon = game.encounter.playerPokemon;
-		Pokemon enemyPokemon = game.encounter.enemyPokemon.get(0);
+		Pokemon playerPokemon = BattleEngine.getInstance().playerCurrentPokemon;
+		Pokemon enemyPokemon = BattleEngine.getInstance().enemyPokemon.get(0);
 
 		g.drawImage(playerPokemon.getBackSprite(), 120 - (playerPokemon.getBackSprite().getHeight(game)) / 2,
 				228 - playerPokemon.getBackSprite().getHeight(game), null);
 		g.drawImage(enemyPokemon.getFrontSprite(), 310, 25, null);
 
-		if (game.encounter.inMain) {
+		if (BattleEngine.getInstance().inMain) {
 			g.drawImage(SpriteLibrary.BATTLE_BG, 0, 0, null);
 			g.drawString("Wild " + enemyPokemon.getName() + " Appeared!", 30, 260);
 			g.drawString("FIGHT", 290, 260);
 			g.drawString("PKMN", 400, 260);
 			g.drawString("ITEM", 290, 290);
 			g.drawString("RUN", 400, 290);
-			if ((game.encounter.currentSelectionMainX == 0) && (game.encounter.currentSelectionMainY == 0)) {
+			if ((BattleEngine.getInstance().currentSelectionMainX == 0)
+					&& (BattleEngine.getInstance().currentSelectionMainY == 0)) {
 				g.drawImage(SpriteLibrary.ARROW, 274, 240, null);
-			} else if ((game.encounter.currentSelectionMainX == 0) && (game.encounter.currentSelectionMainY == 1)) {
+			} else if ((BattleEngine.getInstance().currentSelectionMainX == 0)
+					&& (BattleEngine.getInstance().currentSelectionMainY == 1)) {
 				g.drawImage(SpriteLibrary.ARROW, 274, 270, null);
-			} else if ((game.encounter.currentSelectionMainX == 1) && (game.encounter.currentSelectionMainY == 0)) {
+			} else if ((BattleEngine.getInstance().currentSelectionMainX == 1)
+					&& (BattleEngine.getInstance().currentSelectionMainY == 0)) {
 				g.drawImage(SpriteLibrary.ARROW, 384, 240, null);
-			} else if ((game.encounter.currentSelectionMainX == 1) && (game.encounter.currentSelectionMainY == 1)) {
+			} else if ((BattleEngine.getInstance().currentSelectionMainX == 1)
+					&& (BattleEngine.getInstance().currentSelectionMainY == 1)) {
 				g.drawImage(SpriteLibrary.ARROW, 384, 270, null);
 			}
 		}
-		if (game.encounter.inFight) {
+		if (BattleEngine.getInstance().inFight) {
 
 			g.drawImage(SpriteLibrary.BATTLE_FIGHTBG, 0, 0, null);
 			g.drawString(playerPokemon.getMove(0).getName(), 200, 260);
@@ -168,13 +174,17 @@ public class Painter extends JPanel {
 				g.drawString(playerPokemon.getMove(3).getName(), 345, 290);
 			}
 
-			if ((game.encounter.currentSelectionFightX == 0) && (game.encounter.currentSelectionFightY == 0)) {
+			if ((BattleEngine.getInstance().currentSelectionFightX == 0)
+					&& (BattleEngine.getInstance().currentSelectionFightY == 0)) {
 				g.drawImage(SpriteLibrary.ARROW, 184, 240, null);
-			} else if ((game.encounter.currentSelectionFightX == 0) && (game.encounter.currentSelectionFightY == 1)) {
+			} else if ((BattleEngine.getInstance().currentSelectionFightX == 0)
+					&& (BattleEngine.getInstance().currentSelectionFightY == 1)) {
 				g.drawImage(SpriteLibrary.ARROW, 184, 270, null);
-			} else if ((game.encounter.currentSelectionFightX == 1) && (game.encounter.currentSelectionFightY == 0)) {
+			} else if ((BattleEngine.getInstance().currentSelectionFightX == 1)
+					&& (BattleEngine.getInstance().currentSelectionFightY == 0)) {
 				g.drawImage(SpriteLibrary.ARROW, 329, 240, null);
-			} else if ((game.encounter.currentSelectionFightX == 1) && (game.encounter.currentSelectionFightY == 1)) {
+			} else if ((BattleEngine.getInstance().currentSelectionFightX == 1)
+					&& (BattleEngine.getInstance().currentSelectionFightY == 1)) {
 				g.drawImage(SpriteLibrary.ARROW, 329, 270, null);
 			}
 		}
@@ -408,8 +418,8 @@ public class Painter extends JPanel {
 		}
 
 		for (NPC curNPC : NPCLibrary.getInstance().values()) {
-			g.drawImage(curNPC.getSprite(), curNPC.getCurrentX() * 32 + gameData.start_coorX, curNPC.getCurrentY() * 32
-					+ gameData.start_coorY - 10, null);
+			g.drawImage(curNPC.getSprite(), curNPC.getCurrentX() * 32 + gameData.start_coorX,
+					curNPC.getCurrentY() * 32 + gameData.start_coorY - 10, null);
 			gameData.tm.set(curNPC.tData.position, TileSet.OBSTACLE);
 		}
 		g2.translate(-gameData.offsetX, -gameData.offsetY);

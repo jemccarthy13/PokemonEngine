@@ -1,4 +1,4 @@
-package utilities;
+package driver;
 
 import java.io.Serializable;
 
@@ -6,6 +6,7 @@ import javax.swing.Timer;
 
 import tiles.TileMap;
 import trainers.Player;
+import utilities.TimeStruct;
 
 // ////////////////////////////////////////////////////////////////////////
 //
@@ -13,8 +14,9 @@ import trainers.Player;
 //
 // ////////////////////////////////////////////////////////////////////////
 public class GameData implements Serializable {
+
 	// ======================= Serialization ================================//
-	public static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 4753670767642154788L;
 	// =========================== CHEATS ===================================//
 	public boolean NOCLIP = false; // walk anywhere
 	public boolean NOBATTLE = false; // no wild/trainer battles

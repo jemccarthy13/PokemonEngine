@@ -3,8 +3,8 @@ package trainers;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import libraries.LocationLibrary;
 import location.Location;
+import location.LocationLibrary;
 import utilities.RandomNumUtils;
 
 //////////////////////////////////////////////////////////////////////////

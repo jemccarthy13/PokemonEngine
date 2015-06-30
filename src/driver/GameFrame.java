@@ -2,35 +2,29 @@ package driver;
 
 import javax.swing.JFrame;
 
-import libraries.SpriteLibrary;
 import audio.AudioLibrary;
+import graphics.SpriteLibrary;
 
-public class PokemonGameFrame extends JFrame {
+public class GameFrame extends JFrame {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 8002391898226135401L;
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
 	// Default initializer for game.
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public PokemonGameFrame() {
+	public GameFrame() {
 		// Title changes with each game release (along with version)
 		setTitle("Pokemon: Metallic Silver");
 
-		// No matter the version, the Icon is always located in the same place
-		// and these attributes of the game do not change.
 		setIconImage(SpriteLibrary.getInstance().ICON);
+
+		// Add the main game panel to the game
 		Game pokemonGame = new Game();
 		pokemonGame.setFocusable(true);
 		pokemonGame.requestFocus();
 		add(pokemonGame);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setResizable(false);
-		pack();
-		setLocationRelativeTo(null);
-
-		AudioLibrary.getInstance().playBackgroundMusic("Title");
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -40,7 +34,13 @@ public class PokemonGameFrame extends JFrame {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public static void main(String[] args) {
-		PokemonGameFrame pf = new PokemonGameFrame();
+		GameFrame pf = new GameFrame();
 		pf.setVisible(true);
+		pf.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		pf.setResizable(false);
+		pf.pack();
+		pf.setLocationRelativeTo(null);
+
+		AudioLibrary.getInstance().playBackgroundMusic("Title");
 	}
 }

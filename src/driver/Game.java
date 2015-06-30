@@ -1,11 +1,5 @@
 package driver;
 
-import graphics.BattleScene;
-import graphics.MenuScene;
-import graphics.NPCThread;
-import graphics.NameScene;
-import graphics.Painter;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -19,8 +13,12 @@ import java.util.Set;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import libraries.NPCLibrary;
-import libraries.TeleportLibrary;
+import audio.AudioLibrary;
+import graphics.BattleEngine;
+import graphics.MenuScene;
+import graphics.NPCThread;
+import graphics.NameScene;
+import graphics.Painter;
 import pokedex.Pokemon;
 import pokedex.Pokemon.STATS;
 import pokedex.PokemonList;
@@ -29,8 +27,7 @@ import tiles.Tile;
 import tiles.TileSet;
 import trainers.Actor.DIR;
 import trainers.NPC;
-import utilities.GameData;
-import audio.AudioLibrary;
+import trainers.NPCLibrary;
 
 // ////////////////////////////////////////////////////////////////////////
 //
@@ -40,11 +37,8 @@ import audio.AudioLibrary;
 // ////////////////////////////////////////////////////////////////////////
 public class Game extends JPanel implements KeyListener, ActionListener {
 
-	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-	// ======================== VARIABLE DECLARATIONS =======================//
-	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-
 	private static final long serialVersionUID = 5951510422984321057L;
+
 	// ================= Movement control variables =========================//
 	boolean walking = false; // player animation counter
 	private int movespritepixels = 0; // movement (animation) counter
@@ -54,16 +48,11 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 	// ====================== NPC Random movement controller ================//
 	public NPCThread NPCTHREAD = new NPCThread();
 	// ===================== Graphics Logic Controllers =====================//
-	public BattleScene encounter;
 	public MenuScene menuScreen;
 	public NameScene nameScreen;
 	public EventHandler eventHandler;
 	// ======================== Game logic Data =============================//
 	public GameData gData = new GameData();
-
-	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-	// ===================== END VARIABLE DECLARATIONS ======================//
-	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
@@ -85,6 +74,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 		addKeyListener(this);
 
 		// gameTimer sets the delay between events, based on PLAYER_SPEED
+		// TODO - change timer logic to add to a running total
 		gData.gameTimer = new Timer(100 - gData.currentSpeed, this);
 		gData.gameTimer.start();
 	}
@@ -100,17 +90,19 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 		gData.updateTime(); // update the time played
 
 		if (gData.inBattle) {
-			if (encounter.playerPokemon.getStat(STATS.HP) <= 0) {
+			if (BattleEngine.getInstance().playerCurrentPokemon.getStat(STATS.HP) <= 0) {
 				// TODO - check for other todo switch pokemon
-				encounter.playerSwitchPokemon();
+				BattleEngine.getInstance().playerSwitchPokemon();
 			}
-			if (encounter.enemyPokemon.get(0).getStat(STATS.HP) <= 0) {
-				encounter.Win();
+			if (BattleEngine.getInstance().enemyPokemon.get(0).getStat(STATS.HP) <= 0) {
+				// TODO - needs to check for all enemy pokemon health <= 0
+				BattleEngine.getInstance().Win();
 			}
-			if (!encounter.playerTurn) {
-				encounter.enemyTurn();
+			if (!BattleEngine.getInstance().playerTurn) {
+				BattleEngine.getInstance().enemyTurn();
 			}
-		} else if (!gData.atTitle && !gData.inIntro && !gData.inNameScreen && !gData.inMenu && !gData.atContinueScreen) {
+		} else
+			if (!gData.atTitle && !gData.inIntro && !gData.inNameScreen && !gData.inMenu && !gData.atContinueScreen) {
 			handleMovement();
 		}
 	}
@@ -178,14 +170,20 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 		// check for trainer encounter with any NPC
 		for (NPC curNPC : NPCLibrary.getInstance().values()) {
 			boolean beaten = gData.player.beatenTrainers.contains(curNPC.getName());
-			if (curNPC.isTrainer() && !walking && !gData.NOBATTLE && !beaten && npcSeesPlayer(curNPC) && !gData.inMenu) {
+			if (curNPC.isTrainer() && !walking && !gData.NOBATTLE && !beaten && npcSeesPlayer(curNPC)
+					&& !gData.inMenu) {
 				NPCTHREAD.stop = true;
 				enemyTrainerAnimation(curNPC);
-				doTrainerBattle(curNPC);
+				AudioLibrary.getInstance().playBackgroundMusic("TrainerBattle");
+				movable = false;
+				gData.inBattle = true;
+				BattleEngine.getInstance().fight(curNPC.getPokemon(), this, curNPC.getName());
 			} else {
 				movable = true;
 			}
 		}
+
+		// TODO - check for wild pokemon encounter
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -207,10 +205,13 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 		DIR NPC_DIR = curNPC.getDirection();
 
 		return (((playerCurX == curNPC.getCurrentX()) && (((playerCurY < NPC_Y)
-				&& (NPC_Y - playerCurY <= GameData.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.NORTH)) || ((playerCurY > NPC_Y)
-				&& (playerCurY - NPC_Y <= GameData.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.SOUTH)))) || ((playerCurY == NPC_Y) && (((playerCurX < NPC_X)
-				&& (NPC_X - playerCurX <= GameData.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.WEST)) || ((playerCurX > NPC_X)
-				&& (playerCurX - NPC_X <= GameData.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.EAST)))));
+				&& (NPC_Y - playerCurY <= GameData.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.NORTH))
+				|| ((playerCurY > NPC_Y) && (playerCurY - NPC_Y <= GameData.NPC_SIGHT_DISTANCE)
+						&& (NPC_DIR == DIR.SOUTH))))
+				|| ((playerCurY == NPC_Y) && (((playerCurX < NPC_X)
+						&& (NPC_X - playerCurX <= GameData.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.WEST))
+						|| ((playerCurX > NPC_X) && (playerCurX - NPC_X <= GameData.NPC_SIGHT_DISTANCE)
+								&& (NPC_DIR == DIR.EAST)))));
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -259,19 +260,6 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// After seeing player, after moving to confront, actually do the battle
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	public void doTrainerBattle(NPC curNPC) {
-		movable = false;
-		AudioLibrary.getInstance().playBackgroundMusic("TrainerBattle");
-		encounter = new BattleScene(this, curNPC);
-		gData.inBattle = true;
-		encounter.Start();
-	}
-
-	// ////////////////////////////////////////////////////////////////////////
-	//
 	// Paint component - calls PAINTER and refershes screen
 	//
 	// ////////////////////////////////////////////////////////////////////////
@@ -287,7 +275,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 	// KeyListener override - the heart of the game driver
 	//
 	// Each menu / screen has buttons mapped to events
-	// TODO - fix audio errors (SE_SELECT) at continue and title screen
+	// TODO - fix audio errors in linux
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public void keyPressed(KeyEvent e) {

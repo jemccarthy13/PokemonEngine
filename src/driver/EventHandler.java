@@ -3,15 +3,16 @@ package driver;
 import java.awt.event.KeyEvent;
 import java.util.Random;
 
-import libraries.NPCLibrary;
-import libraries.SpriteLibrary;
+import audio.AudioLibrary;
+import graphics.BattleEngine;
+import graphics.SpriteLibrary;
 import pokedex.Move;
 import pokedex.Pokemon;
 import pokedex.Pokemon.STATS;
 import trainers.Actor.DIR;
 import trainers.NPC;
+import trainers.NPCLibrary;
 import utilities.RandomNumUtils;
-import audio.AudioLibrary;
 
 // ////////////////////////////////////////////////////////////////////////
 //
@@ -41,26 +42,26 @@ public class EventHandler {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	void handleBattleEvent(int keyCode) {
-		if (game.encounter.inFight) {
+		if (BattleEngine.getInstance().inFight) {
 			// at move selection menu
-			Pokemon playerPokemon = game.encounter.playerPokemon;
-			if (game.encounter.playerTurn) {
+			Pokemon playerPokemon = BattleEngine.getInstance().playerCurrentPokemon;
+			if (BattleEngine.getInstance().playerTurn) {
 				if (keyCode == KeyEvent.VK_UP) {
-					game.encounter.currentSelectionFightY = 0;
+					BattleEngine.getInstance().currentSelectionFightY = 0;
 				} else if (keyCode == KeyEvent.VK_DOWN) {
-					game.encounter.currentSelectionFightY = 1;
+					BattleEngine.getInstance().currentSelectionFightY = 1;
 				} else if (keyCode == KeyEvent.VK_LEFT) {
-					game.encounter.currentSelectionFightX = 0;
+					BattleEngine.getInstance().currentSelectionFightX = 0;
 				} else if (keyCode == KeyEvent.VK_RIGHT) {
-					game.encounter.currentSelectionFightX = 1;
+					BattleEngine.getInstance().currentSelectionFightX = 1;
 				} else if (keyCode == KeyEvent.VK_Z) {
 
 					checkIfThawed(playerPokemon);
 
 					// get Player's move if not FZN or PAR
 					int move = -1;
-					move = ((playerPokemon.statusEffect != 4) || (playerPokemon.statusEffect != 5)) ? getSelectedMove(move)
-							: -1;
+					move = ((playerPokemon.statusEffect != 4) || (playerPokemon.statusEffect != 5))
+							? getSelectedMove(move) : -1;
 
 					boolean checkPar = (playerPokemon.statusEffect == 1) ? true : false;
 					evaluateAndDealDamage(checkPar, playerPokemon, move);
@@ -77,7 +78,7 @@ public class EventHandler {
 						System.out.println(playerPokemon.getName() + " has been hurt by its poison");
 					}
 					resetBattleVars();
-					game.encounter.playerTurn = false;
+					BattleEngine.getInstance().playerTurn = false;
 				}
 				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_SELECT, game.gData.option_sound);
 			}
@@ -87,30 +88,35 @@ public class EventHandler {
 				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_SELECT, game.gData.option_sound);
 			}
 		}
-		if (game.encounter.inMain) {
+		if (BattleEngine.getInstance().inMain) {
 			// at main battle menu
-			if (game.encounter.playerTurn) {
+			if (BattleEngine.getInstance().playerTurn) {
 				if (keyCode == KeyEvent.VK_UP) {
-					game.encounter.currentSelectionMainY = 0;
+					BattleEngine.getInstance().currentSelectionMainY = 0;
 				} else if (keyCode == KeyEvent.VK_DOWN) {
-					game.encounter.currentSelectionMainY = 1;
+					BattleEngine.getInstance().currentSelectionMainY = 1;
 				} else if (keyCode == KeyEvent.VK_LEFT) {
-					game.encounter.currentSelectionMainX = 0;
+					BattleEngine.getInstance().currentSelectionMainX = 0;
 				} else if (keyCode == KeyEvent.VK_RIGHT) {
-					game.encounter.currentSelectionMainX = 1;
+					BattleEngine.getInstance().currentSelectionMainX = 1;
 				}
 				if (keyCode == KeyEvent.VK_Z) {
-					if ((game.encounter.currentSelectionMainX == 0) && (game.encounter.currentSelectionMainY == 0)) {
-						game.encounter.Fight();
+					// TODO - maybe shorten this to "changeToMenu(XX)"
+					if ((BattleEngine.getInstance().currentSelectionMainX == 0)
+							&& (BattleEngine.getInstance().currentSelectionMainY == 0)) {
+						BattleEngine.getInstance().inFightMenu();
 					}
-					if ((game.encounter.currentSelectionMainX == 1) && (game.encounter.currentSelectionMainY == 0)) {
-						game.encounter.Pokemon();
+					if ((BattleEngine.getInstance().currentSelectionMainX == 1)
+							&& (BattleEngine.getInstance().currentSelectionMainY == 0)) {
+						BattleEngine.getInstance().inPokemonMenu();
 					}
-					if ((game.encounter.currentSelectionMainX == 0) && (game.encounter.currentSelectionMainY == 1)) {
-						game.encounter.Item();
+					if ((BattleEngine.getInstance().currentSelectionMainX == 0)
+							&& (BattleEngine.getInstance().currentSelectionMainY == 1)) {
+						BattleEngine.getInstance().inItemMenu();
 					}
-					if ((game.encounter.currentSelectionMainX == 1) && (game.encounter.currentSelectionMainY == 1)) {
-						game.encounter.Run();
+					if ((BattleEngine.getInstance().currentSelectionMainX == 1)
+							&& (BattleEngine.getInstance().currentSelectionMainY == 1)) {
+						BattleEngine.getInstance().Run();
 					}
 				}
 				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_SELECT, game.gData.option_sound);
@@ -145,16 +151,20 @@ public class EventHandler {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	private int getSelectedMove(int move) {
-		if ((game.encounter.currentSelectionFightX == 0) && (game.encounter.currentSelectionFightY == 0)) {
+		if ((BattleEngine.getInstance().currentSelectionFightX == 0)
+				&& (BattleEngine.getInstance().currentSelectionFightY == 0)) {
 			move = 0;
 		}
-		if ((game.encounter.currentSelectionFightX == 1) && (game.encounter.currentSelectionFightY == 0)) {
+		if ((BattleEngine.getInstance().currentSelectionFightX == 1)
+				&& (BattleEngine.getInstance().currentSelectionFightY == 0)) {
 			move = 1;
 		}
-		if ((game.encounter.currentSelectionFightX == 0) && (game.encounter.currentSelectionFightY == 1)) {
+		if ((BattleEngine.getInstance().currentSelectionFightX == 0)
+				&& (BattleEngine.getInstance().currentSelectionFightY == 1)) {
 			move = 2;
 		}
-		if ((game.encounter.currentSelectionFightX == 1) && (game.encounter.currentSelectionFightY == 1)) {
+		if ((BattleEngine.getInstance().currentSelectionFightX == 1)
+				&& (BattleEngine.getInstance().currentSelectionFightY == 1)) {
 			move = 3;
 		}
 		return move;
@@ -177,18 +187,17 @@ public class EventHandler {
 			int defStat = 0;
 			if (chosen.getType().equals("PHYSICAL")) {
 				attackStat = playerPokemon.getStat(STATS.ATTACK);
-				defStat = game.encounter.enemyPokemon.get(0).getStat(STATS.DEFENSE);
+				defStat = BattleEngine.getInstance().enemyPokemon.get(0).getStat(STATS.DEFENSE);
 			}
 			if (chosen.getType().equals("SPECIAL")) {
 				attackStat = playerPokemon.getStat(STATS.SP_ATTACK);
-				defStat = game.encounter.enemyPokemon.get(0).getStat(STATS.SP_DEFENSE);
+				defStat = BattleEngine.getInstance().enemyPokemon.get(0).getStat(STATS.SP_DEFENSE);
 			}
 			int damage = 0;
 			if (!chosen.getType().equals("STAT")) {
 				damage = (int) (((2 * playerPokemon.getLevel() / 5 + 2) * chosen.getStrength() * attackStat / defStat
-						/ 50 + 2)
-						* RandomNumUtils.generateRandom(85, 100) / 100.0);
-				((Pokemon) game.encounter.enemyPokemon.get(0)).doDamage(damage);
+						/ 50 + 2) * RandomNumUtils.generateRandom(85, 100) / 100.0);
+				((Pokemon) BattleEngine.getInstance().enemyPokemon.get(0)).doDamage(damage);
 				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_DAMAGE, this.game.gData.option_sound);
 			}
 		} else {
@@ -202,12 +211,12 @@ public class EventHandler {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	private void resetBattleVars() {
-		game.encounter.inMain = true;
-		game.encounter.inFight = false;
-		game.encounter.currentSelectionMainX = 0;
-		game.encounter.currentSelectionMainY = 0;
-		game.encounter.currentSelectionFightX = 0;
-		game.encounter.currentSelectionFightY = 0;
+		BattleEngine.getInstance().inMain = true;
+		BattleEngine.getInstance().inFight = false;
+		BattleEngine.getInstance().currentSelectionMainX = 0;
+		BattleEngine.getInstance().currentSelectionMainY = 0;
+		BattleEngine.getInstance().currentSelectionFightX = 0;
+		BattleEngine.getInstance().currentSelectionFightY = 0;
 	}
 
 	// ////////////////////////////////////////////////////////////////////////

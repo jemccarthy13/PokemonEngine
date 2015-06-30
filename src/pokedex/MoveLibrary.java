@@ -1,11 +1,8 @@
-package libraries;
+package pokedex;
 
 import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Scanner;
-
-import pokedex.Move;
-import pokedex.MoveData;
 
 // ////////////////////////////////////////////////////////////////////////
 //

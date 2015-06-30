@@ -4,7 +4,7 @@ import java.awt.Image;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import libraries.SpriteLibrary;
+import graphics.SpriteLibrary;
 import pokedex.Pokemon;
 import pokedex.PokemonList;
 import tiles.Coordinate;

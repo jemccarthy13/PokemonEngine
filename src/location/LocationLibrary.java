@@ -1,4 +1,4 @@
-package libraries;
+package location;
 
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -9,8 +9,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import location.Location;
-import location.LocationData;
 import trainers.Actor.DIR;
 
 // ////////////////////////////////////////////////////////////////////////
@@ -50,7 +48,7 @@ public class LocationLibrary extends HashMap<String, LocationData> {
 			JSONArray location_data_all = (JSONArray) all_locations.get("locations");
 
 			// iterate through the array of pokemon data
-			Iterator location_it = location_data_all.iterator();
+			Iterator<?> location_it = location_data_all.iterator();
 			while (location_it.hasNext()) {
 
 				LocationData ld = new LocationData();

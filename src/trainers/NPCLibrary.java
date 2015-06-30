@@ -1,10 +1,7 @@
-package libraries;
+package trainers;
 
 import java.io.File;
 import java.util.HashMap;
-
-import trainers.NPC;
-import trainers.TrainerData;
 
 //////////////////////////////////////////////////////////////////////////
 //

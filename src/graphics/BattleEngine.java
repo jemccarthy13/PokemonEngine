@@ -2,15 +2,13 @@ package graphics;
 
 import java.util.Random;
 
-import libraries.SpriteLibrary;
+import audio.AudioLibrary;
+import driver.Game;
 import pokedex.Move;
 import pokedex.Pokemon;
 import pokedex.Pokemon.STATS;
 import pokedex.PokemonList;
-import trainers.NPC;
 import utilities.RandomNumUtils;
-import audio.AudioLibrary;
-import driver.Game;
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -21,49 +19,55 @@ import driver.Game;
 // TODO - change to message boxes for messages
 //
 //////////////////////////////////////////////////////////////////////////
-public class BattleScene {
-	private Game game;
-	public boolean playerTurn;
+public class BattleEngine {
+	private static BattleEngine m_instance = new BattleEngine();
+
+	private Game game = null;
+	public boolean playerTurn = false;
 	public boolean inMain = true;
 	public boolean inFight = false;
 	public boolean inItem = false;
 	public boolean inPokemon = false;
-	public boolean inRun = false;
 	public boolean playerWon = false;
-	public int currentSelectionMainX;
-	public int currentSelectionMainY;
-	public int currentSelectionFightX;
-	public int currentSelectionFightY;
-	public Pokemon playerPokemon;
-	public PokemonList enemyPokemon;
-	public NPC enemy = null;
+	public int currentSelectionMainX = -1;
+	public int currentSelectionMainY = -1;
+	public int currentSelectionFightX = -1;
+	public int currentSelectionFightY = -1;
+	public Pokemon playerCurrentPokemon = null;;
+	public PokemonList enemyPokemon = null;;
+	public String enemyName = null;
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
 	// Constructor - keeps a local copy of the game and the current npc
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public BattleScene(Game pkmnGame, NPC curNPC) {
-		game = pkmnGame;
-		playerPokemon = pkmnGame.gData.player.getPokemon().get(0);
-		playerPokemon.setParticipated();
-		enemyPokemon = curNPC.getPokemon();
-		enemy = curNPC;
-		playerTurn = true;
+	private BattleEngine() {}
+
+	public static BattleEngine getInstance() {
+		return m_instance;
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
 	// Start - set all variables for the start of a battle
 	//
+	// TODO - first pokemon isn't always the pokemon to fight: change to first
+	// Pokemon above 0 health
+	//
 	// ////////////////////////////////////////////////////////////////////////
-
-	public void Start() {
-		this.currentSelectionMainX = 0;
-		this.currentSelectionFightX = 0;
-		this.currentSelectionMainY = 0;
-		this.currentSelectionFightY = 0;
-		this.inMain = true;
+	public void fight(PokemonList enemyPkmn, Game g, String opponentName) {
+		m_instance.currentSelectionMainX = 0;
+		m_instance.currentSelectionFightX = 0;
+		m_instance.currentSelectionMainY = 0;
+		m_instance.currentSelectionFightY = 0;
+		m_instance.game = g;
+		m_instance.playerCurrentPokemon = m_instance.game.gData.player.getPokemon().get(0);
+		m_instance.playerCurrentPokemon.setParticipated();
+		m_instance.enemyPokemon = enemyPkmn;
+		m_instance.inMain = true;
+		m_instance.playerTurn = true;
+		m_instance.enemyName = opponentName;
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -71,7 +75,7 @@ public class BattleScene {
 	// Fight - set variables to be in the fight menu
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public void Fight() {
+	public void inFightMenu() {
 		this.inMain = false;
 		this.inFight = true;
 	}
@@ -81,7 +85,7 @@ public class BattleScene {
 	// Item - set variables for the item menu
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public void Item() {
+	public void inItemMenu() {
 		this.inItem = true;
 		System.out.println("Item");
 	}
@@ -91,7 +95,7 @@ public class BattleScene {
 	// Pokemon - set variables for the party menu
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public void Pokemon() {
+	public void inPokemonMenu() {
 		this.inPokemon = true;
 		System.out.println("Pokemon");
 	}
@@ -132,7 +136,7 @@ public class BattleScene {
 				s++;
 			}
 		}
-		this.playerPokemon.gainExp(((Pokemon) this.enemyPokemon.get(0)).getExpGain(false, s));
+		this.playerCurrentPokemon.gainExp(((Pokemon) this.enemyPokemon.get(0)).getExpGain(false, s));
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -141,9 +145,7 @@ public class BattleScene {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public void Run() {
-		if (enemy == null) {
-			this.inMain = false;
-			this.inRun = true;
+		if (enemyName == null) {
 			((Pokemon) this.enemyPokemon.get(0)).statusEffect = 0;
 
 			this.game.gData.inBattle = false;
@@ -159,7 +161,6 @@ public class BattleScene {
 	public void Win() {
 		giveEXP();
 		this.inMain = false;
-		this.inRun = true;
 		((Pokemon) this.enemyPokemon.get(0)).statusEffect = 0;
 
 		this.game.gData.inBattle = false;
@@ -167,7 +168,7 @@ public class BattleScene {
 		// reset the music, add to beaten trainers
 		AudioLibrary.getInstance().pauseBackgrondMusic();
 		AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown");
-		game.gData.player.beatenTrainers.add(enemy.getName());
+		game.gData.player.beatenTrainers.add(enemyName);
 		game.gData.playerWin = false;
 		game.movable = true;
 	}
@@ -179,7 +180,6 @@ public class BattleScene {
 	// ////////////////////////////////////////////////////////////////////////
 	public void Lose() {
 		this.inMain = false;
-		this.inRun = true;
 		((Pokemon) this.enemyPokemon.get(0)).statusEffect = 0;
 		System.out.println("Player Pokemon has fainted");
 		System.out.println(game.gData.player.getName() + " is all out of usable Pokemon!");
@@ -208,8 +208,8 @@ public class BattleScene {
 						System.out.println(((Pokemon) this.enemyPokemon.get(0)).getName() + " has woken up.");
 					}
 					if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 5) {
-						System.out.println(((Pokemon) this.enemyPokemon.get(0)).getName()
-								+ " has broken free from the ice.");
+						System.out.println(
+								((Pokemon) this.enemyPokemon.get(0)).getName() + " has broken free from the ice.");
 					}
 					((Pokemon) this.enemyPokemon.get(0)).statusEffect = 0;
 				} else {
@@ -233,11 +233,11 @@ public class BattleScene {
 					int defStat = 0;
 					if (chosen.getType().equals("PHYSICAL")) {
 						attackStat = ((Pokemon) this.enemyPokemon.get(0)).getStat(STATS.ATTACK);
-						defStat = this.playerPokemon.getStat(STATS.DEFENSE);
+						defStat = this.playerCurrentPokemon.getStat(STATS.DEFENSE);
 					}
 					if (chosen.getType().equals("SPECIAL")) {
 						attackStat = ((Pokemon) this.enemyPokemon.get(0)).getStat(STATS.SP_ATTACK);
-						defStat = this.playerPokemon.getStat(STATS.SP_DEFENSE);
+						defStat = this.playerCurrentPokemon.getStat(STATS.SP_DEFENSE);
 					}
 					int damage = 0;
 					if (!chosen.getType().equals("STAT")) {
@@ -245,7 +245,7 @@ public class BattleScene {
 								* chosen.getStrength() * attackStat / 50 / defStat + 2)
 								* RandomNumUtils.generateRandom(85, 100) / 100.0);
 					}
-					this.playerPokemon.doDamage(damage);
+					this.playerCurrentPokemon.doDamage(damage);
 					AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_DAMAGE,
 							this.game.gData.option_sound);
 					System.out.println("Enemy's turn is over");
@@ -262,11 +262,11 @@ public class BattleScene {
 				int defStat = 1;
 				if (chosen.getType().equals("PHYSICAL")) {
 					attackStat = ((Pokemon) this.enemyPokemon.get(0)).getStat(STATS.ATTACK);
-					defStat = this.playerPokemon.getStat(STATS.DEFENSE);
+					defStat = this.playerCurrentPokemon.getStat(STATS.DEFENSE);
 				}
 				if (chosen.getType().equals("SPECIAL")) {
 					attackStat = ((Pokemon) this.enemyPokemon.get(0)).getStat(STATS.SP_ATTACK);
-					defStat = this.playerPokemon.getStat(STATS.SP_DEFENSE);
+					defStat = this.playerCurrentPokemon.getStat(STATS.SP_DEFENSE);
 				}
 				if (!chosen.getType().equals("STAT")) {
 					@SuppressWarnings("unused")

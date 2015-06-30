@@ -3,8 +3,7 @@ package pokedex;
 import java.awt.Image;
 import java.io.Serializable;
 
-import libraries.MoveLibrary;
-import libraries.SpriteLibrary;
+import graphics.SpriteLibrary;
 import utilities.RandomNumUtils;
 
 // ////////////////////////////////////////////////////////////////////////

@@ -1,7 +1,7 @@
 package graphics;
 
-import libraries.NPCLibrary;
 import trainers.NPC;
+import trainers.NPCLibrary;
 import utilities.RandomNumUtils;
 
 // ////////////////////////////////////////////////////////////////////////////

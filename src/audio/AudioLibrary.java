@@ -15,10 +15,7 @@ import utilities.RandomNumUtils;
 // ////////////////////////////////////////////////////////////////////////
 public class AudioLibrary {
 
-	private static AudioLibrary m_audioLib = new AudioLibrary();
-
-	private static final String bgMusicPath = "resources/audio_lib/BGM/";
-	public static final String soundEffectsPath = "resources/audio_lib/SE/";
+	private static AudioLibrary m_instance = new AudioLibrary();
 
 	private MidiPlayer m_currentTrack = null;
 	private JukeBox m_JukeBox = new JukeBox();
@@ -38,29 +35,36 @@ public class AudioLibrary {
 	// ////////////////////////////////////////////////////////////////////////
 	private AudioLibrary() {
 		System.out.println("** Loading audio library...");
+
+		final String bgMusicPath = "resources/audio_lib/BGM/";
+		final String soundEffectsPath = "resources/audio_lib/SE/";
+
 		m_encounterTracks = new ArrayList<String>();
 		m_trackList = new HashMap<String, MidiPlayer>();
 
 		File[] listOfFiles = new File(bgMusicPath).listFiles();
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
-				MidiPlayer musicTrack = new MidiPlayer(bgMusicPath + listOfFiles[i].getName(), true);
+
+				String name_of_file = listOfFiles[i].getName();
+
+				MidiPlayer musicTrack = new MidiPlayer(bgMusicPath + name_of_file, true);
 
 				// compile a list of trainer / encounter music
 				Pattern p = Pattern.compile("Encounter");
-				if (p.matcher(listOfFiles[i].getName()).matches()) {
-					m_encounterTracks.add(listOfFiles[i].getName().replace(".mid", ""));
+				if (p.matcher(name_of_file).matches()) {
+					m_encounterTracks.add(name_of_file.replace(".mid", ""));
 				}
 
-				// strip out the .mid in the track title for adding to the list
-				// also strip out the Location portion if the track is for a
-				// location
-				m_trackList.put(listOfFiles[i].getName().replace("Location", "").replace(".mid", ""), musicTrack);
+				// process out junk parts of the name of the track title for
+				// adding to the list
+				m_trackList.put(name_of_file.replace("Location", "").replace(".mid", ""), musicTrack);
 			}
 		}
 
 		System.out.println("** Loaded primary music files.");
 
+		// load all of the sound effect files
 		listOfFiles = new File(soundEffectsPath).listFiles();
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
@@ -77,7 +81,7 @@ public class AudioLibrary {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public static AudioLibrary getInstance() {
-		return m_audioLib;
+		return m_instance;
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -86,7 +90,6 @@ public class AudioLibrary {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public void playBackgroundMusic(String songTitle) {
-
 		// stop the current track, if playing
 		if (m_currentTrack != null) {
 			m_currentTrack.stop();

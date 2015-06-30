@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import libraries.NPCLibrary;
 import trainers.NPC;
+import trainers.NPCLibrary;
 
 //////////////////////////////////////////////////////////////////////////
 //

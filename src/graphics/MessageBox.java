@@ -3,8 +3,6 @@ package graphics;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import libraries.SpriteLibrary;
-
 // ////////////////////////////////////////////////////////////////////////
 //
 // MessageBox - a utility to print messages to the screen - e.g. for signs

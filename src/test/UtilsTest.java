@@ -2,8 +2,8 @@ package test;
 
 import java.util.ArrayList;
 
-import libraries.LocationLibrary;
 import location.Location;
+import location.LocationLibrary;
 import pokedex.Pokemon;
 import pokedex.PokemonFactory;
 import utilities.RandomNumUtils;
