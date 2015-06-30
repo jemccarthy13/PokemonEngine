@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import location.Location;
 import location.LocationLibrary;
+import tiles.Coordinate;
 import utilities.RandomNumUtils;
 
 //////////////////////////////////////////////////////////////////////////
@@ -84,5 +85,9 @@ public class Player extends Actor implements Serializable {
 
 	public int getID() {
 		return this.id;
+	}
+
+	public Coordinate getPosition() {
+		return this.tData.position;
 	}
 }

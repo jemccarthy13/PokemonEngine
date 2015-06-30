@@ -159,8 +159,13 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 			movespritepixels = 0; // reset animation counter
 			walking = false; // player is no longer in animation
 			rightFoot = (!rightFoot);
-			if (moveable_dir[playerDir.ordinal()])
+			if (moveable_dir[playerDir.ordinal()]) {
 				gData.player.move(playerDir);
+				// check for wild encounter
+				if (gData.tm.getTileAt(gData.player.getPosition()) == TileSet.WILD_TILE) {
+					System.err.println("ON WILD TILE");
+				}
+			}
 			for (Pokemon p : playerPokemon) { // deal PZN/BRN damage
 				if ((p.statusEffect == 2) || (p.statusEffect == 3))
 					p.doDamage(1);
@@ -183,7 +188,6 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 			}
 		}
 
-		// TODO - check for wild pokemon encounter
 	}
 
 	// ////////////////////////////////////////////////////////////////////////

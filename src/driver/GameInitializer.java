@@ -6,13 +6,13 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import audio.AudioLibrary;
 import pokedex.Pokemon;
 import pokedex.PokemonFactory;
 import tiles.Coordinate;
 import tiles.Tile;
 import tiles.TileSet;
 import trainers.Player;
-import audio.AudioLibrary;
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -80,8 +80,8 @@ public class GameInitializer {
 	public static void loadMap(String loadedMap) throws IOException {
 		// intialize file reader
 		System.err.println("Loading map...");
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				GameInitializer.class.getResourceAsStream("/maps/" + loadedMap + ".map")));
+		BufferedReader reader = new BufferedReader(
+				new InputStreamReader(GameInitializer.class.getResourceAsStream("/maps/" + loadedMap + ".map")));
 		String line = reader.readLine();
 		StringTokenizer tokens = new StringTokenizer(line);
 
@@ -119,26 +119,25 @@ public class GameInitializer {
 				if ((curCol == 0) && (layers == 1 || layers == 2) && (y != 0)) {
 					curRow++;
 				}
-				addObstaclesToMap(layers, curRow, curCol, code);
+
+				// add speical tiles to the map
+				Coordinate c = new Coordinate(curCol, curRow);
+
+				for (int x = 0; x < TileSet.IMPASSIBLE_TILES.length; x++) {
+					if (Integer.parseInt(code) == TileSet.IMPASSIBLE_TILES[x]) {
+						if (layers == 1 || (layers == 2 && Integer.parseInt(code) > 0))
+							game.gData.tm.set(c, TileSet.OBSTACLE);
+					}
+				}
+				for (int x = 0; x < TileSet.WILD_tiLES.length; x++) {
+					if (Integer.parseInt(code) == TileSet.WILD_tiLES[x]) {
+						if (layers == 1 || (layers == 2 && Integer.parseInt(code) > 0))
+							game.gData.tm.set(c, TileSet.WILD_TILE);
+					}
+				}
 				game.gData.currentMap[layers][y] = Integer.parseInt(code);
 			}
 		}
 		System.err.println("Loaded map.");
-	}
-
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// addObstaclesToMap - based on the codes read, add appropriate obstacles
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	private static void addObstaclesToMap(int layers, int curRow, int curCol, String code) {
-		Coordinate c = new Coordinate(curCol, curRow);
-
-		for (int x = 0; x < TileSet.IMPASSIBLE_TILES.length; x++) {
-			if (Integer.parseInt(code) == TileSet.IMPASSIBLE_TILES[x]) {
-				if (layers == 1 || (layers == 2 && Integer.parseInt(code) > 0))
-					game.gData.tm.set(c, TileSet.OBSTACLE);
-			}
-		}
 	}
 }
