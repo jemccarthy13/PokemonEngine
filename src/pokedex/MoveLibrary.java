@@ -12,8 +12,8 @@ import java.util.Scanner;
 // ////////////////////////////////////////////////////////////////////////
 public class MoveLibrary extends HashMap<String, MoveData> {
 
+	private static final long serialVersionUID = 2297312743092782181L;
 	static MoveLibrary m_instance = new MoveLibrary();
-	private static final long serialVersionUID = 1L;
 
 	// ////////////////////////////////////////////////////////////////////////
 	//

@@ -13,7 +13,7 @@ import utilities.RandomNumUtils;
 //
 // ////////////////////////////////////////////////////////////////////////
 public class Pokemon implements Serializable {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 3959217221984077560L;
 	int evolution_stage = 0;
 	int level;
 	boolean participated = false;

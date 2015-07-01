@@ -15,7 +15,8 @@ import graphics.SpriteLibrary;
 //
 // ////////////////////////////////////////////////////////////////////////
 public class TileSet extends ArrayList<Image>implements Serializable {
-	private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = -3660653996002154385L;
 
 	public static final ObstacleTile OBSTACLE = new ObstacleTile();
 	public static final NormalTile NORMAL_TILE = new NormalTile();

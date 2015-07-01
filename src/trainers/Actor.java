@@ -18,8 +18,6 @@ import utilities.Coordinate;
 //////////////////////////////////////////////////////////////////////////
 public class Actor {
 
-	@SuppressWarnings("unused")
-	private static final long serialVersionUID = 1L;
 	public TrainerData tData = new TrainerData();
 
 	public static enum DIR implements Serializable {

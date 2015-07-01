@@ -15,8 +15,7 @@ import utilities.RandomNumUtils;
 // ////////////////////////////////////////////////////////////////////////
 public class Player extends Actor implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-
+	private static final long serialVersionUID = 4426558941037291067L;
 	Actor rival;
 	public ArrayList<String> beatenTrainers = new ArrayList<String>();
 	private int badges = 0;

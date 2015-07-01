@@ -21,7 +21,7 @@ import utilities.NPCThread;
 //////////////////////////////////////////////////////////////////////////
 public class SpriteTest extends JFrame {
 
-	private static final long serialVersionUID = -8257946860941590572L;
+	private static final long serialVersionUID = 8257946860941590572L;
 
 	static ArrayList<Image> sprites = new ArrayList<Image>();
 

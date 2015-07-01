@@ -15,7 +15,8 @@ import javax.swing.JComponent;
 import javax.swing.JViewport;
 
 public class MapComponent extends JComponent implements MouseListener, MouseMotionListener, MapChangeListener {
-	private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = 5804948335596277170L;
 	Map map;
 	MapEdit mapEdit;
 	private int width = 0;
@@ -105,10 +106,10 @@ public class MapComponent extends JComponent implements MouseListener, MouseMoti
 		paramGraphics.setColor(Color.black);
 		paramGraphics.drawLine(0, 0, this.width * this.tileWidth, 0);
 		paramGraphics.drawLine(0, 0, 0, this.height * this.tileHeight);
-		paramGraphics.drawLine(this.width * this.tileWidth, 0, this.width * this.tileWidth, this.height
-				* this.tileHeight);
-		paramGraphics.drawLine(0, this.height * this.tileHeight, this.width * this.tileWidth, this.height
-				* this.tileHeight);
+		paramGraphics.drawLine(this.width * this.tileWidth, 0, this.width * this.tileWidth,
+				this.height * this.tileHeight);
+		paramGraphics.drawLine(0, this.height * this.tileHeight, this.width * this.tileWidth,
+				this.height * this.tileHeight);
 	}
 
 	public void mapClicked(int paramInt1, int paramInt2) {

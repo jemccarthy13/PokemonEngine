@@ -18,7 +18,7 @@ import trainers.Actor.DIR;
 // ////////////////////////////////////////////////////////////////////////
 public class LocationLibrary extends HashMap<String, LocationData> {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 9095738634104025461L;
 	private static LocationLibrary m_instance = new LocationLibrary();
 
 	// ////////////////////////////////////////////////////////////////////////

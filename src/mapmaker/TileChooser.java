@@ -38,7 +38,7 @@ import javax.swing.TransferHandler;
 import javax.swing.border.TitledBorder;
 
 public class TileChooser extends JPanel implements ActionListener, GraphicsBankChangeListener {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 5090621430335043404L;
 	ArrayList<Object> tiles;
 	GridLayout layout;
 	GraphicsBank gfx;

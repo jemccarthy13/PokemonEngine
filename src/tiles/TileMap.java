@@ -13,7 +13,7 @@ import utilities.Coordinate;
 // ////////////////////////////////////////////////////////////////////////
 public class TileMap extends ArrayList<ArrayList<Tile>> {
 
-	private static final long serialVersionUID = -5325017932787074716L;
+	private static final long serialVersionUID = 5325017932787074716L;
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
