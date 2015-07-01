@@ -1,5 +1,6 @@
 package location;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,8 +12,9 @@ import utilities.Coordinate;
 // LocationData - loads all data for a particular location from a file
 //
 // ////////////////////////////////////////////////////////////////////////
-public class LocationData {
+public class LocationData implements Serializable {
 
+	private static final long serialVersionUID = 5824633156334142566L;
 	public String name = null;
 	public Boolean canFlyOutOf = null;
 	public Coordinate topLeft = null, bottomRight = null;

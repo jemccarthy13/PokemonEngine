@@ -1,11 +1,12 @@
 package utilities;
 
-import graphics.MessageBox;
-
 import java.awt.Graphics;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 
+import driver.Game;
+import graphics.MessageBox;
 import trainers.Player;
 
 // ////////////////////////////////////////////////////////////////////////
@@ -22,13 +23,15 @@ public class Utils {
 	// saveGame - writes a player object to a .SAV file
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public static void saveGame(Player you) {
+	public static void saveGame(Game game) {
 		FileOutputStream fout = null;
 		ObjectOutputStream oos = null;
 		try {
-			fout = new FileOutputStream("Data/PokemonOrange.SAV");
+			File dir = new File("resources/data");
+			System.out.println(dir.isDirectory());
+			fout = new FileOutputStream("resources/data/PokemonOrange.sav");
 			oos = new ObjectOutputStream(fout);
-			oos.writeObject(you);
+			oos.writeObject(game);
 			oos.close();
 			fout.close();
 		} catch (Exception e1) {
@@ -36,7 +39,7 @@ public class Utils {
 			System.out.println("Unable to save game...");
 			return;
 		}
-		System.out.println("Game saved!");
+		System.out.println("Game saved to .SAV!");
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -46,9 +49,9 @@ public class Utils {
 	// TODO - move to HandleEvent and graphics Painter
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public static void accessComputer(Player you) {
+	public static void accessComputer(Game game, Player you) {
 		System.out.println("Saving game...");
-		saveGame(you);
+		saveGame(game);
 		System.out.println("COMPUTER ACCESS GRANTED");
 		System.out.println("computer menu here.");
 	}
@@ -58,10 +61,6 @@ public class Utils {
 	// methods for conversation dialog boxes
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public static void messageBox(Graphics g, String string) {
-		msg_box.Message(g, string);
-	}
-
 	public static void messageBox(Graphics g, String string, String string2) {
 		msg_box.Message(g, string, string2);
 	}

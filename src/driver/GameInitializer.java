@@ -92,8 +92,6 @@ public class GameInitializer {
 		game.gData.map_width = Integer.parseInt(tokens.nextToken());
 		game.gData.map_height = Integer.parseInt(tokens.nextToken());
 
-		System.out.println(game.gData.map_height);
-		System.out.println(game.gData.map_width);
 		line = reader.readLine();
 		tokens = new StringTokenizer(line);
 		while (!line.equals(".")) {

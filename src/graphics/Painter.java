@@ -68,15 +68,23 @@ public class Painter extends JPanel {
 		} else if (!game.gData.inBattle) {
 			paintWorld(g, game.gData, g2, at);
 		}
+
 		if (game.menuScreen.MENU_inMain) {
 			paintPauseMenu(g, game.menuScreen);
-		}
-		if (game.menuScreen.MENU_inConversation) {
-			paintConversation(g, game.menuScreen);
-		}
-		if (game.menuScreen.MENU_inSave) {
+		} else if (game.menuScreen.MENU_inConversation) {
+			paintConversation(g, game);
+		} else if (game.menuScreen.MENU_inSave) {
 			paintSaveMenu(g, game);
+		} else if (game.gData.inMessage) {
+			paintMessageBox(g, game);
 		}
+
+	}
+
+	private static void paintMessageBox(Graphics g, Game game) {
+		g.setColor(Color.BLACK);
+		g.drawImage(SpriteLibrary.MESSAGE_BOX, 0, 0, null);
+		g.drawString(game.messageString, 30, 260);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -361,8 +369,9 @@ public class Painter extends JPanel {
 	// Paint a conversation on the screen as a series of message boxes
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private static void paintConversation(Graphics g, MenuScene menu) {
-		Utils.messageBox(g, menu.MENU_NPC.getText(menu.MENU_stage));
+	private static void paintConversation(Graphics g, Game game) {
+		game.messageString = game.menuScreen.MENU_NPC.getText(game.menuScreen.MENU_stage);
+		paintMessageBox(g, game);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,7 @@
 package graphics;
 
+import java.io.Serializable;
+
 import driver.GameData;
 
 // ////////////////////////////////////////////////////////////////////////
@@ -8,7 +10,9 @@ import driver.GameData;
 // can name any NPC, player, or Pokemon with this screen
 //
 // ////////////////////////////////////////////////////////////////////////
-public class NameScene {
+public class NameScene implements Serializable {
+
+	private static final long serialVersionUID = 3726070037021401282L;
 
 	// name that and shrinks dynamically according to user's choices
 	StringBuilder buildName = new StringBuilder();

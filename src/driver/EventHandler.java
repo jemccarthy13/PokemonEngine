@@ -1,6 +1,7 @@
 package driver;
 
 import java.awt.event.KeyEvent;
+import java.io.Serializable;
 import java.util.Random;
 
 import audio.AudioLibrary;
@@ -13,6 +14,7 @@ import trainers.Actor.DIR;
 import trainers.NPCLibrary;
 import utilities.BattleEngine;
 import utilities.RandomNumUtils;
+import utilities.Utils;
 
 // ////////////////////////////////////////////////////////////////////////
 //
@@ -22,8 +24,9 @@ import utilities.RandomNumUtils;
 // TODO - implement Bag, pokegear, party, save, options, and pokedex events
 //
 // ////////////////////////////////////////////////////////////////////////
-public class EventHandler {
+public class EventHandler implements Serializable {
 
+	private static final long serialVersionUID = 7134855556768076496L;
 	Game game;
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -329,8 +332,10 @@ public class EventHandler {
 				game.menuScreen.MENU_currentSelectionSave = 1;
 			} else if (keyCode == KeyEvent.VK_Z) {
 				if (game.menuScreen.MENU_currentSelectionSave == 0) {
-					// Utils.saveGame(game.gold);
-					System.out.println(game.gData.player.getName() + "'s Game has been saved! (Not really though)");
+					Utils.saveGame(game);
+					game.menuScreen.MENU_inSave = false;
+					game.gData.inMessage = true;
+					game.messageString = "Game saved successfully!";
 				} else {
 					game.menuScreen.MENU_inSave = false;
 					game.menuScreen.MENU_inMain = true;
@@ -338,6 +343,14 @@ public class EventHandler {
 			} else if (keyCode == KeyEvent.VK_X) {
 				game.menuScreen.MENU_inSave = false;
 				game.menuScreen.MENU_inMain = true;
+			}
+		} else if (game.gData.inMessage) {
+			if (keyCode == KeyEvent.VK_X) {
+				game.gData.inMessage = false;
+				game.messageString = "";
+				game.menuScreen.MENU_inSave = false;
+				game.menuScreen.MENU_inMain = false;
+				game.gData.inMenu = false;
 			}
 		} else if (game.menuScreen.MENU_inOption) {
 			if (keyCode == KeyEvent.VK_UP) {

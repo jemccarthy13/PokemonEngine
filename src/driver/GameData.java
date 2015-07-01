@@ -45,6 +45,8 @@ public class GameData implements Serializable {
 	public boolean inNameScreen = false;
 	public boolean atTitle = true;
 	public boolean atContinueScreen = false;
+	public boolean inMessage;
+
 	public int introStage = 1;
 
 	public int offsetX = 0;

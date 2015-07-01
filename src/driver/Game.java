@@ -57,6 +57,8 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 	public GameData gData = new GameData();
 	public PokemonList enemyPkmn = new PokemonList();
 
+	public String messageString;
+
 	// ////////////////////////////////////////////////////////////////////////
 	//
 	// Default constructor for Main panel. This is the panel that all
@@ -167,7 +169,6 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 				// check for wild encounter
 				if (gData.tm.getTileAt(gData.player.getPosition()) == TileSet.WILD_TILE) {
 					if (RandomNumUtils.isWildEncounter()) {
-						System.out.println("wild pokemon encountered!");
 						enemyPkmn.clear();
 						enemyPkmn.add(PokemonFactory.getInstance().randomPokemon(gData.player.getCurLoc()));
 						BattleEngine.getInstance().fight(enemyPkmn, this, null);

@@ -1,5 +1,7 @@
 package utilities;
 
+import java.io.Serializable;
+
 import trainers.Actor;
 import trainers.NPCLibrary;
 
@@ -8,7 +10,9 @@ import trainers.NPCLibrary;
 // NPCThread handles random movement for NPCs every second
 //
 // ////////////////////////////////////////////////////////////////////////////
-public class NPCThread extends Thread {
+public class NPCThread extends Thread implements Serializable {
+
+	private static final long serialVersionUID = 1650659865966804001L;
 	public boolean stop = false;
 
 	public NPCThread() {}

@@ -1,5 +1,7 @@
 package graphics;
 
+import java.io.Serializable;
+
 import trainers.Actor;
 
 // ////////////////////////////////////////////////////////////////////////
@@ -8,8 +10,9 @@ import trainers.Actor;
 // the variables are adjusted accordingly
 //
 // ////////////////////////////////////////////////////////////////////////
-public class MenuScene {
+public class MenuScene implements Serializable {
 
+	private static final long serialVersionUID = 1302432872413157945L;
 	public boolean MENU_inMain = false;
 	public boolean MENU_inPokeDex = false;
 	public boolean MENU_inPokemon = false;

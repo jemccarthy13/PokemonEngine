@@ -1,5 +1,6 @@
 package utilities;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 
 // ////////////////////////////////////////////////////////////////////////
@@ -9,7 +10,10 @@ import java.text.DecimalFormat;
 // TODO will need to adjust for saved/loaded games - running total + offset
 //
 // ////////////////////////////////////////////////////////////////////////
-public class TimeStruct {
+public class TimeStruct implements Serializable {
+
+	private static final long serialVersionUID = 6901548663761911865L;
+
 	public int seconds = 0;
 	public int hours = 0;
 	public int minutes = 0;
