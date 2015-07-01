@@ -98,4 +98,26 @@ public class RandomNumUtils {
 		}
 		return 3;
 	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// isWildEncounter - with a frequency, determine if this wild tile will
+	// be a pokemon encounter
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public static boolean isWildEncounter() {
+		// common: 10
+		// rather common: 8.5
+		// semi-rare: 6.75
+		// rare: 3.33
+		// very rare: 1.25
+
+		float rarity = (float) 8.5;
+
+		boolean isEncounter = false;
+		if (generateRandom(0, 188) < rarity) {
+			isEncounter = true;
+		}
+		return isEncounter;
+	}
 }

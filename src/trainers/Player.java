@@ -90,4 +90,8 @@ public class Player extends Actor implements Serializable {
 	public Coordinate getPosition() {
 		return this.tData.position;
 	}
+
+	public void setCurLocation(Location location) {
+		this.curLoc = location;
+	}
 }

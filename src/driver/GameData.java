@@ -53,7 +53,7 @@ public class GameData implements Serializable {
 	public int menuSelection = 0;
 
 	// ==================== Setting options variables ======================//
-	public boolean option_sound = true;
+	public boolean option_sound = false;
 	// ======================== User Data ==================================//
 	public Player player;
 	public int currentSpeed = PLAYER_SPEED_WALK; // controls the speed of play

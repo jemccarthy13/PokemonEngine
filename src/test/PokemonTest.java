@@ -14,11 +14,8 @@ import pokedex.PokemonFactory;
 // ////////////////////////////////////////////////////////////////////////
 public class PokemonTest {
 	public static void testPokemon() {
-
-		PokemonFactory pLib = PokemonFactory.getInstance();
-
-		Pokemon bulbasaur = pLib.createPokemon("Bulbasaur", 5);
-		Pokemon bulbasaur2 = pLib.createPokemon("Bulbasaur", 10);
+		Pokemon bulbasaur = PokemonFactory.createPokemon("Bulbasaur", 5);
+		Pokemon bulbasaur2 = PokemonFactory.createPokemon("Bulbasaur", 10);
 
 		System.out.println(bulbasaur.toString());
 

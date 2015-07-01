@@ -121,7 +121,7 @@ public class PokemonFactory extends HashMap<String, PokemonData> {
 	// Get the data from the Pokemon map, and create a new pokemon at given lvl
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public Pokemon createPokemon(String name, int level) {
+	public static Pokemon createPokemon(String name, int level) {
 		return new Pokemon(m_instance.get(name), level);
 	}
 

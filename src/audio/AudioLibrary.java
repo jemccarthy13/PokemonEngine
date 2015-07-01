@@ -89,21 +89,23 @@ public class AudioLibrary {
 	// Given a midi track title, play the associated midi file
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public void playBackgroundMusic(String songTitle) {
-		// stop the current track, if playing
-		if (m_currentTrack != null) {
-			m_currentTrack.stop();
-			m_currentTrack = null;
-		}
-
-		// switch to the next track and play, if the track is valid
-		if (m_trackList.containsKey(songTitle)) {
-			m_currentTrack = getInstance().m_trackList.get(songTitle);
+	public void playBackgroundMusic(String songTitle, boolean option_sound) {
+		if (option_sound) {
+			// stop the current track, if playing
 			if (m_currentTrack != null) {
-				m_currentTrack.start();
+				m_currentTrack.stop();
+				m_currentTrack = null;
 			}
-		} else {
-			System.err.println("Can't play " + songTitle);
+
+			// switch to the next track and play, if the track is valid
+			if (m_trackList.containsKey(songTitle)) {
+				m_currentTrack = getInstance().m_trackList.get(songTitle);
+				if (m_currentTrack != null) {
+					m_currentTrack.start();
+				}
+			} else {
+				System.err.println("Can't play " + songTitle);
+			}
 		}
 	}
 
@@ -114,11 +116,13 @@ public class AudioLibrary {
 	// TODO - Looks like no encounter tracks are loaded
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public void pickTrainerMusic() {
-		if (m_encounterTracks.size() > 0) {
-			int choice = RandomNumUtils.generateRandom(m_encounterTracks.size(), 0);
-			String songTitle = m_encounterTracks.get(choice);
-			this.playBackgroundMusic(songTitle);
+	public void pickTrainerMusic(boolean option_sound) {
+		if (option_sound) {
+			if (m_encounterTracks.size() > 0) {
+				int choice = RandomNumUtils.generateRandom(m_encounterTracks.size(), 0);
+				String songTitle = m_encounterTracks.get(choice);
+				this.playBackgroundMusic(songTitle, true);
+			}
 		}
 	}
 

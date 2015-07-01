@@ -167,7 +167,7 @@ public class BattleEngine {
 
 		// reset the music, add to beaten trainers
 		AudioLibrary.getInstance().pauseBackgrondMusic();
-		AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown");
+		AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown", game.gData.option_sound);
 		game.gData.player.beatenTrainers.add(enemyName);
 		game.gData.playerWin = false;
 		game.movable = true;

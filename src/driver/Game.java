@@ -28,6 +28,7 @@ import tiles.TileSet;
 import trainers.Actor.DIR;
 import trainers.NPC;
 import trainers.NPCLibrary;
+import utilities.RandomNumUtils;
 
 // ////////////////////////////////////////////////////////////////////////
 //
@@ -163,7 +164,9 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 				gData.player.move(playerDir);
 				// check for wild encounter
 				if (gData.tm.getTileAt(gData.player.getPosition()) == TileSet.WILD_TILE) {
-					System.err.println("ON WILD TILE");
+					if (RandomNumUtils.isWildEncounter()) {
+						System.err.println("IS WILD ENOUNTER! " + gData.player.getCurLoc().getName());
+					}
 				}
 			}
 			for (Pokemon p : playerPokemon) { // deal PZN/BRN damage
@@ -179,7 +182,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 					&& !gData.inMenu) {
 				NPCTHREAD.stop = true;
 				enemyTrainerAnimation(curNPC);
-				AudioLibrary.getInstance().playBackgroundMusic("TrainerBattle");
+				AudioLibrary.getInstance().playBackgroundMusic("TrainerBattle", gData.option_sound);
 				movable = false;
 				gData.inBattle = true;
 				BattleEngine.getInstance().fight(curNPC.getPokemon(), this, curNPC.getName());
@@ -227,7 +230,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 	// ////////////////////////////////////////////////////////////////////////
 	private void enemyTrainerAnimation(NPC curNPC) {
 
-		AudioLibrary.getInstance().pickTrainerMusic();
+		AudioLibrary.getInstance().pickTrainerMusic(gData.option_sound);
 
 		try { // wait for ! before moving
 			Thread.sleep(2000);
@@ -288,7 +291,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 			// title screen "press enter"
 			if (keyCode == KeyEvent.VK_ENTER) {
 				gData.atTitle = false;
-				AudioLibrary.getInstance().playBackgroundMusic("Continue");
+				AudioLibrary.getInstance().playBackgroundMusic("Continue", gData.option_sound);
 				gData.atContinueScreen = true;
 			}
 		} else if (gData.atContinueScreen) {
@@ -315,7 +318,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 			if (keyCode == KeyEvent.VK_Z) {
 				gData.introStage += 2;
 				if (gData.introStage > NPCLibrary.getInstance().get("Professor Oak").getTextLength() - 1) {
-					AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown");
+					AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown", gData.option_sound);
 					gData.inIntro = !gData.inIntro;
 				} else if (gData.introStage == 15) {
 					gData.inNameScreen = true;

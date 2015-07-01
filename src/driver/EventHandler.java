@@ -351,7 +351,8 @@ public class EventHandler {
 				if (game.menuScreen.MENU_currentSelectionOption == 5) {
 					game.gData.option_sound = !game.gData.option_sound;
 					if (game.gData.option_sound) {
-						AudioLibrary.getInstance().playBackgroundMusic(game.gData.player.getCurLoc().getName());
+						AudioLibrary.getInstance().playBackgroundMusic(game.gData.player.getCurLoc().getName(),
+								game.gData.option_sound);
 					} else {
 						AudioLibrary.getInstance().pauseBackgrondMusic();
 					}

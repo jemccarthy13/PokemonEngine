@@ -4,6 +4,20 @@ For now this will be the location of any @TODO action items, desired features, a
 
 Also documented will be known bugs.
 
+===================================================================
+Version 2.0.0                                           30 June 2015
+===================================================================
+Features:
+- Version 1.0.1 +
+- Restructured framework (again), with run time enhancements
+- Data files converted to JSON, removed python converters
+- Enhancements to battle engine and graphics
+- Can toggle sound in option menu
+- Prof Elm intro scenes work
+- "Random" wild pokemon works, and can battle
+
+TODO/KNOWN BUGS:
+- See repository issues page
 
 ===================================================================
 Version 1.1.0                                           23 Jan 2014

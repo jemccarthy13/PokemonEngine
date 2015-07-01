@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import audio.AudioLibrary;
+import location.LocationLibrary;
 import pokedex.Pokemon;
 import pokedex.PokemonFactory;
 import tiles.Coordinate;
@@ -49,20 +50,22 @@ public class GameInitializer {
 		if (continued) {
 			String name = "GOLD";
 			game.gData.player = new Player(6, 10, name);
-			Pokemon charmander = PokemonFactory.getInstance().createPokemon("Charmander", 90);
+			Pokemon charmander = PokemonFactory.createPokemon("Charmander", 90);
 			game.gData.player.caughtPokemon(charmander);
 			game.gData.player.setMoney(1000000);
 			game.gData.timeStarted = System.currentTimeMillis();
-			AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown");
+			game.gData.player.setCurLocation(LocationLibrary.getLocation("Route 29"));
+			AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown", game.gData.option_sound);
 		} else {
 			String name = "GOLD";
 			game.gData.player = new Player(50, 20, name);
-			Pokemon charmander = PokemonFactory.getInstance().createPokemon("Rattatta", 5);
+			Pokemon charmander = PokemonFactory.createPokemon("Rattatta", 5);
 			game.gData.player.caughtPokemon(charmander);
 			game.gData.player.setMoney(2000);
 			game.gData.inIntro = true;
 			game.gData.timeStarted = System.currentTimeMillis();
-			AudioLibrary.getInstance().playBackgroundMusic("Intro");
+			game.gData.player.setCurLocation(LocationLibrary.getLocation("Route 29"));
+			AudioLibrary.getInstance().playBackgroundMusic("Intro", game.gData.option_sound);
 		}
 		game.gData.start_coorX = (Tile.TILESIZE * (8 - game.gData.player.getCurrentX()));
 		game.gData.start_coorY = (Tile.TILESIZE * (6 - game.gData.player.getCurrentY()));

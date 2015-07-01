@@ -25,6 +25,8 @@ public class GameFrame extends JFrame {
 		pokemonGame.setFocusable(true);
 		pokemonGame.requestFocus();
 		add(pokemonGame);
+
+		AudioLibrary.getInstance().playBackgroundMusic("Title", pokemonGame.gData.option_sound);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -40,7 +42,5 @@ public class GameFrame extends JFrame {
 		pf.setResizable(false);
 		pf.pack();
 		pf.setLocationRelativeTo(null);
-
-		AudioLibrary.getInstance().playBackgroundMusic("Title");
 	}
 }
