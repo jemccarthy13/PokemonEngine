@@ -14,9 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import audio.AudioLibrary;
-import graphics.BattleEngine;
 import graphics.MenuScene;
-import graphics.NPCThread;
 import graphics.NameScene;
 import graphics.Painter;
 import pokedex.Pokemon;
@@ -28,7 +26,9 @@ import tiles.TileSet;
 import trainers.Actor;
 import trainers.Actor.DIR;
 import trainers.NPCLibrary;
+import utilities.BattleEngine;
 import utilities.Coordinate;
+import utilities.NPCThread;
 import utilities.RandomNumUtils;
 
 // ////////////////////////////////////////////////////////////////////////

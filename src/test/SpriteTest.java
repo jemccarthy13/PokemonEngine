@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import graphics.NPCThread;
 import trainers.Actor;
 import trainers.NPCLibrary;
+import utilities.NPCThread;
 
 //////////////////////////////////////////////////////////////////////////
 //

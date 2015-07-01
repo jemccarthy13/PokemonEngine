@@ -1,8 +1,7 @@
-package graphics;
+package utilities;
 
 import trainers.Actor;
 import trainers.NPCLibrary;
-import utilities.RandomNumUtils;
 
 // ////////////////////////////////////////////////////////////////////////////
 //

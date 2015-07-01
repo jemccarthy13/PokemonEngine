@@ -4,7 +4,6 @@ import java.awt.event.KeyEvent;
 import java.util.Random;
 
 import audio.AudioLibrary;
-import graphics.BattleEngine;
 import graphics.SpriteLibrary;
 import pokedex.MoveData;
 import pokedex.Pokemon;
@@ -12,6 +11,7 @@ import pokedex.Pokemon.STATS;
 import trainers.Actor;
 import trainers.Actor.DIR;
 import trainers.NPCLibrary;
+import utilities.BattleEngine;
 import utilities.RandomNumUtils;
 
 // ////////////////////////////////////////////////////////////////////////

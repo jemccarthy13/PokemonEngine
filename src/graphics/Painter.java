@@ -19,6 +19,7 @@ import tiles.TileSet;
 import trainers.Actor;
 import trainers.NPCLibrary;
 import trainers.Player;
+import utilities.BattleEngine;
 import utilities.Utils;
 
 // ////////////////////////////////////////////////////////////////////////////

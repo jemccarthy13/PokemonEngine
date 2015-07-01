@@ -1,14 +1,14 @@
-package graphics;
+package utilities;
 
 import java.util.Random;
 
 import audio.AudioLibrary;
 import driver.Game;
+import graphics.SpriteLibrary;
 import pokedex.MoveData;
 import pokedex.Pokemon;
 import pokedex.Pokemon.STATS;
 import pokedex.PokemonList;
-import utilities.RandomNumUtils;
 
 //////////////////////////////////////////////////////////////////////////
 //
