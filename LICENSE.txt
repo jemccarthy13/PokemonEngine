@@ -1,6 +1,11 @@
 Copyright (c) 2000-2006, John E. McCarthy
 All rights reserved.
 
+This software, images, music, sounds, media, and anything related to this
+software is provided for educational purposes on the programming techniques 
+and styles practiced herein. These items may be protected by copyright laws
+and any uses of such must satisfy fair use practices.
+
 Redistribution and use in source and binary forms, with or without 
 modification, are permitted provided that the following conditions are met:
 

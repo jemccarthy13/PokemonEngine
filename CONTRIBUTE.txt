@@ -6,13 +6,16 @@ as follows:
 ===============================================================================
 COMPONENT:  |  DEALS WITH:
 ===============================================================================
+audio       |  everything music - sounds / background music
+driver      |  drives game logic by handling keystrokes and threads
 graphics    |  image library files
-driver      |  code responsible for game events
-interface   |  code responsible for graphics
-backend     |  Utils, 'global' enums / constants, etc
-data        |  load/save/initialization files
-audio       |  audio library files
-midiplayer  | code responsible for managing audio
+location    |  information storage for locations
+mapmaker    |  makes tile-based maps for the game
+pokedex     |  data storage for moves, pokemon / pokemon creation
+test        |  unit & functional tests for the software
+tiles       |  map tils (obstacles, walkable, battle encounter)
+trainers    |  NPCs and Player - people to interact with in-game
+utilities   |  deals with random number generation, data storage, data processing
 ===============================================================================
 
 Changes that can be made are as follows:

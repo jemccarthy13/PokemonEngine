@@ -8,13 +8,16 @@ Also documented will be known bugs.
 Version 2.0.0                                           30 June 2015
 ===================================================================
 Features:
-- Version 1.0.1 +
+- Prior versions+
 - Restructured framework (again), with run time enhancements
 - Data files converted to JSON, removed python converters
 - Enhancements to battle engine and graphics
 - Can toggle sound in option menu
 - Prof Elm intro scenes work
-- "Random" wild pokemon works, and can battle
+- Random wild pokemon works, and can battle
+- Warnings hunt completed
+- Graphics bugs on Unix-based OS fixed
+- Deprecated unneeded classes
 
 TODO/KNOWN BUGS:
 - See repository issues page
