@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import driver.GameData;
 import trainers.Actor.DIR;
+import utilities.Coordinate;
 
 // ////////////////////////////////////////////////////////////////////////
 //

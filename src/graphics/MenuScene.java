@@ -1,6 +1,6 @@
 package graphics;
 
-import trainers.NPC;
+import trainers.Actor;
 
 // ////////////////////////////////////////////////////////////////////////
 //
@@ -30,7 +30,7 @@ public class MenuScene {
 
 	public int MENU_stage = 0;
 
-	public NPC MENU_conversation;
+	public Actor MENU_NPC;
 
 	public MenuScene() {
 		this.MENU_currentSelectionMain = 2;
@@ -84,15 +84,15 @@ public class MenuScene {
 		this.MENU_inMain = false;
 		this.MENU_inConversation = false;
 
-		if (this.MENU_conversation != null) {
-			this.MENU_conversation.setStationary(false);
+		if (this.MENU_NPC != null) {
+			this.MENU_NPC.setStationary(false);
 		}
 	}
 
-	public void Message(NPC borderNPC) {
+	public void Message(Actor borderNPC) {
 		this.MENU_inMain = false;
 		this.MENU_inConversation = true;
-		this.MENU_conversation = borderNPC;
-		this.MENU_conversation.setStationary(true);
+		this.MENU_NPC = borderNPC;
+		this.MENU_NPC.setStationary(true);
 	}
 }

@@ -16,7 +16,7 @@ import pokedex.Pokemon.STATS;
 import pokedex.PokemonList;
 import tiles.Tile;
 import tiles.TileSet;
-import trainers.NPC;
+import trainers.Actor;
 import trainers.NPCLibrary;
 import trainers.Player;
 import utilities.Utils;
@@ -163,15 +163,15 @@ public class Painter extends JPanel {
 		if (BattleEngine.getInstance().inFight) {
 
 			g.drawImage(SpriteLibrary.BATTLE_FIGHTBG, 0, 0, null);
-			g.drawString(playerPokemon.getMove(0).getName(), 200, 260);
+			g.drawString(playerPokemon.getMove(0).name, 200, 260);
 			if (playerPokemon.getNumMoves() > 1) {
-				g.drawString(playerPokemon.getMove(1).getName(), 345, 260);
+				g.drawString(playerPokemon.getMove(1).name, 345, 260);
 			}
 			if (playerPokemon.getNumMoves() > 2) {
-				g.drawString(playerPokemon.getMove(2).getName(), 200, 290);
+				g.drawString(playerPokemon.getMove(2).name, 200, 290);
 			}
 			if (playerPokemon.getNumMoves() > 3) {
-				g.drawString(playerPokemon.getMove(3).getName(), 345, 290);
+				g.drawString(playerPokemon.getMove(3).name, 345, 290);
 			}
 
 			if ((BattleEngine.getInstance().currentSelectionFightX == 0)
@@ -361,7 +361,7 @@ public class Painter extends JPanel {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	private static void paintConversation(Graphics g, MenuScene menu) {
-		Utils.messageBox(g, menu.MENU_conversation.getText(menu.MENU_stage));
+		Utils.messageBox(g, menu.MENU_NPC.getText(menu.MENU_stage));
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -417,7 +417,7 @@ public class Painter extends JPanel {
 			}
 		}
 
-		for (NPC curNPC : NPCLibrary.getInstance().values()) {
+		for (Actor curNPC : NPCLibrary.getInstance().values()) {
 			g.drawImage(curNPC.getSprite(), curNPC.getCurrentX() * 32 + gameData.start_coorX,
 					curNPC.getCurrentY() * 32 + gameData.start_coorY - 10, null);
 			gameData.tm.set(curNPC.tData.position, TileSet.OBSTACLE);

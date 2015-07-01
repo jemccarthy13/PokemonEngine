@@ -4,8 +4,8 @@ import java.awt.Image;
 import java.util.ArrayList;
 
 import pokedex.PokemonList;
-import tiles.Coordinate;
 import trainers.Actor.DIR;
+import utilities.Coordinate;
 
 // ////////////////////////////////////////////////////////////////////////
 //

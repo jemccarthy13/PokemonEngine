@@ -5,6 +5,7 @@ import java.awt.Toolkit;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 // ////////////////////////////////////////////////////////////////////////
@@ -240,6 +241,11 @@ public class SpriteLibrary extends HashMap<String, ArrayList<Image>> {
 					// gather a group of all relevant sprites, and map to name
 					File f = new File(npcFilePath + npcCharacter);
 					String[] files = f.list();
+
+					// make sure files load in the proper order expected for
+					// walking/direction animations
+					Arrays.sort(files);
+
 					ArrayList<Image> spriteGroup = new ArrayList<Image>();
 					for (String directionImage : files) {
 						spriteGroup.add(createImage(npcFilePath + npcCharacter + "/" + directionImage));

@@ -12,7 +12,7 @@ import org.json.simple.parser.JSONParser;
 import graphics.SpriteLibrary;
 import pokedex.PokemonFactory;
 import pokedex.PokemonList;
-import tiles.Coordinate;
+import utilities.Coordinate;
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -20,7 +20,7 @@ import tiles.Coordinate;
 // the list of active NPCs
 //
 //////////////////////////////////////////////////////////////////////////
-public class NPCLibrary extends HashMap<String, NPC> {
+public class NPCLibrary extends HashMap<String, Actor> {
 
 	private static final long serialVersionUID = 3371121853217236345L;
 	private static NPCLibrary m_instance = new NPCLibrary();

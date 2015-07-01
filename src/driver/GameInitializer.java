@@ -10,10 +10,10 @@ import audio.AudioLibrary;
 import location.LocationLibrary;
 import pokedex.Pokemon;
 import pokedex.PokemonFactory;
-import tiles.Coordinate;
 import tiles.Tile;
 import tiles.TileSet;
 import trainers.Player;
+import utilities.Coordinate;
 
 //////////////////////////////////////////////////////////////////////////
 //

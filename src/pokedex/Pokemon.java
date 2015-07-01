@@ -17,7 +17,7 @@ public class Pokemon implements Serializable {
 	int evolution_stage = 0;
 	int level;
 	boolean participated = false;
-	Move[] moves = new Move[4];
+	MoveData[] moves = new MoveData[4];
 	public Integer[] stats = new Integer[7];
 	Integer[] max_stats = new Integer[7];
 	Integer accuracy = Integer.valueOf(100);
@@ -228,7 +228,7 @@ public class Pokemon implements Serializable {
 	// getMove - return the chosen move
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public Move getMove(int choice) {
+	public MoveData getMove(int choice) {
 		return moves[choice];
 	}
 
@@ -239,8 +239,8 @@ public class Pokemon implements Serializable {
 	// ////////////////////////////////////////////////////////////////////////
 	public int getNumMoves() {
 		int count = 0;
-		for (Move x : moves) {
-			if (x != null) {
+		for (MoveData move : moves) {
+			if (move != null) {
 				count++;
 			}
 		}

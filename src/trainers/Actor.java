@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import graphics.SpriteLibrary;
 import pokedex.Pokemon;
 import pokedex.PokemonList;
-import tiles.Coordinate;
+import utilities.Coordinate;
 
 //////////////////////////////////////////////////////////////////////////
 //

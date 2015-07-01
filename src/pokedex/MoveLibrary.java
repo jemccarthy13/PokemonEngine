@@ -10,7 +10,7 @@ import java.util.Scanner;
 // in that file
 //
 // ////////////////////////////////////////////////////////////////////////
-public class MoveLibrary extends HashMap<String, Move> {
+public class MoveLibrary extends HashMap<String, MoveData> {
 
 	static MoveLibrary m_instance = new MoveLibrary();
 	private static final long serialVersionUID = 1L;
@@ -27,8 +27,8 @@ public class MoveLibrary extends HashMap<String, Move> {
 			fs = new FileInputStream(filePath);
 			Scanner s = new Scanner(fs);
 			while (s.hasNext()) {
-				Move m = new Move(new MoveData(s.nextLine()));
-				put(m.getName(), m);
+				MoveData m = new MoveData(s.nextLine());
+				put(m.name, m);
 			}
 			s.close();
 		} catch (Exception e) {

@@ -9,17 +9,16 @@ import java.text.DecimalFormat;
 // TODO will need to adjust for saved/loaded games - running total + offset
 //
 // ////////////////////////////////////////////////////////////////////////
-@SuppressWarnings("static-access")
 public class TimeStruct {
-	private static int seconds = 0;
-	private static int hours = 0;
-	private static int minutes = 0;
+	public int seconds = 0;
+	public int hours = 0;
+	public int minutes = 0;
 
 	public void updateTime(long timeStarted) {
-		setSeconds(((int) ((System.currentTimeMillis() - timeStarted) / 1000L)));
-		setHours((getSeconds() / 3600));
-		setMinutes(((getSeconds() - getHours() * 3600) / 60));
-		setSeconds((getSeconds() - getHours() * 3600 - getMinutes() * 60));
+		seconds = (((int) ((System.currentTimeMillis() - timeStarted) / 1000L)));
+		hours = seconds / 3600;
+		minutes = (seconds - hours * 3600) / 60;
+		seconds = (seconds - hours * 3600 - minutes * 60);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -29,30 +28,6 @@ public class TimeStruct {
 	// ////////////////////////////////////////////////////////////////////////
 	public String formatTime() {
 		DecimalFormat df = new DecimalFormat("00");
-		return df.format(getHours()) + ": " + df.format(getMinutes()) + ": " + df.format(getSeconds());
-	}
-
-	public static int getHours() {
-		return hours;
-	}
-
-	public void setHours(int hours) {
-		this.hours = hours;
-	}
-
-	public static int getMinutes() {
-		return minutes;
-	}
-
-	public void setMinutes(int minutes) {
-		this.minutes = minutes;
-	}
-
-	public static int getSeconds() {
-		return seconds;
-	}
-
-	public void setSeconds(int seconds) {
-		this.seconds = seconds;
+		return df.format(hours) + ": " + df.format(minutes) + ": " + df.format(seconds);
 	}
 }

@@ -4,7 +4,7 @@ import java.util.Random;
 
 import audio.AudioLibrary;
 import driver.Game;
-import pokedex.Move;
+import pokedex.MoveData;
 import pokedex.Pokemon;
 import pokedex.Pokemon.STATS;
 import pokedex.PokemonList;
@@ -68,6 +68,10 @@ public class BattleEngine {
 		m_instance.inMain = true;
 		m_instance.playerTurn = true;
 		m_instance.enemyName = opponentName;
+
+		g.movable = false;
+		g.gData.inBattle = true;
+
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -228,27 +232,27 @@ public class BattleEngine {
 				if (rand <= 0) {
 					int choice = RandomNumUtils.generateRandom(0,
 							((Pokemon) this.enemyPokemon.get(0)).getNumMoves() - 1);
-					Move chosen = ((Pokemon) this.enemyPokemon.get(0)).getMove(choice);
+					MoveData chosen = ((Pokemon) this.enemyPokemon.get(0)).getMove(choice);
 					int attackStat = 0;
 					int defStat = 0;
-					if (chosen.getType().equals("PHYSICAL")) {
+					if (chosen.type.equals("PHYSICAL")) {
 						attackStat = ((Pokemon) this.enemyPokemon.get(0)).getStat(STATS.ATTACK);
 						defStat = this.playerCurrentPokemon.getStat(STATS.DEFENSE);
 					}
-					if (chosen.getType().equals("SPECIAL")) {
+					if (chosen.type.equals("SPECIAL")) {
 						attackStat = ((Pokemon) this.enemyPokemon.get(0)).getStat(STATS.SP_ATTACK);
 						defStat = this.playerCurrentPokemon.getStat(STATS.SP_DEFENSE);
 					}
 					int damage = 0;
-					if (!chosen.getType().equals("STAT")) {
-						damage = (int) (((2 * ((Pokemon) this.enemyPokemon.get(0)).getLevel() / 5 + 2)
-								* chosen.getStrength() * attackStat / 50 / defStat + 2)
-								* RandomNumUtils.generateRandom(85, 100) / 100.0);
+					if (!chosen.type.equals("STAT")) {
+						damage = (int) (((2 * ((Pokemon) this.enemyPokemon.get(0)).getLevel() / 5 + 2) * chosen.power
+								* attackStat / 50 / defStat + 2) * RandomNumUtils.generateRandom(85, 100) / 100.0);
 					}
 					this.playerCurrentPokemon.doDamage(damage);
 					AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_DAMAGE,
 							this.game.gData.option_sound);
 					System.out.println("Enemy's turn is over");
+					chosen.movePP--;
 				} else {
 					System.out
 							.println(((Pokemon) this.enemyPokemon.get(0)).getName() + " is paralyzed. It can't move.");
@@ -256,26 +260,26 @@ public class BattleEngine {
 			} else {
 				// otherwise do nomral battle order of events
 				int choice = RandomNumUtils.generateRandom(0, ((Pokemon) this.enemyPokemon.get(0)).getNumMoves() - 1);
-				Move chosen = ((Pokemon) this.enemyPokemon.get(0)).getMove(choice);
+				MoveData chosen = ((Pokemon) this.enemyPokemon.get(0)).getMove(choice);
 
 				int attackStat = 0;
 				int defStat = 1;
-				if (chosen.getType().equals("PHYSICAL")) {
+				if (chosen.type.equals("PHYSICAL")) {
 					attackStat = ((Pokemon) this.enemyPokemon.get(0)).getStat(STATS.ATTACK);
 					defStat = this.playerCurrentPokemon.getStat(STATS.DEFENSE);
 				}
-				if (chosen.getType().equals("SPECIAL")) {
+				if (chosen.type.equals("SPECIAL")) {
 					attackStat = ((Pokemon) this.enemyPokemon.get(0)).getStat(STATS.SP_ATTACK);
 					defStat = this.playerCurrentPokemon.getStat(STATS.SP_DEFENSE);
 				}
-				if (!chosen.getType().equals("STAT")) {
+				if (!chosen.type.equals("STAT")) {
 					@SuppressWarnings("unused")
-					int damage = (int) (((2 * ((Pokemon) this.enemyPokemon.get(0)).getLevel() / 5 + 2)
-							* chosen.getStrength() * attackStat / defStat / 50 + 2)
-							* RandomNumUtils.generateRandom(85, 100) / 100.0D);
+					int damage = (int) (((2 * ((Pokemon) this.enemyPokemon.get(0)).getLevel() / 5 + 2) * chosen.power
+							* attackStat / defStat / 50 + 2) * RandomNumUtils.generateRandom(85, 100) / 100.0D);
 
 					// TODO implement stat damage types
 				}
+				chosen.movePP--;
 				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_SELECT, this.game.gData.option_sound);
 			}
 			if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 2) {

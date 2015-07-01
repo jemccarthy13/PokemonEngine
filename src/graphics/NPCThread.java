@@ -1,6 +1,6 @@
 package graphics;
 
-import trainers.NPC;
+import trainers.Actor;
 import trainers.NPCLibrary;
 import utilities.RandomNumUtils;
 
@@ -21,7 +21,7 @@ public class NPCThread extends Thread {
 				break;
 			}
 			// otherwise move each NPC
-			for (NPC other : NPCLibrary.getInstance().values()) {
+			for (Actor other : NPCLibrary.getInstance().values()) {
 				if ((other != null) && (!other.isStationary())) {
 					other.setSpriteFacing(RandomNumUtils.randomDirection());
 				}

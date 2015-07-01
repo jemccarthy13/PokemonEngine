@@ -3,8 +3,8 @@ package location;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import tiles.Coordinate;
 import trainers.Actor.DIR;
+import utilities.Coordinate;
 
 // ////////////////////////////////////////////////////////////////////////
 //

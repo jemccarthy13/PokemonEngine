@@ -1,7 +1,5 @@
 package test;
 
-import graphics.NPCThread;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -10,7 +8,8 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import trainers.NPC;
+import graphics.NPCThread;
+import trainers.Actor;
 import trainers.NPCLibrary;
 
 //////////////////////////////////////////////////////////////////////////
@@ -26,7 +25,7 @@ public class SpriteTest extends JFrame {
 
 	static ArrayList<Image> sprites = new ArrayList<Image>();
 
-	NPC sam = NPCLibrary.getInstance().get("Joey");
+	Actor sam = NPCLibrary.getInstance().get("Joey");
 
 	JPanel p = new JPanel() {
 		private static final long serialVersionUID = 7322676857941810785L;

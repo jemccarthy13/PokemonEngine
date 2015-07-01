@@ -6,11 +6,11 @@ import java.util.Random;
 import audio.AudioLibrary;
 import graphics.BattleEngine;
 import graphics.SpriteLibrary;
-import pokedex.Move;
+import pokedex.MoveData;
 import pokedex.Pokemon;
 import pokedex.Pokemon.STATS;
+import trainers.Actor;
 import trainers.Actor.DIR;
-import trainers.NPC;
 import trainers.NPCLibrary;
 import utilities.RandomNumUtils;
 
@@ -175,31 +175,32 @@ public class EventHandler {
 	// evaluateAndDealDamage - based on the seleted move and whether or not
 	// the pokemon was parlyzed, calculate the damage and deal it
 	//
-	// TODO - make this usable by the enemy as well. Possibly move to Utils
+	// TODO - make this usable by the enemy as well. Possibly move to
+	// BattleEngine
 	// ////////////////////////////////////////////////////////////////////////
 	private void evaluateAndDealDamage(boolean checkPar, Pokemon playerPokemon, int move) {
 		Random r = new Random();
 		boolean par = (checkPar) ? r.nextInt(2) < 0 : false;
 		if (!par) {
-			Move chosen = playerPokemon.getMove(move);
+			MoveData chosen = playerPokemon.getMove(move);
 
 			int attackStat = 0;
 			int defStat = 0;
-			if (chosen.getType().equals("PHYSICAL")) {
-				attackStat = playerPokemon.getStat(STATS.ATTACK);
-				defStat = BattleEngine.getInstance().enemyPokemon.get(0).getStat(STATS.DEFENSE);
-			}
-			if (chosen.getType().equals("SPECIAL")) {
+
+			if (chosen.isStat) {
+				// TODO - logic for stat based moves
 				attackStat = playerPokemon.getStat(STATS.SP_ATTACK);
 				defStat = BattleEngine.getInstance().enemyPokemon.get(0).getStat(STATS.SP_DEFENSE);
-			}
-			int damage = 0;
-			if (!chosen.getType().equals("STAT")) {
-				damage = (int) (((2 * playerPokemon.getLevel() / 5 + 2) * chosen.getStrength() * attackStat / defStat
-						/ 50 + 2) * RandomNumUtils.generateRandom(85, 100) / 100.0);
+			} else {
+				// calculate and deal physical damage
+				attackStat = playerPokemon.getStat(STATS.ATTACK);
+				defStat = BattleEngine.getInstance().enemyPokemon.get(0).getStat(STATS.DEFENSE);
+				int damage = (int) (((2 * playerPokemon.getLevel() / 5 + 2) * chosen.power * attackStat / defStat / 50
+						+ 2) * RandomNumUtils.generateRandom(85, 100) / 100.0);
 				((Pokemon) BattleEngine.getInstance().enemyPokemon.get(0)).doDamage(damage);
 				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_DAMAGE, this.game.gData.option_sound);
 			}
+			chosen.movePP--;
 		} else {
 			System.out.println(playerPokemon.getName() + " is paralyzed. It can't move.");
 		}
@@ -416,12 +417,12 @@ public class EventHandler {
 			game.gData.inMenu = true;
 		} else if (keyCode == KeyEvent.VK_Z) {
 			AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_SELECT, game.gData.option_sound);
-			NPC borderNPC = null;
+			Actor borderNPC = null;
 			// overhead cost for following logic
 			DIR playerDir = game.gData.player.getDir();
 			int playerCurX = game.gData.player.getCurrentX();
 			int playerCurY = game.gData.player.getCurrentY();
-			for (NPC curNPC : NPCLibrary.getInstance().values()) {
+			for (Actor curNPC : NPCLibrary.getInstance().values()) {
 				int NPC_X = curNPC.getCurrentX();
 				int NPC_Y = curNPC.getCurrentY();
 				if (playerDir == DIR.WEST) {

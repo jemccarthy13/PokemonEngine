@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import location.Location;
 import location.LocationLibrary;
-import tiles.Coordinate;
+import utilities.Coordinate;
 import utilities.RandomNumUtils;
 
 //////////////////////////////////////////////////////////////////////////
@@ -17,7 +17,7 @@ public class Player extends Actor implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	NPC rival;
+	Actor rival;
 	public ArrayList<String> beatenTrainers = new ArrayList<String>();
 	private int badges = 0;
 	private int id;
@@ -50,7 +50,7 @@ public class Player extends Actor implements Serializable {
 	// beatTrainer - adds the beaten NPC to the list of beaten trainers
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public void beatTrainer(NPC t) {
+	public void beatTrainer(Actor t) {
 		this.beatenTrainers.add(t.getName());
 	}
 

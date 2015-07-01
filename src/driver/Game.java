@@ -21,13 +21,14 @@ import graphics.NameScene;
 import graphics.Painter;
 import pokedex.Pokemon;
 import pokedex.Pokemon.STATS;
+import pokedex.PokemonFactory;
 import pokedex.PokemonList;
-import tiles.Coordinate;
 import tiles.Tile;
 import tiles.TileSet;
+import trainers.Actor;
 import trainers.Actor.DIR;
-import trainers.NPC;
 import trainers.NPCLibrary;
+import utilities.Coordinate;
 import utilities.RandomNumUtils;
 
 // ////////////////////////////////////////////////////////////////////////
@@ -54,6 +55,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 	public EventHandler eventHandler;
 	// ======================== Game logic Data =============================//
 	public GameData gData = new GameData();
+	public PokemonList enemyPkmn = new PokemonList();
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
@@ -165,7 +167,10 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 				// check for wild encounter
 				if (gData.tm.getTileAt(gData.player.getPosition()) == TileSet.WILD_TILE) {
 					if (RandomNumUtils.isWildEncounter()) {
-						System.err.println("IS WILD ENOUNTER! " + gData.player.getCurLoc().getName());
+						System.out.println("wild pokemon encountered!");
+						enemyPkmn.clear();
+						enemyPkmn.add(PokemonFactory.getInstance().randomPokemon(gData.player.getCurLoc()));
+						BattleEngine.getInstance().fight(enemyPkmn, this, null);
 					}
 				}
 			}
@@ -176,15 +181,13 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 		}
 
 		// check for trainer encounter with any NPC
-		for (NPC curNPC : NPCLibrary.getInstance().values()) {
+		for (Actor curNPC : NPCLibrary.getInstance().values()) {
 			boolean beaten = gData.player.beatenTrainers.contains(curNPC.getName());
 			if (curNPC.isTrainer() && !walking && !gData.NOBATTLE && !beaten && npcSeesPlayer(curNPC)
 					&& !gData.inMenu) {
 				NPCTHREAD.stop = true;
 				enemyTrainerAnimation(curNPC);
 				AudioLibrary.getInstance().playBackgroundMusic("TrainerBattle", gData.option_sound);
-				movable = false;
-				gData.inBattle = true;
 				BattleEngine.getInstance().fight(curNPC.getPokemon(), this, curNPC.getName());
 			} else {
 				movable = true;
@@ -204,7 +207,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 	// WEST - rows match, playerX < NPC_X, within sight distance
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private boolean npcSeesPlayer(NPC curNPC) {
+	private boolean npcSeesPlayer(Actor curNPC) {
 		int playerCurY = gData.player.getCurrentY();
 		int playerCurX = gData.player.getCurrentX();
 		int NPC_X = curNPC.getCurrentX();
@@ -228,7 +231,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 	// TODO - NPC "!" upon beeing seen - right before Thread.sleep
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private void enemyTrainerAnimation(NPC curNPC) {
+	private void enemyTrainerAnimation(Actor curNPC) {
 
 		AudioLibrary.getInstance().pickTrainerMusic(gData.option_sound);
 

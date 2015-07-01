@@ -1,4 +1,4 @@
-package tiles;
+package utilities;
 
 import trainers.Actor.DIR;
 

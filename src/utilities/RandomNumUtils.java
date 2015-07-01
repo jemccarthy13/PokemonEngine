@@ -112,10 +112,10 @@ public class RandomNumUtils {
 		// rare: 3.33
 		// very rare: 1.25
 
-		float rarity = (float) 8.5;
+		int rarity = (int) 9;
 
 		boolean isEncounter = false;
-		if (generateRandom(0, 188) < rarity) {
+		if (generateRandom(0, 188) <= rarity) {
 			isEncounter = true;
 		}
 		return isEncounter;
