@@ -68,4 +68,11 @@ public class GameData implements Serializable {
 	public void updateTime() {
 		gameTimeStruct.updateTime(timeStarted);
 	}
+
+	public String toString() {
+		String retStr = "Player: " + "\n";
+		retStr += player.tData.toString();
+		retStr += player.toString();
+		return retStr;
+	}
 }

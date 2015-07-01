@@ -14,6 +14,7 @@ import tiles.Tile;
 import tiles.TileSet;
 import trainers.Player;
 import utilities.Coordinate;
+import utilities.Utils;
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -44,35 +45,49 @@ public class GameInitializer {
 
 		try {
 			loadMap(loadedMap);
+
+			if (continued) {
+				// String name = "GOLD";
+				// game.gData.player = new Player(6, 10, name);
+				// Pokemon charmander =
+				// PokemonFactory.createPokemon("Charmander",
+				// 90);
+				// game.gData.player.caughtPokemon(charmander);
+				// game.gData.player.setMoney(1000000);
+				// game.gData.timeStarted = System.currentTimeMillis();
+				// game.gData.player.setCurLocation(LocationLibrary.getLocation("Route
+				// 29"));
+				// AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown",
+				// game.gData.option_sound);
+				game = Utils.loadGame();
+				if (game == null) {
+					System.err.println("Unable to load game.");
+					System.exit(0);
+				}
+				if (game.gData.player.tData.isValidData()) {
+					System.out.println("is valid!");
+				} else {
+					System.err.println(game.gData.player.tData.toString());
+				}
+			} else {
+				String name = "GOLD";
+				game.gData.player = new Player(6, 10, name);
+				Pokemon charmander = PokemonFactory.createPokemon("Charmander", 90);
+				game.gData.player.caughtPokemon(charmander);
+				game.gData.player.setMoney(1000000);
+				game.gData.timeStarted = System.currentTimeMillis();
+				game.gData.player.setCurLocation(LocationLibrary.getLocation("Route 29"));
+				AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown", game.gData.option_sound);
+			}
+			game.gData.start_coorX = (Tile.TILESIZE * (8 - game.gData.player.getCurrentX()));
+			game.gData.start_coorY = (Tile.TILESIZE * (6 - game.gData.player.getCurrentY()));
+			game.gData.atTitle = false;
+			game.gData.atContinueScreen = false;
+			game.movable = true;
+			game.NPCTHREAD.start();
 		} catch (IOException e) {
-			System.out.println(e.toString());
+			System.err.println("Error initializing game.");
 		}
-		if (continued) {
-			String name = "GOLD";
-			game.gData.player = new Player(6, 10, name);
-			Pokemon charmander = PokemonFactory.createPokemon("Charmander", 90);
-			game.gData.player.caughtPokemon(charmander);
-			game.gData.player.setMoney(1000000);
-			game.gData.timeStarted = System.currentTimeMillis();
-			game.gData.player.setCurLocation(LocationLibrary.getLocation("Route 29"));
-			AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown", game.gData.option_sound);
-		} else {
-			String name = "GOLD";
-			game.gData.player = new Player(50, 20, name);
-			Pokemon charmander = PokemonFactory.createPokemon("Rattatta", 5);
-			game.gData.player.caughtPokemon(charmander);
-			game.gData.player.setMoney(2000);
-			game.gData.inIntro = true;
-			game.gData.timeStarted = System.currentTimeMillis();
-			game.gData.player.setCurLocation(LocationLibrary.getLocation("Route 29"));
-			AudioLibrary.getInstance().playBackgroundMusic("Intro", game.gData.option_sound);
-		}
-		game.gData.start_coorX = (Tile.TILESIZE * (8 - game.gData.player.getCurrentX()));
-		game.gData.start_coorY = (Tile.TILESIZE * (6 - game.gData.player.getCurrentY()));
-		game.gData.atTitle = false;
-		game.gData.atContinueScreen = false;
-		game.movable = true;
-		game.NPCTHREAD.start();
 	}
 
 	// ////////////////////////////////////////////////////////////////////////

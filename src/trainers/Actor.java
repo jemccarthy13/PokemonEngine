@@ -31,12 +31,15 @@ public class Actor {
 	// ////////////////////////////////////////////////////////////////////////
 	public Actor(int x, int y, String n) {
 		this.tData.name = n;
+		System.out.println("creating actor " + n);
 		this.tData.position = new Coordinate(x, y);
 		this.tData.money = 2000;
 		this.tData.sprites = SpriteLibrary.getInstance().getSprites("PLAYER");
 		this.tData.pokemon = new PokemonList();
 		setSpriteFacing(DIR.SOUTH);
 	}
+
+	public Actor() {}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//

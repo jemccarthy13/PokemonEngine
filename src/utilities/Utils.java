@@ -2,7 +2,9 @@ package utilities;
 
 import java.awt.Graphics;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import driver.Game;
@@ -20,7 +22,7 @@ public class Utils {
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// saveGame - writes a player object to a .SAV file
+	// saveGame - writes a game object to a .SAV file
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public static void saveGame(Game game) {
@@ -40,6 +42,33 @@ public class Utils {
 			return;
 		}
 		System.out.println("Game saved to .SAV!");
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// loadGame - loads game object from a default .SAV file
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public static Game loadGame() {
+		Game game = null;
+		FileInputStream fout = null;
+		ObjectInputStream oos = null;
+		try {
+			fout = new FileInputStream("resources/data/PokemonOrange.sav");
+			oos = new ObjectInputStream(fout);
+
+			game = (Game) oos.readObject();
+
+			System.out.println(game.gData.toString());
+			oos.close();
+			fout.close();
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			System.out.println("Unable to load game...");
+			return game;
+		}
+		System.out.println("Game loaded from .SAV!");
+		return game;
 	}
 
 	// ////////////////////////////////////////////////////////////////////////

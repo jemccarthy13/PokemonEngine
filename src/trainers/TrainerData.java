@@ -35,4 +35,11 @@ public class TrainerData {
 	public boolean isValidData() {
 		return (this.name != null && this.position != null && this.sprites != null);
 	}
+
+	public String toString() {
+		String retStr = name;
+		retStr += "\n" + position;
+		retStr += "\n" + money;
+		return retStr;
+	}
 }
