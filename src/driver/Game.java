@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.swing.JPanel;
-import javax.swing.Timer;
 
 import audio.AudioLibrary;
 import graphics.MenuScene;
@@ -74,11 +73,6 @@ public class Game extends JPanel implements ActionListener {
 
 		setBackground(Color.BLACK);
 		setPreferredSize(new Dimension(480, 320));
-
-		// gameTimer sets the delay between events, based on PLAYER_SPEED
-		// TODO - change timer logic to add to a running total
-		gData.gameTimer = new Timer(100 - gData.currentSpeed, this);
-		gData.gameTimer.start();
 	}
 
 	// ////////////////////////////////////////////////////////////////////////

@@ -43,24 +43,30 @@ public class TimeStruct implements Serializable {
 	// ////////////////////////////////////////////////////////////////////////
 	public void updateTime(long timeStarted) {
 		// get the time difference in hours, mins, seconds
-		int seconds = (((int) ((System.currentTimeMillis() - timeStarted) / 1000L)));
-		int hours = seconds % 3600;
-		int minutes = (seconds - hours * 3600) % 60;
+		int sessionSeconds = (((int) ((System.currentTimeMillis() - timeStarted) / 1000L)));
+		int sessionMinutes = 0;
+		int sessionHours = 0;
+		// int hours = seconds / 3600;
+		// int minutes = (seconds - hours * 3600) / 60;
 
-		seconds = (seconds - hours * 3600 - minutes * 60);
+		// seconds = (seconds - hours * 3600 - minutes * 60);
+
+		// hours_total = hours;
+		// minutes_total = minutes;
+		seconds_total += sessionSeconds;
 
 		// do math to add current session time to total banked time
-		seconds_total += seconds;
-		if (seconds_total > 60) {
-			minutes_total += seconds % 60;
-			seconds_total = 60 - (seconds % 60);
-		}
-		minutes_total += minutes;
-		if (minutes_total > 60) {
-			hours_total += minutes % 60;
-			minutes_total = 60 - (minutes % 60);
-		}
-		hours_total += hours;
+		// seconds_total += seconds;
+		// if (seconds_total > 60) {
+		// minutes_total += seconds / 60;
+		// seconds_total = 60 - (seconds / 60);
+		// }
+		// minutes_total += minutes;
+		// if (minutes_total > 60) {
+		// hours_total += (minutes / 60);
+		// minutes_total = 60 - (minutes / 60);
+		// }
+		// hours_total += hours;
 	}
 
 	// ////////////////////////////////////////////////////////////////////////

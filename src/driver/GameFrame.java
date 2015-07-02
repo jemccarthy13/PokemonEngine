@@ -86,7 +86,6 @@ public class GameFrame extends JFrame {
 					} else if (pokemonGame.gData.menuSelection == 1) {
 						pokemonGame.gData = GameInitializer.startGame(false, pokemonGame);
 					}
-					System.out.println("loaded id: " + pokemonGame.gData.id);
 					repaint();
 					validate();
 				}

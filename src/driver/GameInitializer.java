@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import javax.swing.Timer;
+
 import audio.AudioLibrary;
 import graphics.SpriteLibrary;
 import location.LocationLibrary;
@@ -54,20 +56,29 @@ public class GameInitializer {
 				Pokemon charmander = PokemonFactory.createPokemon("Charmander", 90);
 				theGame.gData.player.caughtPokemon(charmander);
 				theGame.gData.player.setMoney(1000000);
-				theGame.gData.timeStarted = System.currentTimeMillis();
 				theGame.gData.player.setCurLocation(LocationLibrary.getLocation("Route 29"));
 				AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown", theGame.gData.option_sound);
 				theGame.gData.start_coorX = (Tile.TILESIZE * (8 - theGame.gData.player.getCurrentX()));
 				theGame.gData.start_coorY = (Tile.TILESIZE * (6 - theGame.gData.player.getCurrentY()));
 
 			}
+
+			// initialize the player sprite
 			theGame.gData.player.tData.sprite_name = "PLAYER";
 			theGame.gData.player.tData.sprite = SpriteLibrary.getInstance().getSprites("PLAYER")
 					.get(theGame.gData.player.getDirection().ordinal() * 3);
+
+			// get out of any menus
 			theGame.gData.atTitle = false;
 			theGame.gData.atContinueScreen = false;
 			theGame.gData.inMenu = false;
 			theGame.NPCTHREAD.start();
+
+			// start clock for current session
+			theGame.gData.timeStarted = System.currentTimeMillis();
+			theGame.gData.gameTimer = new Timer(100 - theGame.gData.currentSpeed, theGame);
+			theGame.gData.gameTimer.start();
+
 			System.out.println(theGame.gData.player.tData.toString());
 		} catch (IOException e) {
 			System.err.println("Error initializing theGame.");
