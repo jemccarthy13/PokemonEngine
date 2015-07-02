@@ -1,7 +1,10 @@
 package pokedex;
 
-public class MoveData {
+import java.io.Serializable;
 
+public class MoveData implements Serializable {
+
+	private static final long serialVersionUID = 9003426637910342523L;
 	public String name = null;
 	public int power = -1;
 	public boolean isPhysical;

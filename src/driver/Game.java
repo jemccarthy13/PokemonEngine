@@ -5,8 +5,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,7 +35,7 @@ import utilities.RandomNumUtils;
 // essentially controls all game flow logic and holds game data.
 //
 // ////////////////////////////////////////////////////////////////////////
-public class Game extends JPanel implements KeyListener, ActionListener {
+public class Game extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 5951510422984321057L;
 
@@ -76,7 +74,6 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 
 		setBackground(Color.BLACK);
 		setPreferredSize(new Dimension(480, 320));
-		addKeyListener(this);
 
 		// gameTimer sets the delay between events, based on PLAYER_SPEED
 		// TODO - change timer logic to add to a running total
@@ -245,16 +242,16 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 		int distToTravel = 0;
 
 		if (NPC_DIR == DIR.NORTH) {
-			gData.player.setSpriteFacing(DIR.SOUTH);
+			gData.player.setDirection(DIR.SOUTH);
 			distToTravel = (curNPC.getCurrentY() - (gData.player.getCurrentY() + 1));
 		} else if (NPC_DIR == DIR.SOUTH) {
-			gData.player.setSpriteFacing(DIR.NORTH);
+			gData.player.setDirection(DIR.NORTH);
 			distToTravel = ((gData.player.getCurrentY() - 1) - curNPC.getCurrentY());
 		} else if (NPC_DIR == DIR.EAST) {
-			gData.player.setSpriteFacing(DIR.WEST);
+			gData.player.setDirection(DIR.WEST);
 			distToTravel = ((gData.player.getCurrentX() - 1) - curNPC.getCurrentX());
 		} else if (NPC_DIR == DIR.WEST) {
-			gData.player.setSpriteFacing(DIR.EAST);
+			gData.player.setDirection(DIR.EAST);
 			distToTravel = (curNPC.getCurrentX() - (gData.player.getCurrentX() + 1));
 		}
 
@@ -281,104 +278,16 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 		validate();
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// KeyListener override - the heart of the game driver
-	//
-	// Each menu / screen has buttons mapped to events
-	// TODO - fix audio errors in linux
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	public void keyPressed(KeyEvent e) {
-		int keyCode = e.getKeyCode();
-		if (gData.atTitle) {
-			// title screen "press enter"
-			if (keyCode == KeyEvent.VK_ENTER) {
-				gData.atTitle = false;
-				AudioLibrary.getInstance().playBackgroundMusic("Continue", gData.option_sound);
-				gData.atContinueScreen = true;
-			}
-		} else if (gData.atContinueScreen) {
-			// continue screen choice select
-			if (keyCode == KeyEvent.VK_UP) {
-				if (gData.menuSelection > 0)
-					gData.menuSelection -= 1;
-			} else if (keyCode == KeyEvent.VK_DOWN) {
-				if (gData.menuSelection < 2)
-					gData.menuSelection += 1;
-			}
-			if (keyCode == KeyEvent.VK_Z) {
-				if (gData.menuSelection == 0) {
-					GameInitializer.startGame(true, this);
-				} else if (gData.menuSelection == 1) {
-					GameInitializer.startGame(false, this);
-				}
-			}
-			AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_SELECT, gData.option_sound);
-		} else if (gData.inIntro) {
-			// intro screen, advance oak's text
-			if (keyCode == KeyEvent.VK_X)
-				nameScreen.removeChar();
-			if (keyCode == KeyEvent.VK_Z) {
-				gData.introStage += 2;
-				if (gData.introStage > NPCLibrary.getInstance().get("Professor Oak").getTextLength() - 1) {
-					AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown", gData.option_sound);
-					gData.inIntro = !gData.inIntro;
-				} else if (gData.introStage == 15) {
-					gData.inNameScreen = true;
-					nameScreen.setToBeNamed("PLAYER");
-					gData.inIntro = false;
-				}
-			}
-		} else if (gData.inNameScreen) {
-			// name screen, add or remove chars
-			if (keyCode == KeyEvent.VK_X)
-				nameScreen.removeChar();
-			if ((keyCode == KeyEvent.VK_Z)) {
-				if (nameScreen.rowSelection == 5) {
-					// check for end or del
-					if (nameScreen.colSelection == 1 && nameScreen.getChosenName().length() > 0) {
-						gData.player.setName(nameScreen.getChosenName());
-						nameScreen.reset();
-						gData.inNameScreen = false;
-						gData.inIntro = true;
-					} else if (nameScreen.colSelection == 0)
-						nameScreen.removeChar();
-				} else {
-					nameScreen.addSelectedChar();
-				}
-			}
-			if (keyCode == KeyEvent.VK_DOWN && nameScreen.rowSelection < 5) {
-				nameScreen.rowSelection++;
-				if (nameScreen.rowSelection == 5 && nameScreen.colSelection < 3)
-					nameScreen.colSelection = 0;
-				if (nameScreen.rowSelection == 5 && nameScreen.colSelection >= 3)
-					nameScreen.colSelection = 1;
-			} else if (keyCode == KeyEvent.VK_UP && nameScreen.rowSelection > 0) {
-				nameScreen.rowSelection--;
-			} else if (keyCode == KeyEvent.VK_LEFT && nameScreen.colSelection > 0) {
-				nameScreen.colSelection--;
-			} else if (keyCode == KeyEvent.VK_RIGHT && nameScreen.rowSelection == 5 && nameScreen.colSelection < 1) {
-				nameScreen.colSelection++;
-			} else if (keyCode == KeyEvent.VK_RIGHT && nameScreen.rowSelection < 5 && nameScreen.colSelection < 5) {
-				nameScreen.colSelection++;
-			}
-		} else {
-			// otherwise, fire the eventHandler
-			if ((!gData.inMenu) && (movable) && (!gData.inBattle) && (!walking)) {
-				eventHandler.handleWorldEvent(keyCode);
-			} else if (gData.inMenu) {
-				eventHandler.handleMenuEvent(keyCode);
-			} else if (gData.inBattle) {
-				eventHandler.handleBattleEvent(keyCode);
-			}
-		}
-		repaint();
-		validate();
+	public void reset() {
+		gData.atContinueScreen = false;
+		gData.atTitle = false;
+		gData.inBattle = false;
+		gData.inIntro = false;
+		gData.inMenu = false;
+		gData.inMessage = false;
+		gData.inNameScreen = false;
+		gData.introStage = 1;
+		this.movable = true;
+		this.walking = false;
 	}
-
-	public void keyReleased(KeyEvent e) {}
-
-	public void keyTyped(KeyEvent e) {}
-
 }

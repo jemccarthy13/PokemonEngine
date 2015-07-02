@@ -1,5 +1,7 @@
 package utilities;
 
+import java.io.Serializable;
+
 import trainers.Actor.DIR;
 
 //////////////////////////////////////////////////////////////////////////
@@ -7,7 +9,9 @@ import trainers.Actor.DIR;
 // Coordinate class - holds x,y pair data for graphics and location data
 //
 //////////////////////////////////////////////////////////////////////////
-public class Coordinate {
+public class Coordinate implements Serializable {
+
+	private static final long serialVersionUID = 2989130617545732382L;
 	int x;
 	int y;
 

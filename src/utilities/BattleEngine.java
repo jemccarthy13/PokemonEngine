@@ -71,7 +71,6 @@ public class BattleEngine {
 
 		g.movable = false;
 		g.gData.inBattle = true;
-
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -164,22 +163,30 @@ public class BattleEngine {
 	// ////////////////////////////////////////////////////////////////////////
 	public void Win() {
 		giveEXP();
-		this.inMain = false;
-		((Pokemon) this.enemyPokemon.get(0)).statusEffect = 0;
 
-		this.game.gData.inBattle = false;
-
-		// reset the music, add to beaten trainers
-		AudioLibrary.getInstance().pauseBackgrondMusic();
-		AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown", game.gData.option_sound);
-		game.gData.player.beatenTrainers.add(enemyName);
+		// reset logic
 		game.gData.playerWin = false;
 		game.movable = true;
+		this.inMain = false;
+		this.game.gData.inBattle = false;
+		this.game.gData.inMessage = true;
+		this.game.messageString = "Player won!";
+
+		game.gData.player.beatenTrainers.add(enemyName);
+
+		((Pokemon) this.enemyPokemon.get(0)).statusEffect = 0;
+
+		// reset the music
+		// TODO - verify playBackgroundMusic doesn't automatically pause/stop
+		// when switching music
+		AudioLibrary.getInstance().pauseBackgrondMusic();
+		AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown", game.gData.option_sound);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
 	// Lose - set the variables for a player loss (white out) in a battle
+	// TODO - replace setSprite with setDIR, and have setDir change the sprite
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public void Lose() {
@@ -188,7 +195,7 @@ public class BattleEngine {
 		System.out.println("Player Pokemon has fainted");
 		System.out.println(game.gData.player.getName() + " is all out of usable Pokemon!");
 		System.out.println(game.gData.player.getName() + " whited out.");
-		game.gData.player.setSprite(SpriteLibrary.getInstance().getSprites("PLAYER").get(9));
+		game.gData.player.tData.sprite = (SpriteLibrary.getInstance().getSprites("PLAYER").get(9));
 		game.gData.player.getPokemon().get(0).heal(-1);
 		this.game.gData.inBattle = false;
 	}

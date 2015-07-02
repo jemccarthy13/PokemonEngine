@@ -1,6 +1,5 @@
 package trainers;
 
-import java.awt.Image;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -16,7 +15,9 @@ import utilities.Coordinate;
 // TODO - implement box storage for players
 //
 //////////////////////////////////////////////////////////////////////////
-public class Actor {
+public class Actor implements Serializable {
+
+	private static final long serialVersionUID = 6292047432930495977L;
 
 	public TrainerData tData = new TrainerData();
 
@@ -26,29 +27,29 @@ public class Actor {
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// Player constructor - given location and name, create a player
+	// Actor constructor - given location and name, create a player
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public Actor(int x, int y, String n) {
+	public Actor(int x, int y, String n, String sprite_name) {
 		this.tData.name = n;
-		System.out.println("creating actor " + n);
 		this.tData.position = new Coordinate(x, y);
 		this.tData.money = 2000;
-		this.tData.sprites = SpriteLibrary.getInstance().getSprites("PLAYER");
 		this.tData.pokemon = new PokemonList();
-		setSpriteFacing(DIR.SOUTH);
+		this.tData.sprite_name = sprite_name;
+		this.tData.sprite = SpriteLibrary.getInstance().getImage(sprite_name);
+		setDirection(DIR.SOUTH);
 	}
 
 	public Actor() {}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// NPC constructor - given some data, create a new NPC actor
+	// Actor constructor - given some data, create a new Actor
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public Actor(TrainerData npcData) {
-		this.tData = npcData;
-		setSpriteFacing(DIR.SOUTH);
+	public Actor(TrainerData data) {
+		this.tData = data;
+		setDirection(DIR.SOUTH);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -90,27 +91,6 @@ public class Actor {
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// setSpriteFacing - sets the sprites direction
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	public void setSpriteFacing(DIR dir) {
-		setDirection(dir);
-		if (dir.equals(DIR.NORTH)) {
-			setSprite(this.tData.sprites.get(9));
-		}
-		if (dir.equals(DIR.SOUTH)) {
-			setSprite(this.tData.sprites.get(0));
-		}
-		if (dir.equals(DIR.EAST)) {
-			setSprite(this.tData.sprites.get(6));
-		}
-		if (dir.equals(DIR.WEST)) {
-			setSprite(this.tData.sprites.get(3));
-		}
-	}
-
-	// ////////////////////////////////////////////////////////////////////////
-	//
 	// changeSprite - changes sprite based on animation
 	//
 	// ////////////////////////////////////////////////////////////////////////
@@ -119,23 +99,23 @@ public class Actor {
 		int direction = 3 * getDir().ordinal();
 
 		if ((pixels >= 0) && (pixels < 4)) {
-			setSprite(this.tData.sprites.get(direction));
+			tData.sprite = (tData.getSprites().get(direction));
 		} else if ((pixels > 4) && (pixels < 8)) {
-			setSprite(this.tData.sprites.get(direction));
+			tData.sprite = (tData.getSprites().get(direction));
 		} else if ((pixels > 8) && (pixels < 12)) {
 			if (!rightFoot) {
-				setSprite(this.tData.sprites.get(direction + 1));
+				tData.sprite = (tData.getSprites().get(direction + 1));
 			} else {
-				setSprite(this.tData.sprites.get(direction + 2));
+				tData.sprite = (tData.getSprites().get(direction + 2));
 			}
 		} else if ((pixels >= 12) && (pixels < 15)) {
 			if (!rightFoot) {
-				setSprite(this.tData.sprites.get(direction + 1));
+				tData.sprite = (tData.getSprites().get(direction + 1));
 			} else {
-				setSprite(this.tData.sprites.get(direction + 2));
+				tData.sprite = (tData.getSprites().get(direction + 2));
 			}
 		} else {
-			setSprite(this.tData.sprites.get(direction));
+			tData.sprite = (tData.getSprites().get(direction));
 		}
 	}
 
@@ -199,14 +179,6 @@ public class Actor {
 
 	public void setLoc(Coordinate c) {
 		this.tData.position = c;
-	}
-
-	public void setSprite(Image i) {
-		this.tData.sprite = i;
-	}
-
-	public Image getSprite() {
-		return this.tData.sprite;
 	}
 
 	public void setName(String nameSelected) {

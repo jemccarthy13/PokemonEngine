@@ -7,7 +7,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import driver.Game;
+import driver.GameData;
 import graphics.MessageBox;
 import trainers.Player;
 
@@ -22,18 +22,19 @@ public class Utils {
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// saveGame - writes a game object to a .SAV file
+	// saveGame - writes a game data object to a .SAV file
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public static void saveGame(Game game) {
+	public static void saveGame(GameData data) {
 		FileOutputStream fout = null;
 		ObjectOutputStream oos = null;
 		try {
 			File dir = new File("resources/data");
 			System.out.println(dir.isDirectory());
+			System.out.println(data.player.tData.toString());
 			fout = new FileOutputStream("resources/data/PokemonOrange.sav");
 			oos = new ObjectOutputStream(fout);
-			oos.writeObject(game);
+			oos.writeObject(data);
 			oos.close();
 			fout.close();
 		} catch (Exception e1) {
@@ -49,26 +50,23 @@ public class Utils {
 	// loadGame - loads game object from a default .SAV file
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public static Game loadGame() {
-		Game game = null;
+	public static GameData loadGame() {
+		GameData data = null;
 		FileInputStream fout = null;
 		ObjectInputStream oos = null;
 		try {
 			fout = new FileInputStream("resources/data/PokemonOrange.sav");
 			oos = new ObjectInputStream(fout);
-
-			game = (Game) oos.readObject();
-
-			System.out.println(game.gData.toString());
+			data = (GameData) oos.readObject();
 			oos.close();
 			fout.close();
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			System.out.println("Unable to load game...");
-			return game;
+			return data;
 		}
 		System.out.println("Game loaded from .SAV!");
-		return game;
+		return data;
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -78,9 +76,9 @@ public class Utils {
 	// TODO - move to HandleEvent and graphics Painter
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public static void accessComputer(Game game, Player you) {
+	public static void accessComputer(GameData data, Player you) {
 		System.out.println("Saving game...");
-		saveGame(game);
+		saveGame(data);
 		System.out.println("COMPUTER ACCESS GRANTED");
 		System.out.println("computer menu here.");
 	}

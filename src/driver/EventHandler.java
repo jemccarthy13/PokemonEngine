@@ -332,7 +332,7 @@ public class EventHandler implements Serializable {
 				game.menuScreen.MENU_currentSelectionSave = 1;
 			} else if (keyCode == KeyEvent.VK_Z) {
 				if (game.menuScreen.MENU_currentSelectionSave == 0) {
-					Utils.saveGame(game);
+					Utils.saveGame(game.gData);
 					game.menuScreen.MENU_inSave = false;
 					game.gData.inMessage = true;
 					game.messageString = "Game saved successfully!";
@@ -397,7 +397,7 @@ public class EventHandler implements Serializable {
 			if (game.moveable_dir[game.gData.player.getDir().ordinal()]) {
 				game.walking = true;
 			} else {
-				game.gData.player.setSprite(SpriteLibrary.getInstance().getSprites("PLAYER").get(9));
+				game.gData.player.tData.sprite = (SpriteLibrary.getInstance().getSprites("PLAYER").get(9));
 				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_COLLISION, game.gData.option_sound);
 			}
 		} else if (keyCode == KeyEvent.VK_DOWN) {
@@ -405,7 +405,7 @@ public class EventHandler implements Serializable {
 			if (game.moveable_dir[game.gData.player.getDir().ordinal()]) {
 				game.walking = true;
 			} else {
-				game.gData.player.setSprite(SpriteLibrary.getInstance().getSprites("PLAYER").get(0));
+				game.gData.player.tData.sprite = (SpriteLibrary.getInstance().getSprites("PLAYER").get(0));
 				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_COLLISION, game.gData.option_sound);
 			}
 		} else if (keyCode == KeyEvent.VK_LEFT) {
@@ -413,7 +413,7 @@ public class EventHandler implements Serializable {
 			if (game.moveable_dir[game.gData.player.getDir().ordinal()]) {
 				game.walking = true;
 			} else {
-				game.gData.player.setSprite(SpriteLibrary.getInstance().getSprites("PLAYER").get(3));
+				game.gData.player.tData.sprite = (SpriteLibrary.getInstance().getSprites("PLAYER").get(3));
 				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_COLLISION, game.gData.option_sound);
 			}
 		} else if (keyCode == KeyEvent.VK_RIGHT) {
@@ -421,7 +421,7 @@ public class EventHandler implements Serializable {
 			if (game.moveable_dir[game.gData.player.getDir().ordinal()]) {
 				game.walking = true;
 			} else {
-				game.gData.player.setSprite(SpriteLibrary.getInstance().getSprites("PLAYER").get(6));
+				game.gData.player.tData.sprite = (SpriteLibrary.getInstance().getSprites("PLAYER").get(6));
 				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_COLLISION, game.gData.option_sound);
 			}
 		} else if (keyCode == KeyEvent.VK_ENTER) {
@@ -440,22 +440,22 @@ public class EventHandler implements Serializable {
 				int NPC_Y = curNPC.getCurrentY();
 				if (playerDir == DIR.WEST) {
 					if ((NPC_X == playerCurX - 1) && (playerCurY == NPC_Y)) {
-						curNPC.setSpriteFacing(DIR.EAST);
+						curNPC.setDirection(DIR.EAST);
 						borderNPC = curNPC;
 					}
 				} else if (playerDir == DIR.NORTH) {
 					if ((playerCurX == NPC_X) && (playerCurY == NPC_Y + 1)) {
-						curNPC.setSpriteFacing(DIR.SOUTH);
+						curNPC.setDirection(DIR.SOUTH);
 						borderNPC = curNPC;
 					}
 				} else if (playerDir == DIR.EAST) {
 					if ((playerCurX == NPC_X - 1) && (playerCurY == NPC_Y)) {
-						curNPC.setSpriteFacing(DIR.WEST);
+						curNPC.setDirection(DIR.WEST);
 						borderNPC = curNPC;
 					}
 				} else if (playerDir == DIR.SOUTH) {
 					if ((playerCurX == NPC_X) && (playerCurY == NPC_Y - 1)) {
-						curNPC.setSpriteFacing(DIR.NORTH);
+						curNPC.setDirection(DIR.NORTH);
 						borderNPC = curNPC;
 					}
 				}

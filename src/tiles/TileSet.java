@@ -47,7 +47,7 @@ public class TileSet extends ArrayList<Image>implements Serializable {
 				String line = s.nextLine();
 				if (line.split(",").length > 1) {
 					String name = line.split(",")[1].trim().replace("Tiles", "").replace("\\", "");
-					Image im = SpriteLibrary.getInstance().getImage(name);
+					Image im = SpriteLibrary.getInstance().getImage(name).getImage();
 					add(im);
 				}
 			}

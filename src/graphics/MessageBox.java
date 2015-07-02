@@ -18,7 +18,7 @@ public class MessageBox {
 	// ////////////////////////////////////////////////////////////////////////
 	public void Message(Graphics g, String line1, String line2) {
 		g.setColor(Color.BLACK);
-		g.drawImage(SpriteLibrary.MESSAGE_BOX, 0, 0, null);
+		g.drawImage(SpriteLibrary.MESSAGE_BOX.getImage(), 0, 0, null);
 		g.drawString(line1, 30, 260);
 		g.drawString(line2, 30, 290);
 	}

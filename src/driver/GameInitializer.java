@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import audio.AudioLibrary;
+import graphics.SpriteLibrary;
 import location.LocationLibrary;
 import pokedex.Pokemon;
 import pokedex.PokemonFactory;
@@ -18,76 +19,78 @@ import utilities.Utils;
 
 //////////////////////////////////////////////////////////////////////////
 //
-// GameInitializer loads a .SAV file or starts a new game.  Starts all 
+// theGameInitializer loads a .SAV file or starts a new theGame.  Starts all 
 // necessary threads and utilities.
 //
 // ////////////////////////////////////////////////////////////////////////
 public class GameInitializer {
 
-	static Game game;
-
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// startGame method - given whether or not the game is a continue, start
-	// the game based off a save file, or start a new game.
+	// starttheGame method - given whether or not the theGame is a continue,
+	// start
+	// the theGame based off a save file, or start a new theGame.
 	// Prepares all the necessary utilities, such as
 	//
 	// TODO - add load from .SAV feature
 	// TODO - map to be used is scriptable in data file with other "EVENTS"
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public static void startGame(boolean continued, Game theGame) {
-		game = theGame;
+	public static GameData startGame(boolean continued, Game theGame) {
+		// theGame = thetheGame;
 		String loadedMap = "NewBarkTown";
 
-		// TODO verify juke box is initialized properly
-		// EnumsAndConstants.initializeJukeBox();
-
 		try {
-			loadMap(loadedMap);
+			loadMap(theGame.gData, loadedMap);
 
 			if (continued) {
 				// String name = "GOLD";
-				// game.gData.player = new Player(6, 10, name);
+				// theGame.gData.player = new Player(6, 10, name);
 				// Pokemon charmander =
 				// PokemonFactory.createPokemon("Charmander",
 				// 90);
-				// game.gData.player.caughtPokemon(charmander);
-				// game.gData.player.setMoney(1000000);
-				// game.gData.timeStarted = System.currentTimeMillis();
-				// game.gData.player.setCurLocation(LocationLibrary.getLocation("Route
+				// theGame.gData.player.caughtPokemon(charmander);
+				// theGame.gData.player.setMoney(1000000);
+				// theGame.gData.timeStarted = System.currentTimeMillis();
+				// theGame.gData.player.setCurLocation(LocationLibrary.getLocation("Route
 				// 29"));
 				// AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown",
-				// game.gData.option_sound);
-				game = Utils.loadGame();
-				if (game == null) {
-					System.err.println("Unable to load game.");
-					System.exit(0);
-				}
-				if (game.gData.player.tData.isValidData()) {
-					System.out.println("is valid!");
-				} else {
-					System.err.println(game.gData.player.tData.toString());
+				// theGame.gData.option_sound);
+				theGame.gData = Utils.loadGame();
+				theGame.gData.player.tData.sprite_name = "PLAYER";
+				theGame.gData.player.tData.sprite = SpriteLibrary.getInstance().getSprites("PLAYER").get(0);
+
+				System.out.println(theGame.gData.player.tData.sprite);
+
+				if (!theGame.gData.player.tData.isValidData()) {
+					System.err.println(theGame.gData.player.tData.toString());
 				}
 			} else {
 				String name = "GOLD";
-				game.gData.player = new Player(6, 10, name);
+				theGame.gData.player = new Player(6, 10, name);
+				theGame.gData.player.tData.sprite_name = "PLAYER";
+				theGame.gData.player.tData.sprite = SpriteLibrary.getInstance().getSprites("PLAYER").get(0);
 				Pokemon charmander = PokemonFactory.createPokemon("Charmander", 90);
-				game.gData.player.caughtPokemon(charmander);
-				game.gData.player.setMoney(1000000);
-				game.gData.timeStarted = System.currentTimeMillis();
-				game.gData.player.setCurLocation(LocationLibrary.getLocation("Route 29"));
-				AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown", game.gData.option_sound);
+				theGame.gData.player.caughtPokemon(charmander);
+				theGame.gData.player.setMoney(1000000);
+				theGame.gData.timeStarted = System.currentTimeMillis();
+				theGame.gData.player.setCurLocation(LocationLibrary.getLocation("Route 29"));
+				AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown", theGame.gData.option_sound);
 			}
-			game.gData.start_coorX = (Tile.TILESIZE * (8 - game.gData.player.getCurrentX()));
-			game.gData.start_coorY = (Tile.TILESIZE * (6 - game.gData.player.getCurrentY()));
-			game.gData.atTitle = false;
-			game.gData.atContinueScreen = false;
-			game.movable = true;
-			game.NPCTHREAD.start();
+
+			theGame.gData.start_coorX = (Tile.TILESIZE * (8 - theGame.gData.player.getCurrentX()));
+			theGame.gData.start_coorY = (Tile.TILESIZE * (6 - theGame.gData.player.getCurrentY()));
+			theGame.gData.atTitle = false;
+			theGame.gData.atContinueScreen = false;
+			theGame.gData.inMenu = false;
+			theGame.NPCTHREAD.start();
+			System.out.println(theGame.gData.player.tData.toString());
+			System.out.println("* Fully loaded!");
 		} catch (IOException e) {
-			System.err.println("Error initializing game.");
+			System.err.println("Error initializing theGame.");
 		}
+		System.out.println("loaded id: " + theGame.gData.id);
+		return theGame.gData;
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -95,7 +98,7 @@ public class GameInitializer {
 	// loadMap - given a path to a map file, populate the Image and Tile data
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public static void loadMap(String loadedMap) throws IOException {
+	public static void loadMap(GameData data, String loadedMap) throws IOException {
 		// intialize file reader
 		System.err.println("Loading map...");
 		BufferedReader reader = new BufferedReader(
@@ -104,8 +107,8 @@ public class GameInitializer {
 		StringTokenizer tokens = new StringTokenizer(line);
 
 		// read the dimensions, and skip additional data until map data
-		game.gData.map_width = Integer.parseInt(tokens.nextToken());
-		game.gData.map_height = Integer.parseInt(tokens.nextToken());
+		data.map_width = Integer.parseInt(tokens.nextToken());
+		data.map_height = Integer.parseInt(tokens.nextToken());
 
 		line = reader.readLine();
 		tokens = new StringTokenizer(line);
@@ -114,12 +117,12 @@ public class GameInitializer {
 		}
 
 		// intialize the Tile map
-		for (int r = 0; r < game.gData.map_height; r++) {
+		for (int r = 0; r < data.map_height; r++) {
 			ArrayList<Tile> row = new ArrayList<Tile>();
-			for (int c = 0; c < game.gData.map_width; c++) {
+			for (int c = 0; c < data.map_width; c++) {
 				row.add(TileSet.NORMAL_TILE);
 			}
-			game.gData.tm.add(row);
+			data.tm.add(row);
 		}
 
 		// initialize the Image map and add obstacles to the Tile map
@@ -128,10 +131,10 @@ public class GameInitializer {
 			int curRow = 0;
 			int curCol = 0;
 			tokens = new StringTokenizer(line);
-			for (int y = 0; y < game.gData.map_width * game.gData.map_height; y++) {
+			for (int y = 0; y < data.map_width * data.map_height; y++) {
 				String code = tokens.nextToken();
 
-				curCol = y % game.gData.map_width;
+				curCol = y % data.map_width;
 				if ((curCol == 0) && (layers == 1 || layers == 2) && (y != 0)) {
 					curRow++;
 				}
@@ -142,16 +145,16 @@ public class GameInitializer {
 				for (int x = 0; x < TileSet.IMPASSIBLE_TILES.length; x++) {
 					if (Integer.parseInt(code) == TileSet.IMPASSIBLE_TILES[x]) {
 						if (layers == 1 || (layers == 2 && Integer.parseInt(code) > 0))
-							game.gData.tm.set(c, TileSet.OBSTACLE);
+							data.tm.set(c, TileSet.OBSTACLE);
 					}
 				}
 				for (int x = 0; x < TileSet.WILD_tiLES.length; x++) {
 					if (Integer.parseInt(code) == TileSet.WILD_tiLES[x]) {
 						if (layers == 1 || (layers == 2 && Integer.parseInt(code) > 0))
-							game.gData.tm.set(c, TileSet.WILD_TILE);
+							data.tm.set(c, TileSet.WILD_TILE);
 					}
 				}
-				game.gData.currentMap[layers][y] = Integer.parseInt(code);
+				data.currentMap[layers][y] = Integer.parseInt(code);
 			}
 		}
 		System.err.println("Loaded map.");

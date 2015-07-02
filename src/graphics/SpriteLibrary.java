@@ -1,12 +1,12 @@
 package graphics;
 
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+
+import javax.swing.ImageIcon;
 
 // ////////////////////////////////////////////////////////////////////////
 //
@@ -14,30 +14,29 @@ import java.util.HashMap;
 // the characters directory to map TrainerType->Image[]
 //
 // ////////////////////////////////////////////////////////////////////////
-public class SpriteLibrary extends HashMap<String, ArrayList<Image>> {
+public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 
 	private static final long serialVersionUID = 8298201257452310707L;
 
 	public static String libPath = "resources/graphics_lib/";
 
-	public static Image CONTINUESCREEN, START_SYMBOL, TITLESCREEN, ARROW, MAIN_MENU, MESSAGE_BOX;
+	public static ImageIcon CONTINUESCREEN, START_SYMBOL, TITLESCREEN, ARROW, MAIN_MENU, MESSAGE_BOX;
 
-	public static Image POKEDEX, POKESEL, BAGSCREEN, POKEGEAR, TRAINERCARD, SAVE, OPTION_SOUND_ON, OPTION_SOUND_OFF,
-			TRAINER_FOR_CARD;
+	public static ImageIcon POKEDEX, POKESEL, BAGSCREEN, POKEGEAR, TRAINERCARD, SAVE, OPTION_SOUND_OFF,
+			TRAINER_FOR_CARD, OPTION_SOUND_ON;
 
-	public static Image PARTYFIRST, PARTYBOX, PARTYCANCEL, PARTYCANCELSEL;
+	public static ImageIcon PARTYFIRST, PARTYBOX, PARTYCANCEL, PARTYCANCELSEL;
 
-	public static Image POKEGEAR_MAP, POKEGEAR_RADIO, POKEGEAR_PHONE, POKEGEAR_EXIT;
+	public static ImageIcon POKEGEAR_MAP, POKEGEAR_RADIO, POKEGEAR_PHONE, POKEGEAR_EXIT;
 
-	public static Image BATTLE_BG, BATTLE_FIGHTBG, BG;
-	public static Image STATUS_PSN, STATUS_FRZ, STATUS_BRN, STATUS_SLP, STATUS_PAR;
+	public static ImageIcon BATTLE_BG, BATTLE_FIGHTBG, BG;
+	public static ImageIcon STATUS_PSN, STATUS_FRZ, STATUS_BRN, STATUS_SLP, STATUS_PAR;
 
-	public static Image BEGINNING;
+	public static ImageIcon BEGINNING;
 
-	public Image ICON;
+	public ImageIcon ICON;
 
-	public static Image NAMESCREEN;
-	public static Image FONT_UNDERSCORE, FONT_CURSOR;
+	public static ImageIcon NAMESCREEN, FONT_UNDERSCORE, FONT_CURSOR;
 
 	private static SpriteLibrary m_instance = new SpriteLibrary();
 
@@ -145,7 +144,7 @@ public class SpriteLibrary extends HashMap<String, ArrayList<Image>> {
 	// Returns the Font character Image corresponding to the given char
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public Image getFontChar(Character c) {
+	public ImageIcon getFontChar(Character c) {
 		if (containsKey(c + ".png")) {
 			return get(c.toString() + ".png").get(0);
 		} else {
@@ -159,13 +158,13 @@ public class SpriteLibrary extends HashMap<String, ArrayList<Image>> {
 	// Get the set of 12 directional sprites that correspond to the given name
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public ArrayList<Image> getSprites(String name) {
+	public ArrayList<ImageIcon> getSprites(String name) {
 		if (containsKey(name)) {
 			return get(name);
 		} else if (loadActorSprites(name)) {
 			return get(name);
 		} else {
-			System.err.println("NPC images not found in sprite library.");
+			System.err.println(name + " images not found in sprite library.");
 			return null;
 		}
 	}
@@ -175,7 +174,7 @@ public class SpriteLibrary extends HashMap<String, ArrayList<Image>> {
 	// Returns an image from the instance of the library
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public Image getImage(String name) {
+	public ImageIcon getImage(String name) {
 		// if the image exists, get it and return it
 		if (containsKey(name)) {
 			return get(name).get(0);
@@ -205,7 +204,7 @@ public class SpriteLibrary extends HashMap<String, ArrayList<Image>> {
 		File[] listOfFiles = folder.listFiles();
 		for (File file : listOfFiles) {
 			if (file.isFile() && name.equals(file.getName())) {
-				ArrayList<Image> spriteGroup = new ArrayList<Image>();
+				ArrayList<ImageIcon> spriteGroup = new ArrayList<ImageIcon>();
 				spriteGroup.add(createImage(file.getPath().replace("\\", "/")));
 				put(name, spriteGroup);
 				return true;
@@ -246,7 +245,7 @@ public class SpriteLibrary extends HashMap<String, ArrayList<Image>> {
 					// walking/direction animations
 					Arrays.sort(files);
 
-					ArrayList<Image> spriteGroup = new ArrayList<Image>();
+					ArrayList<ImageIcon> spriteGroup = new ArrayList<ImageIcon>();
 					for (String directionImage : files) {
 						spriteGroup.add(createImage(npcFilePath + npcCharacter + "/" + directionImage));
 					}
@@ -265,12 +264,14 @@ public class SpriteLibrary extends HashMap<String, ArrayList<Image>> {
 	// Loads an image from a given path
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public static Image createImage(String path) {
-		Toolkit tk = Toolkit.getDefaultToolkit();
-		Image im = null;
+	public static ImageIcon createImage(String path) {
+		File f = new File(path);
+		if (!f.exists()) {
+			System.err.println("Image path does not exist: " + path);
+			System.exit(0);
+		}
 		path = "/" + path.replace("resources/", "").replace("resources\\", "");
-		im = tk.createImage(System.class.getResource(path));
-
-		return im;
+		ImageIcon thisIcon = new ImageIcon(System.class.getResource(path));
+		return thisIcon;
 	}
 }

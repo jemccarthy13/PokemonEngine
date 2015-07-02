@@ -79,10 +79,8 @@ public class NPCLibrary extends HashMap<String, Actor> {
 				td.stationary = (Boolean) npc_data.get("stationary");
 
 				// get npc sprite images directory name (sprite image name)
-				String sprite_name = (String) npc_data.get("image");
-				// then get the sprites, and set the default sprite to be SOUTH
-				td.sprites = SpriteLibrary.getInstance().getSprites(sprite_name);
-				td.sprite = td.sprites.get(0);
+				td.sprite_name = (String) npc_data.get("image");
+				td.sprite = SpriteLibrary.getInstance().getSprites(td.sprite_name).get(0);
 
 				// get the conversation text
 				JSONArray conversation = (JSONArray) npc_data.get("speech_text");
@@ -106,17 +104,19 @@ public class NPCLibrary extends HashMap<String, Actor> {
 						JSONObject pokemon = (JSONObject) pkmn_it.next();
 						String name = (String) pokemon.get("name");
 						int level = ((Long) pokemon.get("level")).intValue();
-
 						pList.add(PokemonFactory.createPokemon(name, level));
 					}
 
 					td.pokemon = pList;
 					td.money = ((Long) npc_data.get("money")).intValue();
 				}
+
+				put(td.name, new Actor(td));
 			}
 		} catch (Exception e) {
 			System.err.println("Unable to load NPC data.");
 			e.printStackTrace();
+			System.exit(0);
 		}
 	}
 }

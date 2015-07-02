@@ -1,7 +1,8 @@
 package pokedex;
 
-import java.awt.Image;
 import java.io.Serializable;
+
+import javax.swing.ImageIcon;
 
 import graphics.SpriteLibrary;
 import utilities.RandomNumUtils;
@@ -22,10 +23,8 @@ public class Pokemon implements Serializable {
 	Integer[] max_stats = new Integer[7];
 	Integer accuracy = Integer.valueOf(100);
 	private int curExp;
-	protected Image party_icon;
+	protected ImageIcon party_icon, back_sprite, front_sprite;
 	public int statusEffect;
-	protected Image back_sprite;
-	protected Image front_sprite;
 
 	PokemonData pData;
 
@@ -111,9 +110,9 @@ public class Pokemon implements Serializable {
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// levelUp - if at enough EXP, level up (also checks for evolution)
+	// Level up, increase stats, check for evolution, check for moves learned
 	//
-	// TODO - fix tmp variables strangeness
+	// TODO - use EXP gained to judge level up
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public void levelUp() {
@@ -126,12 +125,9 @@ public class Pokemon implements Serializable {
 			if (this.stats[x].intValue() + incr == 240) {
 				incr = 0;
 			}
-			int tmp125_124 = x;
-			Integer[] tmp125_121 = this.stats;
-			tmp125_121[tmp125_124] = Integer.valueOf(tmp125_121[tmp125_124].intValue() + incr);
-			int tmp141_140 = x;
-			Integer[] tmp141_137 = this.max_stats;
-			tmp141_137[tmp141_140] = Integer.valueOf(tmp141_137[tmp141_140].intValue() + incr);
+
+			this.stats[x] = Integer.valueOf(this.stats[x].intValue() + incr);
+
 			if (this.stats[x].intValue() > 240) {
 				this.stats[x] = Integer.valueOf(240);
 			}
@@ -272,7 +268,7 @@ public class Pokemon implements Serializable {
 	// getIcon - return the image used as the party icon for this pokemon
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public Image getIcon() {
+	public ImageIcon getIcon() {
 		return this.party_icon;
 	}
 
@@ -281,7 +277,7 @@ public class Pokemon implements Serializable {
 	// getBackSprite - return the image used as the back battle sprite
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public Image getBackSprite() {
+	public ImageIcon getBackSprite() {
 		return this.back_sprite;
 	}
 
@@ -290,7 +286,7 @@ public class Pokemon implements Serializable {
 	// getFrontSprite - return the image used as the front battle sprite
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public Image getFrontSprite() {
+	public ImageIcon getFrontSprite() {
 		return this.front_sprite;
 	}
 

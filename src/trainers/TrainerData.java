@@ -1,8 +1,11 @@
 package trainers;
 
-import java.awt.Image;
+import java.io.Serializable;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
+
+import graphics.SpriteLibrary;
 import pokedex.PokemonList;
 import trainers.Actor.DIR;
 import utilities.Coordinate;
@@ -12,18 +15,19 @@ import utilities.Coordinate;
 // Holds data variables common to all trainers
 //
 // ////////////////////////////////////////////////////////////////////////
-public class TrainerData {
+public class TrainerData implements Serializable {
 
+	private static final long serialVersionUID = 9089885833065857943L;
 	public String name = null;
 	public Coordinate position = null;
-	public ArrayList<Image> sprites = null;
 	public PokemonList pokemon = null;
 	public int money = 0;
 	public ArrayList<String> conversationText = null;
 	public boolean stationary = false;
 	public boolean trainer = false;
 	public DIR dir = DIR.SOUTH;
-	public Image sprite = null;
+	public String sprite_name = "";
+	public ImageIcon sprite = null;
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
@@ -33,13 +37,18 @@ public class TrainerData {
 	public TrainerData() {}
 
 	public boolean isValidData() {
-		return (this.name != null && this.position != null && this.sprites != null);
+		return (this.name != null && this.position != null);
+	}
+
+	public ArrayList<ImageIcon> getSprites() {
+		return SpriteLibrary.getInstance().getSprites(sprite_name);
 	}
 
 	public String toString() {
 		String retStr = name;
-		retStr += "\n" + position;
-		retStr += "\n" + money;
+		retStr += "\n- " + position.getX() + ", " + position.getY();
+		retStr += "\n- " + money;
+		retStr += "\n- " + sprite;
 		return retStr;
 	}
 }

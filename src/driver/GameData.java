@@ -6,6 +6,7 @@ import javax.swing.Timer;
 
 import tiles.TileMap;
 import trainers.Player;
+import utilities.RandomNumUtils;
 import utilities.TimeStruct;
 
 // ////////////////////////////////////////////////////////////////////////
@@ -59,6 +60,8 @@ public class GameData implements Serializable {
 	// ======================== User Data ==================================//
 	public Player player;
 	public int currentSpeed = PLAYER_SPEED_WALK; // controls the speed of play
+
+	public int id = RandomNumUtils.createTrainerID();
 
 	// ////////////////////////////////////////////////////////////////////////
 	//

@@ -13,7 +13,7 @@ import utilities.Utils;
 public class SaveTest {
 	public static void testSave() {
 		Game g = new Game();
-		Utils.saveGame(g);
+		Utils.saveGame(g.gData);
 		System.exit(0);
 	}
 

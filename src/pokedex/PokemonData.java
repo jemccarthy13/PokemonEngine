@@ -1,5 +1,6 @@
 package pokedex;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 // ////////////////////////////////////////////////////////////////////////
@@ -8,8 +9,9 @@ import java.util.ArrayList;
 // name, number, evolution stages + levels, baseExp, moves + levels learned
 //
 // ////////////////////////////////////////////////////////////////////////
-public class PokemonData {
+public class PokemonData implements Serializable {
 
+	private static final long serialVersionUID = 6172701662394420909L;
 	public String name = null;
 	public String type = null;
 	public String pokedexNumber = null;

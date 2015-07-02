@@ -16,11 +16,12 @@ import utilities.RandomNumUtils;
 public class Player extends Actor implements Serializable {
 
 	private static final long serialVersionUID = 4426558941037291067L;
-	Actor rival;
+	public Actor rival;
 	public ArrayList<String> beatenTrainers = new ArrayList<String>();
-	private int badges = 0;
-	private int id;
-	Location curLoc;
+	public int badges = 0;
+	public int id;
+	public Location curLoc;
+	public BillsPC billsPC = new BillsPC();
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
@@ -28,7 +29,7 @@ public class Player extends Actor implements Serializable {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public Player(int x, int y, String n) {
-		super(x, y, n);
+		super(x, y, n, "PLAYER");
 		curLoc = new Location(LocationLibrary.getInstance().get("New Bark Town"));
 		id = RandomNumUtils.createTrainerID();
 	}
@@ -39,7 +40,7 @@ public class Player extends Actor implements Serializable {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public Player(String n) {
-		super(0, 0, n);
+		super(0, 0, n, "PLAYER");
 		curLoc = new Location(LocationLibrary.getInstance().get("New Bark Town"));
 		id = RandomNumUtils.createTrainerID();
 	}

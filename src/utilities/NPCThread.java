@@ -26,12 +26,14 @@ public class NPCThread extends Thread implements Serializable {
 			// otherwise move each NPC
 			for (Actor other : NPCLibrary.getInstance().values()) {
 				if ((other != null) && (!other.isStationary())) {
-					other.setSpriteFacing(RandomNumUtils.randomDirection());
+					other.setDirection(RandomNumUtils.randomDirection());
 				}
 			}
 			try {
 				sleep(1000);
-			} catch (InterruptedException e) {}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
