@@ -42,7 +42,7 @@ public class Utils {
 			System.out.println("Unable to save game...");
 			return;
 		}
-		System.out.println("Game saved to .SAV!");
+		System.out.println("** Saved game.");
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -65,7 +65,7 @@ public class Utils {
 			System.out.println("Unable to load game...");
 			return data;
 		}
-		System.out.println("Game loaded from .SAV!");
+		System.out.println("** Loaded game from save.");
 		return data;
 	}
 

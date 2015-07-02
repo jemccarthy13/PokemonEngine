@@ -44,52 +44,35 @@ public class GameInitializer {
 			loadMap(theGame.gData, loadedMap);
 
 			if (continued) {
-				// String name = "GOLD";
-				// theGame.gData.player = new Player(6, 10, name);
-				// Pokemon charmander =
-				// PokemonFactory.createPokemon("Charmander",
-				// 90);
-				// theGame.gData.player.caughtPokemon(charmander);
-				// theGame.gData.player.setMoney(1000000);
-				// theGame.gData.timeStarted = System.currentTimeMillis();
-				// theGame.gData.player.setCurLocation(LocationLibrary.getLocation("Route
-				// 29"));
-				// AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown",
-				// theGame.gData.option_sound);
 				theGame.gData = Utils.loadGame();
-				theGame.gData.player.tData.sprite_name = "PLAYER";
-				theGame.gData.player.tData.sprite = SpriteLibrary.getInstance().getSprites("PLAYER").get(0);
-
-				System.out.println(theGame.gData.player.tData.sprite);
-
 				if (!theGame.gData.player.tData.isValidData()) {
 					System.err.println(theGame.gData.player.tData.toString());
 				}
 			} else {
 				String name = "GOLD";
-				theGame.gData.player = new Player(6, 10, name);
-				theGame.gData.player.tData.sprite_name = "PLAYER";
-				theGame.gData.player.tData.sprite = SpriteLibrary.getInstance().getSprites("PLAYER").get(0);
+				theGame.gData.player = new Player(4, 2, name);
 				Pokemon charmander = PokemonFactory.createPokemon("Charmander", 90);
 				theGame.gData.player.caughtPokemon(charmander);
 				theGame.gData.player.setMoney(1000000);
 				theGame.gData.timeStarted = System.currentTimeMillis();
 				theGame.gData.player.setCurLocation(LocationLibrary.getLocation("Route 29"));
 				AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown", theGame.gData.option_sound);
-			}
+				theGame.gData.start_coorX = (Tile.TILESIZE * (8 - theGame.gData.player.getCurrentX()));
+				theGame.gData.start_coorY = (Tile.TILESIZE * (6 - theGame.gData.player.getCurrentY()));
 
-			theGame.gData.start_coorX = (Tile.TILESIZE * (8 - theGame.gData.player.getCurrentX()));
-			theGame.gData.start_coorY = (Tile.TILESIZE * (6 - theGame.gData.player.getCurrentY()));
+			}
+			theGame.gData.player.tData.sprite_name = "PLAYER";
+			theGame.gData.player.tData.sprite = SpriteLibrary.getInstance().getSprites("PLAYER")
+					.get(theGame.gData.player.getDirection().ordinal() * 3);
 			theGame.gData.atTitle = false;
 			theGame.gData.atContinueScreen = false;
 			theGame.gData.inMenu = false;
 			theGame.NPCTHREAD.start();
 			System.out.println(theGame.gData.player.tData.toString());
-			System.out.println("* Fully loaded!");
 		} catch (IOException e) {
 			System.err.println("Error initializing theGame.");
 		}
-		System.out.println("loaded id: " + theGame.gData.id);
+		System.out.println("** Rendered session id: " + theGame.gData.id);
 		return theGame.gData;
 	}
 

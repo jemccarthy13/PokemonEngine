@@ -82,21 +82,12 @@ public class Actor implements Serializable {
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// setDirection - sets the characters direction
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	public void setDirection(DIR direction) {
-		this.tData.dir = direction;
-	}
-
-	// ////////////////////////////////////////////////////////////////////////
-	//
 	// changeSprite - changes sprite based on animation
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public void changeSprite(int pixels, boolean rightFoot) {
 
-		int direction = 3 * getDir().ordinal();
+		int direction = 3 * getDirection().ordinal();
 
 		if ((pixels >= 0) && (pixels < 4)) {
 			tData.sprite = (tData.getSprites().get(direction));
@@ -161,11 +152,16 @@ public class Actor implements Serializable {
 		return this.tData.money;
 	}
 
-	public void setDir(DIR dir) {
-		this.tData.dir = dir;
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// setDirection - sets the characters direction
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public void setDirection(DIR direction) {
+		this.tData.dir = direction;
 	}
 
-	public DIR getDir() {
+	public DIR getDirection() {
 		return this.tData.dir;
 	}
 
@@ -187,10 +183,6 @@ public class Actor implements Serializable {
 
 	public String getPokemonOwned() {
 		return String.valueOf(this.tData.pokemon.size());
-	}
-
-	public DIR getDirection() {
-		return this.tData.dir;
 	}
 
 	public String getName() {
@@ -219,6 +211,10 @@ public class Actor implements Serializable {
 
 	public boolean isTrainer() {
 		return this.tData.trainer;
+	}
+
+	public Coordinate getPosition() {
+		return this.tData.position;
 	}
 
 }

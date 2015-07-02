@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import location.Location;
 import location.LocationLibrary;
-import utilities.Coordinate;
 import utilities.RandomNumUtils;
 
 //////////////////////////////////////////////////////////////////////////
@@ -63,6 +62,10 @@ public class Player extends Actor implements Serializable {
 		return curLoc;
 	}
 
+	public void setCurLocation(Location location) {
+		this.curLoc = location;
+	}
+
 	public void setRivalName(String n) {
 		this.rival.setName(n);
 	}
@@ -87,11 +90,4 @@ public class Player extends Actor implements Serializable {
 		return this.id;
 	}
 
-	public Coordinate getPosition() {
-		return this.tData.position;
-	}
-
-	public void setCurLocation(Location location) {
-		this.curLoc = location;
-	}
 }

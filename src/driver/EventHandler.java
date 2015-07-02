@@ -393,32 +393,32 @@ public class EventHandler implements Serializable {
 	// ////////////////////////////////////////////////////////////////////////
 	void handleWorldEvent(int keyCode) {
 		if (keyCode == KeyEvent.VK_UP) {
-			game.gData.player.setDir(DIR.NORTH);
-			if (game.moveable_dir[game.gData.player.getDir().ordinal()]) {
+			game.gData.player.setDirection(DIR.NORTH);
+			if (game.moveable_dir[game.gData.player.getDirection().ordinal()]) {
 				game.walking = true;
 			} else {
 				game.gData.player.tData.sprite = (SpriteLibrary.getInstance().getSprites("PLAYER").get(9));
 				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_COLLISION, game.gData.option_sound);
 			}
 		} else if (keyCode == KeyEvent.VK_DOWN) {
-			game.gData.player.setDir(DIR.SOUTH);
-			if (game.moveable_dir[game.gData.player.getDir().ordinal()]) {
+			game.gData.player.setDirection(DIR.SOUTH);
+			if (game.moveable_dir[game.gData.player.getDirection().ordinal()]) {
 				game.walking = true;
 			} else {
 				game.gData.player.tData.sprite = (SpriteLibrary.getInstance().getSprites("PLAYER").get(0));
 				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_COLLISION, game.gData.option_sound);
 			}
 		} else if (keyCode == KeyEvent.VK_LEFT) {
-			game.gData.player.setDir(DIR.WEST);
-			if (game.moveable_dir[game.gData.player.getDir().ordinal()]) {
+			game.gData.player.setDirection(DIR.WEST);
+			if (game.moveable_dir[game.gData.player.getDirection().ordinal()]) {
 				game.walking = true;
 			} else {
 				game.gData.player.tData.sprite = (SpriteLibrary.getInstance().getSprites("PLAYER").get(3));
 				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_COLLISION, game.gData.option_sound);
 			}
 		} else if (keyCode == KeyEvent.VK_RIGHT) {
-			game.gData.player.setDir(DIR.EAST);
-			if (game.moveable_dir[game.gData.player.getDir().ordinal()]) {
+			game.gData.player.setDirection(DIR.EAST);
+			if (game.moveable_dir[game.gData.player.getDirection().ordinal()]) {
 				game.walking = true;
 			} else {
 				game.gData.player.tData.sprite = (SpriteLibrary.getInstance().getSprites("PLAYER").get(6));
@@ -432,7 +432,7 @@ public class EventHandler implements Serializable {
 			AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_SELECT, game.gData.option_sound);
 			Actor borderNPC = null;
 			// overhead cost for following logic
-			DIR playerDir = game.gData.player.getDir();
+			DIR playerDir = game.gData.player.getDirection();
 			int playerCurX = game.gData.player.getCurrentX();
 			int playerCurY = game.gData.player.getCurrentY();
 			for (Actor curNPC : NPCLibrary.getInstance().values()) {

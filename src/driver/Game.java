@@ -116,7 +116,7 @@ public class Game extends JPanel implements ActionListener {
 	// ////////////////////////////////////////////////////////////////////////
 	private void handleMovement() {
 		// get all comparison variables up front
-		DIR playerDir = gData.player.getDir();
+		DIR playerDir = gData.player.getDirection();
 		PokemonList playerPokemon = gData.player.getPokemon();
 		Coordinate playerPos = gData.player.tData.position;
 
@@ -152,7 +152,7 @@ public class Game extends JPanel implements ActionListener {
 				gData.start_coorX = (gData.player.getCurrentX() - x.getX()) * -1 * Tile.TILESIZE;
 				gData.start_coorY = (gData.player.getCurrentY() - x.getY()) * -1 * Tile.TILESIZE;
 				teleported = true;
-				gData.player.setDir(DIR.NORTH);
+				gData.player.setDirection(DIR.NORTH);
 			}
 		}
 

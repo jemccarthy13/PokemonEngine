@@ -31,7 +31,7 @@ public class GameFrame extends JFrame {
 		pokemonGame.setFocusable(true);
 		pokemonGame.requestFocus();
 		add(pokemonGame);
-		System.out.println("new id: " + pokemonGame.gData.id);
+		System.out.println("** Issued new session id: " + pokemonGame.gData.id);
 
 		AudioLibrary.getInstance().playBackgroundMusic("Title", pokemonGame.gData.option_sound);
 	}
