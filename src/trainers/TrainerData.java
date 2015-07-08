@@ -48,7 +48,7 @@ public class TrainerData implements Serializable {
 		String retStr = name;
 		retStr += "\n- " + position.getX() + ", " + position.getY();
 		retStr += "\n- " + money;
-		retStr += "\n- " + sprite;
+		retStr += "\n- " + dir;
 		return retStr;
 	}
 }

@@ -30,7 +30,6 @@ public class GameData implements Serializable {
 	public static final int PLAYER_SPEED_BIKE = 95;
 	// ==================== Game Timing Data ================================//
 	public TimeStruct gameTimeStruct = new TimeStruct();
-	public long timeStarted; // time the game was started
 	public Timer gameTimer; // time difference between game events
 	// ======================== Map Data ===================================//
 	public int[][] currentMap = new int[3][21400];
@@ -62,15 +61,6 @@ public class GameData implements Serializable {
 	public int currentSpeed = PLAYER_SPEED_WALK; // controls the speed of play
 
 	public int id = RandomNumUtils.createTrainerID();
-
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Update the game time according to the time started
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	public void updateTime() {
-		gameTimeStruct.updateTime(timeStarted);
-	}
 
 	public String toString() {
 		String retStr = "Player: " + "\n";

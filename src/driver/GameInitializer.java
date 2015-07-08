@@ -75,7 +75,7 @@ public class GameInitializer {
 			theGame.NPCTHREAD.start();
 
 			// start clock for current session
-			theGame.gData.timeStarted = System.currentTimeMillis();
+			theGame.gData.gameTimeStruct.timeStarted = System.currentTimeMillis();
 			theGame.gData.gameTimer = new Timer(100 - theGame.gData.currentSpeed, theGame);
 			theGame.gData.gameTimer.start();
 

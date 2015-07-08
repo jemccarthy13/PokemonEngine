@@ -26,6 +26,7 @@ public class Utils {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public static void saveGame(GameData data) {
+		data.gameTimeStruct.saveTime();
 		FileOutputStream fout = null;
 		ObjectOutputStream oos = null;
 		try {

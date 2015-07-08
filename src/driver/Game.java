@@ -83,7 +83,7 @@ public class Game extends JPanel implements ActionListener {
 	// ////////////////////////////////////////////////////////////////////////
 	public void actionPerformed(ActionEvent e) {
 
-		gData.updateTime(); // update the time played
+		gData.gameTimeStruct.updateTime(); // update the time played
 
 		if (gData.inBattle) {
 			if (BattleEngine.getInstance().playerCurrentPokemon.getStat(STATS.HP) <= 0) {
