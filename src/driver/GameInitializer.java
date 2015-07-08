@@ -34,7 +34,6 @@ public class GameInitializer {
 	// the theGame based off a save file, or start a new theGame.
 	// Prepares all the necessary utilities, such as
 	//
-	// TODO - add load from .SAV feature
 	// TODO - map to be used is scriptable in data file with other "EVENTS"
 	//
 	// ////////////////////////////////////////////////////////////////////////
@@ -53,7 +52,7 @@ public class GameInitializer {
 			} else {
 				String name = "GOLD";
 				theGame.gData.player = new Player(4, 2, name);
-				Pokemon charmander = PokemonFactory.createPokemon("Charmander", 90);
+				Pokemon charmander = PokemonFactory.createPokemon("Charmander", 7);
 				theGame.gData.player.caughtPokemon(charmander);
 				theGame.gData.player.setMoney(1000000);
 				theGame.gData.player.setCurLocation(LocationLibrary.getLocation("Route 29"));

@@ -166,9 +166,10 @@ public class BattleEngine {
 
 		// reset logic
 		game.gData.playerWin = false;
-		game.movable = true;
-		this.inMain = false;
-		this.game.gData.inBattle = false;
+		game.movable = false;
+		inFight = false;
+		this.inMain = true;
+		this.game.gData.inBattle = true;
 		this.game.gData.inMessage = true;
 		this.game.messageString = "Player won!";
 

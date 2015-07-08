@@ -45,7 +45,17 @@ public class EventHandler implements Serializable {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	void handleBattleEvent(int keyCode) {
-		if (BattleEngine.getInstance().inFight) {
+		if (game.gData.inMessage) {
+			if (keyCode == KeyEvent.VK_X || keyCode == KeyEvent.VK_Z) {
+				game.gData.inMessage = false;
+				game.gData.inBattle = false;
+				BattleEngine.getInstance().inMain = false;
+				BattleEngine.getInstance().inFight = false;
+				BattleEngine.getInstance().inItem = false;
+				BattleEngine.getInstance().inPokemon = false;
+				game.movable = true;
+			}
+		} else if (BattleEngine.getInstance().inFight) {
 			// at move selection menu
 			Pokemon playerPokemon = BattleEngine.getInstance().playerCurrentPokemon;
 			if (BattleEngine.getInstance().playerTurn) {
@@ -90,8 +100,7 @@ public class EventHandler implements Serializable {
 				resetBattleVars();
 				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_SELECT, game.gData.option_sound);
 			}
-		}
-		if (BattleEngine.getInstance().inMain) {
+		} else if (BattleEngine.getInstance().inMain) {
 			// at main battle menu
 			if (BattleEngine.getInstance().playerTurn) {
 				if (keyCode == KeyEvent.VK_UP) {

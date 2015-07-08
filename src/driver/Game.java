@@ -85,7 +85,7 @@ public class Game extends JPanel implements ActionListener {
 
 		gData.gameTimeStruct.updateTime(); // update the time played
 
-		if (gData.inBattle) {
+		if (gData.inBattle && !gData.inMessage) {
 			if (BattleEngine.getInstance().playerCurrentPokemon.getStat(STATS.HP) <= 0) {
 				// TODO - check for other todo switch pokemon
 				BattleEngine.getInstance().playerSwitchPokemon();

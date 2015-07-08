@@ -103,6 +103,7 @@ public class Pokemon implements Serializable {
 	// ////////////////////////////////////////////////////////////////////////
 	public void gainExp(int expGain) {
 		this.curExp += expGain;
+		System.out.println("Gained " + expGain + " exp");
 		if (this.curExp >= (this.level + 1) * (this.level + 1) * (this.level + 1)) {
 			levelUp();
 		}
