@@ -59,7 +59,10 @@ public class GameInitializer {
 				AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown", theGame.gData.option_sound);
 				theGame.gData.start_coorX = (Tile.TILESIZE * (8 - theGame.gData.player.getCurrentX()));
 				theGame.gData.start_coorY = (Tile.TILESIZE * (6 - theGame.gData.player.getCurrentY()));
-
+				if (theGame.gData.SHOWINTRO) {
+					theGame.gData.introStage = 1;
+					theGame.gData.inIntro = true;
+				}
 			}
 
 			// initialize the player sprite
