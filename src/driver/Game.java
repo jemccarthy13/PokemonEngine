@@ -20,6 +20,7 @@ import pokedex.PokemonFactory;
 import pokedex.PokemonList;
 import tiles.Tile;
 import tiles.TileSet;
+import tiles.WildTile;
 import trainers.Actor;
 import trainers.Actor.DIR;
 import trainers.NPCLibrary;
@@ -158,7 +159,7 @@ public class Game extends JPanel implements ActionListener {
 			if (moveable_dir[playerDir.ordinal()]) {
 				gData.player.move(playerDir);
 				// check for wild encounter
-				if (gData.tm.getTileAt(gData.player.getPosition()) == TileSet.WILD_TILE) {
+				if (gData.tm.getTileAt(gData.player.getPosition()).equals(WildTile.name)) {
 					if (RandomNumUtils.isWildEncounter()) {
 						enemyPkmn.clear();
 						enemyPkmn.add(PokemonFactory.getInstance().randomPokemon(gData.player.getCurLoc()));

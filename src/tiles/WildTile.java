@@ -9,4 +9,5 @@ import java.io.Serializable;
 //////////////////////////////////////////////////////////////////////////
 public class WildTile extends Tile implements Serializable {
 	private static final long serialVersionUID = 5589304545199492779L;
+	public static final String name = "WILD";
 }

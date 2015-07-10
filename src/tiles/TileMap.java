@@ -32,13 +32,18 @@ public class TileMap extends ArrayList<ArrayList<Tile>> {
 	// specified direction relative to the coordinate
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public Tile getTileAt(Coordinate c) {
-		return this.get(c.getY()).get(c.getX());
-	}
+	public String getTileAt(Coordinate c) {
+		Tile t = this.get(c.getY()).get(c.getX());
+		if (t instanceof ObstacleTile) {
+			return "OBSTACLE";
+		} else if (t instanceof WildTile) {
+			return "WILD";
+		} else if (t instanceof NormalTile) {
+			return "NORMAL";
+		} else {
+			return "BASE TILE";
+		}
 
-	public Tile getTileFromDir(Coordinate c, DIR dir) {
-		Coordinate y = c.move(dir);
-		return getTileAt(y);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -66,6 +71,6 @@ public class TileMap extends ArrayList<ArrayList<Tile>> {
 				return false;
 			}
 		}
-		return !(getTileAt(y) instanceof ObstacleTile);
+		return !(getTileAt(y).equals(ObstacleTile.name));
 	}
 }
