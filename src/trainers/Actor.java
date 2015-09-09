@@ -159,6 +159,7 @@ public class Actor implements Serializable {
 	// ////////////////////////////////////////////////////////////////////////
 	public void setDirection(DIR direction) {
 		this.tData.dir = direction;
+		this.tData.sprite = this.tData.getSprites().get(direction.ordinal() * 3);
 	}
 
 	public DIR getDirection() {
@@ -181,7 +182,7 @@ public class Actor implements Serializable {
 		this.tData.name = nameSelected;
 	}
 
-	public String getPokemonOwned() {
+	public String getNumPokemonOwned() {
 		return String.valueOf(this.tData.pokemon.size());
 	}
 

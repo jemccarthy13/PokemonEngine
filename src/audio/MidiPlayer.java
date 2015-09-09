@@ -16,7 +16,7 @@ public class MidiPlayer {
 	private String filename;
 
 	public MidiPlayer(String file, boolean b) {
-		this.filename = file;
+		this.filename = file.replace(" ", "") + ".mid";
 		try {
 			InputStream resource = MidiPlayer.class.getResourceAsStream(this.filename.replace("resources", ""));
 			Sequence sequence = MidiSystem.getSequence(resource);
@@ -25,7 +25,7 @@ public class MidiPlayer {
 			this.sequencer.setSequence(sequence);
 			this.sequencer.setLoopCount(999);
 		} catch (Exception e) {
-			System.err.println("Cannot load sound " + file);
+			System.err.println("Cannot load sound " + filename);
 		}
 	}
 

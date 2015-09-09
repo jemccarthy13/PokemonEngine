@@ -309,7 +309,7 @@ public class Painter extends JPanel {
 		g.drawString("ID:  " + gameData.player.getID(), 295, 54);
 		g.drawString("Name:" + getPadding("Name:") + gameData.player.getName(), 64, 93);
 		g.drawString("Money:" + getPadding("Money:") + "$" + gameData.player.getMoney(), 64, 150);
-		g.drawString("Pokedex:" + getPadding("Pokedex:") + gameData.player.getPokemonOwned(), 64, 183);
+		g.drawString("Pokedex:" + getPadding("Pokedex:") + gameData.player.getNumPokemonOwned(), 64, 183);
 		g.drawString("Time:  " + getPadding("Time:") + gameData.gameTimeStruct.formatTime(), 64, 213);
 	}
 

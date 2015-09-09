@@ -34,7 +34,7 @@ public class AudioLibrary {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	private AudioLibrary() {
-		System.out.println("** Loading audio library...");
+		System.out.println("** Initializing audio library...");
 
 		final String bgMusicPath = "resources/audio_lib/BGM/";
 		final String soundEffectsPath = "resources/audio_lib/SE/";
@@ -42,27 +42,23 @@ public class AudioLibrary {
 		m_encounterTracks = new ArrayList<String>();
 		m_trackList = new HashMap<String, MidiPlayer>();
 
+		System.out.println("** Finding encounter tracks...");
+
 		File[] listOfFiles = new File(bgMusicPath).listFiles();
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
 
 				String name_of_file = listOfFiles[i].getName();
 
-				MidiPlayer musicTrack = new MidiPlayer(bgMusicPath + name_of_file, true);
-
 				// compile a list of trainer / encounter music
 				Pattern p = Pattern.compile("Encounter");
 				if (p.matcher(name_of_file).matches()) {
 					m_encounterTracks.add(name_of_file.replace(".mid", ""));
 				}
-
-				// process out junk parts of the name of the track title for
-				// adding to the list
-				m_trackList.put(name_of_file.replace("Location", "").replace(".mid", ""), musicTrack);
 			}
 		}
 
-		System.out.println("** Loaded primary music files.");
+		System.out.println("Found " + m_encounterTracks.size() + " tracks.");
 
 		// load all of the sound effect files
 		listOfFiles = new File(soundEffectsPath).listFiles();
@@ -90,23 +86,34 @@ public class AudioLibrary {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public void playBackgroundMusic(String songTitle, boolean option_sound) {
-		if (option_sound) {
-			// stop the current track, if playing
-			if (m_currentTrack != null) {
-				m_currentTrack.stop();
-				m_currentTrack = null;
-			}
-
-			// switch to the next track and play, if the track is valid
-			if (m_trackList.containsKey(songTitle)) {
-				m_currentTrack = getInstance().m_trackList.get(songTitle);
-				if (m_currentTrack != null) {
-					m_currentTrack.start();
-				}
-			} else {
-				System.err.println("Can't play " + songTitle);
-			}
+		if (!option_sound) {
+			return;
 		}
+		// stop the current track, if playing
+		if (m_currentTrack != null) {
+			m_currentTrack.stop();
+			m_currentTrack = null;
+		}
+
+		// switch to the next track and play, if the track is valid
+		if (m_trackList.containsKey(songTitle)) {
+			m_currentTrack = getInstance().m_trackList.get(songTitle);
+			if (m_currentTrack != null) {
+				m_currentTrack.start();
+			}
+		} else {
+
+			final String bgMusicPath = "resources/audio_lib/BGM/";
+			String pathToMusicFile = bgMusicPath + songTitle;
+
+			MidiPlayer musicTrack = new MidiPlayer(pathToMusicFile, true);
+
+			File f = new File(pathToMusicFile);
+
+			m_trackList.put(f.getName().replace("Location", "").replace(".mid", ""), musicTrack);
+			System.out.println("** Dynamically loaded " + songTitle);
+		}
+
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
