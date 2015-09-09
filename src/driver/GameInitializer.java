@@ -1,5 +1,7 @@
 package driver;
 
+import graphics.SpriteLibrary;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,8 +10,6 @@ import java.util.StringTokenizer;
 
 import javax.swing.Timer;
 
-import audio.AudioLibrary;
-import graphics.SpriteLibrary;
 import location.LocationLibrary;
 import pokedex.Pokemon;
 import pokedex.PokemonFactory;
@@ -18,6 +18,7 @@ import tiles.TileSet;
 import trainers.Player;
 import utilities.Coordinate;
 import utilities.Utils;
+import audio.AudioLibrary;
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -55,7 +56,7 @@ public class GameInitializer {
 				Pokemon charmander = PokemonFactory.createPokemon("Charmander", 7);
 				theGame.gData.player.caughtPokemon(charmander);
 				theGame.gData.player.setMoney(1000000);
-				theGame.gData.player.setCurLocation(LocationLibrary.getLocation("Route 29"));
+				theGame.gData.player.setCurLocation(LocationLibrary.getLocation("Route 27"));
 				AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown", theGame.gData.option_sound);
 				theGame.gData.start_coorX = (Tile.TILESIZE * (8 - theGame.gData.player.getCurrentX()));
 				theGame.gData.start_coorY = (Tile.TILESIZE * (6 - theGame.gData.player.getCurrentY()));
@@ -97,8 +98,8 @@ public class GameInitializer {
 	public static void loadMap(GameData data, String loadedMap) throws IOException {
 		// intialize file reader
 		System.err.println("Loading map...");
-		BufferedReader reader = new BufferedReader(
-				new InputStreamReader(GameInitializer.class.getResourceAsStream("/maps/" + loadedMap + ".map")));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				GameInitializer.class.getResourceAsStream("/maps/" + loadedMap + ".map")));
 		String line = reader.readLine();
 		StringTokenizer tokens = new StringTokenizer(line);
 

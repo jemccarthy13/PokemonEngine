@@ -2,7 +2,37 @@
 	"locations":[
 		{
 			"name":"Route 29",
-			"canFly":true,
+			"canFlyOutOf":true,
+			"boundaries":{
+				"north": 0,
+				"south": 10,
+				"east": 10,
+				"west": 0
+			},
+			"pokemon_available":[
+				{
+					"name":"Pidgey",
+					"probability":55,
+					"min_level":2,
+					"max_level":4
+				},
+				{
+					"name":"Rattatta",
+					"probability":5,
+					"min_level":2,
+					"max_level":4
+				},
+				{
+					"name":"Sentret",
+					"probability":40,
+					"min_level":2,
+					"max_level":4
+				}
+			]			
+		},
+		{
+			"name":"Route 27",
+			"canFlyOutOf":true,
 			"boundaries":{
 				"north": 0,
 				"south": 10,

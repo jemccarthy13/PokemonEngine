@@ -28,7 +28,20 @@ public class LocationData implements Serializable {
 	// Constructs a LocationData object
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public LocationData() {}
+	public LocationData() {
+		boundaries = new HashMap<DIR, Integer>();
+		boundaries.put(DIR.NORTH, 0);
+		boundaries.put(DIR.SOUTH, 0);
+		boundaries.put(DIR.EAST, 0);
+		boundaries.put(DIR.WEST, 0);
+		pokemon = new ArrayList<String>();
+		probabilities = new ArrayList<Integer>();
+		minLevels = new ArrayList<Integer>();
+		maxLevels = new ArrayList<Integer>();
+		canFlyOutOf = false;
+		name = "";
+
+	}
 
 	public boolean isValidData() {
 		return (name != null && canFlyOutOf != null && boundaries != null && minLevels != null && maxLevels != null);

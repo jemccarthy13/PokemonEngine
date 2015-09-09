@@ -1,5 +1,7 @@
 package utilities;
 
+import graphics.MessageBox;
+
 import java.awt.Graphics;
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,9 +9,8 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import driver.GameData;
-import graphics.MessageBox;
 import trainers.Player;
+import driver.GameData;
 
 // ////////////////////////////////////////////////////////////////////////
 //
@@ -61,12 +62,11 @@ public class Utils {
 			data = (GameData) oos.readObject();
 			oos.close();
 			fout.close();
+			System.out.println("** Loaded game from save.");
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			System.out.println("Unable to load game...");
-			return data;
 		}
-		System.out.println("** Loaded game from save.");
 		return data;
 	}
 

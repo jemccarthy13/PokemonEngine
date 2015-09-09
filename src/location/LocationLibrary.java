@@ -59,14 +59,14 @@ public class LocationLibrary extends HashMap<String, LocationData> {
 				ld.name = (String) loc_data.get("name");
 
 				// get the pokemon's pokedex number
-				ld.canFlyOutOf = (Boolean) loc_data.get("canFly");
+				ld.canFlyOutOf = (Boolean) loc_data.get("canFlyOutOf");
 
 				// get the coordinate boundaries for this location
 				ld.boundaries = new HashMap<DIR, Integer>();
-				ld.boundaries.put(DIR.NORTH,
-						((Long) ((JSONObject) loc_data.get("boundaries")).get("north")).intValue());
-				ld.boundaries.put(DIR.SOUTH,
-						((Long) ((JSONObject) loc_data.get("boundaries")).get("south")).intValue());
+				ld.boundaries
+						.put(DIR.NORTH, ((Long) ((JSONObject) loc_data.get("boundaries")).get("north")).intValue());
+				ld.boundaries
+						.put(DIR.SOUTH, ((Long) ((JSONObject) loc_data.get("boundaries")).get("south")).intValue());
 				ld.boundaries.put(DIR.EAST, ((Long) ((JSONObject) loc_data.get("boundaries")).get("east")).intValue());
 				ld.boundaries.put(DIR.WEST, ((Long) ((JSONObject) loc_data.get("boundaries")).get("west")).intValue());
 

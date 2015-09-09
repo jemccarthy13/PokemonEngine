@@ -95,14 +95,7 @@ public class AudioLibrary {
 			m_currentTrack = null;
 		}
 
-		// switch to the next track and play, if the track is valid
-		if (m_trackList.containsKey(songTitle)) {
-			m_currentTrack = getInstance().m_trackList.get(songTitle);
-			if (m_currentTrack != null) {
-				m_currentTrack.start();
-			}
-		} else {
-
+		if (!m_trackList.containsKey(songTitle)) {
 			final String bgMusicPath = "resources/audio_lib/BGM/";
 			String pathToMusicFile = bgMusicPath + songTitle;
 
@@ -111,7 +104,15 @@ public class AudioLibrary {
 			File f = new File(pathToMusicFile);
 
 			m_trackList.put(f.getName().replace("Location", "").replace(".mid", ""), musicTrack);
+
 			System.out.println("** Dynamically loaded " + songTitle);
+		}
+
+		// switch to the next track and play, if the track is valid
+		m_currentTrack = getInstance().m_trackList.get(songTitle);
+
+		if (m_currentTrack != null) {
+			m_currentTrack.start();
 		}
 
 	}
