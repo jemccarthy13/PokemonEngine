@@ -1,7 +1,5 @@
 package trainers;
 
-import graphics.SpriteLibrary;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -37,7 +35,6 @@ public class Actor implements Serializable {
 		this.tData.money = 2000;
 		this.tData.pokemon = new PokemonList();
 		this.tData.sprite_name = sprite_name;
-		this.tData.sprite = SpriteLibrary.getInstance().getImageIcon(sprite_name);
 		setDirection(DIR.SOUTH);
 	}
 

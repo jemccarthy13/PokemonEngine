@@ -30,7 +30,7 @@ public class TileSet extends ArrayList<Image> implements Serializable {
 			118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138,
 			139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154 };
 
-	public static final int[] WILD_tiLES = { 10, 17, 41 };
+	public static final int[] WILD_TILES = { 10, 17, 41 };
 
 	private static TileSet m_tiles = new TileSet();
 

@@ -1,17 +1,18 @@
 package tiles;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import driver.GameData;
 import trainers.Actor.DIR;
 import utilities.Coordinate;
+import driver.GameData;
 
 // ////////////////////////////////////////////////////////////////////////
 //
 // TileMap - equivalent to ArrayList<Tile> with some custom functions
 //
 // ////////////////////////////////////////////////////////////////////////
-public class TileMap extends ArrayList<ArrayList<Tile>> {
+public class TileMap extends ArrayList<List<Tile>> {
 
 	private static final long serialVersionUID = 5325017932787074716L;
 

@@ -8,6 +8,7 @@ import java.awt.event.KeyListener;
 import javax.swing.JFrame;
 
 import trainers.NPCLibrary;
+import utilities.DebugUtility;
 import audio.AudioLibrary;
 
 public class GameFrame extends JFrame {
@@ -34,6 +35,13 @@ public class GameFrame extends JFrame {
 		add(pokemonGame);
 		System.out.println("** Issued new session id: " + pokemonGame.gData.id);
 
+		String loadedMap = "NewBarkTown";
+		try {
+			GameInitializer.loadMap(pokemonGame.gData, loadedMap);
+		} catch (Exception e) {
+			System.err.println("Unable to load map.");
+		}
+
 		AudioLibrary.getInstance().playBackgroundMusic("Title", pokemonGame.gData.option_sound);
 	}
 
@@ -50,6 +58,8 @@ public class GameFrame extends JFrame {
 		pf.setResizable(false);
 		pf.pack();
 		pf.setLocationRelativeTo(null);
+
+		DebugUtility.debugHeader("Startup completed");
 	}
 
 	// ////////////////////////////////////////////////////////////////////////

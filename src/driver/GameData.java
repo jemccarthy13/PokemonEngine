@@ -21,7 +21,7 @@ public class GameData implements Serializable {
 	// =========================== CHEATS ===================================//
 	public boolean NOCLIP = false; // walk anywhere
 	public boolean NOBATTLE = false; // no wild/trainer battles
-	public boolean SHOWINTRO = true;
+	public boolean SHOWINTRO = false; // set to false to skip Oak intro scene
 
 	public static final int MAX_NAME_SIZE = 7;
 	public static final int NPC_SIGHT_DISTANCE = 5;

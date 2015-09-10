@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
+import utilities.DebugUtility;
 import utilities.RandomNumUtils;
 
 // ////////////////////////////////////////////////////////////////////////
@@ -34,7 +35,8 @@ public class AudioLibrary {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	private AudioLibrary() {
-		System.out.println("** Initializing audio library...");
+		DebugUtility.debugHeader("Audio");
+		DebugUtility.printMessage("Initializing audio library...");
 
 		final String bgMusicPath = "resources/audio_lib/BGM/";
 		final String soundEffectsPath = "resources/audio_lib/SE/";
@@ -43,9 +45,8 @@ public class AudioLibrary {
 		m_trackList = new HashMap<String, MidiPlayer>();
 
 		File[] listOfFiles = new File(bgMusicPath).listFiles();
-		System.out.println("** - Audio library: " + listOfFiles.length + " tracks.");
+		DebugUtility.printMessage(" - Audio library tracks loaded: " + listOfFiles.length);
 
-		System.out.println("** - Finding encounter tracks...");
 		for (File file : listOfFiles) {
 			if (file.isFile()) {
 
@@ -59,9 +60,10 @@ public class AudioLibrary {
 			}
 		}
 
-		System.out.println("** - " + m_encounterTracks.size() + " encounter tracks.");
+		DebugUtility.printMessage(" - " + "Enounter Tracks loaded: " + m_encounterTracks.size());
 
 		// load all of the sound effect files
+		DebugUtility.printMessage("Loading sound effects...");
 		listOfFiles = new File(soundEffectsPath).listFiles();
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
@@ -69,7 +71,7 @@ public class AudioLibrary {
 						listOfFiles[i].getName().replace(".wav", ""));
 			}
 		}
-		System.out.println("** Loaded primary sound effect files.");
+		DebugUtility.printMessage(" - Sound effects loaded: " + listOfFiles.length);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////

@@ -9,6 +9,8 @@ import java.util.HashMap;
 
 import javax.swing.ImageIcon;
 
+import utilities.DebugUtility;
+
 // ////////////////////////////////////////////////////////////////////////
 //
 // Create all images used in game for reference.
@@ -30,7 +32,8 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	private SpriteLibrary() {
-		System.out.println("** Initialized image library.");
+		DebugUtility.debugHeader("Graphics");
+		DebugUtility.printMessage("Initialized image library.");
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
