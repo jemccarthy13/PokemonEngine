@@ -7,7 +7,6 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import pokedex.Pokemon;
@@ -19,7 +18,6 @@ import trainers.Actor;
 import trainers.NPCLibrary;
 import trainers.Player;
 import utilities.BattleEngine;
-import utilities.Utils;
 import driver.Game;
 import driver.GameData;
 
@@ -36,6 +34,9 @@ public class Painter extends JPanel {
 	private static final long serialVersionUID = 2538625975768781653L;
 
 	private static String ARROW = "Arrow";
+	private static String partyFirstMember = "PartyFirst";
+	private static String partyMember = "PartyBar";
+	private static String partyBackground = "PartyBG";
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
@@ -84,10 +85,27 @@ public class Painter extends JPanel {
 
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// paintMessageBox - utility to print a one line message
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	private static void paintMessageBox(Graphics g, Game game) {
 		g.setColor(Color.BLACK);
-		g.drawImage(SpriteLibrary.MESSAGE_BOX.getImage(), 0, 0, null);
+		g.drawImage(SpriteLibrary.getImage("MessageBox"), 0, 0, null);
 		g.drawString(game.messageString, 30, 260);
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// paintMessageBox - utility to print a two line message
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public static void paintMessageBox(Graphics g, String line1, String line2) {
+		g.setColor(Color.BLACK);
+		g.drawImage(SpriteLibrary.getImage("MessageBox"), 0, 0, null);
+		g.drawString(line1, 30, 260);
+		g.drawString(line2, 30, 290);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -96,7 +114,7 @@ public class Painter extends JPanel {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	private static void paintNameInputScreen(Graphics g, Game game) {
-		g.drawImage(SpriteLibrary.NAMESCREEN.getImage(), 0, 0, null);
+		g.drawImage(SpriteLibrary.getImage("Namescreen"), 0, 0, null);
 
 		if (game.nameScreen.rowSelection < 5) {
 			g.drawImage(SpriteLibrary.getImage(ARROW), (int) (40 + Tile.TILESIZE * 2 * game.nameScreen.colSelection),
@@ -110,13 +128,13 @@ public class Painter extends JPanel {
 		String name = game.nameScreen.getChosenName();
 
 		for (int x = 0; x < GameData.MAX_NAME_SIZE; x++) {
-			g.drawImage(SpriteLibrary.FONT_UNDERSCORE.getImage(), 150 + Tile.TILESIZE * x, 40, null);
+			g.drawImage(SpriteLibrary.getImage("_"), 150 + Tile.TILESIZE * x, 40, null);
 		}
 		for (int x = 0; x < name.toCharArray().length; x++) {
 			paintString(g, name, 150, 40);
 		}
 		if (name.length() < GameData.MAX_NAME_SIZE) {
-			g.drawImage(SpriteLibrary.FONT_CURSOR.getImage(), 150 + Tile.TILESIZE * name.length(), 40, null);
+			g.drawImage(SpriteLibrary.getImage("CURSOR"), 150 + Tile.TILESIZE * name.length(), 40, null);
 		}
 		g.drawImage(SpriteLibrary.getInstance().getSprites(game.nameScreen.toBeNamed).get(0).getImage(), 80, 30, null);
 	}
@@ -128,8 +146,20 @@ public class Painter extends JPanel {
 	// ////////////////////////////////////////////////////////////////////////
 	public static void paintString(Graphics g, String string, int startX, int startY) {
 		for (int x = 0; x < string.toCharArray().length; x++) {
-			g.drawImage(SpriteLibrary.getInstance().getFontChar(string.toCharArray()[x]).getImage(), startX
-					+ Tile.TILESIZE * x, startY, null);
+			switch (string.toCharArray()[x]) {
+			case '?':
+				g.drawImage(SpriteLibrary.getImage("QUESTION"), startX + Tile.TILESIZE * x, startY, null);
+				break;
+			case '.':
+				g.drawImage(SpriteLibrary.getImage("PERIOD"), startX + Tile.TILESIZE * x, startY, null);
+				break;
+			case ' ':
+				g.drawImage(SpriteLibrary.getImage("SPACE"), startX + Tile.TILESIZE * x, startY, null);
+				break;
+			default:
+				g.drawImage(SpriteLibrary.getInstance().getFontChar(string.toCharArray()[x]).getImage(), startX
+						+ Tile.TILESIZE * x, startY, null);
+			}
 		}
 	}
 
@@ -204,28 +234,28 @@ public class Painter extends JPanel {
 
 		// player status effect information
 		if (playerPokemon.statusEffect == 1) {
-			g.drawImage(SpriteLibrary.STATUS_PAR.getImage(), 415, 140, null);
+			g.drawImage(SpriteLibrary.getImage("StatusPAR"), 415, 140, null);
 		} else if (playerPokemon.statusEffect == 2) {
-			g.drawImage(SpriteLibrary.STATUS_BRN.getImage(), 415, 140, null);
+			g.drawImage(SpriteLibrary.getImage("StatusBRN"), 415, 140, null);
 		} else if (playerPokemon.statusEffect == 3) {
-			g.drawImage(SpriteLibrary.STATUS_PSN.getImage(), 415, 140, null);
+			g.drawImage(SpriteLibrary.getImage("StatusPSN"), 415, 140, null);
 		} else if (playerPokemon.statusEffect == 4) {
-			g.drawImage(SpriteLibrary.STATUS_SLP.getImage(), 415, 140, null);
+			g.drawImage(SpriteLibrary.getImage("StatusSLP"), 415, 140, null);
 		} else if (playerPokemon.statusEffect == 5) {
-			g.drawImage(SpriteLibrary.STATUS_FRZ.getImage(), 415, 140, null);
+			g.drawImage(SpriteLibrary.getImage("StatusFRZ"), 415, 140, null);
 		}
 
 		// enemy status effect information
 		if (enemyPokemon.statusEffect == 1) {
-			g.drawImage(SpriteLibrary.STATUS_PAR.getImage(), 18, 60, null);
+			g.drawImage(SpriteLibrary.getImage("StatusPAR"), 18, 60, null);
 		} else if (enemyPokemon.statusEffect == 2) {
-			g.drawImage(SpriteLibrary.STATUS_BRN.getImage(), 18, 60, null);
+			g.drawImage(SpriteLibrary.getImage("StatusBRN"), 18, 60, null);
 		} else if (enemyPokemon.statusEffect == 3) {
-			g.drawImage(SpriteLibrary.STATUS_PSN.getImage(), 18, 60, null);
+			g.drawImage(SpriteLibrary.getImage("StatusPSN"), 18, 60, null);
 		} else if (enemyPokemon.statusEffect == 4) {
-			g.drawImage(SpriteLibrary.STATUS_SLP.getImage(), 18, 60, null);
+			g.drawImage(SpriteLibrary.getImage("StatusSLP"), 18, 60, null);
 		} else if (enemyPokemon.statusEffect == 5) {
-			g.drawImage(SpriteLibrary.STATUS_FRZ.getImage(), 18, 60, null);
+			g.drawImage(SpriteLibrary.getImage("StatusFRZ"), 18, 60, null);
 		}
 		// player pokemon information
 		g.drawString(playerPokemon.getName(), 300, 175);
@@ -248,7 +278,7 @@ public class Painter extends JPanel {
 		g.drawImage(SpriteLibrary.getImage("Beginning"), 0, 0, null);
 		g.drawImage(SpriteLibrary.getInstance().getSprites("PROFESSOROAK_LARGE").get(0).getImage(), 150, 20, null);
 		if (NPCLibrary.getInstance().get("Professor Oak").getText().size() > gameData.introStage) {
-			Utils.messageBox(g, NPCLibrary.getInstance().get("Professor Oak").getText().get(gameData.introStage - 1),
+			paintMessageBox(g, NPCLibrary.getInstance().get("Professor Oak").getText().get(gameData.introStage - 1),
 					NPCLibrary.getInstance().get("Professor Oak").getText().get(gameData.introStage));
 		}
 	}
@@ -259,9 +289,8 @@ public class Painter extends JPanel {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	private static void paintOptionScreen(Graphics g, Game game) {
-		ImageIcon optionBG = (game.gData.option_sound) ? SpriteLibrary.OPTION_SOUND_ON : SpriteLibrary.OPTION_SOUND_OFF;
-
-		g.drawImage(optionBG.getImage(), 0, 0, null);
+		String imageName = (game.gData.option_sound) ? "OptionBG_SoundOn" : "OptionBG_SoundOn";
+		g.drawImage(SpriteLibrary.getImage(imageName), 0, 0, null);
 		g.drawImage(SpriteLibrary.getImage(ARROW), 22, 85 + 32 * game.menuScreen.MENU_currentSelectionOption, null);
 	}
 
@@ -272,7 +301,7 @@ public class Painter extends JPanel {
 	// ////////////////////////////////////////////////////////////////////////
 	private static void paintSaveMenu(Graphics g, Game game) {
 		g.setColor(Color.BLACK);
-		g.drawImage(SpriteLibrary.SAVE.getImage(), 0, 0, null);
+		g.drawImage(SpriteLibrary.getImage("Save"), 0, 0, null);
 		g.drawString(game.gData.player.getName(), 100, 68);
 		g.drawString(((Integer) game.gData.player.getBadges()).toString(), 100, 101);
 		g.drawString("1", 110, 134);
@@ -305,8 +334,8 @@ public class Painter extends JPanel {
 	// ////////////////////////////////////////////////////////////////////////
 	private static void paintTrainerCard(Graphics g, GameData gameData) {
 		g.setColor(Color.BLACK);
-		g.drawImage(SpriteLibrary.TRAINERCARD.getImage(), 0, 0, null);
-		g.drawImage(SpriteLibrary.TRAINER_FOR_CARD.getImage(), 320, 100, null);
+		g.drawImage(SpriteLibrary.getImage("TrainerCard"), 0, 0, null);
+		g.drawImage(SpriteLibrary.getImage("Male"), 320, 100, null);
 
 		g.drawString("ID:  " + gameData.player.getID(), 295, 54);
 		g.drawString("Name:" + getPadding("Name:") + gameData.player.getName(), 64, 93);
@@ -322,15 +351,15 @@ public class Painter extends JPanel {
 	// ////////////////////////////////////////////////////////////////////////
 	private static void paintPokegearScreen(Graphics g, MenuScene menu) {
 		g.setColor(Color.BLACK);
-		g.drawImage(SpriteLibrary.POKEGEAR.getImage(), 0, 0, null);
+		g.drawImage(SpriteLibrary.getImage("PokegearBG"), 0, 0, null);
 		if (menu.MENU_currentSelectionPokeGear == 0) {
-			g.drawImage(SpriteLibrary.POKEGEAR_MAP.getImage(), 0, 0, null);
+			g.drawImage(SpriteLibrary.getImage("PokegearMap"), 0, 0, null);
 		} else if (menu.MENU_currentSelectionPokeGear == 1) {
-			g.drawImage(SpriteLibrary.POKEGEAR_RADIO.getImage(), 0, 0, null);
+			g.drawImage(SpriteLibrary.getImage("PokegearRadio"), 0, 0, null);
 		} else if (menu.MENU_currentSelectionPokeGear == 2) {
-			g.drawImage(SpriteLibrary.POKEGEAR_PHONE.getImage(), 0, 0, null);
+			g.drawImage(SpriteLibrary.getImage("PokegearPhone"), 0, 0, null);
 		} else if (menu.MENU_currentSelectionPokeGear == 3) {
-			g.drawImage(SpriteLibrary.POKEGEAR_EXIT.getImage(), 0, 0, null);
+			g.drawImage(SpriteLibrary.getImage("PokegearExit"), 0, 0, null);
 		}
 	}
 
@@ -341,7 +370,7 @@ public class Painter extends JPanel {
 	// ////////////////////////////////////////////////////////////////////////
 	private static void paintBagScreen(Graphics g) {
 		g.setColor(Color.BLACK);
-		g.drawImage(SpriteLibrary.BAGSCREEN.getImage(), 0, 0, null);
+		g.drawImage(SpriteLibrary.getImage("BagScreen"), 0, 0, null);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -351,15 +380,15 @@ public class Painter extends JPanel {
 	// ////////////////////////////////////////////////////////////////////////
 	private static void paintPartyScreen(Graphics g, Player p) {
 		g.setColor(Color.BLACK);
-		g.drawImage(SpriteLibrary.POKESEL.getImage(), 0, 0, null);
-		g.drawImage(SpriteLibrary.PARTYFIRST.getImage(), 40, 20, null);
-		g.drawImage(SpriteLibrary.PARTYBOX.getImage(), 190, 20, null);
-		g.drawImage(SpriteLibrary.PARTYBOX.getImage(), 190, 70, null);
-		g.drawImage(SpriteLibrary.PARTYBOX.getImage(), 190, 120, null);
-		g.drawImage(SpriteLibrary.PARTYBOX.getImage(), 190, 170, null);
-		g.drawImage(SpriteLibrary.PARTYBOX.getImage(), 190, 220, null);
+		g.drawImage(SpriteLibrary.getImage(partyBackground), 0, 0, null);
+		g.drawImage(SpriteLibrary.getImage(partyFirstMember), 40, 20, null);
+		g.drawImage(SpriteLibrary.getImage(partyMember), 190, 20, null);
+		g.drawImage(SpriteLibrary.getImage(partyMember), 190, 70, null);
+		g.drawImage(SpriteLibrary.getImage(partyMember), 190, 120, null);
+		g.drawImage(SpriteLibrary.getImage(partyMember), 190, 170, null);
+		g.drawImage(SpriteLibrary.getImage(partyMember), 190, 220, null);
 		if (p.getPokemon().size() == 2) {
-			g.drawImage(SpriteLibrary.PARTYBOX.getImage(), 190, 20, null);
+			g.drawImage(SpriteLibrary.getImage(partyMember), 190, 20, null);
 		}
 		PokemonList playerPokemon = p.getPokemon();
 		if (playerPokemon.size() > 0) {
@@ -393,7 +422,7 @@ public class Painter extends JPanel {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	private static void paintPauseMenu(Graphics g, MenuScene menu) {
-		g.drawImage(SpriteLibrary.MAIN_MENU.getImage(), 0, 0, null);
+		g.drawImage(SpriteLibrary.getImage("Menu"), 0, 0, null);
 		g.drawImage(SpriteLibrary.getImage(ARROW), 335, 20 + 32 * menu.MENU_currentSelectionMain, null);
 	}
 

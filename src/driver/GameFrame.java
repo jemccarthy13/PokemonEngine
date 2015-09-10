@@ -1,13 +1,14 @@
 package driver;
 
+import graphics.SpriteLibrary;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import javax.swing.JFrame;
 
-import audio.AudioLibrary;
-import graphics.SpriteLibrary;
 import trainers.NPCLibrary;
+import audio.AudioLibrary;
 
 public class GameFrame extends JFrame {
 
@@ -23,7 +24,7 @@ public class GameFrame extends JFrame {
 		// Title changes with each game release (along with version)
 		setTitle("Pokemon: Metallic Silver");
 
-		setIconImage(SpriteLibrary.getInstance().ICON.getImage());
+		setIconImage(SpriteLibrary.getImage("Icon"));
 
 		// Add the main game panel to the game
 		pokemonGame = new Game();
@@ -97,8 +98,7 @@ public class GameFrame extends JFrame {
 					pokemonGame.nameScreen.removeChar();
 				if (keyCode == KeyEvent.VK_Z) {
 					pokemonGame.gData.introStage += 2;
-					if (pokemonGame.gData.introStage > NPCLibrary.getInstance().get("Professor Oak").getTextLength()
-							- 1) {
+					if (pokemonGame.gData.introStage > NPCLibrary.getInstance().get("Professor Oak").getTextLength() - 1) {
 						AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown", pokemonGame.gData.option_sound);
 						pokemonGame.gData.inIntro = !pokemonGame.gData.inIntro;
 					} else if (pokemonGame.gData.introStage == 15) {

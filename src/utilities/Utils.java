@@ -1,8 +1,5 @@
 package utilities;
 
-import graphics.MessageBox;
-
-import java.awt.Graphics;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -18,8 +15,6 @@ import driver.GameData;
 //
 // ////////////////////////////////////////////////////////////////////////
 public class Utils {
-
-	static MessageBox msg_box = new MessageBox();
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
@@ -84,12 +79,4 @@ public class Utils {
 		System.out.println("computer menu here.");
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// methods for conversation dialog boxes
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	public static void messageBox(Graphics g, String string, String string2) {
-		msg_box.Message(g, string, string2);
-	}
 }

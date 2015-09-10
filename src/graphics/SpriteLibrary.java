@@ -11,8 +11,7 @@ import javax.swing.ImageIcon;
 
 // ////////////////////////////////////////////////////////////////////////
 //
-// Create all images used in game for reference.  Defaults + going through
-// the characters directory to map TrainerType->Image[]
+// Create all images used in game for reference.
 //
 // ////////////////////////////////////////////////////////////////////////
 public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
@@ -21,99 +20,17 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 
 	public static String libPath = "resources/graphics_lib/";
 
-	public static ImageIcon PARTYFIRST, PARTYBOX, PARTYCANCEL, PARTYCANCELSEL, POKESEL, BAGSCREEN, POKEGEAR,
-			TRAINERCARD, SAVE, OPTION_SOUND_OFF, TRAINER_FOR_CARD, OPTION_SOUND_ON, MAIN_MENU, MESSAGE_BOX;;
-
-	public static ImageIcon POKEGEAR_MAP, POKEGEAR_RADIO, POKEGEAR_PHONE, POKEGEAR_EXIT;
-
-	// public static ImageIcon BATTLE_BG, BATTLE_FIGHTBG, BG;
-	public static ImageIcon STATUS_PSN, STATUS_FRZ, STATUS_BRN, STATUS_SLP, STATUS_PAR;
-
-	public ImageIcon ICON;
-
-	public static ImageIcon NAMESCREEN, FONT_UNDERSCORE, FONT_CURSOR;
-
 	private static SpriteLibrary m_instance = new SpriteLibrary();
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// Default constructor intializes all sprites from the graphics_lib folder
+	// Default constructor
 	//
-	// Eager loads all background and menu graphics, letters
-	// Lazy loads all NPC images
+	// SpriteLibrary as a whole lazy loads all images
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	private SpriteLibrary() {
-		System.out.println("** Loading primary images...");
-
-		FONT_UNDERSCORE = getImageIcon("_");
-		FONT_CURSOR = getImageIcon("CURSOR");
-		getImageIcon("A");
-		getImageIcon("B");
-		getImageIcon("C");
-		getImageIcon("D");
-		getImageIcon("E");
-		getImageIcon("F");
-		getImageIcon("G");
-		getImageIcon("H");
-		getImageIcon("I");
-		getImageIcon("J");
-		getImageIcon("K");
-		getImageIcon("L");
-		getImageIcon("M");
-		getImageIcon("N");
-		getImageIcon("O");
-		getImageIcon("P");
-		getImageIcon("Q");
-		getImageIcon("R");
-		getImageIcon("S");
-		getImageIcon("T");
-		getImageIcon("U");
-		getImageIcon("V");
-		getImageIcon("W");
-		getImageIcon("X");
-		getImageIcon("Y");
-		getImageIcon("Z");
-		getImageIcon("QUESTION");
-		getImageIcon("!");
-		getImageIcon("SPACE");
-		getImageIcon("PERIOD");
-
-		ICON = getImageIcon("Icon");
-
-		// MENU graphics
-		NAMESCREEN = getImageIcon("Namescreen");
-		MESSAGE_BOX = getImageIcon("Message_Text");
-		MAIN_MENU = getImageIcon("Menu");
-		POKESEL = getImageIcon("pokeselbg");
-		BAGSCREEN = getImageIcon("BagScreen");
-		TRAINERCARD = getImageIcon("TrainerCard");
-		TRAINER_FOR_CARD = getImageIcon("Male");
-		SAVE = getImageIcon("Save");
-		OPTION_SOUND_ON = getImageIcon("OptionBG_SoundOn");
-		OPTION_SOUND_OFF = getImageIcon("OptionBG_SoundOff");
-
-		// PARTY graphics
-		PARTYFIRST = getImageIcon("Box");
-		PARTYBOX = getImageIcon("SelectionBar");
-		PARTYCANCEL = getImageIcon("pokeselcancel");
-		PARTYCANCELSEL = getImageIcon("pokeselcancelsel");
-
-		// POKEGEAR graphics
-		POKEGEAR = getImageIcon("PokegearBG");
-		POKEGEAR_MAP = getImageIcon("PokegearMap");
-		POKEGEAR_RADIO = getImageIcon("PokegearRadio");
-		POKEGEAR_PHONE = getImageIcon("PokegearPhone");
-		POKEGEAR_EXIT = getImageIcon("PokegearExit");
-
-		// BATTLE graphics
-		STATUS_PAR = getImageIcon("StatusPAR");
-		STATUS_BRN = getImageIcon("StatusBRN");
-		STATUS_PSN = getImageIcon("StatusPSN");
-		STATUS_SLP = getImageIcon("StatusSLP");
-		STATUS_FRZ = getImageIcon("StatusFRZ");
-
-		System.out.println("** Loaded primary images.");
+		System.out.println("** Initialized image library.");
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -134,8 +51,8 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 		if (containsKey(c + ".png")) {
 			return get(c.toString() + ".png").get(0);
 		} else {
-			System.err.println("Cannot load font character " + c);
-			return null;
+			getImageIcon(c.toString());
+			return get(c.toString() + ".png").get(0);
 		}
 	}
 
