@@ -42,23 +42,24 @@ public class AudioLibrary {
 		m_encounterTracks = new ArrayList<String>();
 		m_trackList = new HashMap<String, MidiPlayer>();
 
-		System.out.println("** Finding encounter tracks...");
-
 		File[] listOfFiles = new File(bgMusicPath).listFiles();
-		for (int i = 0; i < listOfFiles.length; i++) {
-			if (listOfFiles[i].isFile()) {
+		System.out.println("** - Audio library: " + listOfFiles.length + " tracks.");
 
-				String name_of_file = listOfFiles[i].getName();
+		System.out.println("** - Finding encounter tracks...");
+		for (File file : listOfFiles) {
+			if (file.isFile()) {
+
+				String name_of_file = file.getName();
 
 				// compile a list of trainer / encounter music
-				Pattern p = Pattern.compile("Encounter");
+				Pattern p = Pattern.compile("^Encounter.*");
 				if (p.matcher(name_of_file).matches()) {
 					m_encounterTracks.add(name_of_file.replace(".mid", ""));
 				}
 			}
 		}
 
-		System.out.println("Found " + m_encounterTracks.size() + " tracks.");
+		System.out.println("** - " + m_encounterTracks.size() + " encounter tracks.");
 
 		// load all of the sound effect files
 		listOfFiles = new File(soundEffectsPath).listFiles();

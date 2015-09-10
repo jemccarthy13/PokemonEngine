@@ -1,5 +1,6 @@
 package graphics;
 
+import java.awt.Image;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
@@ -20,19 +21,13 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 
 	public static String libPath = "resources/graphics_lib/";
 
-	public static ImageIcon CONTINUESCREEN, START_SYMBOL, TITLESCREEN, ARROW, MAIN_MENU, MESSAGE_BOX;
-
-	public static ImageIcon POKEDEX, POKESEL, BAGSCREEN, POKEGEAR, TRAINERCARD, SAVE, OPTION_SOUND_OFF,
-			TRAINER_FOR_CARD, OPTION_SOUND_ON;
-
-	public static ImageIcon PARTYFIRST, PARTYBOX, PARTYCANCEL, PARTYCANCELSEL;
+	public static ImageIcon PARTYFIRST, PARTYBOX, PARTYCANCEL, PARTYCANCELSEL, POKESEL, BAGSCREEN, POKEGEAR,
+			TRAINERCARD, SAVE, OPTION_SOUND_OFF, TRAINER_FOR_CARD, OPTION_SOUND_ON, MAIN_MENU, MESSAGE_BOX;;
 
 	public static ImageIcon POKEGEAR_MAP, POKEGEAR_RADIO, POKEGEAR_PHONE, POKEGEAR_EXIT;
 
-	public static ImageIcon BATTLE_BG, BATTLE_FIGHTBG, BG;
+	// public static ImageIcon BATTLE_BG, BATTLE_FIGHTBG, BG;
 	public static ImageIcon STATUS_PSN, STATUS_FRZ, STATUS_BRN, STATUS_SLP, STATUS_PAR;
-
-	public static ImageIcon BEGINNING;
 
 	public ImageIcon ICON;
 
@@ -51,81 +46,72 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 	private SpriteLibrary() {
 		System.out.println("** Loading primary images...");
 
-		FONT_UNDERSCORE = getImage("_.png");
-		FONT_CURSOR = getImage("CURSOR.png");
-		getImage("A.png");
-		getImage("B.png");
-		getImage("C.png");
-		getImage("D.png");
-		getImage("E.png");
-		getImage("F.png");
-		getImage("G.png");
-		getImage("H.png");
-		getImage("I.png");
-		getImage("J.png");
-		getImage("K.png");
-		getImage("L.png");
-		getImage("M.png");
-		getImage("N.png");
-		getImage("O.png");
-		getImage("P.png");
-		getImage("Q.png");
-		getImage("R.png");
-		getImage("S.png");
-		getImage("T.png");
-		getImage("U.png");
-		getImage("V.png");
-		getImage("W.png");
-		getImage("X.png");
-		getImage("Y.png");
-		getImage("Z.png");
-		getImage("QUESTION.png");
-		getImage("!.png");
-		getImage("SPACE.png");
-		getImage("PERIOD.png");
+		FONT_UNDERSCORE = getImageIcon("_");
+		FONT_CURSOR = getImageIcon("CURSOR");
+		getImageIcon("A");
+		getImageIcon("B");
+		getImageIcon("C");
+		getImageIcon("D");
+		getImageIcon("E");
+		getImageIcon("F");
+		getImageIcon("G");
+		getImageIcon("H");
+		getImageIcon("I");
+		getImageIcon("J");
+		getImageIcon("K");
+		getImageIcon("L");
+		getImageIcon("M");
+		getImageIcon("N");
+		getImageIcon("O");
+		getImageIcon("P");
+		getImageIcon("Q");
+		getImageIcon("R");
+		getImageIcon("S");
+		getImageIcon("T");
+		getImageIcon("U");
+		getImageIcon("V");
+		getImageIcon("W");
+		getImageIcon("X");
+		getImageIcon("Y");
+		getImageIcon("Z");
+		getImageIcon("QUESTION");
+		getImageIcon("!");
+		getImageIcon("SPACE");
+		getImageIcon("PERIOD");
 
-		ICON = getImage("Icon.png");
+		ICON = getImageIcon("Icon");
 
 		// MENU graphics
-		TITLESCREEN = getImage("Title.png");
-		START_SYMBOL = getImage("Start.png");
-		CONTINUESCREEN = getImage("Continue.png");
-		BEGINNING = getImage("Beginning.png");
-		NAMESCREEN = getImage("Namescreen.png");
-		MESSAGE_BOX = getImage("Message_Text.png");
-		ARROW = getImage("Arrow.png");
-		MAIN_MENU = getImage("Menu.png");
-		POKEDEX = getImage("PokedexBG.png");
-		POKESEL = getImage("pokeselbg.png");
-		BAGSCREEN = getImage("BagScreen.png");
-		TRAINERCARD = getImage("TrainerCard.png");
-		TRAINER_FOR_CARD = getImage("Male.png");
-		SAVE = getImage("Save.png");
-		OPTION_SOUND_ON = getImage("OptionBG_SoundOn.png");
-		OPTION_SOUND_OFF = getImage("OptionBG_SoundOff.png");
+		NAMESCREEN = getImageIcon("Namescreen");
+		MESSAGE_BOX = getImageIcon("Message_Text");
+		MAIN_MENU = getImageIcon("Menu");
+		POKESEL = getImageIcon("pokeselbg");
+		BAGSCREEN = getImageIcon("BagScreen");
+		TRAINERCARD = getImageIcon("TrainerCard");
+		TRAINER_FOR_CARD = getImageIcon("Male");
+		SAVE = getImageIcon("Save");
+		OPTION_SOUND_ON = getImageIcon("OptionBG_SoundOn");
+		OPTION_SOUND_OFF = getImageIcon("OptionBG_SoundOff");
 
 		// PARTY graphics
-		PARTYFIRST = getImage("Box.png");
-		PARTYBOX = getImage("SelectionBar.png");
-		PARTYCANCEL = getImage("pokeselcancel.png");
-		PARTYCANCELSEL = getImage("pokeselcancelsel.png");
+		PARTYFIRST = getImageIcon("Box");
+		PARTYBOX = getImageIcon("SelectionBar");
+		PARTYCANCEL = getImageIcon("pokeselcancel");
+		PARTYCANCELSEL = getImageIcon("pokeselcancelsel");
 
 		// POKEGEAR graphics
-		POKEGEAR = getImage("PokegearBG.png");
-		POKEGEAR_MAP = getImage("PokegearMap.png");
-		POKEGEAR_RADIO = getImage("PokegearRadio.png");
-		POKEGEAR_PHONE = getImage("PokegearPhone.png");
-		POKEGEAR_EXIT = getImage("PokegearExit.png");
+		POKEGEAR = getImageIcon("PokegearBG");
+		POKEGEAR_MAP = getImageIcon("PokegearMap");
+		POKEGEAR_RADIO = getImageIcon("PokegearRadio");
+		POKEGEAR_PHONE = getImageIcon("PokegearPhone");
+		POKEGEAR_EXIT = getImageIcon("PokegearExit");
 
 		// BATTLE graphics
-		BG = getImage("BG.png");
-		BATTLE_BG = getImage("Battle.png");
-		BATTLE_FIGHTBG = getImage("Battle2.png");
-		STATUS_PAR = getImage("StatusPAR.png");
-		STATUS_BRN = getImage("StatusBRN.png");
-		STATUS_PSN = getImage("StatusPSN.png");
-		STATUS_SLP = getImage("StatusSLP.png");
-		STATUS_FRZ = getImage("StatusFRZ.png");
+		STATUS_PAR = getImageIcon("StatusPAR");
+		STATUS_BRN = getImageIcon("StatusBRN");
+		STATUS_PSN = getImageIcon("StatusPSN");
+		STATUS_SLP = getImageIcon("StatusSLP");
+		STATUS_FRZ = getImageIcon("StatusFRZ");
 
 		System.out.println("** Loaded primary images.");
 	}
@@ -171,10 +157,20 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
+	// Static access wrapper method to get a paintable image
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public static Image getImage(String name) {
+		return getInstance().getImageIcon(name).getImage();
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
 	// Returns an image from the instance of the library
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public ImageIcon getImage(String name) {
+	public ImageIcon getImageIcon(String name) {
+		name += ".png";
 		// if the image exists, get it and return it
 		if (containsKey(name)) {
 			return get(name).get(0);

@@ -1,12 +1,12 @@
 package tiles;
 
+import graphics.SpriteLibrary;
+
 import java.awt.Image;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Scanner;
-
-import graphics.SpriteLibrary;
 
 // ////////////////////////////////////////////////////////////////////////
 //
@@ -14,7 +14,7 @@ import graphics.SpriteLibrary;
 // is loaded once through EnumsAndConstants as a library of tile images
 //
 // ////////////////////////////////////////////////////////////////////////
-public class TileSet extends ArrayList<Image>implements Serializable {
+public class TileSet extends ArrayList<Image> implements Serializable {
 
 	private static final long serialVersionUID = -3660653996002154385L;
 
@@ -46,8 +46,8 @@ public class TileSet extends ArrayList<Image>implements Serializable {
 			while (s.hasNext()) {
 				String line = s.nextLine();
 				if (line.split(",").length > 1) {
-					String name = line.split(",")[1].trim().replace("Tiles", "").replace("\\", "");
-					Image im = SpriteLibrary.getInstance().getImage(name).getImage();
+					String name = line.split(",")[1].trim().replace("Tiles", "").replace("\\", "").replace(".png", "");
+					Image im = SpriteLibrary.getImage(name);
 					add(im);
 				}
 			}
