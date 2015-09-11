@@ -14,6 +14,8 @@ import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 
+import utilities.DebugUtility;
+
 // ////////////////////////////////////////////////////////////////////////
 //
 // Jukebox - handles playing clips
@@ -53,7 +55,7 @@ public class JukeBox {
 			audioInputStream.close();
 
 		} catch (Exception e) {
-			System.err.println("Unable to load clip " + soundName);
+			DebugUtility.printError("Unable to load clip " + soundName);
 		}
 	}
 
@@ -64,7 +66,7 @@ public class JukeBox {
 	// ////////////////////////////////////////////////////////////////////////
 	public synchronized void playClip(String name) {
 		if (!this.availableClips.containsKey(name)) {
-			System.err.println("Cannot play sound " + name);
+			DebugUtility.printError("Cannot play sound " + name);
 			return;
 		}
 		List<?> clips = (List<Sound>) this.availableClips.get(name);

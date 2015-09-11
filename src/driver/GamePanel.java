@@ -9,8 +9,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Map;
-import java.util.Set;
 
 import javax.swing.JPanel;
 
@@ -18,15 +16,14 @@ import pokedex.Pokemon;
 import pokedex.Pokemon.STATS;
 import pokedex.PokemonFactory;
 import pokedex.PokemonList;
-import tiles.Tile;
 import tiles.TileSet;
-import tiles.WildTile;
 import trainers.Actor;
 import trainers.Actor.DIR;
 import trainers.NPCLibrary;
 import trainers.Player;
 import utilities.BattleEngine;
 import utilities.Coordinate;
+import utilities.DebugUtility;
 import utilities.RandomNumUtils;
 
 // ////////////////////////////////////////////////////////////////////////
@@ -41,7 +38,6 @@ public class GamePanel extends JPanel implements ActionListener {
 
 	// ================= Movement control variables =========================//
 	private int movespritepixels = 0; // movement (animation) counter
-	boolean[] moveable_dir = new boolean[4]; // can move, each direction
 	boolean rightFoot = false; // animation flag
 
 	// ===================== Graphics Logic Controllers =====================//
@@ -49,8 +45,7 @@ public class GamePanel extends JPanel implements ActionListener {
 	public NameScene nameScreen;
 	public EventHandler eventHandler;
 	// ======================== Game logic Data =============================//
-	public GameController game = new GameController(new GameData());
-	public GameData gData = new GameData();
+	public GameController game = new GameController();
 	public PokemonList enemyPkmn = new PokemonList();
 
 	public String messageString;
@@ -71,13 +66,14 @@ public class GamePanel extends JPanel implements ActionListener {
 		nameScreen = new NameScene();
 
 		try {
-			game.loadMap("NewBarkTown");
+			game.loadMap();
 		} catch (Exception e) {
-			System.err.println("Unable to load map.");
+			DebugUtility.error("Unable to load map.");
 		}
 		setBackground(Color.BLACK);
 		setPreferredSize(new Dimension(480, 320));
 
+		DebugUtility.printMessage("Playing title music...");
 		game.playBackgroundMusic("Title");
 	}
 
@@ -91,7 +87,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
 		game.updateTime();
 
-		if (gData.inBattle && !gData.inMessage) {
+		if (game.isInBattle() && !game.isInMessage()) {
 			if (BattleEngine.getInstance().playerCurrentPokemon.getStat(STATS.HP) <= 0) {
 				// TODO - check for other todo switch pokemon
 				BattleEngine.getInstance().playerSwitchPokemon();
@@ -103,7 +99,7 @@ public class GamePanel extends JPanel implements ActionListener {
 			if (!BattleEngine.getInstance().playerTurn) {
 				BattleEngine.getInstance().enemyTurn();
 			}
-		} else if (!gData.atTitle && !gData.inIntro && !gData.inNameScreen && !gData.inMenu && !gData.atContinueScreen) {
+		} else if (!game.isMenuDisplayed()) {
 			handleMovement();
 		}
 	}
@@ -120,52 +116,28 @@ public class GamePanel extends JPanel implements ActionListener {
 		PokemonList playerPokemon = player.getPokemon();
 		Coordinate playerPos = player.tData.position;
 
-		// check for collisions in each direction
-		moveable_dir[DIR.NORTH.ordinal()] = game.canMoveInDir(DIR.NORTH) || game.isNoClip();
-		moveable_dir[DIR.WEST.ordinal()] = game.canMoveInDir(DIR.WEST) || game.isNoClip();
-		moveable_dir[DIR.SOUTH.ordinal()] = game.canMoveInDir(DIR.SOUTH) || game.isNoClip();
-		moveable_dir[DIR.EAST.ordinal()] = game.canMoveInDir(DIR.EAST) || game.isNoClip();
-
 		if (game.isPlayerWalking()) { // take care of walking animation
 			// graphics logic
 			movespritepixels += 1;
-			gData.offsetY = ((playerDir == DIR.NORTH) && (moveable_dir[DIR.NORTH.ordinal()])) ? gData.offsetY + 2
-					: gData.offsetY;
-			gData.offsetY = ((playerDir == DIR.SOUTH) && (moveable_dir[DIR.SOUTH.ordinal()])) ? gData.offsetY - 2
-					: gData.offsetY;
-			gData.offsetX = ((playerDir == DIR.WEST) && (moveable_dir[DIR.WEST.ordinal()])) ? gData.offsetX + 2
-					: gData.offsetX;
-			gData.offsetX = ((playerDir == DIR.EAST) && (moveable_dir[DIR.EAST.ordinal()])) ? gData.offsetX - 2
-					: gData.offsetX;
+			game.setOffsetY(playerDir);
+			game.setOffsetX(playerDir);
 
 			player.changeSprite(movespritepixels, rightFoot);
 		}
 
-		// prep for door teleportation event check
-		Map<Coordinate, Coordinate> dict = TeleportLibrary.getListofTeleports();
-		Set<Coordinate> k = dict.keySet();
-		boolean teleported = false;
-
-		for (Coordinate x : k) {
-			if (x.equals(playerPos)) {
-				player.setLoc(dict.get(x));
-
-				gData.start_coorX = (player.getCurrentX() - x.getX()) * -1 * Tile.TILESIZE;
-				gData.start_coorY = (player.getCurrentY() - x.getY()) * -1 * Tile.TILESIZE;
-				teleported = true;
-				player.setDirection(DIR.NORTH);
-			}
-		}
-
-		// finally, the animation is done, handle the movement logic
-		if (movespritepixels >= 16 && !teleported) {
+		// check for teleport at location
+		// if no teleport, check for animation completion
+		// when walking animation is done, handle poison damage
+		if (game.isTeleportTile(playerPos)) {
+			game.doTeleport(playerPos);
+		} else if (movespritepixels >= 16) {
 			movespritepixels = 0; // reset animation counter
 			game.setPlayerWalking(false); // player is no longer in animation
 			rightFoot = (!rightFoot);
-			if (moveable_dir[playerDir.ordinal()]) {
+			if (game.canMoveInDir(playerDir)) {
 				player.move(playerDir);
 				// check for wild encounter
-				if (game.getMapTileAt(player.getPosition()).equals(WildTile.name)) {
+				if (game.isBattleTile(player.getPosition())) {
 					if (RandomNumUtils.isWildEncounter()) {
 						enemyPkmn.clear();
 						enemyPkmn.add(PokemonFactory.getInstance().randomPokemon(player.getCurLoc()));
@@ -181,9 +153,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
 		// check for trainer encounter with any NPC
 		for (Actor curNPC : NPCLibrary.getInstance().values()) {
-			boolean beaten = game.getPlayer().beatenTrainers.contains(curNPC.getName());
-			if (curNPC.isTrainer() && !game.isPlayerWalking() && game.doBattles() && !beaten && npcSeesPlayer(curNPC)
-					&& !gData.inMenu) {
+			if (game.validEncounterConditions(curNPC)) {
 				game.stopNPCMovement();
 				enemyTrainerAnimation(curNPC);
 				game.playBackgroundMusic("TrainerBattle");
@@ -192,33 +162,6 @@ public class GamePanel extends JPanel implements ActionListener {
 				game.setMovable(true);
 			}
 		}
-
-	}
-
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Given an NPC, check if that NPC sees the player
-	//
-	// Sight rules:
-	// NORTH - columns match, playerY < NPC_Y, within sight distance
-	// SOUTH - columns match, playerY > NPC_Y, within sight distance
-	// EAST - rows match, playerX > NPC_X, within sight distance
-	// WEST - rows match, playerX < NPC_X, within sight distance
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	private boolean npcSeesPlayer(Actor curNPC) {
-		Player player = game.getPlayer();
-		int playerCurY = player.getCurrentY();
-		int playerCurX = player.getCurrentX();
-		int NPC_X = curNPC.getCurrentX();
-		int NPC_Y = curNPC.getCurrentY();
-		DIR NPC_DIR = curNPC.getDirection();
-
-		return (((playerCurX == curNPC.getCurrentX()) && (((playerCurY < NPC_Y)
-				&& (NPC_Y - playerCurY <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.NORTH)) || ((playerCurY > NPC_Y)
-				&& (playerCurY - NPC_Y <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.SOUTH)))) || ((playerCurY == NPC_Y) && (((playerCurX < NPC_X)
-				&& (NPC_X - playerCurX <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.WEST)) || ((playerCurX > NPC_X)
-				&& (playerCurX - NPC_X <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.EAST)))));
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -277,18 +220,5 @@ public class GamePanel extends JPanel implements ActionListener {
 		Painter.paintComponent(g, this);
 		repaint();
 		validate();
-	}
-
-	public void reset() {
-		gData.atContinueScreen = false;
-		gData.atTitle = false;
-		gData.inBattle = false;
-		gData.inIntro = false;
-		gData.inMenu = false;
-		gData.inMessage = false;
-		gData.inNameScreen = false;
-		gData.introStage = 1;
-		game.setMovable(true);
-		game.setPlayerWalking(false);
 	}
 }

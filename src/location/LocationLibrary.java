@@ -10,6 +10,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import trainers.Actor.DIR;
+import utilities.DebugUtility;
 
 // ////////////////////////////////////////////////////////////////////////
 //
@@ -88,9 +89,9 @@ public class LocationLibrary extends HashMap<String, LocationData> {
 				if (ld.isValidData()) {
 					put(ld.name, ld);
 				} else if (ld.name != null) {
-					System.err.println("Unable to load data for location: " + ld.name);
+					DebugUtility.printError("Unable to load data for location: " + ld.name);
 				} else {
-					System.err.println("Unknown error in populating location map.");
+					DebugUtility.error("Unknown error in populating location map.");
 				}
 			}
 		} catch (Exception e) {

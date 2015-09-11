@@ -37,6 +37,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.border.TitledBorder;
 
+import utilities.DebugUtility;
+
 public class TileChooser extends JPanel implements ActionListener, GraphicsBankChangeListener {
 	private static final long serialVersionUID = 5090621430335043404L;
 	ArrayList<Object> tiles;
@@ -193,21 +195,21 @@ public class TileChooser extends JPanel implements ActionListener, GraphicsBankC
 	}
 
 	public void tilesetUpdated(GraphicsBank paramGraphicsBank) {
-		System.out.println("tilset updated");
+		DebugUtility.printMessage("tilset updated");
 		if (paramGraphicsBank == this.gfx) {
 			reset();
 		}
 	}
 
 	public void tileRemoved(GraphicsBank paramGraphicsBank, MapTile paramTile) {
-		System.out.println("tilset updated");
+		DebugUtility.printMessage("tilset updated");
 		if (paramGraphicsBank == this.gfx) {
 			reset();
 		}
 	}
 
 	public void tileAdded(GraphicsBank paramGraphicsBank, MapTile paramTile) {
-		System.out.println("tilset updated");
+		DebugUtility.printMessage("tilset updated");
 		TileButton localTileButton = new TileButton(paramTile);
 		this.tilePanel.add(localTileButton);
 		this.group.add(localTileButton);
@@ -236,7 +238,7 @@ public class TileChooser extends JPanel implements ActionListener, GraphicsBankC
 			}
 			this.propertiesDialog.dispose();
 		} else {
-			System.err.println("Unknown button fired action. " + paramActionEvent);
+			DebugUtility.printError("Unknown button fired action. " + paramActionEvent);
 		}
 	}
 
@@ -295,20 +297,20 @@ public class TileChooser extends JPanel implements ActionListener, GraphicsBankC
 				importImageAsTile(arrayOfFile[j]);
 			}
 		}
-		System.out.println("Import " + paramFile);
+		DebugUtility.printMessage("Import " + paramFile);
 		try {
 			ImageIO.read(paramFile);
 		} catch (Exception localException) {
-			System.out.println("FAIL");
+			DebugUtility.printMessage("FAIL");
 			return;
 		}
-		System.out.println("getbasedir.... ahuh!");
-		System.out.println("?1");
+		DebugUtility.printMessage("getbasedir.... ahuh!");
+		DebugUtility.printMessage("?1");
 		int i = this.gfx.getUnusedNumber();
-		System.out.println("?2");
+		DebugUtility.printMessage("?2");
 		MapTile localTile = new MapTile(i, paramFile.getAbsolutePath(), "New Tile " + i, "No Type");
 
-		System.out.println("Adding " + paramFile);
+		DebugUtility.printMessage("Adding " + paramFile);
 		this.gfx.add(localTile);
 		if (this.propertiesDialog != null) {
 			showProperties(localTile);
@@ -344,9 +346,9 @@ public class TileChooser extends JPanel implements ActionListener, GraphicsBankC
 					TileChooser.this.importImageAsTile(localFile);
 				}
 			} catch (UnsupportedFlavorException localUnsupportedFlavorException) {
-				System.err.println("Unsupported drop content: " + localUnsupportedFlavorException);
+				DebugUtility.printError("Unsupported drop content: " + localUnsupportedFlavorException);
 			} catch (IOException localIOException) {
-				System.err.println("Unexpected IO Exception while importing tile: " + localIOException);
+				DebugUtility.printError("Unexpected IO Exception while importing tile: " + localIOException);
 				localIOException.printStackTrace();
 			}
 			return true;

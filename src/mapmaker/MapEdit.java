@@ -41,6 +41,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import utilities.DebugUtility;
+
 public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 	boolean compactToolbars = true;
 	boolean borderedButtons = true;
@@ -415,7 +417,7 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 			}
 		} else if (localObject == exitMI) {
 			mainFrame.dispose();
-			System.exit(0);
+			DebugUtility.quit();
 		} else if (localObject == tilesetNewBtn) {
 			newTileset();
 		} else if (localObject == tilesetOpenBtn) {
@@ -423,7 +425,7 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 		} else if (localObject == tilesetSaveBtn) {
 			saveTileset();
 		} else {
-			System.err.println("Unknown source of actionEvent. (The button you just clicked does nothing)");
+			DebugUtility.printError("Unknown source of actionEvent. (The button you just clicked does nothing)");
 		}
 		if ((localObject == zoomInBtn) || (localObject == zoomOutBtn) || (localObject == zoomFullBtn)
 				|| (localObject == effectsResetBtn)) {
@@ -533,7 +535,7 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 			mapPanel.validate();
 			mainFrame.repaint();
 		} catch (IOException localIOException) {
-			System.err.println("Invalid Map File. " + localIOException);
+			DebugUtility.printError("Invalid Map File. " + localIOException);
 		}
 	}
 
@@ -631,11 +633,9 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 			}
 		} catch (FileNotFoundException localFileNotFoundException) {
 			PromptDialog.tell("Selected file could not be found", "OK");
-			System.err.println(localFileNotFoundException);
 			localFileNotFoundException.printStackTrace();
 		} catch (IOException localIOException) {
 			PromptDialog.tell("Could not read the file", "OK");
-			System.err.println(localIOException);
 			localIOException.printStackTrace();
 		}
 	}
@@ -649,7 +649,6 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 			}
 		} catch (IOException localIOException) {
 			PromptDialog.tell("Could not read the file", "OK");
-			System.err.println(localIOException);
 			localIOException.printStackTrace();
 		}
 	}

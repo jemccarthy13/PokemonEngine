@@ -23,6 +23,8 @@ import location.LocationLibrary;
 
 import org.json.simple.JSONObject;
 
+import utilities.DebugUtility;
+
 public class LocationEditor extends JFrame {
 
 	JMenuBar menuBar = new JMenuBar();
@@ -57,12 +59,12 @@ public class LocationEditor extends JFrame {
 				int returnVal = j.showOpenDialog(LocationEditor.this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					locationFile = j.getSelectedFile();
-					System.err.println("opening " + locationFile.getName() + ".");
+					DebugUtility.printMessage("opening " + locationFile.getName() + ".");
 
 					locLib.populateMap(locationFile.getAbsolutePath());
 
 					for (String loc : locLib.keySet()) {
-						System.out.println(loc);
+						DebugUtility.printMessage(loc);
 					}
 
 					ltm = new LocationTableModel();
@@ -81,10 +83,10 @@ public class LocationEditor extends JFrame {
 				} else {}
 			}
 			if (e.getSource().equals(saveItem)) {
-				System.err.println("TODO - save data here");
+				DebugUtility.printError("TODO - save data here");
 			}
 			if (e.getSource().equals(addItem)) {
-				System.out.println("adding item");
+				DebugUtility.printMessage("adding item");
 				locLib.put("", new LocationData());
 				ltm.addObject(locLib.get(""));
 				repaint();

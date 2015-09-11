@@ -35,7 +35,7 @@ public class AudioLibrary {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	private AudioLibrary() {
-		DebugUtility.debugHeader("Audio");
+		DebugUtility.printHeader("Audio");
 		DebugUtility.printMessage("Initializing audio library...");
 
 		final String bgMusicPath = "resources/audio_lib/BGM/";
@@ -105,7 +105,7 @@ public class AudioLibrary {
 
 			m_trackList.put(f.getName().replace("Location", "").replace(".mid", ""), musicTrack);
 
-			System.out.println("** Dynamically loaded " + songTitle);
+			DebugUtility.printMessage("Dynamically loaded " + songTitle);
 		}
 
 		// switch to the next track and play, if the track is valid

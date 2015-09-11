@@ -31,17 +31,7 @@ public class TileMap extends ArrayList<List<Tile>> {
 	// specified direction relative to the coordinate
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public String getTileAt(Coordinate c) {
-		Tile t = this.get(c.getY()).get(c.getX());
-		if (t instanceof ObstacleTile) {
-			return "OBSTACLE";
-		} else if (t instanceof WildTile) {
-			return "WILD";
-		} else if (t instanceof NormalTile) {
-			return "NORMAL";
-		} else {
-			return "BASE TILE";
-		}
-
+	public Tile getTileAt(Coordinate c) {
+		return this.get(c.getY()).get(c.getX());
 	}
 }

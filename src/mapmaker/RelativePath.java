@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import utilities.DebugUtility;
+
 public class RelativePath {
 	private static List<String> getPathList(File paramFile) {
 		ArrayList<String> localArrayList = new ArrayList<String>();
@@ -52,7 +54,7 @@ public class RelativePath {
 
 	public static void main(String[] paramArrayOfString) {
 		if (paramArrayOfString.length != 2) {
-			System.out.println("RelativePath <home> <file>");
+			DebugUtility.printMessage("RelativePath <home> <file>");
 			return;
 		}
 	}

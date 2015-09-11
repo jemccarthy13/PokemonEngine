@@ -1,11 +1,12 @@
 package trainers;
 
+import graphics.SpriteLibrary;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
-import graphics.SpriteLibrary;
 import pokedex.PokemonList;
 import trainers.Actor.DIR;
 import utilities.Coordinate;
@@ -41,7 +42,7 @@ public class TrainerData implements Serializable {
 	}
 
 	public ArrayList<ImageIcon> getSprites() {
-		return SpriteLibrary.getInstance().getSprites(sprite_name);
+		return SpriteLibrary.getSprites(sprite_name);
 	}
 
 	public String toString() {

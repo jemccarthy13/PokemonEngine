@@ -7,6 +7,7 @@ import javax.swing.table.AbstractTableModel;
 
 import location.LocationData;
 import trainers.Actor.DIR;
+import utilities.DebugUtility;
 
 /**
  * Simple table model for displaying properties common to all objects. Note that
@@ -103,7 +104,7 @@ public class LocationTableModel extends AbstractTableModel {
 	@Override
 	public int getColumnCount() {
 		if (columns.length != columnTypes.length) {
-			System.err.println("column length != columnTypes length");
+			DebugUtility.error("column length != columnTypes length");
 		}
 		return columns.length;
 	}

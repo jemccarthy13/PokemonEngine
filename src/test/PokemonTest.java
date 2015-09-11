@@ -4,6 +4,7 @@ import org.junit.Assert;
 
 import pokedex.Pokemon;
 import pokedex.PokemonFactory;
+import utilities.DebugUtility;
 
 // ////////////////////////////////////////////////////////////////////////
 //
@@ -17,7 +18,7 @@ public class PokemonTest {
 		Pokemon bulbasaur = PokemonFactory.createPokemon("Bulbasaur", 5);
 		Pokemon bulbasaur2 = PokemonFactory.createPokemon("Bulbasaur", 10);
 
-		System.out.println(bulbasaur.toString());
+		DebugUtility.printMessage(bulbasaur.toString());
 
 		Assert.assertTrue(bulbasaur.getLevel() == 5);
 		for (int m = 0; m < 10; m++) {
@@ -42,7 +43,6 @@ public class PokemonTest {
 
 		Assert.assertTrue(bulbasaur2.getName().equals("Bulbasaur"));
 		Assert.assertTrue(bulbasaur2.getLevel() == 10);
-		System.exit(0);
 	}
 
 	public static void main(String[] args) {

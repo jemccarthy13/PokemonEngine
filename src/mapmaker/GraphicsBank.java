@@ -11,6 +11,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import utilities.DebugUtility;
+
 public class GraphicsBank {
 	static final int DEFAULT_MapTile_WIDTH = 32;
 	static final int DEFAULT_MapTile_HEIGHT = 32;
@@ -55,7 +57,7 @@ public class GraphicsBank {
 		} else {
 			this.isUnsaved = false;
 		}
-		System.out.println(paramFile);
+		DebugUtility.printMessage(paramFile.getAbsolutePath());
 		this.baseDirectory = paramFile.getParentFile();
 		this.loadedFrom = paramFile;
 
@@ -72,17 +74,17 @@ public class GraphicsBank {
 			if ((str.length() != 0) && (str.charAt(0) != '#')) {
 				String[] arrayOfString = str.split(",");
 				if (arrayOfString.length < 4) {
-					System.err.println("Could not parse line " + j + ". :");
-					System.err.println(str);
-					System.err.println("(There are not enough tokens)");
+					DebugUtility.printError("Could not parse line " + j + ". :");
+					DebugUtility.printError(str);
+					DebugUtility.printError("(There are not enough tokens)");
 				} else {
 					int i = 0;
 					try {
 						i = Integer.parseInt(arrayOfString[0].trim());
 					} catch (Exception localException) {
-						System.err.println("Could not parse line " + j + ". :");
-						System.err.println(str);
-						System.err.println("(The MapTile id is not a valid number)");
+						DebugUtility.printError("Could not parse line " + j + ". :");
+						DebugUtility.printError(str);
+						DebugUtility.printError("(The MapTile id is not a valid number)");
 					}
 					arrayOfString[1] = arrayOfString[1].trim();
 					arrayOfString[2] = arrayOfString[2].trim();
@@ -109,7 +111,7 @@ public class GraphicsBank {
 		if (!localFile.exists()) {
 			localFile = new File(arrayOfString[1]);
 			if (localFile.exists()) {
-				System.err.println("WARNING: file " + arrayOfString[1]
+				DebugUtility.printError("WARNING: file " + arrayOfString[1]
 						+ " not within the MapTilemaps working directory");
 			} else {
 				localBufferedReader.close();
@@ -123,7 +125,7 @@ public class GraphicsBank {
 	void saveMapTileset(File paramFile) throws IOException {
 		File localFile1 = paramFile.getParentFile();
 		PrintWriter localPrintWriter = new PrintWriter(new FileWriter(paramFile));
-		System.out.println("Saving " + this.MapTiles.size() + " MapTiles.");
+		DebugUtility.printMessage("Saving " + this.MapTiles.size() + " MapTiles.");
 		Iterator<MapTile> localIterator = this.MapTiles.iterator();
 		while (localIterator.hasNext()) {
 			MapTile localMapTile = (MapTile) localIterator.next();

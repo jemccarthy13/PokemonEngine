@@ -90,4 +90,23 @@ public class Player extends Actor implements Serializable {
 		return this.id;
 	}
 
+	public void turnAround() {
+		switch (getDirection()) {
+		case NORTH:
+			setDirection(DIR.SOUTH);
+			break;
+		case EAST:
+			setDirection(DIR.WEST);
+			break;
+		case WEST:
+			setDirection(DIR.EAST);
+			break;
+		case SOUTH:
+			setDirection(DIR.NORTH);
+			break;
+		default:
+			break;
+		}
+	}
+
 }

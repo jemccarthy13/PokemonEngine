@@ -1,7 +1,5 @@
 package utilities;
 
-import graphics.SpriteLibrary;
-
 import java.util.Random;
 
 import pokedex.MoveData;
@@ -10,6 +8,7 @@ import pokedex.Pokemon.STATS;
 import pokedex.PokemonList;
 import trainers.Actor.DIR;
 import audio.AudioLibrary;
+import driver.GameData.SCREEN;
 import driver.GamePanel;
 
 //////////////////////////////////////////////////////////////////////////
@@ -26,7 +25,7 @@ public class BattleEngine {
 
 	private GamePanel game = null;
 	public boolean playerTurn = false;
-	public boolean inMain = true;
+	// public boolean inMain = true;
 	public boolean inFight = false;
 	public boolean inItem = false;
 	public boolean inPokemon = false;
@@ -67,22 +66,11 @@ public class BattleEngine {
 		m_instance.playerCurrentPokemon = g.game.getPlayer().getPokemon().get(0);
 		m_instance.playerCurrentPokemon.setParticipated();
 		m_instance.enemyPokemon = enemyPkmn;
-		m_instance.inMain = true;
 		m_instance.playerTurn = true;
 		m_instance.enemyName = opponentName;
 
-		g.game.setMovable(false);
-		g.gData.inBattle = true;
-	}
-
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Fight - set variables to be in the fight menu
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	public void inFightMenu() {
-		this.inMain = false;
-		this.inFight = true;
+		m_instance.game.game.setMovable(false);
+		m_instance.game.game.setScreen(SCREEN.BATTLE);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -92,7 +80,8 @@ public class BattleEngine {
 	// ////////////////////////////////////////////////////////////////////////
 	public void inItemMenu() {
 		this.inItem = true;
-		System.out.println("Item");
+		// TODO item menu logic
+		DebugUtility.printMessage("Item");
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -102,7 +91,8 @@ public class BattleEngine {
 	// ////////////////////////////////////////////////////////////////////////
 	public void inPokemonMenu() {
 		this.inPokemon = true;
-		System.out.println("Pokemon");
+		// TODO - pokemon screen logic
+		DebugUtility.printMessage("Pokemon");
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -153,8 +143,9 @@ public class BattleEngine {
 		if (enemyName == null) {
 			((Pokemon) this.enemyPokemon.get(0)).statusEffect = 0;
 
-			this.game.gData.inBattle = false;
-			System.out.println("Got away safely!");
+			game.game.setScreen(SCREEN.WORLD);
+			// TODO - convert to message box
+			DebugUtility.printMessage("Got away safely!");
 		}
 	}
 
@@ -167,13 +158,11 @@ public class BattleEngine {
 		giveEXP();
 
 		// reset logic
-		game.gData.playerWin = false;
+		game.game.setPlayerWin(false);
 		game.game.setMovable(false);
 		inFight = false;
-		this.inMain = true;
-		this.game.gData.inBattle = true;
-		this.game.gData.inMessage = true;
-		this.game.messageString = "Player won!";
+		game.game.setScreen(SCREEN.BATTLE_MESSAGE);
+		game.game.setMessage("Player won!");
 
 		game.game.getPlayer().beatenTrainers.add(enemyName);
 
@@ -189,18 +178,18 @@ public class BattleEngine {
 	// ////////////////////////////////////////////////////////////////////////
 	//
 	// Lose - set the variables for a player loss (white out) in a battle
-	// TODO - replace setSprite with setDIR, and have setDir change the sprite
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public void Lose() {
-		this.inMain = false;
 		((Pokemon) this.enemyPokemon.get(0)).statusEffect = 0;
-		System.out.println("Player Pokemon has fainted");
-		System.out.println(game.game.getPlayer().getName() + " is all out of usable Pokemon!");
-		System.out.println(game.game.getPlayer().getName() + " whited out.");
-		game.game.setPlayerSprite(SpriteLibrary.getSpriteForDir("PLAYER", DIR.SOUTH));
+		// TODO - convert to message box
+		DebugUtility.printMessage("Player Pokemon has fainted");
+		DebugUtility.printMessage(game.game.getPlayer().getName() + " is all out of usable Pokemon!");
+		DebugUtility.printMessage(game.game.getPlayer().getName() + " whited out.");
+
+		game.game.setPlayerDirection(DIR.SOUTH);
 		game.game.getPlayer().getPokemon().get(0).heal(-1);
-		this.game.gData.inBattle = false;
+		game.game.setScreen(SCREEN.WORLD);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -219,19 +208,19 @@ public class BattleEngine {
 				int wakeupthaw = rr.nextInt(5);
 				if (wakeupthaw <= 1) {
 					if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 4) {
-						System.out.println(((Pokemon) this.enemyPokemon.get(0)).getName() + " has woken up.");
+						DebugUtility.printMessage(((Pokemon) this.enemyPokemon.get(0)).getName() + " has woken up.");
 					}
 					if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 5) {
-						System.out.println(((Pokemon) this.enemyPokemon.get(0)).getName()
+						DebugUtility.printMessage(((Pokemon) this.enemyPokemon.get(0)).getName()
 								+ " has broken free from the ice.");
 					}
 					((Pokemon) this.enemyPokemon.get(0)).statusEffect = 0;
 				} else {
 					if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 4) {
-						System.out.println(((Pokemon) this.enemyPokemon.get(0)).getName() + " is still asleep.");
+						DebugUtility.printMessage(((Pokemon) this.enemyPokemon.get(0)).getName() + " is still asleep.");
 					}
 					if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 5) {
-						System.out.println(((Pokemon) this.enemyPokemon.get(0)).getName() + " is frozen solid.");
+						DebugUtility.printMessage(((Pokemon) this.enemyPokemon.get(0)).getName() + " is frozen solid.");
 					}
 				}
 			}
@@ -261,11 +250,12 @@ public class BattleEngine {
 					}
 					this.playerCurrentPokemon.doDamage(damage);
 					game.game.playClip(AudioLibrary.SE_DAMAGE);
-					System.out.println("Enemy's turn is over");
+					// TODO - convert to message box
+					DebugUtility.printMessage("Enemy's turn is over");
 					chosen.movePP--;
 				} else {
-					System.out
-							.println(((Pokemon) this.enemyPokemon.get(0)).getName() + " is paralyzed. It can't move.");
+					DebugUtility.printMessage(((Pokemon) this.enemyPokemon.get(0)).getName()
+							+ " is paralyzed. It can't move.");
 				}
 			} else {
 				// otherwise do nomral battle order of events
@@ -295,11 +285,15 @@ public class BattleEngine {
 			}
 			if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 2) {
 				game.game.playClip(AudioLibrary.SE_DAMAGE);
-				System.out.println(((Pokemon) this.enemyPokemon.get(0)).getName() + " has been hurt by its burn");
+				// TODO convert to message box
+				DebugUtility
+						.printMessage(((Pokemon) this.enemyPokemon.get(0)).getName() + " has been hurt by its burn");
 			}
 			if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 3) {
 				game.game.playClip(AudioLibrary.SE_DAMAGE);
-				System.out.println(((Pokemon) this.enemyPokemon.get(0)).getName() + " has been hurt by its poison");
+				// TODO convert to message box
+				DebugUtility.printMessage(((Pokemon) this.enemyPokemon.get(0)).getName()
+						+ " has been hurt by its poison");
 			}
 			this.playerTurn = true;
 		}

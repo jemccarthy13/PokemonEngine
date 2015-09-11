@@ -6,6 +6,7 @@ import location.Location;
 import location.LocationLibrary;
 import pokedex.Pokemon;
 import pokedex.PokemonFactory;
+import utilities.DebugUtility;
 import utilities.RandomNumUtils;
 
 public class UtilsTest {
@@ -17,66 +18,66 @@ public class UtilsTest {
 	}
 
 	public static void testRandomLevel() {
-		System.out.println("Random Levels (2-4):");
+		DebugUtility.printMessage("Random Levels (2-4):");
 		for (int x = 0; x < 10; x++) {
-			System.out.print(RandomNumUtils.randomLevel(4, 2) + " ");
+			DebugUtility.print(RandomNumUtils.randomLevel(4, 2) + " ");
 		}
-		System.out.println();
-		System.out.println("Random Levels: (4-9)");
+		DebugUtility.printMessage();
+		DebugUtility.printMessage("Random Levels: (4-9)");
 		for (int x = 0; x < 10; x++) {
-			System.out.print(RandomNumUtils.randomLevel(9, 4) + " ");
+			DebugUtility.print(RandomNumUtils.randomLevel(9, 4) + " ");
 		}
-		System.out.println();
-		System.out.println("Random Levels: (20-30)");
+		DebugUtility.printMessage();
+		DebugUtility.printMessage("Random Levels: (20-30)");
 		for (int x = 0; x < 10; x++) {
-			System.out.print(RandomNumUtils.randomLevel(30, 20) + " ");
+			DebugUtility.print(RandomNumUtils.randomLevel(30, 20) + " ");
 		}
-		System.out.println();
-		System.out.println();
+		DebugUtility.printMessage();
+		DebugUtility.printMessage();
 	}
 
 	public static void testRandomBaseStat() {
-		System.out.println("Random Base Stats (Level 4):");
+		DebugUtility.printMessage("Random Base Stats (Level 4):");
 		for (int x = 0; x < 10; x++) {
-			System.out.print(RandomNumUtils.randomBaseStat(4) + " ");
+			DebugUtility.print(RandomNumUtils.randomBaseStat(4) + " ");
 		}
-		System.out.println();
-		System.out.println("Random Base Stats (Level 10):");
+		DebugUtility.printMessage();
+		DebugUtility.printMessage("Random Base Stats (Level 10):");
 		for (int x = 0; x < 10; x++) {
-			System.out.print(RandomNumUtils.randomBaseStat(10) + " ");
+			DebugUtility.print(RandomNumUtils.randomBaseStat(10) + " ");
 		}
-		System.out.println();
-		System.out.println("Random Base Stats (Level 25):");
+		DebugUtility.printMessage();
+		DebugUtility.printMessage("Random Base Stats (Level 25):");
 		for (int x = 0; x < 10; x++) {
-			System.out.print(RandomNumUtils.randomBaseStat(25) + " ");
+			DebugUtility.print(RandomNumUtils.randomBaseStat(25) + " ");
 		}
-		System.out.println();
+		DebugUtility.printMessage();
 	}
 
 	public static void testRandomPokemon() {
 		Location loc = LocationLibrary.getLocation("Route 29");
 
-		System.out.println("Random Pokemon (Route 29):");
+		DebugUtility.printMessage("Random Pokemon (Route 29):");
 		for (int x = 0; x < 10; x++) {
-			System.out.println("-------- " + x + " --------");
+			DebugUtility.printMessage("-------- " + x + " --------");
 			Pokemon p = PokemonFactory.getInstance().randomPokemon(loc);
-			System.out.println(p);
+			DebugUtility.printMessage(p.toString());
 		}
 
-		System.out.println();
+		DebugUtility.printMessage();
 
 		ArrayList<Pokemon> trainer = new ArrayList<Pokemon>();
 		for (int y = 0; y < 5; y++) {
 			trainer.add(PokemonFactory.getInstance().randomPokemon(loc));
 		}
-		System.out.println();
-		System.out.println("Trainer's Random Pokemon");
-		System.out.println("============================");
+		DebugUtility.printMessage();
+		DebugUtility.printMessage("Trainer's Random Pokemon");
+		DebugUtility.printMessage("============================");
 		for (int y = 1; y <= trainer.size(); y++) {
-			System.out.println("Trainer Pkmn #" + y);
-			System.out.println(trainer.get(y - 1));
+			DebugUtility.printMessage("Trainer Pkmn #" + y);
+			DebugUtility.printMessage(trainer.get(y - 1).toString());
 		}
-		System.out.println();
+		DebugUtility.printMessage();
 	}
 
 	public static void main(String[] args) {

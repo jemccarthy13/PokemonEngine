@@ -14,9 +14,11 @@ import trainers.Actor.DIR;
 import trainers.NPCLibrary;
 import trainers.Player;
 import utilities.BattleEngine;
+import utilities.DebugUtility;
 import utilities.RandomNumUtils;
 import utilities.Utils;
 import audio.AudioLibrary;
+import driver.GameData.SCREEN;
 
 // ////////////////////////////////////////////////////////////////////////
 //
@@ -47,11 +49,9 @@ public class EventHandler implements Serializable {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	void handleBattleEvent(int keyCode) {
-		if (game.gData.inMessage) {
+		if (game.game.isInMessage()) {
 			if (keyCode == KeyEvent.VK_X || keyCode == KeyEvent.VK_Z) {
-				game.gData.inMessage = false;
-				game.gData.inBattle = false;
-				BattleEngine.getInstance().inMain = false;
+				game.game.setScreen(SCREEN.WORLD);
 				BattleEngine.getInstance().inFight = false;
 				BattleEngine.getInstance().inItem = false;
 				BattleEngine.getInstance().inPokemon = false;
@@ -84,11 +84,13 @@ public class EventHandler implements Serializable {
 					if (playerPokemon.statusEffect == 2) { // burned
 						playerPokemon.doDamage(2);
 						game.game.playClip(AudioLibrary.SE_DAMAGE);
-						System.out.println(playerPokemon.getName() + " has been hurt by its burn");
+						// TODO - convert to use message box
+						DebugUtility.printMessage(playerPokemon.getName() + " has been hurt by its burn");
 					} else if (playerPokemon.statusEffect == 3) { // PSN
 						playerPokemon.doDamage(2);
 						game.game.playClip(AudioLibrary.SE_DAMAGE);
-						System.out.println(playerPokemon.getName() + " has been hurt by its poison");
+						// TODO - convert to use message box
+						DebugUtility.printMessage(playerPokemon.getName() + " has been hurt by its poison");
 					}
 					resetBattleVars();
 					BattleEngine.getInstance().playerTurn = false;
@@ -100,7 +102,7 @@ public class EventHandler implements Serializable {
 				resetBattleVars();
 				game.game.playClip(AudioLibrary.SE_SELECT);
 			}
-		} else if (BattleEngine.getInstance().inMain) {
+		} else if (game.game.getScreen() == SCREEN.BATTLE) {
 			// at main battle menu
 			if (BattleEngine.getInstance().playerTurn) {
 				if (keyCode == KeyEvent.VK_UP) {
@@ -116,7 +118,7 @@ public class EventHandler implements Serializable {
 					// TODO - maybe shorten this to "changeToMenu(XX)"
 					if ((BattleEngine.getInstance().currentSelectionMainX == 0)
 							&& (BattleEngine.getInstance().currentSelectionMainY == 0)) {
-						BattleEngine.getInstance().inFightMenu();
+						game.game.setScreen(SCREEN.BATTLE_FIGHT);
 					}
 					if ((BattleEngine.getInstance().currentSelectionMainX == 1)
 							&& (BattleEngine.getInstance().currentSelectionMainY == 0)) {
@@ -147,10 +149,12 @@ public class EventHandler implements Serializable {
 		int wakeupthaw = rr.nextInt(5);
 		if (wakeupthaw <= 1) {
 			if (p.statusEffect == 4) {
-				System.out.println(p.getName() + " has woken up.");
+				// TODO - convert to use message box
+				DebugUtility.printMessage(p.getName() + " has woken up.");
 			}
 			if (p.statusEffect == 5) {
-				System.out.println(p.getName() + " has broken free from the ice.");
+				// TODO - convert to use message box
+				DebugUtility.printMessage(p.getName() + " has broken free from the ice.");
 			}
 			p.statusEffect = 0;
 		}
@@ -215,7 +219,7 @@ public class EventHandler implements Serializable {
 			}
 			chosen.movePP--;
 		} else {
-			System.out.println(playerPokemon.getName() + " is paralyzed. It can't move.");
+			DebugUtility.printMessage(playerPokemon.getName() + " is paralyzed. It can't move.");
 		}
 	}
 
@@ -225,7 +229,7 @@ public class EventHandler implements Serializable {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	private void resetBattleVars() {
-		BattleEngine.getInstance().inMain = true;
+		game.game.setScreen(SCREEN.BATTLE);
 		BattleEngine.getInstance().inFight = false;
 		BattleEngine.getInstance().currentSelectionMainX = 0;
 		BattleEngine.getInstance().currentSelectionMainY = 0;
@@ -246,7 +250,7 @@ public class EventHandler implements Serializable {
 			// exit a conversation
 			if (keyCode == KeyEvent.VK_X) {
 				game.menuScreen.Exit();
-				game.gData.inMenu = false;
+				game.game.setScreen(SCREEN.WORLD);
 			}
 		} else if (game.menuScreen.MENU_inMain) {
 			// main pause menu screen
@@ -282,11 +286,11 @@ public class EventHandler implements Serializable {
 				}
 				if (game.menuScreen.MENU_currentSelectionMain == 7) {
 					game.menuScreen.Exit();
-					game.gData.inMenu = false;
+					game.game.setScreen(SCREEN.WORLD);
 				}
 			} else if (keyCode == KeyEvent.VK_X) {
 				game.menuScreen.Exit();
-				game.gData.inMenu = false;
+				game.game.setScreen(SCREEN.WORLD);
 			}
 
 		} else if (game.menuScreen.MENU_inPokeDex) {
@@ -315,13 +319,16 @@ public class EventHandler implements Serializable {
 				}
 			} else if (keyCode == KeyEvent.VK_Z) {
 				if (game.menuScreen.MENU_currentSelectionPokeGear == 0) {
-					System.out.println("Map");
+					// TODO - add Map painting
+					DebugUtility.printMessage("Map");
 				} else if (game.menuScreen.MENU_currentSelectionPokeGear == 1) {
-					System.out.println("Radio");
+					// TODO - add Radio painting
+					DebugUtility.printMessage("Radio");
 				} else if (game.menuScreen.MENU_currentSelectionPokeGear == 2) {
-					System.out.println("Phone");
+					// TODO - add Phone painting
+					DebugUtility.printMessage("Phone");
 				} else if (game.menuScreen.MENU_currentSelectionPokeGear == 3) {
-					System.out.println("Exit");
+					// TODO - use SCREEN.MENU_* instead
 					game.menuScreen.MENU_currentSelectionPokeGear = 0;
 					game.menuScreen.MENU_inPokeGear = false;
 					game.menuScreen.MENU_inMain = true;
@@ -344,7 +351,7 @@ public class EventHandler implements Serializable {
 				if (game.menuScreen.MENU_currentSelectionSave == 0) {
 					Utils.saveGame(game);
 					game.menuScreen.MENU_inSave = false;
-					game.gData.inMessage = true;
+					game.game.setScreen(SCREEN.MESSAGE);
 					game.messageString = "Game saved successfully!";
 				} else {
 					game.menuScreen.MENU_inSave = false;
@@ -354,13 +361,12 @@ public class EventHandler implements Serializable {
 				game.menuScreen.MENU_inSave = false;
 				game.menuScreen.MENU_inMain = true;
 			}
-		} else if (game.gData.inMessage) {
+		} else if (game.game.isInMessage()) {
 			if (keyCode == KeyEvent.VK_X) {
-				game.gData.inMessage = false;
 				game.messageString = "";
 				game.menuScreen.MENU_inSave = false;
 				game.menuScreen.MENU_inMain = false;
-				game.gData.inMenu = false;
+				game.game.setScreen(SCREEN.WORLD);
 			}
 		} else if (game.menuScreen.MENU_inOption) {
 			if (keyCode == KeyEvent.VK_UP) {
@@ -373,12 +379,7 @@ public class EventHandler implements Serializable {
 				}
 			} else if (keyCode == KeyEvent.VK_Z) {
 				if (game.menuScreen.MENU_currentSelectionOption == 5) {
-					game.gData.option_sound = !game.gData.option_sound;
-					if (game.gData.option_sound) {
-						game.game.playBackgroundMusic(game.game.getPlayer().getCurLoc().getName());
-					} else {
-						AudioLibrary.getInstance().pauseBackgrondMusic();
-					}
+					game.game.toggleSound();
 				}
 			} else if (keyCode == KeyEvent.VK_X) {
 				game.menuScreen.MENU_inOption = false;
@@ -436,7 +437,7 @@ public class EventHandler implements Serializable {
 		} else if (keyCode == KeyEvent.VK_ENTER) {
 			game.game.playClip(AudioLibrary.SE_MENU);
 			game.menuScreen.MENU_inMain = true;
-			game.gData.inMenu = true;
+			game.game.setScreen(SCREEN.MENU);
 		} else if (keyCode == KeyEvent.VK_Z) {
 			game.game.playClip(AudioLibrary.SE_SELECT);
 			Actor borderNPC = null;
@@ -471,7 +472,7 @@ public class EventHandler implements Serializable {
 				}
 			}
 			if (borderNPC != null) {
-				game.gData.inMenu = true;
+				game.game.setScreen(SCREEN.MENU);
 				game.menuScreen.Message(borderNPC);
 			}
 		}

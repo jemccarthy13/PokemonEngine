@@ -13,6 +13,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import utilities.DebugUtility;
+
 public class Scene {
 	int offsetX = 0;
 	int offsetY = 0;
@@ -66,7 +68,7 @@ public class Scene {
 		GraphicsBank localGraphicsBank = new GraphicsBank();
 
 		File localFile = new File(paramFile.getParentFile(), str2);
-		System.out.println("Attempt to load tileset " + localFile.getAbsoluteFile());
+		DebugUtility.printMessage("Attempt to load tileset " + localFile.getAbsoluteFile());
 
 		localGraphicsBank.loadMapTileset(localFile);
 
@@ -143,7 +145,7 @@ public class Scene {
 		} catch (IOException localIOException) {
 			throw new RuntimeException("Could not save the level");
 		}
-		System.err.println("Saved");
+		DebugUtility.printMessage("Saved");
 	}
 
 	private void writeScene(PrintWriter localPrintWriter, int i, int j) {

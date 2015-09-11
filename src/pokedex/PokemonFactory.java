@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import location.Location;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import location.Location;
+import utilities.DebugUtility;
 import utilities.RandomNumUtils;
 
 // ////////////////////////////////////////////////////////////////////////
@@ -96,13 +98,13 @@ public class PokemonFactory extends HashMap<String, PokemonData> {
 				if (pd.isValidData()) {
 					put(pd.name, pd);
 				} else if (pd.name != null) {
-					System.err.println("Unable to load data for pokemon: " + pd.name);
+					DebugUtility.printError("Unable to load data for pokemon: " + pd.name);
 				} else {
-					System.err.println("Unknown error in populating pokemon map.");
+					DebugUtility.error("Unknown error in populating pokemon map.");
 				}
 			}
 		} catch (Exception e) {
-			System.err.println("Unable to load Pokedex data.");
+			DebugUtility.error("Unable to load Pokedex data.");
 			e.printStackTrace();
 		}
 	}

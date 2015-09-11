@@ -14,6 +14,8 @@ import java.util.Stack;
 import javax.swing.JComponent;
 import javax.swing.JViewport;
 
+import utilities.DebugUtility;
+
 public class MapComponent extends JComponent implements MouseListener, MouseMotionListener, MapChangeListener {
 
 	private static final long serialVersionUID = 5804948335596277170L;
@@ -106,10 +108,10 @@ public class MapComponent extends JComponent implements MouseListener, MouseMoti
 		paramGraphics.setColor(Color.black);
 		paramGraphics.drawLine(0, 0, this.width * this.tileWidth, 0);
 		paramGraphics.drawLine(0, 0, 0, this.height * this.tileHeight);
-		paramGraphics.drawLine(this.width * this.tileWidth, 0, this.width * this.tileWidth,
-				this.height * this.tileHeight);
-		paramGraphics.drawLine(0, this.height * this.tileHeight, this.width * this.tileWidth,
-				this.height * this.tileHeight);
+		paramGraphics.drawLine(this.width * this.tileWidth, 0, this.width * this.tileWidth, this.height
+				* this.tileHeight);
+		paramGraphics.drawLine(0, this.height * this.tileHeight, this.width * this.tileWidth, this.height
+				* this.tileHeight);
 	}
 
 	public void mapClicked(int paramInt1, int paramInt2) {
@@ -124,7 +126,7 @@ public class MapComponent extends JComponent implements MouseListener, MouseMoti
 				recursiveFlood(paramInt1, paramInt2, this.activeLayer,
 						this.map.getTile(paramInt1, paramInt2, this.activeLayer), this.mapEdit.getSelectedTile());
 			} else {
-				System.out.println("Invalid paint mode");
+				DebugUtility.printMessage("Invalid paint mode");
 			}
 		}
 	}

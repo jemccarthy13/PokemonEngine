@@ -1,5 +1,7 @@
 package trainers;
 
+import graphics.SpriteLibrary;
+
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,10 +11,11 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import graphics.SpriteLibrary;
 import pokedex.PokemonFactory;
 import pokedex.PokemonList;
+import trainers.Actor.DIR;
 import utilities.Coordinate;
+import utilities.DebugUtility;
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -80,7 +83,7 @@ public class NPCLibrary extends HashMap<String, Actor> {
 
 				// get npc sprite images directory name (sprite image name)
 				td.sprite_name = (String) npc_data.get("image");
-				td.sprite = SpriteLibrary.getInstance().getSprites(td.sprite_name).get(0);
+				td.sprite = SpriteLibrary.getSpriteForDir(td.sprite_name, DIR.SOUTH);
 
 				// get the conversation text
 				JSONArray conversation = (JSONArray) npc_data.get("speech_text");
@@ -114,9 +117,7 @@ public class NPCLibrary extends HashMap<String, Actor> {
 				put(td.name, new Actor(td));
 			}
 		} catch (Exception e) {
-			System.err.println("Unable to load NPC data.");
-			e.printStackTrace();
-			System.exit(0);
+			DebugUtility.error("Unable to load NPC data.");
 		}
 	}
 }

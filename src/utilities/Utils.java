@@ -28,8 +28,8 @@ public class Utils {
 		ObjectOutputStream oos = null;
 		try {
 			File dir = new File("resources/data");
-			System.out.println(dir.isDirectory());
-			System.out.println(data.game.getPlayer().tData.toString());
+			DebugUtility.printMessage(dir.isDirectory() + "");
+			DebugUtility.printMessage(data.game.getPlayer().tData.toString());
 			fout = new FileOutputStream("resources/data/PokemonOrange.sav");
 			oos = new ObjectOutputStream(fout);
 			oos.writeObject(data);
@@ -37,10 +37,10 @@ public class Utils {
 			fout.close();
 		} catch (Exception e1) {
 			e1.printStackTrace();
-			System.out.println("Unable to save game...");
+			DebugUtility.printMessage("Unable to save game...");
 			return;
 		}
-		System.out.println("** Saved game.");
+		DebugUtility.printMessage("** Saved game.");
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -58,10 +58,10 @@ public class Utils {
 			data = (GameData) oos.readObject();
 			oos.close();
 			fout.close();
-			System.out.println("** Loaded game from save.");
+			DebugUtility.printMessage("** Loaded game from save.");
 		} catch (Exception e1) {
 			e1.printStackTrace();
-			System.out.println("Unable to load game...");
+			DebugUtility.printMessage("Unable to load game...");
 		}
 		return data;
 	}
@@ -74,10 +74,10 @@ public class Utils {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public static void accessComputer(GamePanel data, Player you) {
-		System.out.println("Saving game...");
+		DebugUtility.printMessage("Saving game...");
 		saveGame(data);
-		System.out.println("COMPUTER ACCESS GRANTED");
-		System.out.println("computer menu here.");
+		DebugUtility.printMessage("COMPUTER ACCESS GRANTED");
+		DebugUtility.printMessage("computer menu here.");
 	}
 
 }

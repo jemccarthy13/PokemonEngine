@@ -35,6 +35,8 @@ public class GameData implements Serializable {
 	// ==================== Game Data Control ==============================//
 
 	public Player player;
+	public String messageString;
+	public int id = RandomNumUtils.createTrainerID();
 
 	// Timing Data
 	public TimeStruct gameTimeStruct = new TimeStruct();
@@ -50,12 +52,15 @@ public class GameData implements Serializable {
 	// ======================= Battle information ==========================//
 	public boolean inBattle = false;
 	public boolean playerWin = false;
+
 	// ====================== Graphics control variables ===================//
+	public enum SCREEN {
+		WORLD, MENU, INTRO, NAME, TITLE, CONTINUE, MESSAGE, BATTLE, BATTLE_FIGHT, BATTLE_MESSAGE;
+	}
+
+	public SCREEN screen = SCREEN.TITLE;
+
 	public boolean inMenu = false;
-	public boolean inIntro = false;
-	public boolean inNameScreen = false;
-	public boolean atTitle = true;
-	public boolean atContinueScreen = false;
 	public boolean inMessage;
 
 	public int introStage = 1;
@@ -65,12 +70,12 @@ public class GameData implements Serializable {
 	public int menuSelection = 0;
 
 	// ==================== Setting options variables ======================//
+
 	public boolean option_sound = false;
+
 	// ======================== User Data ==================================//
 
 	public int currentSpeed = Configuration.PLAYER_SPEED_WALK;
-
-	public int id = RandomNumUtils.createTrainerID();
 
 	public String toString() {
 		String retStr = "Player: " + "\n";

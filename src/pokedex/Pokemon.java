@@ -1,10 +1,12 @@
 package pokedex;
 
+import graphics.SpriteLibrary;
+
 import java.io.Serializable;
 
 import javax.swing.ImageIcon;
 
-import graphics.SpriteLibrary;
+import utilities.DebugUtility;
 import utilities.RandomNumUtils;
 
 // ////////////////////////////////////////////////////////////////////////
@@ -75,12 +77,12 @@ public class Pokemon implements Serializable {
 			this.max_stats[x] = this.stats[x];
 		}
 
-		this.party_icon = SpriteLibrary
-				.createImage(SpriteLibrary.libPath + "Icons/icon" + formatPokedexNumber(0) + ".png");
-		this.back_sprite = SpriteLibrary
-				.createImage(SpriteLibrary.libPath + "Battlers/" + formatPokedexNumber(evolution_stage) + "b.png");
-		this.front_sprite = SpriteLibrary
-				.createImage(SpriteLibrary.libPath + "Battlers/" + formatPokedexNumber(evolution_stage) + ".png");
+		this.party_icon = SpriteLibrary.createImage(SpriteLibrary.libPath + "Icons/icon" + formatPokedexNumber(0)
+				+ ".png");
+		this.back_sprite = SpriteLibrary.createImage(SpriteLibrary.libPath + "Battlers/"
+				+ formatPokedexNumber(evolution_stage) + "b.png");
+		this.front_sprite = SpriteLibrary.createImage(SpriteLibrary.libPath + "Battlers/"
+				+ formatPokedexNumber(evolution_stage) + ".png");
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -103,7 +105,8 @@ public class Pokemon implements Serializable {
 	// ////////////////////////////////////////////////////////////////////////
 	public void gainExp(int expGain) {
 		this.curExp += expGain;
-		System.out.println("Gained " + expGain + " exp");
+		// TODO - convert to use message box
+		DebugUtility.printMessage("Gained " + expGain + " exp");
 		if (this.curExp >= (this.level + 1) * (this.level + 1) * (this.level + 1)) {
 			levelUp();
 		}
@@ -113,13 +116,12 @@ public class Pokemon implements Serializable {
 	//
 	// Level up, increase stats, check for evolution, check for moves learned
 	//
-	// TODO - use EXP gained to judge level up
-	//
 	// ////////////////////////////////////////////////////////////////////////
 	public void levelUp() {
 		if (this.level < 100) {
 			this.level += 1;
-			System.out.println(getName() + " grew to level " + level + "!");
+			// TODO - convert to use message box
+			DebugUtility.printMessage(getName() + " grew to level " + level + "!");
 		}
 		for (int x = 0; x < 6; x++) {
 			int incr = RandomNumUtils.randomStatIncr();
@@ -135,12 +137,14 @@ public class Pokemon implements Serializable {
 		}
 		if ((this.evolution_stage < 2) && (this.level == pData.evolution_levels.get(evolution_stage + 1))) {
 			this.evolution_stage += 1;
-			System.out.println("Congratulations!  Your " + pData.evolution_stages.get(evolution_stage - 1)
+			// TODO Convert to use message box
+			DebugUtility.printMessage("Congratulations!  Your " + pData.evolution_stages.get(evolution_stage - 1)
 					+ " has evolved into a " + pData.evolution_stages.get(evolution_stage) + "!");
 		}
 		for (int x = 0; x < pData.moves.size(); x++) {
 			if (level == pData.levelsLearned.get(x))
-				System.out.println(getName() + " learned " + pData.moves.get(x));
+				// TODO convert to use message box
+				DebugUtility.printMessage(getName() + " learned " + pData.moves.get(x));
 		}
 	}
 

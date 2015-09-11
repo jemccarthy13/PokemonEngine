@@ -9,4 +9,6 @@ public class Configuration {
 	public static final int PLAYER_SPEED_WALK = 80;
 	public static final int PLAYER_SPEED_RUN = 90;
 	public static final int PLAYER_SPEED_BIKE = 95;
+
+	public static final String MAP_TO_LOAD = "/maps/NewBarkTown.map";
 }

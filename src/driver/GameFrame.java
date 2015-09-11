@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import trainers.NPCLibrary;
 import utilities.DebugUtility;
 import audio.AudioLibrary;
+import driver.GameData.SCREEN;
 
 public class GameFrame extends JFrame {
 
@@ -49,9 +50,8 @@ public class GameFrame extends JFrame {
 		pf.pack();
 		pf.setLocationRelativeTo(null);
 
-		DebugUtility.printMessage("Game session id: " + pokemonGame.gData.id);
-
-		DebugUtility.debugHeader("Startup completed");
+		DebugUtility.printMessage("Game session id: " + pokemonGame.game.getId());
+		DebugUtility.printHeader("Startup completed");
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -66,50 +66,50 @@ public class GameFrame extends JFrame {
 
 		public void keyPressed(KeyEvent e) {
 			int keyCode = e.getKeyCode();
-			if (pokemonGame.gData.atTitle) {
-				// title screen "press enter"
+			switch (pokemonGame.game.getScreen()) {
+			case TITLE: // title screen "press enter"
 				if (keyCode == KeyEvent.VK_ENTER) {
-					pokemonGame.gData.atTitle = false;
 					pokemonGame.game.playBackgroundMusic("Continue");
-					pokemonGame.gData.atContinueScreen = true;
+					pokemonGame.game.setScreen(SCREEN.CONTINUE);
 				}
-			} else if (pokemonGame.gData.atContinueScreen) {
-				// continue screen choice select
+				break;
+			case CONTINUE: // continue screen choice select
 				if (keyCode == KeyEvent.VK_UP) {
-					if (pokemonGame.gData.menuSelection > 0)
-						pokemonGame.gData.menuSelection -= 1;
+					if (pokemonGame.game.getMenuSelectionNumber() > 0)
+						pokemonGame.game.decrementMenuSelection();
 				} else if (keyCode == KeyEvent.VK_DOWN) {
-					if (pokemonGame.gData.menuSelection < 2)
-						pokemonGame.gData.menuSelection += 1;
+					if (pokemonGame.game.getMenuSelectionNumber() < 2)
+						pokemonGame.game.incrementMenuSelection();
 				}
 				if (keyCode == KeyEvent.VK_Z) {
 					// remove(pokemonGame);
-					if (pokemonGame.gData.menuSelection == 0) {
-						pokemonGame.gData = pokemonGame.game.startGame(true, pokemonGame);
-					} else if (pokemonGame.gData.menuSelection == 1) {
-						pokemonGame.gData = pokemonGame.game.startGame(false, pokemonGame);
+					if (pokemonGame.game.getMenuSelectionNumber() == 0) {
+						pokemonGame.game.startGame(true);
+					} else if (pokemonGame.game.getMenuSelectionNumber() == 1) {
+						pokemonGame.game.startGame(false);
 					}
+					pokemonGame.game.startNewTimer(pokemonGame);
 					repaint();
 					validate();
 				}
 				pokemonGame.game.playClip(AudioLibrary.SE_SELECT);
-			} else if (pokemonGame.gData.inIntro) {
-				// intro screen, advance oak's text
+				break;
+			case INTRO: // intro screen, advance oak's text
 				if (keyCode == KeyEvent.VK_X)
 					pokemonGame.nameScreen.removeChar();
 				if (keyCode == KeyEvent.VK_Z) {
-					pokemonGame.gData.introStage += 2;
-					if (pokemonGame.gData.introStage > NPCLibrary.getInstance().get("Professor Oak").getTextLength() - 1) {
+					pokemonGame.game.incrIntroStage();
+					if (pokemonGame.game.getIntroStage() > NPCLibrary.getInstance().get("Professor Oak")
+							.getTextLength() - 1) {
 						pokemonGame.game.playBackgroundMusic("NewBarkTown");
-						pokemonGame.gData.inIntro = !pokemonGame.gData.inIntro;
-					} else if (pokemonGame.gData.introStage == 15) {
-						pokemonGame.gData.inNameScreen = true;
+						pokemonGame.game.setScreen(SCREEN.WORLD);
+					} else if (pokemonGame.game.getIntroStage() == 15) {
+						pokemonGame.game.setScreen(SCREEN.NAME);
 						pokemonGame.nameScreen.setToBeNamed("PLAYER");
-						pokemonGame.gData.inIntro = false;
 					}
 				}
-			} else if (pokemonGame.gData.inNameScreen) {
-				// name screen, add or remove chars
+				break;
+			case NAME:// name screen, add or remove chars
 				if (keyCode == KeyEvent.VK_X)
 					pokemonGame.nameScreen.removeChar();
 				if ((keyCode == KeyEvent.VK_Z)) {
@@ -119,8 +119,7 @@ public class GameFrame extends JFrame {
 								&& pokemonGame.nameScreen.getChosenName().length() > 0) {
 							pokemonGame.game.getPlayer().setName(pokemonGame.nameScreen.getChosenName());
 							pokemonGame.nameScreen.reset();
-							pokemonGame.gData.inNameScreen = false;
-							pokemonGame.gData.inIntro = true;
+							pokemonGame.game.setScreen(SCREEN.INTRO);
 						} else if (pokemonGame.nameScreen.colSelection == 0)
 							pokemonGame.nameScreen.removeChar();
 					} else {
@@ -144,14 +143,15 @@ public class GameFrame extends JFrame {
 						&& pokemonGame.nameScreen.colSelection < 5) {
 					pokemonGame.nameScreen.colSelection++;
 				}
-			} else {
+				break;
+			default:
 				// otherwise, fire the eventHandler
-				if ((!pokemonGame.gData.inMenu) && (pokemonGame.game.isMovable()) && (!pokemonGame.gData.inBattle)
-						&& (!pokemonGame.game.isPlayerWalking())) {
+				if ((pokemonGame.game.getScreen() != SCREEN.MENU) && (pokemonGame.game.isMovable())
+						&& (!pokemonGame.game.isInBattle()) && (!pokemonGame.game.isPlayerWalking())) {
 					pokemonGame.eventHandler.handleWorldEvent(keyCode);
-				} else if (pokemonGame.gData.inMenu) {
+				} else if (pokemonGame.game.getScreen() != SCREEN.MENU) {
 					pokemonGame.eventHandler.handleMenuEvent(keyCode);
-				} else if (pokemonGame.gData.inBattle) {
+				} else if (pokemonGame.game.isInBattle()) {
 					pokemonGame.eventHandler.handleBattleEvent(keyCode);
 				}
 			}

@@ -6,6 +6,8 @@ import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
 
+import utilities.DebugUtility;
+
 // ////////////////////////////////////////////////////////////////////////
 //
 // MidiPlayer - handles playing the back ground music
@@ -25,7 +27,7 @@ public class MidiPlayer {
 			this.sequencer.setSequence(sequence);
 			this.sequencer.setLoopCount(999);
 		} catch (Exception e) {
-			System.err.println("Cannot load sound " + filename);
+			DebugUtility.printError("Cannot load sound " + filename);
 		}
 	}
 
@@ -34,7 +36,7 @@ public class MidiPlayer {
 			if (this.sequencer != null) {
 				this.sequencer.start();
 			} else {
-				System.out.println("sound " + filename + " was not loaded");
+				DebugUtility.printMessage("sound " + filename + " was not loaded");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

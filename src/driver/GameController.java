@@ -2,6 +2,7 @@ package driver;
 
 import graphics.SpriteLibrary;
 
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,6 +20,8 @@ import pokedex.PokemonFactory;
 import tiles.ObstacleTile;
 import tiles.Tile;
 import tiles.TileSet;
+import tiles.WildTile;
+import trainers.Actor;
 import trainers.Actor.DIR;
 import trainers.Player;
 import utilities.Coordinate;
@@ -26,6 +29,7 @@ import utilities.DebugUtility;
 import utilities.NPCThread;
 import utilities.Utils;
 import audio.AudioLibrary;
+import driver.GameData.SCREEN;
 
 public class GameController {
 	// main game logic
@@ -34,8 +38,8 @@ public class GameController {
 	// NPC random movement controller
 	public NPCThread npcs = new NPCThread();
 
-	GameController(GameData game) {
-		gData = game;
+	GameController() {
+		gData = new GameData();
 	}
 
 	boolean isNoClip() {
@@ -44,6 +48,14 @@ public class GameController {
 
 	public void setNoClip(boolean isNoClip) {
 		gData.NOCLIP = isNoClip;
+	}
+
+	public boolean isMovable() {
+		return gData.movable;
+	}
+
+	public void setMovable(boolean b) {
+		gData.movable = b;
 	}
 
 	boolean doBattles() {
@@ -82,22 +94,10 @@ public class GameController {
 		gData.gameTimeStruct.saveTime();
 	}
 
-	public void startNewTimer(GamePanel theGame) {
+	public void startNewTimer(ActionListener theGame) {
 		gData.gameSpeed = new Timer(100 - gData.currentSpeed, theGame);
 		gData.gameSpeed.start();
 	}
-
-	public boolean isMovable() {
-		return gData.movable;
-	}
-
-	public void setMovable(boolean b) {
-		gData.movable = b;
-	}
-
-	// public void startNPCMovement() {
-	// //
-	// }
 
 	public void stopNPCMovement() {
 		npcs.stop = true;
@@ -110,40 +110,36 @@ public class GameController {
 	// the theGame based off a save file, or start a new theGame.
 	// Prepares all the necessary utilities, such as
 	//
-	// TODO - map to be used is scriptable in data file with other "EVENTS"
-	//
 	// ////////////////////////////////////////////////////////////////////////
-	public GameData startGame(boolean continued, GamePanel p) {
-		Player player = getPlayer();
-
+	public GameData startGame(boolean continued) {
+		DebugUtility.printHeader("Starting game:");
 		if (continued) {
 			gData = Utils.loadGame();
-			if (!player.tData.isValidData()) {
-				System.err.println(player.tData.toString());
+			if (!gData.player.tData.isValidData()) {
+				DebugUtility.error(gData.player.tData.toString());
 			}
 		} else {
 			String name = "GOLD";
-			player = new Player(4, 2, name);
+			gData.player = new Player(4, 2, name);
 			Pokemon charmander = PokemonFactory.createPokemon("Charmander", 7);
-			player.caughtPokemon(charmander);
-			player.setMoney(1000000);
-			player.setCurLocation(LocationLibrary.getLocation("Route 27"));
+			gData.player.caughtPokemon(charmander);
+			gData.player.setMoney(1000000);
+			gData.player.setCurLocation(LocationLibrary.getLocation("Route 27"));
 			playBackgroundMusic("NewBarkTown");
-			gData.start_coorX = (Tile.TILESIZE * (8 - player.getCurrentX()));
-			gData.start_coorY = (Tile.TILESIZE * (6 - player.getCurrentY()));
+			gData.start_coorX = (Tile.TILESIZE * (8 - gData.player.getCurrentX()));
+			gData.start_coorY = (Tile.TILESIZE * (6 - gData.player.getCurrentY()));
 			if (isShowIntro()) {
 				gData.introStage = 1;
-				gData.inIntro = true;
+				gData.screen = SCREEN.INTRO;
 			}
 		}
 
 		// initialize the player sprite
-		player.tData.sprite_name = "PLAYER";
-		player.tData.sprite = SpriteLibrary.getSprites("PLAYER").get(player.getDirection().ordinal() * 3);
+		gData.player.tData.sprite_name = "PLAYER";
+		gData.player.tData.sprite = SpriteLibrary.getSprites("PLAYER").get(gData.player.getDirection().ordinal() * 3);
 
 		// get out of any menus
-		gData.atTitle = false;
-		gData.atContinueScreen = false;
+		gData.screen = SCREEN.WORLD;
 		gData.inMenu = false;
 
 		npcs.start();
@@ -151,11 +147,7 @@ public class GameController {
 		// start clock for current session
 		gData.gameTimeStruct.timeStarted = System.currentTimeMillis();
 
-		// start the timer that handles events (gameplay speed)
-		startNewTimer(p);
-
-		DebugUtility.printMessage("Starting game:");
-		DebugUtility.printMessage("- " + player.tData.toString());
+		DebugUtility.printMessage("- " + gData.player.tData.toString());
 		DebugUtility.printMessage("* Rendered session id: " + gData.id);
 		return gData;
 	}
@@ -165,7 +157,7 @@ public class GameController {
 	// loadMap - given a path to a map file, populate the Image and Tile data
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public void loadMap(String loadedMap) throws Exception {
+	public void loadMap() throws Exception {
 
 		class SynchronizedReader {
 			BufferedReader reader;
@@ -235,11 +227,11 @@ public class GameController {
 			}
 		}
 
-		DebugUtility.debugHeader("Loading Map");
+		DebugUtility.printHeader("Loading Map");
 
 		// intialize file reader
 		BufferedReader bReader = new BufferedReader(new InputStreamReader(
-				GameInitializer.class.getResourceAsStream("/maps/" + loadedMap + ".map")));
+				GameController.class.getResourceAsStream(Configuration.MAP_TO_LOAD)));
 		SynchronizedReader reader = new SynchronizedReader(bReader);
 		String line = reader.readLine();
 		StringTokenizer tokens = new StringTokenizer(line);
@@ -356,7 +348,7 @@ public class GameController {
 		gData.map_width = wdt;
 	}
 
-	public Object getMapTileAt(Coordinate c) {
+	public Tile getMapTileAt(Coordinate c) {
 		return gData.tileMap.getTileAt(c);
 	}
 
@@ -409,5 +401,174 @@ public class GameController {
 
 	public int getIntroStage() {
 		return gData.introStage;
+	}
+
+	public void incrIntroStage() {
+		gData.introStage += 2;
+	}
+
+	public boolean isInBattle() {
+		return gData.inBattle;
+	}
+
+	public boolean isInMessage() {
+		return gData.inMessage;
+	}
+
+	public boolean isMenuDisplayed() {
+		return (gData.screen == SCREEN.TITLE) || (gData.screen == SCREEN.INTRO) || (gData.screen == SCREEN.NAME)
+				|| gData.inMenu || (gData.screen == SCREEN.CONTINUE);
+	}
+
+	public void setOffsetY(DIR playerDir) {
+		if (canMoveInDir(playerDir)) {
+			switch (playerDir) {
+			case NORTH:
+				gData.offsetY += 2;
+				break;
+			case SOUTH:
+				gData.offsetY -= 2;
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	public void setOffsetX(DIR playerDir) {
+		if (canMoveInDir(playerDir)) {
+			switch (playerDir) {
+			case EAST:
+				gData.offsetX -= 2;
+				break;
+			case WEST:
+				gData.offsetX += 2;
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	public void setStartCoordX(int i) {
+		gData.start_coorX = i;
+	}
+
+	public void setStartCoordY(int i) {
+		gData.start_coorY = i;
+	}
+
+	public boolean isBattleTile(Coordinate position) {
+		return getMapTileAt(position).getClass().equals(WildTile.class);
+	}
+
+	public boolean isTeleportTile(Coordinate playerPos) {
+		return TeleportLibrary.getListofTeleports().containsKey(playerPos);
+	}
+
+	public void doTeleport(Coordinate playerPos) {
+		Player player = getPlayer();
+
+		player.setLoc(TeleportLibrary.getListofTeleports().get(playerPos));
+
+		setStartCoordX((player.getCurrentX() - playerPos.getX()) * -1 * Tile.TILESIZE);
+		setStartCoordY((player.getCurrentY() - playerPos.getY()) * -1 * Tile.TILESIZE);
+
+		// face the opposite direction of the way the player entered the
+		// teleport square
+		player.turnAround();
+	}
+
+	public boolean validEncounterConditions(Actor npc) {
+		return npc.isTrainer() && !isPlayerWalking() && doBattles()
+				&& !getPlayer().beatenTrainers.contains(npc.getName()) && npcSeesPlayer(npc) && !gData.inMenu;
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Given an NPC, check if that NPC sees the player
+	//
+	// Sight rules:
+	// NORTH - columns match, playerY < NPC_Y, within sight distance
+	// SOUTH - columns match, playerY > NPC_Y, within sight distance
+	// EAST - rows match, playerX > NPC_X, within sight distance
+	// WEST - rows match, playerX < NPC_X, within sight distance
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	private boolean npcSeesPlayer(Actor curNPC) {
+		Player player = getPlayer();
+		int playerCurY = player.getCurrentY();
+		int playerCurX = player.getCurrentX();
+		int NPC_X = curNPC.getCurrentX();
+		int NPC_Y = curNPC.getCurrentY();
+		DIR NPC_DIR = curNPC.getDirection();
+
+		return (((playerCurX == curNPC.getCurrentX()) && (((playerCurY < NPC_Y)
+				&& (NPC_Y - playerCurY <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.NORTH)) || ((playerCurY > NPC_Y)
+				&& (playerCurY - NPC_Y <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.SOUTH)))) || ((playerCurY == NPC_Y) && (((playerCurX < NPC_X)
+				&& (NPC_X - playerCurX <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.WEST)) || ((playerCurX > NPC_X)
+				&& (playerCurX - NPC_X <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.EAST)))));
+	}
+
+	public void resetMenuLogic() {
+		gData.screen = SCREEN.WORLD;
+		gData.inBattle = false;
+		gData.inMenu = false;
+		gData.inMessage = false;
+		gData.introStage = 1;
+	}
+
+	public boolean isSoundOn() {
+		return gData.option_sound;
+	}
+
+	public int getMenuSelectionNumber() {
+		return gData.menuSelection;
+	}
+
+	public boolean isInNameScreen() {
+		return gData.screen == SCREEN.NAME;
+	}
+
+	public SCREEN getScreen() {
+		return gData.screen;
+	}
+
+	public void setScreen(SCREEN curScreen) {
+		gData.screen = curScreen;
+	}
+
+	public void toggleSound() {
+		gData.option_sound = !gData.option_sound;
+		if (gData.option_sound) {
+			playBackgroundMusic(getPlayer().getCurLoc().getName());
+		} else {
+			AudioLibrary.getInstance().pauseBackgrondMusic();
+		}
+	}
+
+	public void decrementMenuSelection() {
+		gData.menuSelection -= 1;
+	}
+
+	public void incrementMenuSelection() {
+		gData.menuSelection += 1;
+	}
+
+	public void setPlayerWin(boolean b) {
+		gData.playerWin = false;
+	}
+
+	public void setMessage(String string) {
+		gData.messageString = string;
+	}
+
+	public Object getGameData() {
+		// TODO Auto-generated method stub
+		return gData;
+	}
+
+	public void initialize() {
+		gData = new GameData();
 	}
 }

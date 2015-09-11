@@ -14,7 +14,6 @@ public class SaveTest {
 	public static void testSave() {
 		GamePanel g = new GamePanel();
 		Utils.saveGame(g);
-		System.exit(0);
 	}
 
 	public static void main(String[] args) {

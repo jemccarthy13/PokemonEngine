@@ -33,7 +33,7 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	private SpriteLibrary() {
-		DebugUtility.debugHeader("Graphics");
+		DebugUtility.printHeader("Graphics");
 		DebugUtility.printMessage("Initialized image library.");
 	}
 
@@ -71,7 +71,7 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 		} else if (m_instance.loadActorSprites(name)) {
 			return m_instance.get(name);
 		} else {
-			System.err.println(name + " images not found in sprite library.");
+			DebugUtility.printError(name + " images not found in sprite library.");
 			return null;
 		}
 	}
@@ -132,7 +132,7 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 			if (containsKey(name)) {
 				return get(name).get(0);
 			} else {
-				System.err.println(name + " not found in graphics library.");
+				DebugUtility.printError(name + " not found in graphics library.");
 				return null;
 			}
 		}
@@ -211,8 +211,7 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 	public static ImageIcon createImage(String path) {
 		File f = new File(path);
 		if (!f.exists()) {
-			System.err.println("Image path does not exist: " + path);
-			System.exit(0);
+			DebugUtility.error("Image path does not exist: " + path);
 		}
 		path = "/" + path.replace("resources/", "").replace("resources\\", "");
 		ImageIcon thisIcon = new ImageIcon(System.class.getResource(path));
