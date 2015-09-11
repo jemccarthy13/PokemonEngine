@@ -2,7 +2,7 @@ package graphics;
 
 import java.io.Serializable;
 
-import driver.GameData;
+import driver.Configuration;
 
 // ////////////////////////////////////////////////////////////////////////
 //
@@ -45,7 +45,7 @@ public class NameScene implements Serializable {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public void addSelectedChar() {
-		if (buildName.length() < GameData.MAX_NAME_SIZE) {
+		if (buildName.length() < Configuration.MAX_NAME_SIZE) {
 			buildName.append(charArray[rowSelection][colSelection]);
 		}
 	}

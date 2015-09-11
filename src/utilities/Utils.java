@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 
 import trainers.Player;
 import driver.GameData;
+import driver.GamePanel;
 
 // ////////////////////////////////////////////////////////////////////////
 //
@@ -21,14 +22,14 @@ public class Utils {
 	// saveGame - writes a game data object to a .SAV file
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public static void saveGame(GameData data) {
-		data.gameTimeStruct.saveTime();
+	public static void saveGame(GamePanel data) {
+		data.game.saveTime();
 		FileOutputStream fout = null;
 		ObjectOutputStream oos = null;
 		try {
 			File dir = new File("resources/data");
 			System.out.println(dir.isDirectory());
-			System.out.println(data.player.tData.toString());
+			System.out.println(data.game.getPlayer().tData.toString());
 			fout = new FileOutputStream("resources/data/PokemonOrange.sav");
 			oos = new ObjectOutputStream(fout);
 			oos.writeObject(data);
@@ -72,7 +73,7 @@ public class Utils {
 	// TODO - move to HandleEvent and graphics Painter
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public static void accessComputer(GameData data, Player you) {
+	public static void accessComputer(GamePanel data, Player you) {
 		System.out.println("Saving game...");
 		saveGame(data);
 		System.out.println("COMPUTER ACCESS GRANTED");

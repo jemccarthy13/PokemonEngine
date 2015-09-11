@@ -62,22 +62,20 @@ public class JukeBox {
 	// Play a sound effect, with optional master sound option tag
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public synchronized void playClip(String name, boolean option_sound) {
-		if (option_sound) {
-			if (!this.availableClips.containsKey(name)) {
-				System.err.println("Cannot play sound " + name);
-				return;
-			}
-			List<?> clips = (List<Sound>) this.availableClips.get(name);
-
-			if (clips.isEmpty()) {
-				return;
-			}
-
-			Sound clip = (Sound) clips.remove(0);
-
-			clip.play();
+	public synchronized void playClip(String name) {
+		if (!this.availableClips.containsKey(name)) {
+			System.err.println("Cannot play sound " + name);
+			return;
 		}
+		List<?> clips = (List<Sound>) this.availableClips.get(name);
+
+		if (clips.isEmpty()) {
+			return;
+		}
+
+		Sound clip = (Sound) clips.remove(0);
+
+		clip.play();
 	}
 
 	// ////////////////////////////////////////////////////////////////////////

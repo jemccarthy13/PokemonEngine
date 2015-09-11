@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 import javax.swing.ImageIcon;
 
+import trainers.Actor.DIR;
 import utilities.DebugUtility;
 
 // ////////////////////////////////////////////////////////////////////////
@@ -64,15 +65,42 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 	// Get the set of 12 directional sprites that correspond to the given name
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public ArrayList<ImageIcon> getSprites(String name) {
-		if (containsKey(name)) {
-			return get(name);
-		} else if (loadActorSprites(name)) {
-			return get(name);
+	public static ArrayList<ImageIcon> getSprites(String name) {
+		if (m_instance.containsKey(name)) {
+			return m_instance.get(name);
+		} else if (m_instance.loadActorSprites(name)) {
+			return m_instance.get(name);
 		} else {
 			System.err.println(name + " images not found in sprite library.");
 			return null;
 		}
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Get a specific directional sprite
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public static ImageIcon getSpriteForDir(String name, DIR dir) {
+		ArrayList<ImageIcon> sprites = getSprites(name);
+		ImageIcon retSprite = null;
+		switch (dir) {
+		case NORTH:
+			retSprite = sprites.get(9);
+			break;
+		case EAST:
+			retSprite = sprites.get(6);
+			break;
+		case SOUTH:
+			retSprite = sprites.get(0);
+			break;
+		case WEST:
+			retSprite = sprites.get(3);
+			break;
+		default:
+			retSprite = sprites.get(0);
+		}
+		return retSprite;
 	}
 
 	// ////////////////////////////////////////////////////////////////////////

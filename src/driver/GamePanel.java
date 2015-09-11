@@ -1,5 +1,9 @@
 package driver;
 
+import graphics.MenuScene;
+import graphics.NameScene;
+import graphics.Painter;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -10,10 +14,6 @@ import java.util.Set;
 
 import javax.swing.JPanel;
 
-import audio.AudioLibrary;
-import graphics.MenuScene;
-import graphics.NameScene;
-import graphics.Painter;
 import pokedex.Pokemon;
 import pokedex.Pokemon.STATS;
 import pokedex.PokemonFactory;
@@ -24,9 +24,9 @@ import tiles.WildTile;
 import trainers.Actor;
 import trainers.Actor.DIR;
 import trainers.NPCLibrary;
+import trainers.Player;
 import utilities.BattleEngine;
 import utilities.Coordinate;
-import utilities.NPCThread;
 import utilities.RandomNumUtils;
 
 // ////////////////////////////////////////////////////////////////////////
@@ -35,23 +35,21 @@ import utilities.RandomNumUtils;
 // essentially controls all game flow logic and holds game data.
 //
 // ////////////////////////////////////////////////////////////////////////
-public class Game extends JPanel implements ActionListener {
+public class GamePanel extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 5951510422984321057L;
 
 	// ================= Movement control variables =========================//
-	boolean walking = false; // player animation counter
 	private int movespritepixels = 0; // movement (animation) counter
-	public boolean movable = true;
 	boolean[] moveable_dir = new boolean[4]; // can move, each direction
 	boolean rightFoot = false; // animation flag
-	// ====================== NPC Random movement controller ================//
-	public NPCThread NPCTHREAD = new NPCThread();
+
 	// ===================== Graphics Logic Controllers =====================//
 	public MenuScene menuScreen;
 	public NameScene nameScreen;
 	public EventHandler eventHandler;
 	// ======================== Game logic Data =============================//
+	public GameController game = new GameController(new GameData());
 	public GameData gData = new GameData();
 	public PokemonList enemyPkmn = new PokemonList();
 
@@ -67,13 +65,20 @@ public class Game extends JPanel implements ActionListener {
 	// speeds. Also sets up input controller (key listener).
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public Game() {
+	public GamePanel() {
 		eventHandler = new EventHandler(this);
 		menuScreen = new MenuScene();
 		nameScreen = new NameScene();
 
+		try {
+			game.loadMap("NewBarkTown");
+		} catch (Exception e) {
+			System.err.println("Unable to load map.");
+		}
 		setBackground(Color.BLACK);
 		setPreferredSize(new Dimension(480, 320));
+
+		game.playBackgroundMusic("Title");
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -84,7 +89,7 @@ public class Game extends JPanel implements ActionListener {
 	// ////////////////////////////////////////////////////////////////////////
 	public void actionPerformed(ActionEvent e) {
 
-		gData.gameTimeStruct.updateTime(); // update the time played
+		game.updateTime();
 
 		if (gData.inBattle && !gData.inMessage) {
 			if (BattleEngine.getInstance().playerCurrentPokemon.getStat(STATS.HP) <= 0) {
@@ -98,8 +103,7 @@ public class Game extends JPanel implements ActionListener {
 			if (!BattleEngine.getInstance().playerTurn) {
 				BattleEngine.getInstance().enemyTurn();
 			}
-		} else
-			if (!gData.atTitle && !gData.inIntro && !gData.inNameScreen && !gData.inMenu && !gData.atContinueScreen) {
+		} else if (!gData.atTitle && !gData.inIntro && !gData.inNameScreen && !gData.inMenu && !gData.atContinueScreen) {
 			handleMovement();
 		}
 	}
@@ -110,18 +114,20 @@ public class Game extends JPanel implements ActionListener {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	private void handleMovement() {
+		Player player = game.getPlayer();
 		// get all comparison variables up front
-		DIR playerDir = gData.player.getDirection();
-		PokemonList playerPokemon = gData.player.getPokemon();
-		Coordinate playerPos = gData.player.tData.position;
+		DIR playerDir = player.getDirection();
+		PokemonList playerPokemon = player.getPokemon();
+		Coordinate playerPos = player.tData.position;
 
 		// check for collisions in each direction
-		moveable_dir[DIR.NORTH.ordinal()] = gData.tm.canMoveInDir(playerPos, DIR.NORTH, gData) || gData.NOCLIP;
-		moveable_dir[DIR.WEST.ordinal()] = gData.tm.canMoveInDir(playerPos, DIR.WEST, gData) || gData.NOCLIP;
-		moveable_dir[DIR.SOUTH.ordinal()] = gData.tm.canMoveInDir(playerPos, DIR.SOUTH, gData) || gData.NOCLIP;
-		moveable_dir[DIR.EAST.ordinal()] = gData.tm.canMoveInDir(playerPos, DIR.EAST, gData) || gData.NOCLIP;
+		moveable_dir[DIR.NORTH.ordinal()] = game.canMoveInDir(DIR.NORTH) || game.isNoClip();
+		moveable_dir[DIR.WEST.ordinal()] = game.canMoveInDir(DIR.WEST) || game.isNoClip();
+		moveable_dir[DIR.SOUTH.ordinal()] = game.canMoveInDir(DIR.SOUTH) || game.isNoClip();
+		moveable_dir[DIR.EAST.ordinal()] = game.canMoveInDir(DIR.EAST) || game.isNoClip();
 
-		if (walking) { // take care of walking animation graphics logic
+		if (game.isPlayerWalking()) { // take care of walking animation
+			// graphics logic
 			movespritepixels += 1;
 			gData.offsetY = ((playerDir == DIR.NORTH) && (moveable_dir[DIR.NORTH.ordinal()])) ? gData.offsetY + 2
 					: gData.offsetY;
@@ -132,7 +138,7 @@ public class Game extends JPanel implements ActionListener {
 			gData.offsetX = ((playerDir == DIR.EAST) && (moveable_dir[DIR.EAST.ordinal()])) ? gData.offsetX - 2
 					: gData.offsetX;
 
-			gData.player.changeSprite(movespritepixels, rightFoot);
+			player.changeSprite(movespritepixels, rightFoot);
 		}
 
 		// prep for door teleportation event check
@@ -142,27 +148,27 @@ public class Game extends JPanel implements ActionListener {
 
 		for (Coordinate x : k) {
 			if (x.equals(playerPos)) {
-				gData.player.setLoc(dict.get(x));
+				player.setLoc(dict.get(x));
 
-				gData.start_coorX = (gData.player.getCurrentX() - x.getX()) * -1 * Tile.TILESIZE;
-				gData.start_coorY = (gData.player.getCurrentY() - x.getY()) * -1 * Tile.TILESIZE;
+				gData.start_coorX = (player.getCurrentX() - x.getX()) * -1 * Tile.TILESIZE;
+				gData.start_coorY = (player.getCurrentY() - x.getY()) * -1 * Tile.TILESIZE;
 				teleported = true;
-				gData.player.setDirection(DIR.NORTH);
+				player.setDirection(DIR.NORTH);
 			}
 		}
 
 		// finally, the animation is done, handle the movement logic
 		if (movespritepixels >= 16 && !teleported) {
 			movespritepixels = 0; // reset animation counter
-			walking = false; // player is no longer in animation
+			game.setPlayerWalking(false); // player is no longer in animation
 			rightFoot = (!rightFoot);
 			if (moveable_dir[playerDir.ordinal()]) {
-				gData.player.move(playerDir);
+				player.move(playerDir);
 				// check for wild encounter
-				if (gData.tm.getTileAt(gData.player.getPosition()).equals(WildTile.name)) {
+				if (game.getMapTileAt(player.getPosition()).equals(WildTile.name)) {
 					if (RandomNumUtils.isWildEncounter()) {
 						enemyPkmn.clear();
-						enemyPkmn.add(PokemonFactory.getInstance().randomPokemon(gData.player.getCurLoc()));
+						enemyPkmn.add(PokemonFactory.getInstance().randomPokemon(player.getCurLoc()));
 						BattleEngine.getInstance().fight(enemyPkmn, this, null);
 					}
 				}
@@ -175,15 +181,15 @@ public class Game extends JPanel implements ActionListener {
 
 		// check for trainer encounter with any NPC
 		for (Actor curNPC : NPCLibrary.getInstance().values()) {
-			boolean beaten = gData.player.beatenTrainers.contains(curNPC.getName());
-			if (curNPC.isTrainer() && !walking && !gData.NOBATTLE && !beaten && npcSeesPlayer(curNPC)
+			boolean beaten = game.getPlayer().beatenTrainers.contains(curNPC.getName());
+			if (curNPC.isTrainer() && !game.isPlayerWalking() && game.doBattles() && !beaten && npcSeesPlayer(curNPC)
 					&& !gData.inMenu) {
-				NPCTHREAD.stop = true;
+				game.stopNPCMovement();
 				enemyTrainerAnimation(curNPC);
-				AudioLibrary.getInstance().playBackgroundMusic("TrainerBattle", gData.option_sound);
+				game.playBackgroundMusic("TrainerBattle");
 				BattleEngine.getInstance().fight(curNPC.getPokemon(), this, curNPC.getName());
 			} else {
-				movable = true;
+				game.setMovable(true);
 			}
 		}
 
@@ -201,20 +207,18 @@ public class Game extends JPanel implements ActionListener {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	private boolean npcSeesPlayer(Actor curNPC) {
-		int playerCurY = gData.player.getCurrentY();
-		int playerCurX = gData.player.getCurrentX();
+		Player player = game.getPlayer();
+		int playerCurY = player.getCurrentY();
+		int playerCurX = player.getCurrentX();
 		int NPC_X = curNPC.getCurrentX();
 		int NPC_Y = curNPC.getCurrentY();
 		DIR NPC_DIR = curNPC.getDirection();
 
 		return (((playerCurX == curNPC.getCurrentX()) && (((playerCurY < NPC_Y)
-				&& (NPC_Y - playerCurY <= GameData.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.NORTH))
-				|| ((playerCurY > NPC_Y) && (playerCurY - NPC_Y <= GameData.NPC_SIGHT_DISTANCE)
-						&& (NPC_DIR == DIR.SOUTH))))
-				|| ((playerCurY == NPC_Y) && (((playerCurX < NPC_X)
-						&& (NPC_X - playerCurX <= GameData.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.WEST))
-						|| ((playerCurX > NPC_X) && (playerCurX - NPC_X <= GameData.NPC_SIGHT_DISTANCE)
-								&& (NPC_DIR == DIR.EAST)))));
+				&& (NPC_Y - playerCurY <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.NORTH)) || ((playerCurY > NPC_Y)
+				&& (playerCurY - NPC_Y <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.SOUTH)))) || ((playerCurY == NPC_Y) && (((playerCurX < NPC_X)
+				&& (NPC_X - playerCurX <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.WEST)) || ((playerCurX > NPC_X)
+				&& (playerCurX - NPC_X <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.EAST)))));
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -226,7 +230,7 @@ public class Game extends JPanel implements ActionListener {
 	// ////////////////////////////////////////////////////////////////////////
 	private void enemyTrainerAnimation(Actor curNPC) {
 
-		AudioLibrary.getInstance().pickTrainerMusic(gData.option_sound);
+		game.playTrainerMusic();
 
 		try { // wait for ! before moving
 			Thread.sleep(2000);
@@ -236,23 +240,25 @@ public class Game extends JPanel implements ActionListener {
 		DIR NPC_DIR = curNPC.getDirection();
 		int distToTravel = 0;
 
+		Player player = game.getPlayer();
+
 		if (NPC_DIR == DIR.NORTH) {
-			gData.player.setDirection(DIR.SOUTH);
-			distToTravel = (curNPC.getCurrentY() - (gData.player.getCurrentY() + 1));
+			player.setDirection(DIR.SOUTH);
+			distToTravel = (curNPC.getCurrentY() - (player.getCurrentY() + 1));
 		} else if (NPC_DIR == DIR.SOUTH) {
-			gData.player.setDirection(DIR.NORTH);
-			distToTravel = ((gData.player.getCurrentY() - 1) - curNPC.getCurrentY());
+			player.setDirection(DIR.NORTH);
+			distToTravel = ((player.getCurrentY() - 1) - curNPC.getCurrentY());
 		} else if (NPC_DIR == DIR.EAST) {
-			gData.player.setDirection(DIR.WEST);
-			distToTravel = ((gData.player.getCurrentX() - 1) - curNPC.getCurrentX());
+			player.setDirection(DIR.WEST);
+			distToTravel = ((player.getCurrentX() - 1) - curNPC.getCurrentX());
 		} else if (NPC_DIR == DIR.WEST) {
-			gData.player.setDirection(DIR.EAST);
-			distToTravel = (curNPC.getCurrentX() - (gData.player.getCurrentX() + 1));
+			player.setDirection(DIR.EAST);
+			distToTravel = (curNPC.getCurrentX() - (player.getCurrentX() + 1));
 		}
 
-		// until NPC reaches player, place tile, move NPC, repaint
+		// until NPC reaches player, place a normal tile, move NPC, repaint
 		for (int x = 0; x < distToTravel; x++) {
-			gData.tm.set(curNPC.tData.position, TileSet.NORMAL_TILE);
+			game.setMapTileAt(curNPC.tData.position, TileSet.NORMAL_TILE);
 			curNPC.move(NPC_DIR);
 			paintComponent(getGraphics());
 			try {
@@ -282,7 +288,7 @@ public class Game extends JPanel implements ActionListener {
 		gData.inMessage = false;
 		gData.inNameScreen = false;
 		gData.introStage = 1;
-		this.movable = true;
-		this.walking = false;
+		game.setMovable(true);
+		game.setPlayerWalking(false);
 	}
 }

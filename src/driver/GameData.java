@@ -18,26 +18,35 @@ public class GameData implements Serializable {
 
 	// ======================= Serialization ================================//
 	private static final long serialVersionUID = 4753670767642154788L;
+
 	// =========================== CHEATS ===================================//
 	public boolean NOCLIP = false; // walk anywhere
-	public boolean NOBATTLE = false; // no wild/trainer battles
-	public boolean SHOWINTRO = false; // set to false to skip Oak intro scene
+	public boolean DOBATTLES = true; // no wild/trainer battles
+	public boolean SHOWINTRO = false; // false = skip Oak intro
 
-	public static final int MAX_NAME_SIZE = 7;
-	public static final int NPC_SIGHT_DISTANCE = 5;
-	public static final String VERSION = "Metallic Silver";
+	//
+	// Trying something new and crazy
+	//
+	// ==================== Game Logic Control ==============================//
 
-	public static final int PLAYER_SPEED_WALK = 80;
-	public static final int PLAYER_SPEED_RUN = 90;
-	public static final int PLAYER_SPEED_BIKE = 95;
-	// ==================== Game Timing Data ================================//
+	public boolean isPlayerWalking = false; // player animation counter
+	public boolean movable = false;
+
+	// ==================== Game Data Control ==============================//
+
+	public Player player;
+
+	// Timing Data
 	public TimeStruct gameTimeStruct = new TimeStruct();
-	public Timer gameTimer; // time difference between game events
+	public Timer gameSpeed; // controls the speed game events are handled
+
 	// ======================== Map Data ===================================//
-	public int[][] currentMap = new int[3][21400];
-	public TileMap tm = new TileMap();
 	public int map_width;
 	public int map_height;
+
+	// ////////////////////////
+	public int[][] imageMap = new int[3][21400];
+	public TileMap tileMap = new TileMap();
 	// ======================= Battle information ==========================//
 	public boolean inBattle = false;
 	public boolean playerWin = false;
@@ -51,16 +60,15 @@ public class GameData implements Serializable {
 
 	public int introStage = 1;
 
-	public int offsetX = 0;
-	public int offsetY = 0;
+	public int offsetX = 0, offsetY = 0; // painting variables
 	public int start_coorX, start_coorY; // teleportation graphics variables
 	public int menuSelection = 0;
 
 	// ==================== Setting options variables ======================//
 	public boolean option_sound = false;
 	// ======================== User Data ==================================//
-	public Player player;
-	public int currentSpeed = PLAYER_SPEED_WALK; // controls the speed of play
+
+	public int currentSpeed = Configuration.PLAYER_SPEED_WALK;
 
 	public int id = RandomNumUtils.createTrainerID();
 

@@ -1,20 +1,22 @@
 package driver;
 
+import graphics.SpriteLibrary;
+
 import java.awt.event.KeyEvent;
 import java.io.Serializable;
 import java.util.Random;
 
-import audio.AudioLibrary;
-import graphics.SpriteLibrary;
 import pokedex.MoveData;
 import pokedex.Pokemon;
 import pokedex.Pokemon.STATS;
 import trainers.Actor;
 import trainers.Actor.DIR;
 import trainers.NPCLibrary;
+import trainers.Player;
 import utilities.BattleEngine;
 import utilities.RandomNumUtils;
 import utilities.Utils;
+import audio.AudioLibrary;
 
 // ////////////////////////////////////////////////////////////////////////
 //
@@ -27,7 +29,7 @@ import utilities.Utils;
 public class EventHandler implements Serializable {
 
 	private static final long serialVersionUID = 7134855556768076496L;
-	Game game;
+	GamePanel game;
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
@@ -35,7 +37,7 @@ public class EventHandler implements Serializable {
 	// so it has all the logic references
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public EventHandler(Game theGame) {
+	public EventHandler(GamePanel theGame) {
 		game = theGame;
 	}
 
@@ -53,7 +55,7 @@ public class EventHandler implements Serializable {
 				BattleEngine.getInstance().inFight = false;
 				BattleEngine.getInstance().inItem = false;
 				BattleEngine.getInstance().inPokemon = false;
-				game.movable = true;
+				game.game.setMovable(true);
 			}
 		} else if (BattleEngine.getInstance().inFight) {
 			// at move selection menu
@@ -73,32 +75,30 @@ public class EventHandler implements Serializable {
 
 					// get Player's move if not FZN or PAR
 					int move = -1;
-					move = ((playerPokemon.statusEffect != 4) || (playerPokemon.statusEffect != 5))
-							? getSelectedMove(move) : -1;
+					move = ((playerPokemon.statusEffect != 4) || (playerPokemon.statusEffect != 5)) ? getSelectedMove(move)
+							: -1;
 
 					boolean checkPar = (playerPokemon.statusEffect == 1) ? true : false;
 					evaluateAndDealDamage(checkPar, playerPokemon, move);
 
 					if (playerPokemon.statusEffect == 2) { // burned
 						playerPokemon.doDamage(2);
-						AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_DAMAGE,
-								this.game.gData.option_sound);
+						game.game.playClip(AudioLibrary.SE_DAMAGE);
 						System.out.println(playerPokemon.getName() + " has been hurt by its burn");
 					} else if (playerPokemon.statusEffect == 3) { // PSN
 						playerPokemon.doDamage(2);
-						AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_DAMAGE,
-								this.game.gData.option_sound);
+						game.game.playClip(AudioLibrary.SE_DAMAGE);
 						System.out.println(playerPokemon.getName() + " has been hurt by its poison");
 					}
 					resetBattleVars();
 					BattleEngine.getInstance().playerTurn = false;
 				}
-				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_SELECT, game.gData.option_sound);
+				game.game.playClip(AudioLibrary.SE_SELECT);
 			}
 			if (keyCode == KeyEvent.VK_X) {
 				// cancel == exit to main battle menu
 				resetBattleVars();
-				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_SELECT, game.gData.option_sound);
+				game.game.playClip(AudioLibrary.SE_SELECT);
 			}
 		} else if (BattleEngine.getInstance().inMain) {
 			// at main battle menu
@@ -131,7 +131,7 @@ public class EventHandler implements Serializable {
 						BattleEngine.getInstance().Run();
 					}
 				}
-				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_SELECT, game.gData.option_sound);
+				game.game.playClip(AudioLibrary.SE_SELECT);
 			}
 		}
 	}
@@ -207,10 +207,11 @@ public class EventHandler implements Serializable {
 				// calculate and deal physical damage
 				attackStat = playerPokemon.getStat(STATS.ATTACK);
 				defStat = BattleEngine.getInstance().enemyPokemon.get(0).getStat(STATS.DEFENSE);
-				int damage = (int) (((2 * playerPokemon.getLevel() / 5 + 2) * chosen.power * attackStat / defStat / 50
-						+ 2) * RandomNumUtils.generateRandom(85, 100) / 100.0);
+				int damage = (int) (((2 * playerPokemon.getLevel() / 5 + 2) * chosen.power * attackStat / defStat / 50 + 2)
+						* RandomNumUtils.generateRandom(85, 100) / 100.0);
 				((Pokemon) BattleEngine.getInstance().enemyPokemon.get(0)).doDamage(damage);
-				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_DAMAGE, this.game.gData.option_sound);
+
+				game.game.playClip(AudioLibrary.SE_DAMAGE);
 			}
 			chosen.movePP--;
 		} else {
@@ -341,7 +342,7 @@ public class EventHandler implements Serializable {
 				game.menuScreen.MENU_currentSelectionSave = 1;
 			} else if (keyCode == KeyEvent.VK_Z) {
 				if (game.menuScreen.MENU_currentSelectionSave == 0) {
-					Utils.saveGame(game.gData);
+					Utils.saveGame(game);
 					game.menuScreen.MENU_inSave = false;
 					game.gData.inMessage = true;
 					game.messageString = "Game saved successfully!";
@@ -374,8 +375,7 @@ public class EventHandler implements Serializable {
 				if (game.menuScreen.MENU_currentSelectionOption == 5) {
 					game.gData.option_sound = !game.gData.option_sound;
 					if (game.gData.option_sound) {
-						AudioLibrary.getInstance().playBackgroundMusic(game.gData.player.getCurLoc().getName(),
-								game.gData.option_sound);
+						game.game.playBackgroundMusic(game.game.getPlayer().getCurLoc().getName());
 					} else {
 						AudioLibrary.getInstance().pauseBackgrondMusic();
 					}
@@ -386,7 +386,7 @@ public class EventHandler implements Serializable {
 			}
 		}
 
-		AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_SELECT, game.gData.option_sound);
+		game.game.playClip(AudioLibrary.SE_SELECT);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -396,59 +396,60 @@ public class EventHandler implements Serializable {
 	//
 	// TODO - add interactive environment (say, items on the ground, message
 	// signs, surfing / water, etc
-	// TODO - look into shortening or method-izing the arrow key world events
 	// TODO - look into shortening or method-izing the border NPC check
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	void handleWorldEvent(int keyCode) {
-		if (keyCode == KeyEvent.VK_UP) {
-			game.gData.player.setDirection(DIR.NORTH);
-			if (game.moveable_dir[game.gData.player.getDirection().ordinal()]) {
-				game.walking = true;
+		// match the key to a direction
+		DIR toTravel = null;
+		boolean moving = true;
+
+		switch (keyCode) {
+		case KeyEvent.VK_UP:
+			toTravel = DIR.NORTH;
+			break;
+		case KeyEvent.VK_DOWN:
+			toTravel = DIR.SOUTH;
+			break;
+		case KeyEvent.VK_LEFT:
+			toTravel = DIR.WEST;
+			break;
+		case KeyEvent.VK_RIGHT:
+			toTravel = DIR.EAST;
+			break;
+		default:
+			// the button pressed wasn't a moving button, so don't do movement
+			moving = false;
+			toTravel = DIR.SOUTH;
+		}
+
+		if (moving) {
+			// one of the movement buttons was pressed, so try to move in that
+			// direction
+			game.game.setPlayerDirection(toTravel);
+			if (game.game.canMoveInDir(toTravel)) {
+				game.game.setPlayerWalking(true);
 			} else {
-				game.gData.player.tData.sprite = (SpriteLibrary.getInstance().getSprites("PLAYER").get(9));
-				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_COLLISION, game.gData.option_sound);
-			}
-		} else if (keyCode == KeyEvent.VK_DOWN) {
-			game.gData.player.setDirection(DIR.SOUTH);
-			if (game.moveable_dir[game.gData.player.getDirection().ordinal()]) {
-				game.walking = true;
-			} else {
-				game.gData.player.tData.sprite = (SpriteLibrary.getInstance().getSprites("PLAYER").get(0));
-				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_COLLISION, game.gData.option_sound);
-			}
-		} else if (keyCode == KeyEvent.VK_LEFT) {
-			game.gData.player.setDirection(DIR.WEST);
-			if (game.moveable_dir[game.gData.player.getDirection().ordinal()]) {
-				game.walking = true;
-			} else {
-				game.gData.player.tData.sprite = (SpriteLibrary.getInstance().getSprites("PLAYER").get(3));
-				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_COLLISION, game.gData.option_sound);
-			}
-		} else if (keyCode == KeyEvent.VK_RIGHT) {
-			game.gData.player.setDirection(DIR.EAST);
-			if (game.moveable_dir[game.gData.player.getDirection().ordinal()]) {
-				game.walking = true;
-			} else {
-				game.gData.player.tData.sprite = (SpriteLibrary.getInstance().getSprites("PLAYER").get(6));
-				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_COLLISION, game.gData.option_sound);
+				game.game.setPlayerSprite(SpriteLibrary.getSpriteForDir("PLAYER", toTravel));
+				game.game.playClip(AudioLibrary.SE_COLLISION);
 			}
 		} else if (keyCode == KeyEvent.VK_ENTER) {
-			AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_MENU, game.gData.option_sound);
+			game.game.playClip(AudioLibrary.SE_MENU);
 			game.menuScreen.MENU_inMain = true;
 			game.gData.inMenu = true;
 		} else if (keyCode == KeyEvent.VK_Z) {
-			AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_SELECT, game.gData.option_sound);
+			game.game.playClip(AudioLibrary.SE_SELECT);
 			Actor borderNPC = null;
 			// overhead cost for following logic
-			DIR playerDir = game.gData.player.getDirection();
-			int playerCurX = game.gData.player.getCurrentX();
-			int playerCurY = game.gData.player.getCurrentY();
+			Player player = game.game.getPlayer();
+			DIR playerDir = player.getDirection();
+			int playerCurX = player.getCurrentX();
+			int playerCurY = player.getCurrentY();
 			for (Actor curNPC : NPCLibrary.getInstance().values()) {
 				int NPC_X = curNPC.getCurrentX();
 				int NPC_Y = curNPC.getCurrentY();
 				if (playerDir == DIR.WEST) {
-					if ((NPC_X == playerCurX - 1) && (playerCurY == NPC_Y)) {
+					if ((playerCurX - 1 == NPC_X) && (playerCurY == NPC_Y)) {
 						curNPC.setDirection(DIR.EAST);
 						borderNPC = curNPC;
 					}

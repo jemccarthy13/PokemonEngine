@@ -24,10 +24,10 @@ public class AudioLibrary {
 	private ArrayList<String> m_encounterTracks;
 	private HashMap<String, MidiPlayer> m_trackList;
 
-	public String SE_SELECT = "Select";
-	public String SE_DAMAGE = "Damage";
-	public String SE_COLLISION = "Collision";
-	public String SE_MENU = "Menu";
+	public static String SE_SELECT = "Select";
+	public static String SE_DAMAGE = "Damage";
+	public static String SE_COLLISION = "Collision";
+	public static String SE_MENU = "Menu";
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
@@ -88,10 +88,7 @@ public class AudioLibrary {
 	// Given a midi track title, play the associated midi file
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public void playBackgroundMusic(String songTitle, boolean option_sound) {
-		if (!option_sound) {
-			return;
-		}
+	public void playBackgroundMusic(String songTitle) {
 		// stop the current track, if playing
 		if (m_currentTrack != null) {
 			m_currentTrack.stop();
@@ -127,13 +124,11 @@ public class AudioLibrary {
 	// TODO - Looks like no encounter tracks are loaded
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public void pickTrainerMusic(boolean option_sound) {
-		if (option_sound) {
-			if (m_encounterTracks.size() > 0) {
-				int choice = RandomNumUtils.generateRandom(m_encounterTracks.size(), 0);
-				String songTitle = m_encounterTracks.get(choice);
-				this.playBackgroundMusic(songTitle, true);
-			}
+	public void pickTrainerMusic() {
+		if (m_encounterTracks.size() > 0) {
+			int choice = RandomNumUtils.generateRandom(m_encounterTracks.size(), 0);
+			String songTitle = m_encounterTracks.get(choice);
+			playBackgroundMusic(songTitle);
 		}
 	}
 
@@ -149,7 +144,7 @@ public class AudioLibrary {
 		}
 	}
 
-	public void playClip(String string, boolean option_sound) {
-		m_JukeBox.playClip(string, option_sound);
+	public void playClip(String string) {
+		m_JukeBox.playClip(string);
 	}
 }

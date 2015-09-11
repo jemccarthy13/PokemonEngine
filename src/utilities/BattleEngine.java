@@ -1,14 +1,16 @@
 package utilities;
 
+import graphics.SpriteLibrary;
+
 import java.util.Random;
 
-import audio.AudioLibrary;
-import driver.Game;
-import graphics.SpriteLibrary;
 import pokedex.MoveData;
 import pokedex.Pokemon;
 import pokedex.Pokemon.STATS;
 import pokedex.PokemonList;
+import trainers.Actor.DIR;
+import audio.AudioLibrary;
+import driver.GamePanel;
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -22,7 +24,7 @@ import pokedex.PokemonList;
 public class BattleEngine {
 	private static BattleEngine m_instance = new BattleEngine();
 
-	private Game game = null;
+	private GamePanel game = null;
 	public boolean playerTurn = false;
 	public boolean inMain = true;
 	public boolean inFight = false;
@@ -56,20 +58,20 @@ public class BattleEngine {
 	// Pokemon above 0 health
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public void fight(PokemonList enemyPkmn, Game g, String opponentName) {
+	public void fight(PokemonList enemyPkmn, GamePanel g, String opponentName) {
 		m_instance.currentSelectionMainX = 0;
 		m_instance.currentSelectionFightX = 0;
 		m_instance.currentSelectionMainY = 0;
 		m_instance.currentSelectionFightY = 0;
 		m_instance.game = g;
-		m_instance.playerCurrentPokemon = m_instance.game.gData.player.getPokemon().get(0);
+		m_instance.playerCurrentPokemon = g.game.getPlayer().getPokemon().get(0);
 		m_instance.playerCurrentPokemon.setParticipated();
 		m_instance.enemyPokemon = enemyPkmn;
 		m_instance.inMain = true;
 		m_instance.playerTurn = true;
 		m_instance.enemyName = opponentName;
 
-		g.movable = false;
+		g.game.setMovable(false);
 		g.gData.inBattle = true;
 	}
 
@@ -111,7 +113,7 @@ public class BattleEngine {
 	// ////////////////////////////////////////////////////////////////////////
 	public void playerSwitchPokemon() {
 		boolean loss = true;
-		for (Pokemon p : game.gData.player.getPokemon()) {
+		for (Pokemon p : game.game.getPlayer().getPokemon()) {
 			if (p.getStat(STATS.HP) > 0) {
 				loss = false;
 			}
@@ -134,8 +136,8 @@ public class BattleEngine {
 	// ////////////////////////////////////////////////////////////////////////
 	public void giveEXP() {
 		int s = 0;
-		for (int x = 0; x < this.game.gData.player.getPokemon().size(); x++) {
-			if (((Pokemon) this.game.gData.player.getPokemon().get(x)).hasParticipated()) {
+		for (int x = 0; x < game.game.getPlayer().getPokemon().size(); x++) {
+			if (((Pokemon) game.game.getPlayer().getPokemon().get(x)).hasParticipated()) {
 				s++;
 			}
 		}
@@ -166,14 +168,14 @@ public class BattleEngine {
 
 		// reset logic
 		game.gData.playerWin = false;
-		game.movable = false;
+		game.game.setMovable(false);
 		inFight = false;
 		this.inMain = true;
 		this.game.gData.inBattle = true;
 		this.game.gData.inMessage = true;
 		this.game.messageString = "Player won!";
 
-		game.gData.player.beatenTrainers.add(enemyName);
+		game.game.getPlayer().beatenTrainers.add(enemyName);
 
 		((Pokemon) this.enemyPokemon.get(0)).statusEffect = 0;
 
@@ -181,7 +183,7 @@ public class BattleEngine {
 		// TODO - verify playBackgroundMusic doesn't automatically pause/stop
 		// when switching music
 		AudioLibrary.getInstance().pauseBackgrondMusic();
-		AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown", game.gData.option_sound);
+		AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown");
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -194,10 +196,10 @@ public class BattleEngine {
 		this.inMain = false;
 		((Pokemon) this.enemyPokemon.get(0)).statusEffect = 0;
 		System.out.println("Player Pokemon has fainted");
-		System.out.println(game.gData.player.getName() + " is all out of usable Pokemon!");
-		System.out.println(game.gData.player.getName() + " whited out.");
-		game.gData.player.tData.sprite = (SpriteLibrary.getInstance().getSprites("PLAYER").get(9));
-		game.gData.player.getPokemon().get(0).heal(-1);
+		System.out.println(game.game.getPlayer().getName() + " is all out of usable Pokemon!");
+		System.out.println(game.game.getPlayer().getName() + " whited out.");
+		game.game.setPlayerSprite(SpriteLibrary.getSpriteForDir("PLAYER", DIR.SOUTH));
+		game.game.getPlayer().getPokemon().get(0).heal(-1);
 		this.game.gData.inBattle = false;
 	}
 
@@ -220,8 +222,8 @@ public class BattleEngine {
 						System.out.println(((Pokemon) this.enemyPokemon.get(0)).getName() + " has woken up.");
 					}
 					if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 5) {
-						System.out.println(
-								((Pokemon) this.enemyPokemon.get(0)).getName() + " has broken free from the ice.");
+						System.out.println(((Pokemon) this.enemyPokemon.get(0)).getName()
+								+ " has broken free from the ice.");
 					}
 					((Pokemon) this.enemyPokemon.get(0)).statusEffect = 0;
 				} else {
@@ -254,11 +256,11 @@ public class BattleEngine {
 					int damage = 0;
 					if (!chosen.type.equals("STAT")) {
 						damage = (int) (((2 * ((Pokemon) this.enemyPokemon.get(0)).getLevel() / 5 + 2) * chosen.power
-								* attackStat / 50 / defStat + 2) * RandomNumUtils.generateRandom(85, 100) / 100.0);
+								* attackStat / 50 / defStat + 2)
+								* RandomNumUtils.generateRandom(85, 100) / 100.0);
 					}
 					this.playerCurrentPokemon.doDamage(damage);
-					AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_DAMAGE,
-							this.game.gData.option_sound);
+					game.game.playClip(AudioLibrary.SE_DAMAGE);
 					System.out.println("Enemy's turn is over");
 					chosen.movePP--;
 				} else {
@@ -283,19 +285,20 @@ public class BattleEngine {
 				if (!chosen.type.equals("STAT")) {
 					@SuppressWarnings("unused")
 					int damage = (int) (((2 * ((Pokemon) this.enemyPokemon.get(0)).getLevel() / 5 + 2) * chosen.power
-							* attackStat / defStat / 50 + 2) * RandomNumUtils.generateRandom(85, 100) / 100.0D);
+							* attackStat / defStat / 50 + 2)
+							* RandomNumUtils.generateRandom(85, 100) / 100.0D);
 
 					// TODO implement stat damage types
 				}
 				chosen.movePP--;
-				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_SELECT, this.game.gData.option_sound);
+				game.game.playClip(AudioLibrary.SE_SELECT);
 			}
 			if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 2) {
-				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_DAMAGE, this.game.gData.option_sound);
+				game.game.playClip(AudioLibrary.SE_DAMAGE);
 				System.out.println(((Pokemon) this.enemyPokemon.get(0)).getName() + " has been hurt by its burn");
 			}
 			if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 3) {
-				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_DAMAGE, this.game.gData.option_sound);
+				game.game.playClip(AudioLibrary.SE_DAMAGE);
 				System.out.println(((Pokemon) this.enemyPokemon.get(0)).getName() + " has been hurt by its poison");
 			}
 			this.playerTurn = true;

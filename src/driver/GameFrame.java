@@ -14,7 +14,7 @@ import audio.AudioLibrary;
 public class GameFrame extends JFrame {
 
 	private static final long serialVersionUID = 8002391898226135401L;
-	Game pokemonGame;
+	static GamePanel pokemonGame;
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
@@ -28,21 +28,11 @@ public class GameFrame extends JFrame {
 		setIconImage(SpriteLibrary.getImage("Icon"));
 
 		// Add the main game panel to the game
-		pokemonGame = new Game();
+		pokemonGame = new GamePanel();
 		pokemonGame.addKeyListener(kListener);
 		pokemonGame.setFocusable(true);
 		pokemonGame.requestFocus();
 		add(pokemonGame);
-		System.out.println("** Issued new session id: " + pokemonGame.gData.id);
-
-		String loadedMap = "NewBarkTown";
-		try {
-			GameInitializer.loadMap(pokemonGame.gData, loadedMap);
-		} catch (Exception e) {
-			System.err.println("Unable to load map.");
-		}
-
-		AudioLibrary.getInstance().playBackgroundMusic("Title", pokemonGame.gData.option_sound);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -58,6 +48,8 @@ public class GameFrame extends JFrame {
 		pf.setResizable(false);
 		pf.pack();
 		pf.setLocationRelativeTo(null);
+
+		DebugUtility.printMessage("Game session id: " + pokemonGame.gData.id);
 
 		DebugUtility.debugHeader("Startup completed");
 	}
@@ -78,7 +70,7 @@ public class GameFrame extends JFrame {
 				// title screen "press enter"
 				if (keyCode == KeyEvent.VK_ENTER) {
 					pokemonGame.gData.atTitle = false;
-					AudioLibrary.getInstance().playBackgroundMusic("Continue", pokemonGame.gData.option_sound);
+					pokemonGame.game.playBackgroundMusic("Continue");
 					pokemonGame.gData.atContinueScreen = true;
 				}
 			} else if (pokemonGame.gData.atContinueScreen) {
@@ -93,15 +85,14 @@ public class GameFrame extends JFrame {
 				if (keyCode == KeyEvent.VK_Z) {
 					// remove(pokemonGame);
 					if (pokemonGame.gData.menuSelection == 0) {
-						pokemonGame.gData = GameInitializer.startGame(true, pokemonGame);
+						pokemonGame.gData = pokemonGame.game.startGame(true, pokemonGame);
 					} else if (pokemonGame.gData.menuSelection == 1) {
-						pokemonGame.gData = GameInitializer.startGame(false, pokemonGame);
+						pokemonGame.gData = pokemonGame.game.startGame(false, pokemonGame);
 					}
 					repaint();
 					validate();
 				}
-				AudioLibrary.getInstance().playClip(AudioLibrary.getInstance().SE_SELECT,
-						pokemonGame.gData.option_sound);
+				pokemonGame.game.playClip(AudioLibrary.SE_SELECT);
 			} else if (pokemonGame.gData.inIntro) {
 				// intro screen, advance oak's text
 				if (keyCode == KeyEvent.VK_X)
@@ -109,7 +100,7 @@ public class GameFrame extends JFrame {
 				if (keyCode == KeyEvent.VK_Z) {
 					pokemonGame.gData.introStage += 2;
 					if (pokemonGame.gData.introStage > NPCLibrary.getInstance().get("Professor Oak").getTextLength() - 1) {
-						AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown", pokemonGame.gData.option_sound);
+						pokemonGame.game.playBackgroundMusic("NewBarkTown");
 						pokemonGame.gData.inIntro = !pokemonGame.gData.inIntro;
 					} else if (pokemonGame.gData.introStage == 15) {
 						pokemonGame.gData.inNameScreen = true;
@@ -126,7 +117,7 @@ public class GameFrame extends JFrame {
 						// check for end or del
 						if (pokemonGame.nameScreen.colSelection == 1
 								&& pokemonGame.nameScreen.getChosenName().length() > 0) {
-							pokemonGame.gData.player.setName(pokemonGame.nameScreen.getChosenName());
+							pokemonGame.game.getPlayer().setName(pokemonGame.nameScreen.getChosenName());
 							pokemonGame.nameScreen.reset();
 							pokemonGame.gData.inNameScreen = false;
 							pokemonGame.gData.inIntro = true;
@@ -155,8 +146,8 @@ public class GameFrame extends JFrame {
 				}
 			} else {
 				// otherwise, fire the eventHandler
-				if ((!pokemonGame.gData.inMenu) && (pokemonGame.movable) && (!pokemonGame.gData.inBattle)
-						&& (!pokemonGame.walking)) {
+				if ((!pokemonGame.gData.inMenu) && (pokemonGame.game.isMovable()) && (!pokemonGame.gData.inBattle)
+						&& (!pokemonGame.game.isPlayerWalking())) {
 					pokemonGame.eventHandler.handleWorldEvent(keyCode);
 				} else if (pokemonGame.gData.inMenu) {
 					pokemonGame.eventHandler.handleMenuEvent(keyCode);

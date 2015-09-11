@@ -1,7 +1,7 @@
 package test;
 
-import driver.Game;
 import utilities.Utils;
+import driver.GamePanel;
 
 // ////////////////////////////////////////////////////////////////////////
 //
@@ -12,8 +12,8 @@ import utilities.Utils;
 // ////////////////////////////////////////////////////////////////////////
 public class SaveTest {
 	public static void testSave() {
-		Game g = new Game();
-		Utils.saveGame(g.gData);
+		GamePanel g = new GamePanel();
+		Utils.saveGame(g);
 		System.exit(0);
 	}
 
