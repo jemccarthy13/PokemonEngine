@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import model.Coordinate;
 import trainers.Actor.DIR;
-import utilities.Coordinate;
 
 // ////////////////////////////////////////////////////////////////////////
 //

@@ -9,5 +9,4 @@ import java.io.Serializable;
 // ////////////////////////////////////////////////////////////////////////
 public class ObstacleTile extends Tile implements Serializable {
 	private static final long serialVersionUID = 8939607965131857483L;
-	public static final String name = "OBSTACLE";
 }

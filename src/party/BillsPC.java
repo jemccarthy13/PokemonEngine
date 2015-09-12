@@ -1,10 +1,7 @@
-package trainers;
+package party;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
-import pokedex.Pokemon;
-import pokedex.PokemonList;
 
 // ////////////////////////////////////////////////////////////////////////
 //
@@ -14,7 +11,7 @@ import pokedex.PokemonList;
 public class BillsPC implements Serializable {
 	private static final long serialVersionUID = 8519420241334625610L;
 
-	public ArrayList<PokemonList> boxes = new ArrayList<PokemonList>();
+	public ArrayList<Party> boxes = new ArrayList<Party>();
 	private static final int BOX_CAPACITY = 20;
 	private static final int max_num_boxes = 10;
 
@@ -28,7 +25,7 @@ public class BillsPC implements Serializable {
 	// ////////////////////////////////////////////////////////////////////////
 	public BillsPC() {
 		for (int x = 0; x < max_num_boxes; x++) {
-			boxes.add(new PokemonList());
+			boxes.add(new Party());
 		}
 	}
 
@@ -37,9 +34,9 @@ public class BillsPC implements Serializable {
 	// Try to add a pokemon to the first box with room
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public boolean depositPokemon(Pokemon p) {
+	public boolean depositPokemon(PartyMember p) {
 		boolean added = false;
-		for (PokemonList box : boxes) {
+		for (Party box : boxes) {
 			if (box.size() < BOX_CAPACITY) {
 				box.add(p);
 				added = true;
@@ -53,8 +50,8 @@ public class BillsPC implements Serializable {
 	// Default constructor
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public boolean withdrawPokemon(Pokemon p) {
-		for (PokemonList box : boxes) {
+	public boolean withdrawPokemon(PartyMember p) {
+		for (Party box : boxes) {
 			if (box.contains(p)) {
 				return box.remove(p);
 			}

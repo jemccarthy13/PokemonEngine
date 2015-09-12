@@ -7,5 +7,4 @@ package tiles;
 // ////////////////////////////////////////////////////////////////////////
 public class NormalTile extends Tile {
 	private static final long serialVersionUID = 7513092465586406507L;
-	public static String name = "NORMAL";
 }

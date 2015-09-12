@@ -1,4 +1,4 @@
-package pokedex;
+package party;
 
 import java.io.Serializable;
 

@@ -2,7 +2,7 @@ package utilities;
 
 import java.util.Random;
 
-import pokedex.Pokemon;
+import party.PartyMember;
 import trainers.Actor.DIR;
 
 public class RandomNumUtils {
@@ -60,7 +60,7 @@ public class RandomNumUtils {
 	// for an enemy pokemon, pick a random move
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public static int getMove(Pokemon p) {
+	public static int getMove(PartyMember p) {
 		return generateRandom(0, p.getNumMoves() - 1);
 	}
 

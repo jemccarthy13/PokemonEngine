@@ -2,14 +2,14 @@ package utilities;
 
 import java.util.Random;
 
-import pokedex.MoveData;
-import pokedex.Pokemon;
-import pokedex.Pokemon.STATS;
-import pokedex.PokemonList;
+import model.GameData.SCREEN;
+import party.MoveData;
+import party.PartyMember;
+import party.Party;
+import party.PartyMember.STATS;
 import trainers.Actor.DIR;
 import audio.AudioLibrary;
 import driver.GameController;
-import driver.GameData.SCREEN;
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -34,8 +34,8 @@ public class BattleEngine {
 	public int currentSelectionMainY = -1;
 	public int currentSelectionFightX = -1;
 	public int currentSelectionFightY = -1;
-	public Pokemon playerCurrentPokemon = null;;
-	public PokemonList enemyPokemon = null;;
+	public PartyMember playerCurrentPokemon = null;;
+	public Party enemyPokemon = null;;
 	public String enemyName = null;
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -57,7 +57,7 @@ public class BattleEngine {
 	// Pokemon above 0 health
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public void fight(PokemonList enemyPkmn, GameController g, String opponentName) {
+	public void fight(Party enemyPkmn, GameController g, String opponentName) {
 		game = g;
 		m_instance.currentSelectionMainX = 0;
 		m_instance.currentSelectionFightX = 0;
@@ -103,7 +103,7 @@ public class BattleEngine {
 	// ////////////////////////////////////////////////////////////////////////
 	public void playerSwitchPokemon() {
 		boolean loss = true;
-		for (Pokemon p : game.getPlayer().getPokemon()) {
+		for (PartyMember p : game.getPlayer().getPokemon()) {
 			if (p.getStat(STATS.HP) > 0) {
 				loss = false;
 			}
@@ -127,11 +127,11 @@ public class BattleEngine {
 	public void giveEXP() {
 		int s = 0;
 		for (int x = 0; x < game.getPlayer().getPokemon().size(); x++) {
-			if (((Pokemon) game.getPlayer().getPokemon().get(x)).hasParticipated()) {
+			if (((PartyMember) game.getPlayer().getPokemon().get(x)).hasParticipated()) {
 				s++;
 			}
 		}
-		this.playerCurrentPokemon.gainExp(((Pokemon) this.enemyPokemon.get(0)).getExpGain(false, s));
+		this.playerCurrentPokemon.gainExp(((PartyMember) this.enemyPokemon.get(0)).getExpGain(false, s));
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -141,7 +141,7 @@ public class BattleEngine {
 	// ////////////////////////////////////////////////////////////////////////
 	public void Run() {
 		if (enemyName == null) {
-			((Pokemon) this.enemyPokemon.get(0)).statusEffect = 0;
+			((PartyMember) this.enemyPokemon.get(0)).setStatusEffect(0);
 
 			game.setScreen(SCREEN.WORLD);
 			// TODO - convert to message box
@@ -156,23 +156,23 @@ public class BattleEngine {
 	// ////////////////////////////////////////////////////////////////////////
 	public void Win() {
 		giveEXP();
-
+		DebugUtility.printMessage("Player won!");
 		// reset logic
 		game.setPlayerWin(false);
 		game.setMovable(false);
 		inFight = false;
+
+		game.setCurrentMessage("Player won!");
 		game.setScreen(SCREEN.BATTLE_MESSAGE);
-		game.setMessage("Player won!");
 
 		game.getPlayer().beatenTrainers.add(enemyName);
 
-		((Pokemon) this.enemyPokemon.get(0)).statusEffect = 0;
+		((PartyMember) this.enemyPokemon.get(0)).setStatusEffect(0);
 
 		// reset the music
 		// TODO - verify playBackgroundMusic doesn't automatically pause/stop
 		// when switching music
-		AudioLibrary.getInstance().pauseBackgrondMusic();
-		AudioLibrary.getInstance().playBackgroundMusic("NewBarkTown");
+		game.playBackgroundMusic();
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -181,7 +181,7 @@ public class BattleEngine {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public void Lose() {
-		((Pokemon) this.enemyPokemon.get(0)).statusEffect = 0;
+		((PartyMember) this.enemyPokemon.get(0)).setStatusEffect(0);
 		// TODO - convert to message box
 		DebugUtility.printMessage("Player Pokemon has fainted");
 		DebugUtility.printMessage(game.getPlayer().getName() + " is all out of usable Pokemon!");
@@ -201,50 +201,50 @@ public class BattleEngine {
 	// ////////////////////////////////////////////////////////////////////////
 	public void enemyTurn() {
 		if (!this.playerWon) {
-			if ((((Pokemon) this.enemyPokemon.get(0)).statusEffect == 4)
-					|| (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 5)) {
+			if ((((PartyMember) this.enemyPokemon.get(0)).getStatusEffect() == 4)
+					|| (((PartyMember) this.enemyPokemon.get(0)).getStatusEffect() == 5)) {
 				// Do frozen or sleep logic
 				Random rr = new Random();
 				int wakeupthaw = rr.nextInt(5);
 				if (wakeupthaw <= 1) {
-					if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 4) {
-						DebugUtility.printMessage(((Pokemon) this.enemyPokemon.get(0)).getName() + " has woken up.");
+					if (((PartyMember) this.enemyPokemon.get(0)).getStatusEffect() == 4) {
+						DebugUtility.printMessage(((PartyMember) this.enemyPokemon.get(0)).getName() + " has woken up.");
 					}
-					if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 5) {
-						DebugUtility.printMessage(((Pokemon) this.enemyPokemon.get(0)).getName()
+					if (((PartyMember) this.enemyPokemon.get(0)).getStatusEffect() == 5) {
+						DebugUtility.printMessage(((PartyMember) this.enemyPokemon.get(0)).getName()
 								+ " has broken free from the ice.");
 					}
-					((Pokemon) this.enemyPokemon.get(0)).statusEffect = 0;
+					((PartyMember) this.enemyPokemon.get(0)).setStatusEffect(0);
 				} else {
-					if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 4) {
-						DebugUtility.printMessage(((Pokemon) this.enemyPokemon.get(0)).getName() + " is still asleep.");
+					if (((PartyMember) this.enemyPokemon.get(0)).getStatusEffect() == 4) {
+						DebugUtility.printMessage(((PartyMember) this.enemyPokemon.get(0)).getName() + " is still asleep.");
 					}
-					if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 5) {
-						DebugUtility.printMessage(((Pokemon) this.enemyPokemon.get(0)).getName() + " is frozen solid.");
+					if (((PartyMember) this.enemyPokemon.get(0)).getStatusEffect() == 5) {
+						DebugUtility.printMessage(((PartyMember) this.enemyPokemon.get(0)).getName() + " is frozen solid.");
 					}
 				}
 			}
-			if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 1) {
+			if (((PartyMember) this.enemyPokemon.get(0)).getStatusEffect() == 1) {
 				// do paralyzed logic
 				Random r = new Random();
 				int rand = r.nextInt(2);
 				if (rand <= 0) {
 					int choice = RandomNumUtils.generateRandom(0,
-							((Pokemon) this.enemyPokemon.get(0)).getNumMoves() - 1);
-					MoveData chosen = ((Pokemon) this.enemyPokemon.get(0)).getMove(choice);
+							((PartyMember) this.enemyPokemon.get(0)).getNumMoves() - 1);
+					MoveData chosen = ((PartyMember) this.enemyPokemon.get(0)).getMove(choice);
 					int attackStat = 0;
 					int defStat = 0;
 					if (chosen.type.equals("PHYSICAL")) {
-						attackStat = ((Pokemon) this.enemyPokemon.get(0)).getStat(STATS.ATTACK);
+						attackStat = ((PartyMember) this.enemyPokemon.get(0)).getStat(STATS.ATTACK);
 						defStat = this.playerCurrentPokemon.getStat(STATS.DEFENSE);
 					}
 					if (chosen.type.equals("SPECIAL")) {
-						attackStat = ((Pokemon) this.enemyPokemon.get(0)).getStat(STATS.SP_ATTACK);
+						attackStat = ((PartyMember) this.enemyPokemon.get(0)).getStat(STATS.SP_ATTACK);
 						defStat = this.playerCurrentPokemon.getStat(STATS.SP_DEFENSE);
 					}
 					int damage = 0;
 					if (!chosen.type.equals("STAT")) {
-						damage = (int) (((2 * ((Pokemon) this.enemyPokemon.get(0)).getLevel() / 5 + 2) * chosen.power
+						damage = (int) (((2 * ((PartyMember) this.enemyPokemon.get(0)).getLevel() / 5 + 2) * chosen.power
 								* attackStat / 50 / defStat + 2)
 								* RandomNumUtils.generateRandom(85, 100) / 100.0);
 					}
@@ -254,27 +254,27 @@ public class BattleEngine {
 					DebugUtility.printMessage("Enemy's turn is over");
 					chosen.movePP--;
 				} else {
-					DebugUtility.printMessage(((Pokemon) this.enemyPokemon.get(0)).getName()
+					DebugUtility.printMessage(((PartyMember) this.enemyPokemon.get(0)).getName()
 							+ " is paralyzed. It can't move.");
 				}
 			} else {
 				// otherwise do nomral battle order of events
-				int choice = RandomNumUtils.generateRandom(0, ((Pokemon) this.enemyPokemon.get(0)).getNumMoves() - 1);
-				MoveData chosen = ((Pokemon) this.enemyPokemon.get(0)).getMove(choice);
+				int choice = RandomNumUtils.generateRandom(0, ((PartyMember) this.enemyPokemon.get(0)).getNumMoves() - 1);
+				MoveData chosen = ((PartyMember) this.enemyPokemon.get(0)).getMove(choice);
 
 				int attackStat = 0;
 				int defStat = 1;
 				if (chosen.type.equals("PHYSICAL")) {
-					attackStat = ((Pokemon) this.enemyPokemon.get(0)).getStat(STATS.ATTACK);
+					attackStat = ((PartyMember) this.enemyPokemon.get(0)).getStat(STATS.ATTACK);
 					defStat = this.playerCurrentPokemon.getStat(STATS.DEFENSE);
 				}
 				if (chosen.type.equals("SPECIAL")) {
-					attackStat = ((Pokemon) this.enemyPokemon.get(0)).getStat(STATS.SP_ATTACK);
+					attackStat = ((PartyMember) this.enemyPokemon.get(0)).getStat(STATS.SP_ATTACK);
 					defStat = this.playerCurrentPokemon.getStat(STATS.SP_DEFENSE);
 				}
 				if (!chosen.type.equals("STAT")) {
 					@SuppressWarnings("unused")
-					int damage = (int) (((2 * ((Pokemon) this.enemyPokemon.get(0)).getLevel() / 5 + 2) * chosen.power
+					int damage = (int) (((2 * ((PartyMember) this.enemyPokemon.get(0)).getLevel() / 5 + 2) * chosen.power
 							* attackStat / defStat / 50 + 2)
 							* RandomNumUtils.generateRandom(85, 100) / 100.0D);
 
@@ -283,16 +283,16 @@ public class BattleEngine {
 				chosen.movePP--;
 				game.playClip(AudioLibrary.SE_SELECT);
 			}
-			if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 2) {
+			if (((PartyMember) this.enemyPokemon.get(0)).getStatusEffect() == 2) {
 				game.playClip(AudioLibrary.SE_DAMAGE);
 				// TODO convert to message box
 				DebugUtility
-						.printMessage(((Pokemon) this.enemyPokemon.get(0)).getName() + " has been hurt by its burn");
+						.printMessage(((PartyMember) this.enemyPokemon.get(0)).getName() + " has been hurt by its burn");
 			}
-			if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 3) {
+			if (((PartyMember) this.enemyPokemon.get(0)).getStatusEffect() == 3) {
 				game.playClip(AudioLibrary.SE_DAMAGE);
 				// TODO convert to message box
-				DebugUtility.printMessage(((Pokemon) this.enemyPokemon.get(0)).getName()
+				DebugUtility.printMessage(((PartyMember) this.enemyPokemon.get(0)).getName()
 						+ " has been hurt by its poison");
 			}
 			this.playerTurn = true;

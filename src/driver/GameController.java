@@ -1,11 +1,17 @@
 package driver;
 
+import graphics.NPCThread;
 import graphics.SpriteLibrary;
 
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,24 +22,22 @@ import javax.swing.ImageIcon;
 import javax.swing.Timer;
 
 import location.LocationLibrary;
-import pokedex.Pokemon;
-import pokedex.PokemonFactory;
-import pokedex.PokemonList;
-import tiles.ObstacleTile;
+import model.Configuration;
+import model.Coordinate;
+import model.GameData;
+import model.GameData.SCREEN;
+import party.Party;
+import party.PartyMember;
+import party.PartyMemberFactory;
+import tiles.BattleTile;
 import tiles.Tile;
 import tiles.TileSet;
-import tiles.WildTile;
 import trainers.Actor;
 import trainers.Actor.DIR;
 import trainers.Player;
 import utilities.BattleEngine;
-import utilities.Configuration;
-import utilities.Coordinate;
 import utilities.DebugUtility;
-import utilities.NPCThread;
-import utilities.Utils;
 import audio.AudioLibrary;
-import driver.GameData.SCREEN;
 
 public class GameController implements Serializable {
 
@@ -44,12 +48,14 @@ public class GameController implements Serializable {
 	private Configuration config = new Configuration();
 
 	// NPC random movement controller
-	public NPCThread npcs = new NPCThread();
+	private NPCThread npcs = new NPCThread();
 
-	GameController() {
+	public GameController() {
 		gData = new GameData();
 
 	}
+
+	// ////////////////////////// CHEAT LOGIC ///////////////////////////////
 
 	boolean isNoClip() {
 		return gData.NOCLIP;
@@ -57,14 +63,6 @@ public class GameController implements Serializable {
 
 	public void setNoClip(boolean isNoClip) {
 		gData.NOCLIP = isNoClip;
-	}
-
-	public boolean isMovable() {
-		return gData.movable;
-	}
-
-	public void setMovable(boolean b) {
-		gData.movable = b;
 	}
 
 	boolean doBattles() {
@@ -75,6 +73,8 @@ public class GameController implements Serializable {
 		gData.DOBATTLES = areThereBattles;
 	}
 
+	// ////////////////////////// GRAPHICS CONTROL LOGIC ///////////////////////
+
 	boolean isShowIntro() {
 		return gData.SHOWINTRO;
 	}
@@ -83,81 +83,24 @@ public class GameController implements Serializable {
 		gData.SHOWINTRO = showIntro;
 	}
 
-	boolean isPlayerWalking() {
-		return gData.isPlayerWalking;
-	}
-
-	public void setPlayerWalking(boolean isPlayerWalking) {
-		gData.isPlayerWalking = isPlayerWalking;
-	}
-
-	public void updateTime() {
-		gData.gameTimeStruct.updateTime();
-	}
-
-	public String formatTime() {
-		return gData.gameTimeStruct.formatTime();
-	}
-
-	public void saveTime() {
-		gData.gameTimeStruct.saveTime();
-	}
-
-	public void startNewTimer(ActionListener theGame) {
-		gData.gameSpeed = new Timer(100 - gData.currentSpeed, theGame);
-		gData.gameSpeed.start();
-	}
-
 	public void stopNPCMovement() {
 		npcs.stop = true;
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// starttheGame method - given whether or not the theGame is a continue,
-	// start
-	// the theGame based off a save file, or start a new theGame.
-	// Prepares all the necessary utilities, such as
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	public GameData startGame(boolean continued) {
-		DebugUtility.printHeader("Starting game:");
-		if (continued) {
-			gData = Utils.loadGame();
-			if (!gData.player.tData.isValidData()) {
-				DebugUtility.error(gData.player.tData.toString());
-			}
-		} else {
-			String name = "GOLD";
-			gData.player = new Player(4, 2, name);
-			Pokemon charmander = PokemonFactory.createPokemon("Charmander", 7);
-			gData.player.caughtPokemon(charmander);
-			gData.player.setMoney(1000000);
-			gData.player.setCurLocation(LocationLibrary.getLocation("Route 27"));
-			playBackgroundMusic("NewBarkTown");
-			gData.start_coorX = (Tile.TILESIZE * (8 - gData.player.getCurrentX()));
-			gData.start_coorY = (Tile.TILESIZE * (6 - gData.player.getCurrentY()));
-			if (isShowIntro()) {
-				gData.introStage = 1;
-				gData.screen = SCREEN.INTRO;
-			}
-		}
+	public void setMapImageAt(int layer, int y, int parseInt) {
+		gData.imageMap[layer][y] = parseInt;
+	}
 
-		// initialize the player sprite
-		gData.player.tData.sprite_name = "PLAYER";
-		gData.player.tData.sprite = SpriteLibrary.getSprites("PLAYER").get(gData.player.getDirection().ordinal() * 3);
+	public int getMapImageAt(int layer, int tile_number) {
+		return gData.imageMap[layer][tile_number];
+	}
 
-		// get out of any menus
-		gData.screen = SCREEN.WORLD;
+	public int getOffsetX() {
+		return gData.offsetX;
+	}
 
-		npcs.start();
-
-		// start clock for current session
-		gData.gameTimeStruct.timeStarted = System.currentTimeMillis();
-
-		DebugUtility.printMessage("- " + gData.player.tData.toString());
-		DebugUtility.printMessage("* Rendered session id: " + gData.id);
-		return gData;
+	public int getOffsetY() {
+		return gData.offsetY;
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -221,13 +164,13 @@ public class GameController implements Serializable {
 						if (layer == 1 || (layer == 2 && Integer.parseInt(code) > 0)) {
 							data.setMapTileAt(c, TileSet.OBSTACLE);
 						}
-					} else if (Arrays.binarySearch(TileSet.WILD_TILES, Integer.parseInt(code)) >= 0) {
+					} else if (Arrays.binarySearch(TileSet.BATTLE_TILES, Integer.parseInt(code)) >= 0) {
 						if (layer == 1 || (layer == 2 && Integer.parseInt(code) > 0)) {
-							data.setMapTileAt(c, TileSet.WILD_TILE);
+							data.setMapTileAt(c, TileSet.BATTLE);
 						}
 					} else {
 						if ((layer == 1 || (layer == 2 && Integer.parseInt(code) > 0)) && data.getMapTileAt(c) == null) {
-							data.setMapTileAt(c, TileSet.NORMAL_TILE);
+							data.setMapTileAt(c, TileSet.NORMAL);
 						}
 					}
 					data.setMapImageAt(layer, y, Integer.parseInt(code));
@@ -283,26 +226,91 @@ public class GameController implements Serializable {
 		DebugUtility.printMessage("Loaded map.");
 	}
 
-	public void setMapImageAt(int layer, int y, int parseInt) {
-		gData.imageMap[layer][y] = parseInt;
+	// ////////////////////////// MOVEMENT CONTROL LOGIC ///////////////////////
+
+	public boolean isMovable() {
+		return gData.movable;
 	}
 
-	public int getMapImageAt(int layer, int tile_number) {
-		return gData.imageMap[layer][tile_number];
+	public void setMovable(boolean b) {
+		gData.movable = b;
 	}
 
-	public int getOffsetX() {
-		return gData.offsetX;
+	public boolean isPlayerWalking() {
+		return gData.isPlayerWalking;
 	}
 
-	public int getOffsetY() {
-		return gData.offsetY;
+	public void setPlayerWalking(boolean isPlayerWalking) {
+		gData.isPlayerWalking = isPlayerWalking;
+	}
+
+	public void startNewTimer(ActionListener theGame) {
+		gData.gameSpeed = new Timer(100 - gData.currentSpeed, theGame);
+		gData.gameSpeed.start();
+	}
+
+	// //////////////////////////// TIME CONTROL //////////////////////////////
+
+	public void updateTime() {
+		gData.gameTimeStruct.updateTime();
+	}
+
+	public String formatTime() {
+		return gData.gameTimeStruct.formatTime();
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// canMoveInDir - makes a copy of the coordinate, and checks directional
-	// data to see if the actor can move in the specified direction
+	// start the game, based off a save file or as a new game
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public GameData startGame(boolean continued) {
+
+		DebugUtility.printHeader("Starting game:");
+		if (continued) {
+			loadGame();
+			if (!gData.player.tData.isValidData()) {
+				DebugUtility.error("Unable to continue game from save file. Corrupt data:\n"
+						+ gData.player.tData.toString());
+			}
+		} else {
+			String name = "GOLD";
+			gData.player = new Player(4, 2, name);
+			PartyMember charmander = PartyMemberFactory.createPokemon("Charmander", 7);
+			gData.player.caughtPokemon(charmander);
+			gData.player.setMoney(1000000);
+			gData.player.setCurLocation(LocationLibrary.getLocation("Route 27"));
+			playBackgroundMusic("NewBarkTown");
+			gData.start_coorX = (Tile.TILESIZE * (8 - gData.player.getCurrentX()));
+			gData.start_coorY = (Tile.TILESIZE * (6 - gData.player.getCurrentY()));
+			if (isShowIntro()) {
+				gData.introStage = 1;
+				gData.screen = SCREEN.INTRO;
+			}
+			DebugUtility.printMessage("Started new game.");
+		}
+
+		// initialize the player sprite
+		gData.player.tData.sprite_name = "PLAYER";
+		gData.player.tData.sprite = SpriteLibrary.getSprites("PLAYER").get(gData.player.getDirection().ordinal() * 3);
+
+		// get out of any menus
+		gData.screen = SCREEN.WORLD;
+
+		npcs.start();
+
+		// start clock for current session
+		gData.gameTimeStruct.timeStarted = System.currentTimeMillis();
+
+		DebugUtility.printMessage("- " + gData.player.tData.toString());
+		DebugUtility.printMessage("Rendered session id: " + gData.gameSessionID);
+		return gData;
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// canMoveInDir - makes a temporary coordinate, and checks to see if the
+	// actor can move in the specified direction
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public boolean canMoveInDir(DIR dir) {
@@ -312,29 +320,14 @@ public class GameController implements Serializable {
 			// if noclip is turned on, player can always move
 			canMove = true;
 		} else {
-			// a temporary location after moving
+			// temporarily store the location the player would move to
 			Coordinate loc = getPlayer().getPosition().move(dir);
-			boolean outOfBounds = false;
-			if (dir == DIR.NORTH) {
-				if (loc.getY() < 0) {
-					outOfBounds = true;
-				}
-			} else if (dir == DIR.SOUTH) {
-				if (loc.getY() >= getMapHeight()) {
-					outOfBounds = true;
-				}
-			} else if (dir == DIR.EAST) {
-				if (loc.getX() >= getMapWidth()) {
-					outOfBounds = true;
-				}
-			} else if (dir == DIR.WEST) {
-				if (loc.getX() < 0) {
-					outOfBounds = true;
-				}
-			}
 
-			if (!outOfBounds) {
-				canMove = !(getMapTileAt(loc).equals(ObstacleTile.name));
+			// if the potential location is in bounds, can only move if tile is
+			// not obstacle
+			// TODO water tiles
+			if (loc.getY() > 0 && loc.getY() <= getMapHeight() && loc.getX() > 0 && loc.getX() <= getMapWidth()) {
+				canMove = !(TileSet.compareTiles(getMapTileAt(loc), TileSet.OBSTACLE));
 			}
 		}
 		return canMove;
@@ -377,7 +370,7 @@ public class GameController implements Serializable {
 	}
 
 	public int getId() {
-		return gData.id;
+		return gData.gameSessionID;
 	}
 
 	public void setPlayerDirection(DIR dir) {
@@ -387,6 +380,15 @@ public class GameController implements Serializable {
 
 	public void setPlayerSprite(ImageIcon imageIcon) {
 		getPlayer().tData.sprite = imageIcon;
+	}
+
+	public void toggleSound() {
+		gData.option_sound = !gData.option_sound;
+		if (gData.option_sound) {
+			playBackgroundMusic();
+		} else {
+			AudioLibrary.getInstance().pauseBackgrondMusic();
+		}
 	}
 
 	public void playClip(String clipToPlay) {
@@ -404,6 +406,12 @@ public class GameController implements Serializable {
 	public void playBackgroundMusic(String string) {
 		if (gData.option_sound) {
 			AudioLibrary.getInstance().playBackgroundMusic(string);
+		}
+	}
+
+	public void playBackgroundMusic() {
+		if (gData.option_sound) {
+			AudioLibrary.getInstance().playBackgroundMusic(getPlayer().getCurLoc().getName());
 		}
 	}
 
@@ -458,7 +466,7 @@ public class GameController implements Serializable {
 	}
 
 	public boolean isBattleTile(Coordinate position) {
-		return getMapTileAt(position).getClass().equals(WildTile.class);
+		return getMapTileAt(position).getClass().equals(BattleTile.class);
 	}
 
 	public boolean isTeleportTile(Coordinate playerPos) {
@@ -553,8 +561,10 @@ public class GameController implements Serializable {
 	public void incrementSelection() {
 		if (gData.currentSelection.containsKey(getScreen())) {
 			int curSel = gData.currentSelection.get(getScreen());
-			if (getCurrentSelection() < config.numSelections.get(getScreen()) - 1) {
-				setCurrentSelection(curSel + 1);
+			if (config.numSelections.containsKey(getScreen())) {
+				if (getCurrentSelection() < config.numSelections.get(getScreen()) - 1) {
+					setCurrentSelection(curSel + 1);
+				}
 			}
 		} else {
 			setCurrentSelection(1);
@@ -573,39 +583,35 @@ public class GameController implements Serializable {
 		gData.screen = curScreen;
 	}
 
-	public void toggleSound() {
-		gData.option_sound = !gData.option_sound;
-		if (gData.option_sound) {
-			playBackgroundMusic(getPlayer().getCurLoc().getName());
-		} else {
-			AudioLibrary.getInstance().pauseBackgrondMusic();
-		}
-	}
-
 	public void setPlayerWin(boolean b) {
 		gData.playerWin = false;
 	}
 
-	public void setMessage(String string) {
-		gData.messageString = string;
+	public void setCurrentMessage(String string) {
+		gData.currentMessage = string;
 	}
 
-	public Object getGameData() {
-		// TODO Auto-generated method stub
-		return gData;
+	public String getCurrentMessage(boolean npc) {
+		if (npc)
+			return getCurNPC().getText(getMessageStage());
+		else
+			return gData.currentMessage;
 	}
 
 	public void initialize() {
 		gData = new GameData();
 	}
 
-	public void doWildEncounter() {
-		gData.wildPokemon.clear();
-		gData.wildPokemon.add(PokemonFactory.getInstance().randomPokemon(getPlayer().getCurLoc()));
-		BattleEngine.getInstance().fight(gData.wildPokemon, this, null);
+	public Party getCurrentEnemy() {
+		return gData.currentEnemy;
 	}
 
-	public void doEncounter(PokemonList pokemon, String name) {
+	public void setWildPokemon() {
+		gData.currentEnemy.clear();
+		gData.currentEnemy.add(PartyMemberFactory.getInstance().randomPokemon(getPlayer().getCurLoc()));
+	}
+
+	public void doEncounter(Party pokemon, String name) {
 		BattleEngine.getInstance().fight(pokemon, this, name);
 	}
 
@@ -614,11 +620,11 @@ public class GameController implements Serializable {
 	}
 
 	public Actor getCurNPC() {
-		return gData.curNPC;
+		return gData.currentNPC;
 	}
 
 	public void setCurNPC(Actor npc) {
-		gData.curNPC = npc;
+		gData.currentNPC = npc;
 	}
 
 	public void exitMenu() {
@@ -626,11 +632,48 @@ public class GameController implements Serializable {
 		setScreen(SCREEN.WORLD);
 	}
 
-	public String getCurrentMessage(boolean npc) {
-		if (npc)
-			return getCurNPC().getText(getMessageStage());
-		else
-			return "";
+	public void saveGame() {
+		gData.gameTimeStruct.saveTime();
+
+		FileOutputStream fout = null;
+		ObjectOutputStream oos = null;
+		try {
+			File dir = new File("resources/data");
+			DebugUtility.printMessage(dir.isDirectory() + "");
+			DebugUtility.printMessage(getPlayer().tData.toString());
+			fout = new FileOutputStream("resources/data/PokemonOrange.sav");
+			oos = new ObjectOutputStream(fout);
+			oos.writeObject(gData);
+			oos.close();
+			fout.close();
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			DebugUtility.printMessage("Unable to save game...");
+			return;
+		}
+		DebugUtility.printMessage("** Saved game.");
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// loadGame - loads game object from a default .SAV file
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public void loadGame() {
+		GameData data = null;
+		FileInputStream fout = null;
+		ObjectInputStream oos = null;
+		try {
+			fout = new FileInputStream("resources/data/PokemonOrange.sav");
+			oos = new ObjectInputStream(fout);
+			data = (GameData) oos.readObject();
+			oos.close();
+			fout.close();
+			DebugUtility.printMessage("** Loaded game from save.");
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			DebugUtility.printMessage("Unable to load game...");
+		}
+		gData = data;
+	}
 }

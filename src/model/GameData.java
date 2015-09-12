@@ -1,17 +1,15 @@
-package driver;
+package model;
 
 import java.io.Serializable;
 import java.util.HashMap;
 
 import javax.swing.Timer;
 
-import pokedex.PokemonList;
+import party.Party;
 import tiles.TileMap;
 import trainers.Actor;
 import trainers.Player;
-import utilities.Configuration;
 import utilities.RandomNumUtils;
-import utilities.TimeStruct;
 
 // ////////////////////////////////////////////////////////////////////////
 //
@@ -38,14 +36,12 @@ public class GameData implements Serializable {
 
 	// ==================== Game Data Control ==============================//
 
-	public Actor curNPC;
+	public Actor currentNPC;
 	public Player player;
-	public String messageString;
+	public String currentMessage;
 	public int messageStage;
-	public int id = RandomNumUtils.createTrainerID();
-	public PokemonList wildPokemon = new PokemonList();
-
-	public HashMap<SCREEN, Integer> currentSelection = new HashMap<SCREEN, Integer>();
+	public int gameSessionID = RandomNumUtils.createTrainerID();
+	public Party currentEnemy = new Party();
 
 	// Timing Data
 	public TimeStruct gameTimeStruct = new TimeStruct();
@@ -57,19 +53,22 @@ public class GameData implements Serializable {
 
 	// ====================== Graphics control variables ===================//
 	public enum SCREEN {
-		WORLD, MENU, INTRO, NAME, TITLE, CONTINUE, MESSAGE, BATTLE, BATTLE_FIGHT, BATTLE_MESSAGE, POKEDEX, POKEMON, BAG, POKEGEAR, TRAINERCARD, SAVE, OPTION;
+		WORLD, MENU, INTRO, NAME, TITLE, CONTINUE, MESSAGE, BATTLE, BATTLE_FIGHT, BATTLE_MESSAGE, POKEDEX, POKEMON, BAG, POKEGEAR, TRAINERCARD, SAVE, OPTION, CONVERSATION;
 	}
 
-	public SCREEN screen = SCREEN.TITLE;
-
+	public SCREEN screen = SCREEN.TITLE; // start at the title screen
 	public int introStage = 1;
 	public int offsetX = 0, offsetY = 0; // painting variables
 	public int start_coorX, start_coorY; // teleportation graphics variables
 
-	// ////////////////////////
+	// stored as a map so each SCREEN can store it's own current selection
+	public HashMap<SCREEN, Integer> currentSelection = new HashMap<SCREEN, Integer>();
+
 	public int[][] imageMap = new int[3][21400];
 	public TileMap tileMap = new TileMap();
+
 	// ======================= Battle information ==========================//
+	// ////////////////////////
 	public boolean inBattle = false;
 	public boolean playerWin = false;
 

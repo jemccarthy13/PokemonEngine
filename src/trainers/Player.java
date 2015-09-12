@@ -3,6 +3,7 @@ package trainers;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import party.BillsPC;
 import location.Location;
 import location.LocationLibrary;
 import utilities.RandomNumUtils;
@@ -89,24 +90,4 @@ public class Player extends Actor implements Serializable {
 	public int getID() {
 		return this.id;
 	}
-
-	public void turnAround() {
-		switch (getDirection()) {
-		case NORTH:
-			setDirection(DIR.SOUTH);
-			break;
-		case EAST:
-			setDirection(DIR.WEST);
-			break;
-		case WEST:
-			setDirection(DIR.EAST);
-			break;
-		case SOUTH:
-			setDirection(DIR.NORTH);
-			break;
-		default:
-			break;
-		}
-	}
-
 }

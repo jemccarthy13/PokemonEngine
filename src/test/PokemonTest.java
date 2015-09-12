@@ -2,8 +2,8 @@ package test;
 
 import org.junit.Assert;
 
-import pokedex.Pokemon;
-import pokedex.PokemonFactory;
+import party.PartyMember;
+import party.PartyMemberFactory;
 import utilities.DebugUtility;
 
 // ////////////////////////////////////////////////////////////////////////
@@ -15,8 +15,8 @@ import utilities.DebugUtility;
 // ////////////////////////////////////////////////////////////////////////
 public class PokemonTest {
 	public static void testPokemon() {
-		Pokemon bulbasaur = PokemonFactory.createPokemon("Bulbasaur", 5);
-		Pokemon bulbasaur2 = PokemonFactory.createPokemon("Bulbasaur", 10);
+		PartyMember bulbasaur = PartyMemberFactory.createPokemon("Bulbasaur", 5);
+		PartyMember bulbasaur2 = PartyMemberFactory.createPokemon("Bulbasaur", 10);
 
 		DebugUtility.printMessage(bulbasaur.toString());
 

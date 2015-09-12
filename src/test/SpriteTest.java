@@ -1,5 +1,7 @@
 package test;
 
+import graphics.NPCThread;
+
 import java.awt.Color;
 import java.awt.Graphics;
 
@@ -8,7 +10,6 @@ import javax.swing.JPanel;
 
 import trainers.Actor;
 import trainers.NPCLibrary;
-import utilities.NPCThread;
 
 //////////////////////////////////////////////////////////////////////////
 //

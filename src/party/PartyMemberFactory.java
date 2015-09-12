@@ -1,4 +1,4 @@
-package pokedex;
+package party;
 
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -21,18 +21,18 @@ import utilities.RandomNumUtils;
 // Can create pokemon from this data given a level
 //
 // ////////////////////////////////////////////////////////////////////////
-public class PokemonFactory extends HashMap<String, PokemonData> {
+public class PartyMemberFactory extends HashMap<String, PartyMemberData> {
 
 	private static final long serialVersionUID = 6443726917122609755L;
-	private static PokemonFactory m_instance = new PokemonFactory();
+	private static PartyMemberFactory m_instance = new PartyMemberFactory();
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
 	// Private constructor allows resource loading to happen once and only once
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private PokemonFactory() {
-		String filename = "resources/data/Pokedex.json";
+	private PartyMemberFactory() {
+		String filename = "resources/data/PartyInfo.json";
 		populateMap(filename);
 	}
 
@@ -55,7 +55,7 @@ public class PokemonFactory extends HashMap<String, PokemonData> {
 			// iterate through the array of pokemon data
 			Iterator<?> pokedex = pokemon_data_all.iterator();
 			while (pokedex.hasNext()) {
-				PokemonData pd = new PokemonData();
+				PartyMemberData pd = new PartyMemberData();
 
 				// this is the JSON object for a pokemon
 				JSONObject pokemon_data = (JSONObject) pokedex.next();
@@ -114,7 +114,7 @@ public class PokemonFactory extends HashMap<String, PokemonData> {
 	// Return the one and only instance of this singleton for use
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public static PokemonFactory getInstance() {
+	public static PartyMemberFactory getInstance() {
 		return m_instance;
 	}
 
@@ -123,8 +123,8 @@ public class PokemonFactory extends HashMap<String, PokemonData> {
 	// Get the data from the Pokemon map, and create a new pokemon at given lvl
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public static Pokemon createPokemon(String name, int level) {
-		return new Pokemon(m_instance.get(name), level);
+	public static PartyMember createPokemon(String name, int level) {
+		return new PartyMember(m_instance.get(name), level);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -133,7 +133,7 @@ public class PokemonFactory extends HashMap<String, PokemonData> {
 	// wild pokemon chart in that region
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public Pokemon randomPokemon(Location location) {
+	public PartyMember randomPokemon(Location location) {
 		String name = location.getPokemon(RandomNumUtils.generateRandom(0, 100));
 		int level = RandomNumUtils.randomLevel(location.getMaxLevel(name), location.getMinLevel(name));
 		return createPokemon(name, level);

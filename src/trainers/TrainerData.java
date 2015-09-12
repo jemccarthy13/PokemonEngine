@@ -7,9 +7,9 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
-import pokedex.PokemonList;
+import model.Coordinate;
+import party.Party;
 import trainers.Actor.DIR;
-import utilities.Coordinate;
 
 // ////////////////////////////////////////////////////////////////////////
 //
@@ -21,7 +21,7 @@ public class TrainerData implements Serializable {
 	private static final long serialVersionUID = 9089885833065857943L;
 	public String name = null;
 	public Coordinate position = null;
-	public PokemonList pokemon = null;
+	public Party pokemon = null;
 	public int money = 0;
 	public ArrayList<String> conversationText = null;
 	public boolean stationary = false;

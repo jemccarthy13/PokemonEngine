@@ -7,9 +7,10 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 
-import pokedex.Pokemon;
-import pokedex.Pokemon.STATS;
-import pokedex.PokemonList;
+import model.Configuration;
+import party.PartyMember;
+import party.Party;
+import party.PartyMember.STATS;
 import tiles.Tile;
 import tiles.TileSet;
 import trainers.Actor;
@@ -17,9 +18,7 @@ import trainers.Actor.DIR;
 import trainers.NPCLibrary;
 import trainers.Player;
 import utilities.BattleEngine;
-import utilities.Configuration;
 import driver.GameController;
-import driver.GamePanel;
 
 // ////////////////////////////////////////////////////////////////////////////
 //
@@ -62,6 +61,10 @@ public class Painter {
 		case BATTLE:
 			paintBattle(g, game);
 			break;
+		case BATTLE_FIGHT:
+			paintBattle(g, game);
+			paintBattleFight(g, game);
+			break;
 		case MENU:
 			paintWorld(g, game.game, g2, at);
 			paintPauseMenu(g, game.game);
@@ -88,18 +91,21 @@ public class Painter {
 			paintWorld(g, game.game, g2, at);
 			paintSaveMenu(g, game.game);
 			break;
+		case CONVERSATION:
+			paintWorld(g, game.game, g2, at);
+			paintConversation(g, game.game);
 		case MESSAGE:
 			paintWorld(g, game.game, g2, at);
-			paintMessageBox(g, game);
+			paintMessageBox(g, game.game);
+			break;
+		case BATTLE_MESSAGE:
+			paintBattle(g, game);
+			paintMessageBox(g, game.game);
 			break;
 		default:
 			paintWorld(g, game.game, g2, at);
 			break;
 		}
-
-		// /if (game.menuScreen.MENU_inConversation) {
-		// paintConversation(g, game.game);
-		// }
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -161,15 +167,12 @@ public class Painter {
 	//
 	// Paint all components of a battle scene
 	//
-	// TODO - analyze function arguments for potential decrease in passing large
-	// data
-	//
 	// ////////////////////////////////////////////////////////////////////////
 	private static void paintBattle(Graphics g, GamePanel game) {
 		g.drawImage(SpriteLibrary.getImage("BG"), 0, 0, null);
 
-		Pokemon playerPokemon = BattleEngine.getInstance().playerCurrentPokemon;
-		Pokemon enemyPokemon = BattleEngine.getInstance().enemyPokemon.get(0);
+		PartyMember playerPokemon = BattleEngine.getInstance().playerCurrentPokemon;
+		PartyMember enemyPokemon = BattleEngine.getInstance().enemyPokemon.get(0);
 
 		g.drawImage(playerPokemon.getBackSprite().getImage(),
 				120 - (playerPokemon.getBackSprite().getImage().getHeight(game)) / 2, 228 - playerPokemon
@@ -177,7 +180,10 @@ public class Painter {
 		g.drawImage(enemyPokemon.getFrontSprite().getImage(), 310, 25, null);
 
 		g.drawImage(SpriteLibrary.getImage("Battle"), 0, 0, null);
-		g.drawString("Wild " + enemyPokemon.getName() + " Appeared!", 30, 260);
+		String battleMessage = game.game.getCurrentMessage(false);
+		if (battleMessage != null) {
+			g.drawString(battleMessage, 30, 260);
+		}
 		g.drawString("FIGHT", 290, 260);
 		g.drawString("PKMN", 400, 260);
 		g.drawString("ITEM", 290, 290);
@@ -196,60 +202,81 @@ public class Painter {
 			g.drawImage(SpriteLibrary.getImage(ARROW), 384, 270, null);
 		}
 
-		if (BattleEngine.getInstance().inFight) {
-
-			g.drawImage(SpriteLibrary.getImage("BattleFight"), 0, 0, null);
-			g.drawString(playerPokemon.getMove(0).name, 200, 260);
-			if (playerPokemon.getNumMoves() > 1) {
-				g.drawString(playerPokemon.getMove(1).name, 345, 260);
-			}
-			if (playerPokemon.getNumMoves() > 2) {
-				g.drawString(playerPokemon.getMove(2).name, 200, 290);
-			}
-			if (playerPokemon.getNumMoves() > 3) {
-				g.drawString(playerPokemon.getMove(3).name, 345, 290);
-			}
-
-			if ((BattleEngine.getInstance().currentSelectionFightX == 0)
-					&& (BattleEngine.getInstance().currentSelectionFightY == 0)) {
-				g.drawImage(SpriteLibrary.getImage(ARROW), 184, 240, null);
-			} else if ((BattleEngine.getInstance().currentSelectionFightX == 0)
-					&& (BattleEngine.getInstance().currentSelectionFightY == 1)) {
-				g.drawImage(SpriteLibrary.getImage(ARROW), 184, 270, null);
-			} else if ((BattleEngine.getInstance().currentSelectionFightX == 1)
-					&& (BattleEngine.getInstance().currentSelectionFightY == 0)) {
-				g.drawImage(SpriteLibrary.getImage(ARROW), 329, 240, null);
-			} else if ((BattleEngine.getInstance().currentSelectionFightX == 1)
-					&& (BattleEngine.getInstance().currentSelectionFightY == 1)) {
-				g.drawImage(SpriteLibrary.getImage(ARROW), 329, 270, null);
-			}
-		}
-
 		// player status effect information
-		if (playerPokemon.statusEffect == 1) {
+		if (playerPokemon.getStatusEffect() == 1) {
 			g.drawImage(SpriteLibrary.getImage("StatusPAR"), 415, 140, null);
-		} else if (playerPokemon.statusEffect == 2) {
+		} else if (playerPokemon.getStatusEffect() == 2) {
 			g.drawImage(SpriteLibrary.getImage("StatusBRN"), 415, 140, null);
-		} else if (playerPokemon.statusEffect == 3) {
+		} else if (playerPokemon.getStatusEffect() == 3) {
 			g.drawImage(SpriteLibrary.getImage("StatusPSN"), 415, 140, null);
-		} else if (playerPokemon.statusEffect == 4) {
+		} else if (playerPokemon.getStatusEffect() == 4) {
 			g.drawImage(SpriteLibrary.getImage("StatusSLP"), 415, 140, null);
-		} else if (playerPokemon.statusEffect == 5) {
+		} else if (playerPokemon.getStatusEffect() == 5) {
 			g.drawImage(SpriteLibrary.getImage("StatusFRZ"), 415, 140, null);
 		}
 
 		// enemy status effect information
-		if (enemyPokemon.statusEffect == 1) {
+		if (enemyPokemon.getStatusEffect() == 1) {
 			g.drawImage(SpriteLibrary.getImage("StatusPAR"), 18, 60, null);
-		} else if (enemyPokemon.statusEffect == 2) {
+		} else if (enemyPokemon.getStatusEffect() == 2) {
 			g.drawImage(SpriteLibrary.getImage("StatusBRN"), 18, 60, null);
-		} else if (enemyPokemon.statusEffect == 3) {
+		} else if (enemyPokemon.getStatusEffect() == 3) {
 			g.drawImage(SpriteLibrary.getImage("StatusPSN"), 18, 60, null);
-		} else if (enemyPokemon.statusEffect == 4) {
+		} else if (enemyPokemon.getStatusEffect() == 4) {
 			g.drawImage(SpriteLibrary.getImage("StatusSLP"), 18, 60, null);
-		} else if (enemyPokemon.statusEffect == 5) {
+		} else if (enemyPokemon.getStatusEffect() == 5) {
 			g.drawImage(SpriteLibrary.getImage("StatusFRZ"), 18, 60, null);
 		}
+
+		paintPokemonInfo(g);
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Paint all components of the name input screen
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	private static void paintBattleFight(Graphics g, GamePanel game) {
+		PartyMember playerPokemon = BattleEngine.getInstance().playerCurrentPokemon;
+
+		g.drawImage(SpriteLibrary.getImage("BattleFight"), 0, 0, null);
+		g.drawString(playerPokemon.getMove(0).name, 200, 260);
+		if (playerPokemon.getNumMoves() > 1) {
+			g.drawString(playerPokemon.getMove(1).name, 345, 260);
+		}
+		if (playerPokemon.getNumMoves() > 2) {
+			g.drawString(playerPokemon.getMove(2).name, 200, 290);
+		}
+		if (playerPokemon.getNumMoves() > 3) {
+			g.drawString(playerPokemon.getMove(3).name, 345, 290);
+		}
+
+		if ((BattleEngine.getInstance().currentSelectionFightX == 0)
+				&& (BattleEngine.getInstance().currentSelectionFightY == 0)) {
+			g.drawImage(SpriteLibrary.getImage(ARROW), 184, 240, null);
+		} else if ((BattleEngine.getInstance().currentSelectionFightX == 0)
+				&& (BattleEngine.getInstance().currentSelectionFightY == 1)) {
+			g.drawImage(SpriteLibrary.getImage(ARROW), 184, 270, null);
+		} else if ((BattleEngine.getInstance().currentSelectionFightX == 1)
+				&& (BattleEngine.getInstance().currentSelectionFightY == 0)) {
+			g.drawImage(SpriteLibrary.getImage(ARROW), 329, 240, null);
+		} else if ((BattleEngine.getInstance().currentSelectionFightX == 1)
+				&& (BattleEngine.getInstance().currentSelectionFightY == 1)) {
+			g.drawImage(SpriteLibrary.getImage(ARROW), 329, 270, null);
+		}
+
+		paintPokemonInfo(g);
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Paint friendly & enemy Pokemon information
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	private static void paintPokemonInfo(Graphics g) {
+		PartyMember playerPokemon = BattleEngine.getInstance().playerCurrentPokemon;
+		PartyMember enemyPokemon = BattleEngine.getInstance().enemyPokemon.get(0);
+
 		// player pokemon information
 		g.drawString(playerPokemon.getName(), 300, 175);
 		g.drawString(String.valueOf(playerPokemon.getLevel()), 435, 175);
@@ -279,6 +306,9 @@ public class Painter {
 	// ////////////////////////////////////////////////////////////////////////
 	//
 	// Paint all components of the options screen
+	//
+	// TODO paint options based on current options - adjust images
+	// option sound is only on/off
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	private static void paintOptionScreen(Graphics g, GameController game) {
@@ -326,6 +356,8 @@ public class Painter {
 	// ////////////////////////////////////////////////////////////////////////
 	//
 	// Paint all components of the Trainer Card
+	//
+	// TODO paint badges
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	private static void paintTrainerCard(Graphics g, GamePanel game) {
@@ -392,43 +424,11 @@ public class Painter {
 		if (game.game.getPlayer().getPokemon().size() == 2) {
 			g.drawImage(SpriteLibrary.getImage(partyMember), 190, 20, null);
 		}
-		PokemonList playerPokemon = game.game.getPlayer().getPokemon();
+		Party playerPokemon = game.game.getPlayer().getPokemon();
 		if (playerPokemon.size() > 0) {
 			g.drawImage((playerPokemon.get(0)).getIcon().getImage(), 75, 40, null);
 			g.drawString((playerPokemon.get(0)).getName(), 65, 130);
 		}
-	}
-
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Paint a conversation on the screen as a series of message boxes
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	private static void paintConversation(Graphics g, GameController game) {
-		g.setColor(Color.BLACK);
-		g.drawImage(SpriteLibrary.getImage("MessageBox"), 0, 0, null);
-		g.drawString(game.getCurrentMessage(true), 30, 260);
-	}
-
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// paintMessageBox - utility to print a one line message
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	private static void paintMessageBox(Graphics g, GamePanel game) {
-
-	}
-
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// paintMessageBox - utility to print a two line message
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	public static void paintMessageBox(Graphics g, String line1, String line2) {
-		g.setColor(Color.BLACK);
-		g.drawImage(SpriteLibrary.getImage("MessageBox"), 0, 0, null);
-		g.drawString(line1, 30, 260);
-		g.drawString(line2, 30, 290);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -462,7 +462,7 @@ public class Painter {
 	// ////////////////////////////////////////////////////////////////////////
 	private static void paintWorld(Graphics g, GameController game, Graphics2D g2, AffineTransform at) {
 		g.setColor(Color.BLACK);
-		g2.setClip(new Rectangle(-16, -42, 704, 438));
+		g.setClip(new Rectangle(-16, -42, 704, 438));
 
 		int offsetX = game.getOffsetX();
 		int offsetY = game.getOffsetY();
@@ -473,7 +473,7 @@ public class Painter {
 		int startX = game.getStartX();
 		int startY = game.getStartY();
 
-		g2.translate(offsetX - 32, offsetY - 64);
+		g.translate(offsetX - 32, offsetY - 64);
 
 		for (int layer = 1; layer < 3; layer++) {
 			int x_coor = startX;
@@ -500,7 +500,10 @@ public class Painter {
 					+ startY - 10, null);
 			game.setMapTileAt(curNPC.getPosition(), TileSet.OBSTACLE);
 		}
-		g2.translate(-offsetX, -offsetY);
+
+		// TODO - remove this line and the 2 setTranform lines to start
+		// debugging transition to 20x20 painting
+		g.translate(-offsetX, -offsetY);
 
 		g2.setTransform(at);
 		g.drawImage(player.tData.sprite.getImage(), 224, 118, null);
@@ -527,4 +530,39 @@ public class Painter {
 		g.drawImage(SpriteLibrary.getImage("Title"), 0, 0, null);
 		g.drawImage(SpriteLibrary.getImage("Start"), 0, 260, null);
 	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Paint a conversation on the screen as a series of message boxes
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	private static void paintConversation(Graphics g, GameController game) {
+		g.setColor(Color.BLACK);
+		g.drawImage(SpriteLibrary.getImage("MessageBox"), 0, 0, null);
+		g.drawString(game.getCurrentMessage(true), 30, 260);
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// paintMessageBox - utility to print a one line message
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	private static void paintMessageBox(Graphics g, GameController game) {
+		g.setColor(Color.BLACK);
+		g.drawImage(SpriteLibrary.getImage("MessageBox"), 0, 0, null);
+		g.drawString(game.getCurrentMessage(false), 30, 260);
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// paintMessageBox - utility to print a two line message
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	private static void paintMessageBox(Graphics g, String line1, String line2) {
+		g.setColor(Color.BLACK);
+		g.drawImage(SpriteLibrary.getImage("MessageBox"), 0, 0, null);
+		g.drawString(line1, 30, 260);
+		g.drawString(line2, 30, 290);
+	}
+
 }

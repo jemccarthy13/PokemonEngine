@@ -1,4 +1,4 @@
-package pokedex;
+package party;
 
 import graphics.SpriteLibrary;
 
@@ -11,24 +11,25 @@ import utilities.RandomNumUtils;
 
 // ////////////////////////////////////////////////////////////////////////
 //
-// Pokemon - generated from PokemonData, calculates stats based on a level
+// ParyMember - generated from PokemonData, calculates stats based on a level
 // and holds moves + sprite data
 //
 // ////////////////////////////////////////////////////////////////////////
-public class Pokemon implements Serializable {
+public class PartyMember implements Serializable {
 	private static final long serialVersionUID = 3959217221984077560L;
-	int evolution_stage = 0;
-	int level;
-	boolean participated = false;
-	MoveData[] moves = new MoveData[4];
-	public Integer[] stats = new Integer[7];
-	Integer[] max_stats = new Integer[7];
-	Integer accuracy = Integer.valueOf(100);
-	private int curExp;
-	protected ImageIcon party_icon, back_sprite, front_sprite;
-	public int statusEffect;
 
-	PokemonData pData;
+	private int evolution_stage = 0;
+	private int level;
+	private boolean participated = false;
+	private MoveData[] moves = new MoveData[4];
+	private Integer[] stats = new Integer[7];
+	private Integer[] max_stats = new Integer[7];
+	private Integer accuracy = Integer.valueOf(100);
+	private int curExp;
+	private ImageIcon party_icon, back_sprite, front_sprite;
+	private int statusEffect;
+
+	PartyMemberData pData;
 
 	public static enum STATS {
 		HP, ATTACK, DEFENSE, SP_ATTACK, SP_DEFENSE, SPEED, ACCURACY;
@@ -40,7 +41,7 @@ public class Pokemon implements Serializable {
 	// (stats, evolution stage, moves, sprites)
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public Pokemon(PokemonData pData, int lev) {
+	public PartyMember(PartyMemberData pData, int lev) {
 		this.pData = pData;
 		this.level = lev;
 		for (Integer x : pData.evolution_levels) {
@@ -312,5 +313,21 @@ public class Pokemon implements Serializable {
 	// ////////////////////////////////////////////////////////////////////////
 	public String formatPokedexNumber(int evolutionStage) {
 		return String.format("%03d", Integer.parseInt(this.pData.pokedexNumber) + evolutionStage);
+	}
+
+	public Integer getAccuracy() {
+		return accuracy;
+	}
+
+	public void setAccuracy(Integer accuracy) {
+		this.accuracy = accuracy;
+	}
+
+	public int getStatusEffect() {
+		return statusEffect;
+	}
+
+	public void setStatusEffect(int statusEffect) {
+		this.statusEffect = statusEffect;
 	}
 }

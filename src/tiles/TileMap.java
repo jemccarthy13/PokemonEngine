@@ -3,7 +3,7 @@ package tiles;
 import java.util.ArrayList;
 import java.util.List;
 
-import utilities.Coordinate;
+import model.Coordinate;
 
 // ////////////////////////////////////////////////////////////////////////
 //

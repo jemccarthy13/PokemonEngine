@@ -1,4 +1,4 @@
-package utilities;
+package model;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;

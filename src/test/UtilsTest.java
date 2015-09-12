@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import location.Location;
 import location.LocationLibrary;
-import pokedex.Pokemon;
-import pokedex.PokemonFactory;
+import party.PartyMember;
+import party.PartyMemberFactory;
 import utilities.DebugUtility;
 import utilities.RandomNumUtils;
 
@@ -60,15 +60,15 @@ public class UtilsTest {
 		DebugUtility.printMessage("Random Pokemon (Route 29):");
 		for (int x = 0; x < 10; x++) {
 			DebugUtility.printMessage("-------- " + x + " --------");
-			Pokemon p = PokemonFactory.getInstance().randomPokemon(loc);
+			PartyMember p = PartyMemberFactory.getInstance().randomPokemon(loc);
 			DebugUtility.printMessage(p.toString());
 		}
 
 		DebugUtility.printMessage();
 
-		ArrayList<Pokemon> trainer = new ArrayList<Pokemon>();
+		ArrayList<PartyMember> trainer = new ArrayList<PartyMember>();
 		for (int y = 0; y < 5; y++) {
-			trainer.add(PokemonFactory.getInstance().randomPokemon(loc));
+			trainer.add(PartyMemberFactory.getInstance().randomPokemon(loc));
 		}
 		DebugUtility.printMessage();
 		DebugUtility.printMessage("Trainer's Random Pokemon");

@@ -2,7 +2,7 @@ package graphics;
 
 import java.io.Serializable;
 
-import utilities.Configuration;
+import model.Configuration;
 
 // ////////////////////////////////////////////////////////////////////////
 //

@@ -3,7 +3,7 @@ package driver;
 import java.util.HashMap;
 import java.util.Map;
 
-import utilities.Coordinate;
+import model.Coordinate;
 
 //////////////////////////////////////////////////////////////////////////
 //

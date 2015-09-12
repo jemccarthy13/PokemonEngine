@@ -7,14 +7,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import model.Coordinate;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import pokedex.PokemonFactory;
-import pokedex.PokemonList;
+import party.PartyMemberFactory;
+import party.Party;
 import trainers.Actor.DIR;
-import utilities.Coordinate;
 import utilities.DebugUtility;
 
 //////////////////////////////////////////////////////////////////////////
@@ -101,13 +102,13 @@ public class NPCLibrary extends HashMap<String, Actor> {
 
 				if (td.trainer) {
 					// convert to PokemonList and push to trainerdata
-					PokemonList pList = new PokemonList();
+					Party pList = new Party();
 					Iterator<?> pkmn_it = pkmn_json.iterator();
 					while (pkmn_it.hasNext()) {
 						JSONObject pokemon = (JSONObject) pkmn_it.next();
 						String name = (String) pokemon.get("name");
 						int level = ((Long) pokemon.get("level")).intValue();
-						pList.add(PokemonFactory.createPokemon(name, level));
+						pList.add(PartyMemberFactory.createPokemon(name, level));
 					}
 
 					td.pokemon = pList;

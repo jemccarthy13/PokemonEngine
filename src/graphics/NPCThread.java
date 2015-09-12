@@ -1,9 +1,10 @@
-package utilities;
+package graphics;
 
 import java.io.Serializable;
 
 import trainers.Actor;
 import trainers.NPCLibrary;
+import utilities.RandomNumUtils;
 
 // ////////////////////////////////////////////////////////////////////////////
 //

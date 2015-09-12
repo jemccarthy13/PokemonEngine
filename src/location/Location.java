@@ -29,7 +29,6 @@ public class Location implements Serializable {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public String getName() {
-		// return this.lData.name;
 		return lData.name;
 	}
 

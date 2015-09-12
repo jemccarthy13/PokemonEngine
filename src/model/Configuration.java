@@ -1,11 +1,15 @@
-package utilities;
+package model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-import driver.GameData.SCREEN;
+import model.GameData.SCREEN;
 
-public class Configuration {
+public class Configuration implements Serializable {
+	private static final long serialVersionUID = 3800907360431668204L;
+
 	// ==========Configuration information and game settings=================//
+
 	public static final int MAX_NAME_SIZE = 7;
 	public static final String VERSION = "Metallic Silver";
 	public static final int PLAYER_SPEED_WALK = 80;

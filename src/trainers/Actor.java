@@ -3,9 +3,9 @@ package trainers;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import pokedex.Pokemon;
-import pokedex.PokemonList;
-import utilities.Coordinate;
+import model.Coordinate;
+import party.PartyMember;
+import party.Party;
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -33,7 +33,7 @@ public class Actor implements Serializable {
 		this.tData.name = n;
 		this.tData.position = new Coordinate(x, y);
 		this.tData.money = 2000;
-		this.tData.pokemon = new PokemonList();
+		this.tData.pokemon = new Party();
 		this.tData.sprite_name = sprite_name;
 		setDirection(DIR.SOUTH);
 	}
@@ -55,7 +55,7 @@ public class Actor implements Serializable {
 	// caughtPokemon - add the caught pokemon to the list of pokemon
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public void caughtPokemon(Pokemon p) {
+	public void caughtPokemon(PartyMember p) {
 		this.tData.pokemon.add(p);
 	}
 
@@ -65,7 +65,7 @@ public class Actor implements Serializable {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 
-	public PokemonList getPokemon() {
+	public Party getPokemon() {
 		return this.tData.pokemon;
 	}
 
@@ -147,8 +147,46 @@ public class Actor implements Serializable {
 		this.tData.sprite = this.tData.getSprites().get(direction.ordinal() * 3);
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// get the current direction of this actor
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public DIR getDirection() {
 		return this.tData.dir;
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// face the opposite of any direction
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public void setDirectionOpposite(DIR dir) {
+		switch (dir) {
+		case NORTH:
+			setDirection(DIR.SOUTH);
+			break;
+		case EAST:
+			setDirection(DIR.WEST);
+			break;
+		case WEST:
+			setDirection(DIR.EAST);
+			break;
+		case SOUTH:
+			setDirection(DIR.NORTH);
+			break;
+		default:
+			break;
+		}
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// face opposite of current direction
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public void turnAround() {
+		setDirectionOpposite(getDirection());
 	}
 
 	public int getCurrentX() {
