@@ -1,4 +1,4 @@
-package mapmaker;
+package editors.mapmaker;
 
 public class Camera {
 	static final float floatiness = 0.002F;

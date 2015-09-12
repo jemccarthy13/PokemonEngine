@@ -1,4 +1,4 @@
-package mapmaker;
+package editors.mapmaker;
 
 abstract interface GraphicsBankChangeListener {
 	public abstract void tilesetUpdated(GraphicsBank paramGraphicsBank);

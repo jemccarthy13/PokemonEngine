@@ -1,4 +1,4 @@
-package mapmaker;
+package editors.mapmaker;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
