@@ -75,17 +75,17 @@ public class GameFrame extends JFrame {
 				break;
 			case CONTINUE: // continue screen choice select
 				if (keyCode == KeyEvent.VK_UP) {
-					if (pokemonGame.game.getMenuSelectionNumber() > 0)
-						pokemonGame.game.decrementMenuSelection();
+					if (pokemonGame.game.getCurrentSelection() > 0)
+						pokemonGame.game.decrementSelection();
 				} else if (keyCode == KeyEvent.VK_DOWN) {
-					if (pokemonGame.game.getMenuSelectionNumber() < 2)
-						pokemonGame.game.incrementMenuSelection();
+					if (pokemonGame.game.getCurrentSelection() < 2)
+						pokemonGame.game.incrementSelection();
 				}
 				if (keyCode == KeyEvent.VK_Z) {
 					// remove(pokemonGame);
-					if (pokemonGame.game.getMenuSelectionNumber() == 0) {
+					if (pokemonGame.game.getCurrentSelection() == 0) {
 						pokemonGame.game.startGame(true);
-					} else if (pokemonGame.game.getMenuSelectionNumber() == 1) {
+					} else if (pokemonGame.game.getCurrentSelection() == 1) {
 						pokemonGame.game.startGame(false);
 					}
 					pokemonGame.game.startNewTimer(pokemonGame);
@@ -144,13 +144,21 @@ public class GameFrame extends JFrame {
 					pokemonGame.nameScreen.colSelection++;
 				}
 				break;
+			case POKEMON:
+			case BAG:
+			case SAVE:
+			case OPTION:
+			case POKEDEX:
+			case POKEGEAR:
+			case TRAINERCARD:
+			case MENU:
+				pokemonGame.eventHandler.handleMenuEvent(keyCode);
+				break;
 			default:
 				// otherwise, fire the eventHandler
 				if ((pokemonGame.game.getScreen() != SCREEN.MENU) && (pokemonGame.game.isMovable())
 						&& (!pokemonGame.game.isInBattle()) && (!pokemonGame.game.isPlayerWalking())) {
 					pokemonGame.eventHandler.handleWorldEvent(keyCode);
-				} else if (pokemonGame.game.getScreen() != SCREEN.MENU) {
-					pokemonGame.eventHandler.handleMenuEvent(keyCode);
 				} else if (pokemonGame.game.isInBattle()) {
 					pokemonGame.eventHandler.handleBattleEvent(keyCode);
 				}

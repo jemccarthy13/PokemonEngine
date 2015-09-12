@@ -49,7 +49,7 @@ public class EventHandler implements Serializable {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	void handleBattleEvent(int keyCode) {
-		if (game.game.isInMessage()) {
+		if (game.game.getScreen() == SCREEN.MESSAGE) {
 			if (keyCode == KeyEvent.VK_X || keyCode == KeyEvent.VK_Z) {
 				game.game.setScreen(SCREEN.WORLD);
 				BattleEngine.getInstance().inFight = false;
@@ -246,144 +246,84 @@ public class EventHandler implements Serializable {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	void handleMenuEvent(int keyCode) {
-		if (game.menuScreen.MENU_inConversation) {
-			// exit a conversation
-			if (keyCode == KeyEvent.VK_X) {
-				game.menuScreen.Exit();
+		SCREEN curScreen = game.game.getScreen();
+
+		if (keyCode == KeyEvent.VK_X) {
+			if (curScreen == SCREEN.MENU) {
 				game.game.setScreen(SCREEN.WORLD);
+			} else {
+				game.game.setScreen(SCREEN.MENU);
 			}
-		} else if (game.menuScreen.MENU_inMain) {
+		}
+
+		if (keyCode == KeyEvent.VK_UP) {
+			game.game.decrementSelection();
+		}
+
+		if (keyCode == KeyEvent.VK_DOWN) {
+			game.game.incrementSelection();
+		}
+
+		if (game.game.getScreen() == SCREEN.MENU) {
 			// main pause menu screen
-			if (keyCode == KeyEvent.VK_UP) {
-				if (game.menuScreen.MENU_currentSelectionMain > 0) {
-					game.menuScreen.MENU_currentSelectionMain -= 1;
+			if (keyCode == KeyEvent.VK_Z) {
+				if (game.game.getCurrentSelection() == 0) {
+					game.game.setScreen(SCREEN.POKEDEX);
 				}
-			} else if (keyCode == KeyEvent.VK_DOWN) {
-				if (game.menuScreen.MENU_currentSelectionMain < 7) {
-					game.menuScreen.MENU_currentSelectionMain += 1;
+				if (game.game.getCurrentSelection() == 1) {
+					game.game.setScreen(SCREEN.POKEMON);
 				}
-			} else if (keyCode == KeyEvent.VK_Z) {
-				if (game.menuScreen.MENU_currentSelectionMain == 0) {
-					game.menuScreen.PokeDex();
+				if (game.game.getCurrentSelection() == 2) {
+					game.game.setScreen(SCREEN.BAG);
 				}
-				if (game.menuScreen.MENU_currentSelectionMain == 1) {
-					game.menuScreen.Pokemon();
+				if (game.game.getCurrentSelection() == 3) {
+					game.game.setScreen(SCREEN.POKEGEAR);
 				}
-				if (game.menuScreen.MENU_currentSelectionMain == 2) {
-					game.menuScreen.Bag();
+				if (game.game.getCurrentSelection() == 4) {
+					game.game.setScreen(SCREEN.TRAINERCARD);
 				}
-				if (game.menuScreen.MENU_currentSelectionMain == 3) {
-					game.menuScreen.PokeGear();
+				if (game.game.getCurrentSelection() == 5) {
+					game.game.setScreen(SCREEN.SAVE);
 				}
-				if (game.menuScreen.MENU_currentSelectionMain == 4) {
-					game.menuScreen.TrainerCard();
+				if (game.game.getCurrentSelection() == 6) {
+					game.game.setScreen(SCREEN.OPTION);
 				}
-				if (game.menuScreen.MENU_currentSelectionMain == 5) {
-					game.menuScreen.Save();
-				}
-				if (game.menuScreen.MENU_currentSelectionMain == 6) {
-					game.menuScreen.Option();
-				}
-				if (game.menuScreen.MENU_currentSelectionMain == 7) {
-					game.menuScreen.Exit();
+				if (game.game.getCurrentSelection() == 7) {
 					game.game.setScreen(SCREEN.WORLD);
 				}
-			} else if (keyCode == KeyEvent.VK_X) {
-				game.menuScreen.Exit();
-				game.game.setScreen(SCREEN.WORLD);
 			}
-
-		} else if (game.menuScreen.MENU_inPokeDex) {
-			if (keyCode == KeyEvent.VK_X) {
-				game.menuScreen.MENU_inPokeDex = false;
-				game.menuScreen.MENU_inMain = true;
-			}
-		} else if (game.menuScreen.MENU_inPokemon) {
-			if (keyCode == KeyEvent.VK_X) {
-				game.menuScreen.MENU_inPokemon = false;
-				game.menuScreen.MENU_inMain = true;
-			}
-		} else if (game.menuScreen.MENU_inBag) {
-			if (keyCode == KeyEvent.VK_X) {
-				game.menuScreen.MENU_inBag = false;
-				game.menuScreen.MENU_inMain = true;
-			}
-		} else if (game.menuScreen.MENU_inPokeGear) {
-			if (keyCode == KeyEvent.VK_UP) {
-				if (game.menuScreen.MENU_currentSelectionPokeGear > 0) {
-					game.menuScreen.MENU_currentSelectionPokeGear -= 1;
-				}
-			} else if (keyCode == KeyEvent.VK_DOWN) {
-				if (game.menuScreen.MENU_currentSelectionPokeGear < 3) {
-					game.menuScreen.MENU_currentSelectionPokeGear += 1;
-				}
-			} else if (keyCode == KeyEvent.VK_Z) {
-				if (game.menuScreen.MENU_currentSelectionPokeGear == 0) {
+		} else if (game.game.getScreen() == SCREEN.POKEGEAR) {
+			if (keyCode == KeyEvent.VK_Z) {
+				if (game.game.getCurrentSelection() == 0) {
 					// TODO - add Map painting
 					DebugUtility.printMessage("Map");
-				} else if (game.menuScreen.MENU_currentSelectionPokeGear == 1) {
+				} else if (game.game.getCurrentSelection() == 1) {
 					// TODO - add Radio painting
 					DebugUtility.printMessage("Radio");
-				} else if (game.menuScreen.MENU_currentSelectionPokeGear == 2) {
+				} else if (game.game.getCurrentSelection() == 2) {
 					// TODO - add Phone painting
 					DebugUtility.printMessage("Phone");
-				} else if (game.menuScreen.MENU_currentSelectionPokeGear == 3) {
+				} else if (game.game.getCurrentSelection() == 3) {
 					// TODO - use SCREEN.MENU_* instead
-					game.menuScreen.MENU_currentSelectionPokeGear = 0;
-					game.menuScreen.MENU_inPokeGear = false;
-					game.menuScreen.MENU_inMain = true;
+					game.game.setScreen(SCREEN.MENU);
 				}
-			} else if (keyCode == KeyEvent.VK_X) {
-				game.menuScreen.MENU_inPokeGear = false;
-				game.menuScreen.MENU_inMain = true;
+				game.game.setCurrentSelection(0);
 			}
-		} else if (game.menuScreen.MENU_inTrainerCard) {
-			if (keyCode == KeyEvent.VK_X) {
-				game.menuScreen.MENU_inTrainerCard = false;
-				game.menuScreen.MENU_inMain = true;
-			}
-		} else if (game.menuScreen.MENU_inSave) {
-			if (keyCode == KeyEvent.VK_UP) {
-				game.menuScreen.MENU_currentSelectionSave = 0;
-			} else if (keyCode == KeyEvent.VK_DOWN) {
-				game.menuScreen.MENU_currentSelectionSave = 1;
-			} else if (keyCode == KeyEvent.VK_Z) {
-				if (game.menuScreen.MENU_currentSelectionSave == 0) {
+		} else if (game.game.getScreen() == SCREEN.SAVE) {
+			if (keyCode == KeyEvent.VK_Z) {
+				if (game.game.getCurrentSelection() == 0) {
 					Utils.saveGame(game);
-					game.menuScreen.MENU_inSave = false;
 					game.game.setScreen(SCREEN.MESSAGE);
 					game.messageString = "Game saved successfully!";
 				} else {
-					game.menuScreen.MENU_inSave = false;
-					game.menuScreen.MENU_inMain = true;
+					game.game.setScreen(SCREEN.MENU);
 				}
-			} else if (keyCode == KeyEvent.VK_X) {
-				game.menuScreen.MENU_inSave = false;
-				game.menuScreen.MENU_inMain = true;
 			}
-		} else if (game.game.isInMessage()) {
-			if (keyCode == KeyEvent.VK_X) {
-				game.messageString = "";
-				game.menuScreen.MENU_inSave = false;
-				game.menuScreen.MENU_inMain = false;
-				game.game.setScreen(SCREEN.WORLD);
-			}
-		} else if (game.menuScreen.MENU_inOption) {
-			if (keyCode == KeyEvent.VK_UP) {
-				if (game.menuScreen.MENU_currentSelectionOption > 0) {
-					game.menuScreen.MENU_currentSelectionOption -= 1;
-				}
-			} else if (keyCode == KeyEvent.VK_DOWN) {
-				if (game.menuScreen.MENU_currentSelectionOption < 5) {
-					game.menuScreen.MENU_currentSelectionOption += 1;
-				}
-			} else if (keyCode == KeyEvent.VK_Z) {
-				if (game.menuScreen.MENU_currentSelectionOption == 5) {
+		} else if (game.game.getScreen() == SCREEN.OPTION) {
+			if (keyCode == KeyEvent.VK_Z) {
+				if (game.game.getCurrentSelection() == 5) {
 					game.game.toggleSound();
 				}
-			} else if (keyCode == KeyEvent.VK_X) {
-				game.menuScreen.MENU_inOption = false;
-				game.menuScreen.MENU_inMain = true;
 			}
 		}
 
@@ -436,11 +376,9 @@ public class EventHandler implements Serializable {
 			}
 		} else if (keyCode == KeyEvent.VK_ENTER) {
 			game.game.playClip(AudioLibrary.SE_MENU);
-			game.menuScreen.MENU_inMain = true;
 			game.game.setScreen(SCREEN.MENU);
 		} else if (keyCode == KeyEvent.VK_Z) {
 			game.game.playClip(AudioLibrary.SE_SELECT);
-			Actor borderNPC = null;
 			// overhead cost for following logic
 			Player player = game.game.getPlayer();
 			DIR playerDir = player.getDirection();
@@ -452,28 +390,28 @@ public class EventHandler implements Serializable {
 				if (playerDir == DIR.WEST) {
 					if ((playerCurX - 1 == NPC_X) && (playerCurY == NPC_Y)) {
 						curNPC.setDirection(DIR.EAST);
-						borderNPC = curNPC;
+						game.game.setCurNPC(curNPC);
 					}
 				} else if (playerDir == DIR.NORTH) {
 					if ((playerCurX == NPC_X) && (playerCurY == NPC_Y + 1)) {
 						curNPC.setDirection(DIR.SOUTH);
-						borderNPC = curNPC;
+						game.game.setCurNPC(curNPC);
 					}
 				} else if (playerDir == DIR.EAST) {
 					if ((playerCurX == NPC_X - 1) && (playerCurY == NPC_Y)) {
 						curNPC.setDirection(DIR.WEST);
-						borderNPC = curNPC;
+						game.game.setCurNPC(curNPC);
 					}
 				} else if (playerDir == DIR.SOUTH) {
 					if ((playerCurX == NPC_X) && (playerCurY == NPC_Y - 1)) {
 						curNPC.setDirection(DIR.NORTH);
-						borderNPC = curNPC;
+						game.game.setCurNPC(curNPC);
 					}
 				}
 			}
-			if (borderNPC != null) {
-				game.game.setScreen(SCREEN.MENU);
-				game.menuScreen.Message(borderNPC);
+			if (game.game.getCurNPC() != null) {
+				game.game.setScreen(SCREEN.MESSAGE);
+				game.game.getCurNPC().setStationary(true);
 			}
 		}
 	}

@@ -1,6 +1,5 @@
 package driver;
 
-import graphics.MenuScene;
 import graphics.NameScene;
 import graphics.Painter;
 
@@ -14,7 +13,6 @@ import javax.swing.JPanel;
 
 import pokedex.Pokemon;
 import pokedex.Pokemon.STATS;
-import pokedex.PokemonFactory;
 import pokedex.PokemonList;
 import tiles.TileSet;
 import trainers.Actor;
@@ -25,6 +23,7 @@ import utilities.BattleEngine;
 import utilities.Coordinate;
 import utilities.DebugUtility;
 import utilities.RandomNumUtils;
+import driver.GameData.SCREEN;
 
 // ////////////////////////////////////////////////////////////////////////
 //
@@ -36,19 +35,18 @@ public class GamePanel extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 5951510422984321057L;
 
-	// ================= Movement control variables =========================//
-	private int movespritepixels = 0; // movement (animation) counter
-	boolean rightFoot = false; // animation flag
+	// ================== Display control variables =========================//
+	private int animationStep = 0; // movement (animation) counter
+	private boolean isRightFoot = false; // animation flag
+	public String messageString;
 
 	// ===================== Graphics Logic Controllers =====================//
-	public MenuScene menuScreen;
 	public NameScene nameScreen;
 	public EventHandler eventHandler;
-	// ======================== Game logic Data =============================//
-	public GameController game = new GameController();
-	public PokemonList enemyPkmn = new PokemonList();
 
-	public String messageString;
+	// ===================== Game logic controller ==========================//
+
+	public GameController game = new GameController();
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
@@ -62,7 +60,6 @@ public class GamePanel extends JPanel implements ActionListener {
 	// ////////////////////////////////////////////////////////////////////////
 	public GamePanel() {
 		eventHandler = new EventHandler(this);
-		menuScreen = new MenuScene();
 		nameScreen = new NameScene();
 
 		try {
@@ -87,9 +84,9 @@ public class GamePanel extends JPanel implements ActionListener {
 
 		game.updateTime();
 
-		if (game.isInBattle() && !game.isInMessage()) {
+		if (game.isInBattle() && game.getScreen() != SCREEN.MESSAGE) {
 			if (BattleEngine.getInstance().playerCurrentPokemon.getStat(STATS.HP) <= 0) {
-				// TODO - check for other todo switch pokemon
+				// TODO - player switch pokemon
 				BattleEngine.getInstance().playerSwitchPokemon();
 			}
 			if (BattleEngine.getInstance().enemyPokemon.get(0).getStat(STATS.HP) <= 0) {
@@ -99,7 +96,7 @@ public class GamePanel extends JPanel implements ActionListener {
 			if (!BattleEngine.getInstance().playerTurn) {
 				BattleEngine.getInstance().enemyTurn();
 			}
-		} else if (!game.isMenuDisplayed()) {
+		} else if (game.getScreen() == SCREEN.WORLD) {
 			handleMovement();
 		}
 	}
@@ -117,12 +114,12 @@ public class GamePanel extends JPanel implements ActionListener {
 		Coordinate playerPos = player.tData.position;
 
 		if (game.isPlayerWalking()) { // take care of walking animation
-			// graphics logic
-			movespritepixels += 1;
+			// as the gameTimer increments,
+			animationStep += 1;
 			game.setOffsetY(playerDir);
 			game.setOffsetX(playerDir);
 
-			player.changeSprite(movespritepixels, rightFoot);
+			player.changeSprite(animationStep, isRightFoot);
 		}
 
 		// check for teleport at location
@@ -130,18 +127,16 @@ public class GamePanel extends JPanel implements ActionListener {
 		// when walking animation is done, handle poison damage
 		if (game.isTeleportTile(playerPos)) {
 			game.doTeleport(playerPos);
-		} else if (movespritepixels >= 16) {
-			movespritepixels = 0; // reset animation counter
+		} else if (animationStep >= 16) {
+			animationStep = 0; // reset animation counter
 			game.setPlayerWalking(false); // player is no longer in animation
-			rightFoot = (!rightFoot);
+			isRightFoot = (!isRightFoot);
 			if (game.canMoveInDir(playerDir)) {
 				player.move(playerDir);
 				// check for wild encounter
 				if (game.isBattleTile(player.getPosition())) {
 					if (RandomNumUtils.isWildEncounter()) {
-						enemyPkmn.clear();
-						enemyPkmn.add(PokemonFactory.getInstance().randomPokemon(player.getCurLoc()));
-						BattleEngine.getInstance().fight(enemyPkmn, this, null);
+						game.doWildEncounter();
 					}
 				}
 			}
@@ -157,7 +152,7 @@ public class GamePanel extends JPanel implements ActionListener {
 				game.stopNPCMovement();
 				enemyTrainerAnimation(curNPC);
 				game.playBackgroundMusic("TrainerBattle");
-				BattleEngine.getInstance().fight(curNPC.getPokemon(), this, curNPC.getName());
+				game.doEncounter(curNPC.getPokemon(), curNPC.getName());
 			} else {
 				game.setMovable(true);
 			}

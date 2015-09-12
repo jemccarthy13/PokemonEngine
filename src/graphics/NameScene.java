@@ -2,7 +2,7 @@ package graphics;
 
 import java.io.Serializable;
 
-import driver.Configuration;
+import utilities.Configuration;
 
 // ////////////////////////////////////////////////////////////////////////
 //

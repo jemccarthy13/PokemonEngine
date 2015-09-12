@@ -1,11 +1,15 @@
 package driver;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 import javax.swing.Timer;
 
+import pokedex.PokemonList;
 import tiles.TileMap;
+import trainers.Actor;
 import trainers.Player;
+import utilities.Configuration;
 import utilities.RandomNumUtils;
 import utilities.TimeStruct;
 
@@ -34,9 +38,14 @@ public class GameData implements Serializable {
 
 	// ==================== Game Data Control ==============================//
 
+	public Actor curNPC;
 	public Player player;
 	public String messageString;
+	public int messageStage;
 	public int id = RandomNumUtils.createTrainerID();
+	public PokemonList wildPokemon = new PokemonList();
+
+	public HashMap<SCREEN, Integer> currentSelection = new HashMap<SCREEN, Integer>();
 
 	// Timing Data
 	public TimeStruct gameTimeStruct = new TimeStruct();
@@ -46,28 +55,23 @@ public class GameData implements Serializable {
 	public int map_width;
 	public int map_height;
 
+	// ====================== Graphics control variables ===================//
+	public enum SCREEN {
+		WORLD, MENU, INTRO, NAME, TITLE, CONTINUE, MESSAGE, BATTLE, BATTLE_FIGHT, BATTLE_MESSAGE, POKEDEX, POKEMON, BAG, POKEGEAR, TRAINERCARD, SAVE, OPTION;
+	}
+
+	public SCREEN screen = SCREEN.TITLE;
+
+	public int introStage = 1;
+	public int offsetX = 0, offsetY = 0; // painting variables
+	public int start_coorX, start_coorY; // teleportation graphics variables
+
 	// ////////////////////////
 	public int[][] imageMap = new int[3][21400];
 	public TileMap tileMap = new TileMap();
 	// ======================= Battle information ==========================//
 	public boolean inBattle = false;
 	public boolean playerWin = false;
-
-	// ====================== Graphics control variables ===================//
-	public enum SCREEN {
-		WORLD, MENU, INTRO, NAME, TITLE, CONTINUE, MESSAGE, BATTLE, BATTLE_FIGHT, BATTLE_MESSAGE;
-	}
-
-	public SCREEN screen = SCREEN.TITLE;
-
-	public boolean inMenu = false;
-	public boolean inMessage;
-
-	public int introStage = 1;
-
-	public int offsetX = 0, offsetY = 0; // painting variables
-	public int start_coorX, start_coorY; // teleportation graphics variables
-	public int menuSelection = 0;
 
 	// ==================== Setting options variables ======================//
 

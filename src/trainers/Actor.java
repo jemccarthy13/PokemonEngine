@@ -87,22 +87,9 @@ public class Actor implements Serializable {
 
 		int direction = 3 * getDirection().ordinal();
 
-		if ((pixels >= 0) && (pixels < 4)) {
-			tData.sprite = (tData.getSprites().get(direction));
-		} else if ((pixels > 4) && (pixels < 8)) {
-			tData.sprite = (tData.getSprites().get(direction));
-		} else if ((pixels > 8) && (pixels < 12)) {
-			if (!rightFoot) {
-				tData.sprite = (tData.getSprites().get(direction + 1));
-			} else {
-				tData.sprite = (tData.getSprites().get(direction + 2));
-			}
-		} else if ((pixels >= 12) && (pixels < 15)) {
-			if (!rightFoot) {
-				tData.sprite = (tData.getSprites().get(direction + 1));
-			} else {
-				tData.sprite = (tData.getSprites().get(direction + 2));
-			}
+		if (pixels > 8 && pixels < 15) {
+			int offset = (rightFoot) ? 2 : 1;
+			tData.sprite = (tData.getSprites().get(direction + offset));
 		} else {
 			tData.sprite = (tData.getSprites().get(direction));
 		}

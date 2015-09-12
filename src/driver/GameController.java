@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +18,7 @@ import javax.swing.Timer;
 import location.LocationLibrary;
 import pokedex.Pokemon;
 import pokedex.PokemonFactory;
+import pokedex.PokemonList;
 import tiles.ObstacleTile;
 import tiles.Tile;
 import tiles.TileSet;
@@ -24,6 +26,8 @@ import tiles.WildTile;
 import trainers.Actor;
 import trainers.Actor.DIR;
 import trainers.Player;
+import utilities.BattleEngine;
+import utilities.Configuration;
 import utilities.Coordinate;
 import utilities.DebugUtility;
 import utilities.NPCThread;
@@ -31,15 +35,20 @@ import utilities.Utils;
 import audio.AudioLibrary;
 import driver.GameData.SCREEN;
 
-public class GameController {
+public class GameController implements Serializable {
+
+	private static final long serialVersionUID = 968834933407220662L;
+
 	// main game logic
 	private GameData gData;
+	private Configuration config = new Configuration();
 
 	// NPC random movement controller
 	public NPCThread npcs = new NPCThread();
 
 	GameController() {
 		gData = new GameData();
+
 	}
 
 	boolean isNoClip() {
@@ -140,7 +149,6 @@ public class GameController {
 
 		// get out of any menus
 		gData.screen = SCREEN.WORLD;
-		gData.inMenu = false;
 
 		npcs.start();
 
@@ -231,7 +239,7 @@ public class GameController {
 
 		// intialize file reader
 		BufferedReader bReader = new BufferedReader(new InputStreamReader(
-				GameController.class.getResourceAsStream(Configuration.MAP_TO_LOAD)));
+				GameController.class.getResourceAsStream(config.MAP_TO_LOAD)));
 		SynchronizedReader reader = new SynchronizedReader(bReader);
 		String line = reader.readLine();
 		StringTokenizer tokens = new StringTokenizer(line);
@@ -383,7 +391,7 @@ public class GameController {
 
 	public void playClip(String clipToPlay) {
 		if (gData.option_sound) {
-			AudioLibrary.getInstance().playClip(AudioLibrary.SE_COLLISION);
+			AudioLibrary.getInstance().playClip(clipToPlay);
 		}
 	}
 
@@ -409,15 +417,6 @@ public class GameController {
 
 	public boolean isInBattle() {
 		return gData.inBattle;
-	}
-
-	public boolean isInMessage() {
-		return gData.inMessage;
-	}
-
-	public boolean isMenuDisplayed() {
-		return (gData.screen == SCREEN.TITLE) || (gData.screen == SCREEN.INTRO) || (gData.screen == SCREEN.NAME)
-				|| gData.inMenu || (gData.screen == SCREEN.CONTINUE);
 	}
 
 	public void setOffsetY(DIR playerDir) {
@@ -480,8 +479,12 @@ public class GameController {
 	}
 
 	public boolean validEncounterConditions(Actor npc) {
-		return npc.isTrainer() && !isPlayerWalking() && doBattles()
-				&& !getPlayer().beatenTrainers.contains(npc.getName()) && npcSeesPlayer(npc) && !gData.inMenu;
+		boolean isValid = false;
+		if (getScreen() == SCREEN.WORLD) {
+			isValid = npc.isTrainer() && !isPlayerWalking() && doBattles()
+					&& !getPlayer().beatenTrainers.contains(npc.getName()) && npcSeesPlayer(npc);
+		}
+		return isValid;
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -504,17 +507,15 @@ public class GameController {
 		DIR NPC_DIR = curNPC.getDirection();
 
 		return (((playerCurX == curNPC.getCurrentX()) && (((playerCurY < NPC_Y)
-				&& (NPC_Y - playerCurY <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.NORTH)) || ((playerCurY > NPC_Y)
-				&& (playerCurY - NPC_Y <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.SOUTH)))) || ((playerCurY == NPC_Y) && (((playerCurX < NPC_X)
-				&& (NPC_X - playerCurX <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.WEST)) || ((playerCurX > NPC_X)
-				&& (playerCurX - NPC_X <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.EAST)))));
+				&& (NPC_Y - playerCurY <= config.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.NORTH)) || ((playerCurY > NPC_Y)
+				&& (playerCurY - NPC_Y <= config.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.SOUTH)))) || ((playerCurY == NPC_Y) && (((playerCurX < NPC_X)
+				&& (NPC_X - playerCurX <= config.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.WEST)) || ((playerCurX > NPC_X)
+				&& (playerCurX - NPC_X <= config.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.EAST)))));
 	}
 
 	public void resetMenuLogic() {
 		gData.screen = SCREEN.WORLD;
 		gData.inBattle = false;
-		gData.inMenu = false;
-		gData.inMessage = false;
 		gData.introStage = 1;
 	}
 
@@ -522,8 +523,42 @@ public class GameController {
 		return gData.option_sound;
 	}
 
-	public int getMenuSelectionNumber() {
-		return gData.menuSelection;
+	public int getCurrentSelection() {
+		SCREEN curScreen = getScreen();
+		if (!gData.currentSelection.containsKey(curScreen)) {
+			setCurrentSelection(0);
+		}
+		return gData.currentSelection.get(curScreen);
+	}
+
+	public void setCurrentSelection(int i) {
+		if (gData.currentSelection.containsKey(getScreen())) {
+			gData.currentSelection.replace(getScreen(), i);
+		} else {
+			gData.currentSelection.put(getScreen(), 0);
+		}
+	}
+
+	public void decrementSelection() {
+		if (gData.currentSelection.containsKey(getScreen())) {
+			int curSel = gData.currentSelection.get(getScreen());
+			if (getCurrentSelection() > 0 && getScreen() != SCREEN.WORLD) {
+				setCurrentSelection(curSel - 1);
+			}
+		} else {
+			setCurrentSelection(0);
+		}
+	}
+
+	public void incrementSelection() {
+		if (gData.currentSelection.containsKey(getScreen())) {
+			int curSel = gData.currentSelection.get(getScreen());
+			if (getCurrentSelection() < config.numSelections.get(getScreen()) - 1) {
+				setCurrentSelection(curSel + 1);
+			}
+		} else {
+			setCurrentSelection(1);
+		}
 	}
 
 	public boolean isInNameScreen() {
@@ -547,14 +582,6 @@ public class GameController {
 		}
 	}
 
-	public void decrementMenuSelection() {
-		gData.menuSelection -= 1;
-	}
-
-	public void incrementMenuSelection() {
-		gData.menuSelection += 1;
-	}
-
 	public void setPlayerWin(boolean b) {
 		gData.playerWin = false;
 	}
@@ -571,4 +598,39 @@ public class GameController {
 	public void initialize() {
 		gData = new GameData();
 	}
+
+	public void doWildEncounter() {
+		gData.wildPokemon.clear();
+		gData.wildPokemon.add(PokemonFactory.getInstance().randomPokemon(getPlayer().getCurLoc()));
+		BattleEngine.getInstance().fight(gData.wildPokemon, this, null);
+	}
+
+	public void doEncounter(PokemonList pokemon, String name) {
+		BattleEngine.getInstance().fight(pokemon, this, name);
+	}
+
+	public int getMessageStage() {
+		return gData.messageStage;
+	}
+
+	public Actor getCurNPC() {
+		return gData.curNPC;
+	}
+
+	public void setCurNPC(Actor npc) {
+		gData.curNPC = npc;
+	}
+
+	public void exitMenu() {
+		getCurNPC().setStationary(false);
+		setScreen(SCREEN.WORLD);
+	}
+
+	public String getCurrentMessage(boolean npc) {
+		if (npc)
+			return getCurNPC().getText(getMessageStage());
+		else
+			return "";
+	}
+
 }

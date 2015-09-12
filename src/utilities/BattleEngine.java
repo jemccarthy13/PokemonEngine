@@ -8,8 +8,8 @@ import pokedex.Pokemon.STATS;
 import pokedex.PokemonList;
 import trainers.Actor.DIR;
 import audio.AudioLibrary;
+import driver.GameController;
 import driver.GameData.SCREEN;
-import driver.GamePanel;
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -23,7 +23,7 @@ import driver.GamePanel;
 public class BattleEngine {
 	private static BattleEngine m_instance = new BattleEngine();
 
-	private GamePanel game = null;
+	private GameController game = null;
 	public boolean playerTurn = false;
 	// public boolean inMain = true;
 	public boolean inFight = false;
@@ -57,20 +57,20 @@ public class BattleEngine {
 	// Pokemon above 0 health
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public void fight(PokemonList enemyPkmn, GamePanel g, String opponentName) {
+	public void fight(PokemonList enemyPkmn, GameController g, String opponentName) {
+		game = g;
 		m_instance.currentSelectionMainX = 0;
 		m_instance.currentSelectionFightX = 0;
 		m_instance.currentSelectionMainY = 0;
 		m_instance.currentSelectionFightY = 0;
-		m_instance.game = g;
-		m_instance.playerCurrentPokemon = g.game.getPlayer().getPokemon().get(0);
+		m_instance.playerCurrentPokemon = game.getPlayer().getPokemon().get(0);
 		m_instance.playerCurrentPokemon.setParticipated();
 		m_instance.enemyPokemon = enemyPkmn;
 		m_instance.playerTurn = true;
 		m_instance.enemyName = opponentName;
 
-		m_instance.game.game.setMovable(false);
-		m_instance.game.game.setScreen(SCREEN.BATTLE);
+		game.setMovable(false);
+		game.setScreen(SCREEN.BATTLE);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -103,7 +103,7 @@ public class BattleEngine {
 	// ////////////////////////////////////////////////////////////////////////
 	public void playerSwitchPokemon() {
 		boolean loss = true;
-		for (Pokemon p : game.game.getPlayer().getPokemon()) {
+		for (Pokemon p : game.getPlayer().getPokemon()) {
 			if (p.getStat(STATS.HP) > 0) {
 				loss = false;
 			}
@@ -126,8 +126,8 @@ public class BattleEngine {
 	// ////////////////////////////////////////////////////////////////////////
 	public void giveEXP() {
 		int s = 0;
-		for (int x = 0; x < game.game.getPlayer().getPokemon().size(); x++) {
-			if (((Pokemon) game.game.getPlayer().getPokemon().get(x)).hasParticipated()) {
+		for (int x = 0; x < game.getPlayer().getPokemon().size(); x++) {
+			if (((Pokemon) game.getPlayer().getPokemon().get(x)).hasParticipated()) {
 				s++;
 			}
 		}
@@ -143,7 +143,7 @@ public class BattleEngine {
 		if (enemyName == null) {
 			((Pokemon) this.enemyPokemon.get(0)).statusEffect = 0;
 
-			game.game.setScreen(SCREEN.WORLD);
+			game.setScreen(SCREEN.WORLD);
 			// TODO - convert to message box
 			DebugUtility.printMessage("Got away safely!");
 		}
@@ -158,13 +158,13 @@ public class BattleEngine {
 		giveEXP();
 
 		// reset logic
-		game.game.setPlayerWin(false);
-		game.game.setMovable(false);
+		game.setPlayerWin(false);
+		game.setMovable(false);
 		inFight = false;
-		game.game.setScreen(SCREEN.BATTLE_MESSAGE);
-		game.game.setMessage("Player won!");
+		game.setScreen(SCREEN.BATTLE_MESSAGE);
+		game.setMessage("Player won!");
 
-		game.game.getPlayer().beatenTrainers.add(enemyName);
+		game.getPlayer().beatenTrainers.add(enemyName);
 
 		((Pokemon) this.enemyPokemon.get(0)).statusEffect = 0;
 
@@ -184,12 +184,12 @@ public class BattleEngine {
 		((Pokemon) this.enemyPokemon.get(0)).statusEffect = 0;
 		// TODO - convert to message box
 		DebugUtility.printMessage("Player Pokemon has fainted");
-		DebugUtility.printMessage(game.game.getPlayer().getName() + " is all out of usable Pokemon!");
-		DebugUtility.printMessage(game.game.getPlayer().getName() + " whited out.");
+		DebugUtility.printMessage(game.getPlayer().getName() + " is all out of usable Pokemon!");
+		DebugUtility.printMessage(game.getPlayer().getName() + " whited out.");
 
-		game.game.setPlayerDirection(DIR.SOUTH);
-		game.game.getPlayer().getPokemon().get(0).heal(-1);
-		game.game.setScreen(SCREEN.WORLD);
+		game.setPlayerDirection(DIR.SOUTH);
+		game.getPlayer().getPokemon().get(0).heal(-1);
+		game.setScreen(SCREEN.WORLD);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -249,7 +249,7 @@ public class BattleEngine {
 								* RandomNumUtils.generateRandom(85, 100) / 100.0);
 					}
 					this.playerCurrentPokemon.doDamage(damage);
-					game.game.playClip(AudioLibrary.SE_DAMAGE);
+					game.playClip(AudioLibrary.SE_DAMAGE);
 					// TODO - convert to message box
 					DebugUtility.printMessage("Enemy's turn is over");
 					chosen.movePP--;
@@ -281,16 +281,16 @@ public class BattleEngine {
 					// TODO implement stat damage types
 				}
 				chosen.movePP--;
-				game.game.playClip(AudioLibrary.SE_SELECT);
+				game.playClip(AudioLibrary.SE_SELECT);
 			}
 			if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 2) {
-				game.game.playClip(AudioLibrary.SE_DAMAGE);
+				game.playClip(AudioLibrary.SE_DAMAGE);
 				// TODO convert to message box
 				DebugUtility
 						.printMessage(((Pokemon) this.enemyPokemon.get(0)).getName() + " has been hurt by its burn");
 			}
 			if (((Pokemon) this.enemyPokemon.get(0)).statusEffect == 3) {
-				game.game.playClip(AudioLibrary.SE_DAMAGE);
+				game.playClip(AudioLibrary.SE_DAMAGE);
 				// TODO convert to message box
 				DebugUtility.printMessage(((Pokemon) this.enemyPokemon.get(0)).getName()
 						+ " has been hurt by its poison");
