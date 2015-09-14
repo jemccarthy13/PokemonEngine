@@ -64,10 +64,115 @@ public class GameController implements Serializable {
 
 	// NPC random movement controller
 	private NPCThread npcs = new NPCThread();
+	// name that and shrinks dynamically according to user's choices
+	private StringBuilder buildName = new StringBuilder();
+
+	// char selection information
+	private int rowSelection = 0;
+	private int colSelection = 0;
+
+	// the name screen layout makes it easer to get selected characters
+	private char[][] charArray = { { 'A', 'B', 'C', 'D', 'E', 'F' }, { 'G', 'H', 'I', 'J', 'K', 'L' },
+			{ 'M', 'N', 'O', 'P', 'Q', 'R' }, { 'S', 'T', 'U', 'V', 'W', 'X' }, { 'Y', 'Z', ' ', '!', '?', '.' } };
+
+	// the name of the object to be named
+	private String toBeNamed;
 
 	public GameController() {
 		gData = new GameData();
 
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Sets the toBeNamed object. Used for graphics painting
+	// to get the sprite of the thing to be named.
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public void setToBeNamed(String tbn) {
+		toBeNamed = tbn;
+	}
+
+	public void decrRowSelection() {
+		rowSelection--;
+	}
+
+	public void incrColSelection() {
+		colSelection++;
+	}
+
+	public void decrColSelection() {
+		colSelection--;
+	}
+
+	public void setColSelection(int i) {
+		colSelection = i;
+	}
+
+	public void setRowSelection(int i) {
+		rowSelection = i;
+	}
+
+	public int getRowSelection() {
+		return rowSelection;
+	}
+
+	public int getColSelection() {
+		return rowSelection;
+	}
+
+	public void incrRowSelection() {
+		rowSelection++;
+	}
+
+	public void inrColSelection() {
+		colSelection++;
+	}
+
+	public String getToBeNamed() {
+		return toBeNamed;
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Add the selected character to the name builder
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public void addSelectedChar() {
+		if (buildName.length() < Configuration.MAX_NAME_SIZE) {
+			buildName.append(charArray[rowSelection][colSelection]);
+		}
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Retrieve the name built by the user in the current session
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public String getChosenName() {
+		return buildName.toString();
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Removes a char from the string in the proccess of being built
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public void removeChar() {
+		int size = buildName.length();
+		if (size > 0) {
+			buildName.deleteCharAt(size - 1);
+		}
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Resets the string builder (clear all chars)
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public void reset() {
+		int size = buildName.length();
+		buildName.delete(0, size);
 	}
 
 	// ////////////////////////// GRAPHICS CONTROL LOGIC ///////////////////////
@@ -90,7 +195,6 @@ public class GameController implements Serializable {
 	}
 
 	public void addMapImageAt(int x, int y, int parseInt) {
-
 		List<Integer> layer = null;
 		// set up a new layer if it doesn't exist
 		try {

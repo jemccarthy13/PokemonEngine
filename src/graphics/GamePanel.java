@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 
 import javax.swing.JPanel;
 
@@ -22,8 +21,6 @@ import trainers.Player;
 import utilities.BattleEngine;
 import utilities.DebugUtility;
 import utilities.RandomNumUtils;
-import audio.AudioLibrary.SOUND_EFFECT;
-import controller.EventController;
 import controller.GameController;
 import controller.GameKeyListener;
 
@@ -40,12 +37,7 @@ public class GamePanel extends JPanel implements ActionListener {
 	// ================== Display control variables =========================//
 	private int animationStep = 0; // movement (animation) counter
 	private boolean isRightFoot = false; // animation flag
-	public String messageString;
-
-	// ===================== Graphics Logic Controllers =====================//
-
-	public NameScene nameScreen;
-	public EventController eventHandler;
+	public String displayMessage;
 
 	// ===================== Game logic controller ==========================//
 
@@ -68,14 +60,11 @@ public class GamePanel extends JPanel implements ActionListener {
 			DebugUtility.error("Unable to load map.");
 		}
 
-		addKeyListener(kListener);
-		eventHandler = new EventController(this);
+		addKeyListener(new GameKeyListener(game));
 
 		DebugUtility.printHeader("Event Registration");
 		DebugUtility.printMessage("Added event handler.");
 		DebugUtility.printMessage("Registered for events.");
-
-		nameScreen = new NameScene();
 
 		setBackground(Color.BLACK);
 		setPreferredSize(new Dimension(480, 320));
@@ -83,121 +72,6 @@ public class GamePanel extends JPanel implements ActionListener {
 		DebugUtility.printMessage("Playing title music...");
 		game.playBackgroundMusic("Title");
 	}
-
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// KeyListener override - the heart of the game driver
-	//
-	// Each menu / screen has buttons mapped to events
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	GameKeyListener kListener = new GameKeyListener() {
-		private static final long serialVersionUID = 433796777156267003L;
-
-		public void keyPressed(KeyEvent e) {
-			int keyCode = e.getKeyCode();
-			switch (game.getScreen()) {
-			case TITLE: // title screen "press enter"
-				if (keyCode == KeyEvent.VK_ENTER) {
-					game.playBackgroundMusic("Continue");
-					game.setScreen(SCREEN.CONTINUE);
-				}
-				break;
-			case CONTINUE: // continue screen choice select
-				if (keyCode == KeyEvent.VK_UP) {
-					if (game.getCurrentSelection() > 0)
-						game.decrementSelection();
-				} else if (keyCode == KeyEvent.VK_DOWN) {
-					if (game.getCurrentSelection() < 2)
-						game.incrementSelection();
-				}
-				if (keyCode == KeyEvent.VK_Z) {
-					if (game.getCurrentSelection() == 0) {
-						game.startGame(true);
-					} else if (game.getCurrentSelection() == 1) {
-						game.startGame(false);
-					}
-					repaint();
-					validate();
-				}
-				game.playClip(SOUND_EFFECT.SELECT);
-				break;
-			case INTRO: // intro screen, advance oak's text
-				if (keyCode == KeyEvent.VK_Z) {
-					game.incrIntroStage();
-					if (game.getIntroStage() > NPCLibrary.getInstance().get("Professor Oak").getTextLength() - 1) {
-						game.playBackgroundMusic("NewBarkTown");
-						game.setScreen(SCREEN.WORLD);
-					} else if (game.getIntroStage() == 15) {
-						game.setScreen(SCREEN.NAME);
-						nameScreen.setToBeNamed("PLAYER");
-					}
-				}
-				break;
-			case NAME:// name screen, add or remove chars
-				if (keyCode == KeyEvent.VK_X)
-					nameScreen.removeChar();
-				if ((keyCode == KeyEvent.VK_Z)) {
-					if (nameScreen.rowSelection == 5) {
-						// check for end or del
-						if (nameScreen.colSelection == 1 && nameScreen.getChosenName().length() > 0) {
-							game.getPlayer().setName(nameScreen.getChosenName());
-							nameScreen.reset();
-							game.setScreen(SCREEN.INTRO);
-						} else if (nameScreen.colSelection == 0)
-							nameScreen.removeChar();
-					} else {
-						nameScreen.addSelectedChar();
-					}
-				}
-				if (keyCode == KeyEvent.VK_DOWN && nameScreen.rowSelection < 5) {
-					nameScreen.rowSelection++;
-					if (nameScreen.rowSelection == 5 && nameScreen.colSelection < 3)
-						nameScreen.colSelection = 0;
-					if (nameScreen.rowSelection == 5 && nameScreen.colSelection >= 3)
-						nameScreen.colSelection = 1;
-				} else if (keyCode == KeyEvent.VK_UP && nameScreen.rowSelection > 0) {
-					nameScreen.rowSelection--;
-				} else if (keyCode == KeyEvent.VK_LEFT && nameScreen.colSelection > 0) {
-					nameScreen.colSelection--;
-				} else if (keyCode == KeyEvent.VK_RIGHT && nameScreen.rowSelection == 5 && nameScreen.colSelection < 1) {
-					nameScreen.colSelection++;
-				} else if (keyCode == KeyEvent.VK_RIGHT && nameScreen.rowSelection < 5 && nameScreen.colSelection < 5) {
-					nameScreen.colSelection++;
-				}
-				break;
-			case POKEMON:
-			case BAG:
-			case SAVE:
-			case OPTION:
-			case POKEDEX:
-			case POKEGEAR:
-			case TRAINERCARD:
-			case MENU:
-				eventHandler.handleMenuEvent(keyCode);
-				break;
-			case BATTLE:
-			case BATTLE_FIGHT:
-			case BATTLE_MESSAGE:
-				eventHandler.handleBattleEvent(keyCode);
-				break;
-			case MESSAGE:
-				eventHandler.handleMessageEvent(keyCode);
-				break;
-			default:
-				// otherwise, fire the eventHandler
-				if (game.isMovable() && !game.isInBattle() && !game.isPlayerWalking()) {
-					eventHandler.handleWorldEvent(keyCode);
-				}
-			}
-			repaint();
-			validate();
-		}
-
-		public void keyReleased(KeyEvent e) {}
-
-		public void keyTyped(KeyEvent e) {}
-	};
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
@@ -291,14 +165,15 @@ public class GamePanel extends JPanel implements ActionListener {
 	//
 	// Upon NPC seeing player, move to confront player.
 	//
-	// TODO - NPC "!" upon beeing seen - right before Thread.sleep
-	//
 	// ////////////////////////////////////////////////////////////////////////
 	private void enemyTrainerAnimation(Actor curNPC) {
 
 		game.playTrainerMusic();
 
-		try { // wait for ! before moving
+		try { // show ! and wait before moving
+				// TODO show ! - before this function is called, set the screen
+				// to SCREEN.TRAINER_SIGHTED
+				// screen logic will paint for 2 seconds
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {}
 

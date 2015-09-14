@@ -3,6 +3,7 @@ package party;
 import graphics.SpriteLibrary;
 
 import java.io.Serializable;
+import java.util.Random;
 
 import javax.swing.ImageIcon;
 
@@ -110,6 +111,24 @@ public class PartyMember implements Serializable {
 		DebugUtility.printMessage("Gained " + expGain + " exp");
 		if (this.curExp >= (this.level + 1) * (this.level + 1) * (this.level + 1)) {
 			levelUp();
+		}
+	}
+
+	//
+	// TODO change to use BATTLE_STATUS enum
+	//
+	public void tryToThaw() {
+		Random rr = new Random();
+		if (rr.nextInt(5) <= 1) {
+			if (getStatusEffect() == 4) {
+				// TODO - convert to use message box
+				DebugUtility.printMessage(getName() + " has woken up.");
+			}
+			if (getStatusEffect() == 5) {
+				// TODO - convert to use message box
+				DebugUtility.printMessage(getName() + " has broken free from the ice.");
+			}
+			setStatusEffect(0);
 		}
 	}
 

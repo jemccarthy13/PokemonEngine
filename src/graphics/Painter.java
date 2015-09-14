@@ -7,10 +7,9 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 
-import controller.GameController;
 import model.Configuration;
-import party.PartyMember;
 import party.Party;
+import party.PartyMember;
 import party.PartyMember.STATS;
 import tiles.Tile;
 import tiles.TileSet;
@@ -19,6 +18,7 @@ import trainers.Actor.DIR;
 import trainers.NPCLibrary;
 import trainers.Player;
 import utilities.BattleEngine;
+import controller.GameController;
 
 // ////////////////////////////////////////////////////////////////////////////
 //
@@ -35,42 +35,45 @@ public class Painter {
 	private static String partyMember = "PartyBar";
 	private static String partyBackground = "PartyBG";
 
+	static GameController game;
+	static GamePanel gamePanel;
+
 	// ////////////////////////////////////////////////////////////////////////
 	//
 	// paintComponent - main painting logic from which submethods are called
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public static void paintComponent(Graphics g, GamePanel game) {
-		Graphics2D g2 = (Graphics2D) g;
-		AffineTransform at = new AffineTransform();
-		g2.setTransform(at);
+	public static void paintComponent(Graphics g, GamePanel panel) {
 
-		switch (game.game.getScreen()) {
+		game = panel.game;
+		gamePanel = panel;
+
+		switch (game.getScreen()) {
 		case TITLE:
-			paintTitle(g, game.game);
+			paintTitle(g);
 			break;
 		case CONTINUE:
-			paintContinueScreen(g, game.game);
+			paintContinueScreen(g);
 			break;
 		case INTRO:
-			paintIntroScreen(g, game.game);
+			paintIntroScreen(g);
 			break;
 		case NAME:
-			paintNameInputScreen(g, game);
+			paintNameInputScreen(g);
 			break;
 		case BATTLE:
-			paintBattle(g, game);
+			paintBattle(g);
 			break;
 		case BATTLE_FIGHT:
-			paintBattle(g, game);
-			paintBattleFight(g, game);
+			paintBattle(g);
+			paintBattleFight(g);
 			break;
 		case MENU:
-			paintWorld(g, game.game, g2, at);
-			paintPauseMenu(g, game.game);
+			paintWorld(g);
+			paintPauseMenu(g);
 			break;
 		case POKEMON:
-			paintPartyScreen(g, game);
+			paintPartyScreen(g);
 			break;
 		case POKEDEX:
 			paintPokedexScreen(g);
@@ -79,31 +82,34 @@ public class Painter {
 			paintBagScreen(g);
 			break;
 		case POKEGEAR:
-			paintPokegearScreen(g, game.game);
+			paintPokegearScreen(g);
 			break;
 		case TRAINERCARD:
-			paintTrainerCard(g, game);
+			paintTrainerCard(g);
 			break;
 		case OPTION:
-			paintOptionScreen(g, game.game);
+			paintOptionScreen(g);
 			break;
 		case SAVE:
-			paintWorld(g, game.game, g2, at);
-			paintSaveMenu(g, game.game);
+			paintWorld(g);
+			paintSaveMenu(g);
 			break;
 		case CONVERSATION:
-			paintWorld(g, game.game, g2, at);
-			paintConversation(g, game.game);
+			paintWorld(g);
+			paintConversation(g, game);
 		case MESSAGE:
-			paintWorld(g, game.game, g2, at);
-			paintMessageBox(g, game.game);
+			paintWorld(g);
+			paintMessageBox(g, game);
 			break;
 		case BATTLE_MESSAGE:
-			paintBattle(g, game);
-			paintMessageBox(g, game.game);
+			paintBattle(g);
+			paintMessageBox(g, game);
+			break;
+		case BATTLE_ITEM:
+			paintBagScreen(g);
 			break;
 		default:
-			paintWorld(g, game.game, g2, at);
+			paintWorld(g);
 			break;
 		}
 	}
@@ -113,19 +119,19 @@ public class Painter {
 	// Paint all components of the name input screen
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private static void paintNameInputScreen(Graphics g, GamePanel game) {
+	private static void paintNameInputScreen(Graphics g) {
 		g.drawImage(SpriteLibrary.getImage("Namescreen"), 0, 0, null);
 
-		if (game.nameScreen.rowSelection < 5) {
-			g.drawImage(SpriteLibrary.getImage(ARROW), (int) (40 + Tile.TILESIZE * 2 * game.nameScreen.colSelection),
-					100 + Tile.TILESIZE * game.nameScreen.rowSelection, null);
+		if (game.getRowSelection() < 5) {
+			g.drawImage(SpriteLibrary.getImage(ARROW), (int) (40 + Tile.TILESIZE * 2 * game.getColSelection()), 100
+					+ Tile.TILESIZE * game.getRowSelection(), null);
 		}
-		if (game.nameScreen.rowSelection == 5) {
-			g.drawImage(SpriteLibrary.getImage(ARROW), (int) (100 + Tile.TILESIZE * 6 * game.nameScreen.colSelection),
-					100 + Tile.TILESIZE * game.nameScreen.rowSelection, null);
+		if (game.getRowSelection() == 5) {
+			g.drawImage(SpriteLibrary.getImage(ARROW), (int) (100 + Tile.TILESIZE * 6 * game.getColSelection()), 100
+					+ Tile.TILESIZE * game.getRowSelection(), null);
 		}
 
-		String name = game.nameScreen.getChosenName();
+		String name = game.getChosenName();
 
 		for (int x = 0; x < Configuration.MAX_NAME_SIZE; x++) {
 			g.drawImage(SpriteLibrary.getImage("_"), 150 + Tile.TILESIZE * x, 40, null);
@@ -136,7 +142,7 @@ public class Painter {
 		if (name.length() < Configuration.MAX_NAME_SIZE) {
 			g.drawImage(SpriteLibrary.getImage("CURSOR"), 150 + Tile.TILESIZE * name.length(), 40, null);
 		}
-		g.drawImage(SpriteLibrary.getSpriteForDir(game.nameScreen.toBeNamed, DIR.SOUTH).getImage(), 80, 30, null);
+		g.drawImage(SpriteLibrary.getSpriteForDir(game.getToBeNamed(), DIR.SOUTH).getImage(), 80, 30, null);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -144,7 +150,7 @@ public class Painter {
 	// Paint a given string to a given location of the screen
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public static void paintString(Graphics g, String string, int startX, int startY) {
+	private static void paintString(Graphics g, String string, int startX, int startY) {
 		for (int x = 0; x < string.toCharArray().length; x++) {
 			switch (string.toCharArray()[x]) {
 			case '?':
@@ -168,19 +174,19 @@ public class Painter {
 	// Paint all components of a battle scene
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private static void paintBattle(Graphics g, GamePanel game) {
+	private static void paintBattle(Graphics g) {
 		g.drawImage(SpriteLibrary.getImage("BG"), 0, 0, null);
 
 		PartyMember playerPokemon = BattleEngine.getInstance().playerCurrentPokemon;
 		PartyMember enemyPokemon = BattleEngine.getInstance().enemyPokemon.get(0);
 
 		g.drawImage(playerPokemon.getBackSprite().getImage(),
-				120 - (playerPokemon.getBackSprite().getImage().getHeight(game)) / 2, 228 - playerPokemon
-						.getBackSprite().getImage().getHeight(game), null);
+				120 - (playerPokemon.getBackSprite().getImage().getHeight(gamePanel)) / 2, 228 - playerPokemon
+						.getBackSprite().getImage().getHeight(gamePanel), null);
 		g.drawImage(enemyPokemon.getFrontSprite().getImage(), 310, 25, null);
 
 		g.drawImage(SpriteLibrary.getImage("Battle"), 0, 0, null);
-		String battleMessage = game.game.getCurrentMessage(false);
+		String battleMessage = game.getCurrentMessage(false);
 		if (battleMessage != null) {
 			g.drawString(battleMessage, 30, 260);
 		}
@@ -236,7 +242,7 @@ public class Painter {
 	// Paint all components of the name input screen
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private static void paintBattleFight(Graphics g, GamePanel game) {
+	private static void paintBattleFight(Graphics g) {
 		PartyMember playerPokemon = BattleEngine.getInstance().playerCurrentPokemon;
 
 		g.drawImage(SpriteLibrary.getImage("BattleFight"), 0, 0, null);
@@ -294,7 +300,7 @@ public class Painter {
 	// Paint all components of the intro screen
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private static void paintIntroScreen(Graphics g, GameController game) {
+	private static void paintIntroScreen(Graphics g) {
 		g.drawImage(SpriteLibrary.getImage("Beginning"), 0, 0, null);
 		g.drawImage(SpriteLibrary.getSpriteForDir("PROFESSOROAK_LARGE", DIR.SOUTH).getImage(), 150, 20, null);
 		if (NPCLibrary.getInstance().get("Professor Oak").getText().size() > game.getIntroStage()) {
@@ -311,7 +317,7 @@ public class Painter {
 	// option sound is only on/off
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private static void paintOptionScreen(Graphics g, GameController game) {
+	private static void paintOptionScreen(Graphics g) {
 		String imageName = game.isSoundOn() ? "OptionBG_SoundOn" : "OptionBG_SoundOff";
 		g.drawImage(SpriteLibrary.getImage(imageName), 0, 0, null);
 		g.drawImage(SpriteLibrary.getImage(ARROW), 22, 85 + 32 * game.getCurrentSelection(), null);
@@ -322,7 +328,7 @@ public class Painter {
 	// Paint all components of the save menu
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private static void paintSaveMenu(Graphics g, GameController game) {
+	private static void paintSaveMenu(Graphics g) {
 		g.setColor(Color.BLACK);
 
 		Player player = game.getPlayer();
@@ -360,17 +366,17 @@ public class Painter {
 	// TODO paint badges
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private static void paintTrainerCard(Graphics g, GamePanel game) {
+	private static void paintTrainerCard(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.drawImage(SpriteLibrary.getImage("TrainerCard"), 0, 0, null);
 		g.drawImage(SpriteLibrary.getImage("Male"), 320, 100, null);
 
-		Player player = game.game.getPlayer();
+		Player player = game.getPlayer();
 		g.drawString("ID:  " + player.getID(), 295, 54);
 		g.drawString("Name:" + getPadding("Name:") + player.getName(), 64, 93);
 		g.drawString("Money:" + getPadding("Money:") + "$" + player.getMoney(), 64, 150);
 		g.drawString("Pokedex:" + getPadding("Pokedex:") + player.getNumPokemonOwned(), 64, 183);
-		g.drawString("Time:  " + getPadding("Time:") + game.game.formatTime(), 64, 213);
+		g.drawString("Time:  " + getPadding("Time:") + game.formatTime(), 64, 213);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -378,7 +384,7 @@ public class Painter {
 	// Paint all components of the pokegear screen
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private static void paintPokegearScreen(Graphics g, GameController game) {
+	private static void paintPokegearScreen(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.drawImage(SpriteLibrary.getImage("PokegearBG"), 0, 0, null);
 		switch (game.getCurrentSelection()) {
@@ -412,7 +418,7 @@ public class Painter {
 	// Paint all components of the party screen
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private static void paintPartyScreen(Graphics g, GamePanel game) {
+	private static void paintPartyScreen(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.drawImage(SpriteLibrary.getImage(partyBackground), 0, 0, null);
 		g.drawImage(SpriteLibrary.getImage(partyFirstMember), 40, 20, null);
@@ -421,10 +427,10 @@ public class Painter {
 		g.drawImage(SpriteLibrary.getImage(partyMember), 190, 120, null);
 		g.drawImage(SpriteLibrary.getImage(partyMember), 190, 170, null);
 		g.drawImage(SpriteLibrary.getImage(partyMember), 190, 220, null);
-		if (game.game.getPlayer().getPokemon().size() == 2) {
+		if (game.getPlayer().getPokemon().size() == 2) {
 			g.drawImage(SpriteLibrary.getImage(partyMember), 190, 20, null);
 		}
-		Party playerPokemon = game.game.getPlayer().getPokemon();
+		Party playerPokemon = game.getPlayer().getPokemon();
 		if (playerPokemon.size() > 0) {
 			g.drawImage((playerPokemon.get(0)).getIcon().getImage(), 75, 40, null);
 			g.drawString((playerPokemon.get(0)).getName(), 65, 130);
@@ -447,7 +453,7 @@ public class Painter {
 	// Paint all components of the pause menu
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private static void paintPauseMenu(Graphics g, GameController game) {
+	private static void paintPauseMenu(Graphics g) {
 		g.drawImage(SpriteLibrary.getImage("Menu"), 0, 0, null);
 		g.drawImage(SpriteLibrary.getImage(ARROW), 335, 20 + 32 * game.getCurrentSelection(), null);
 	}
@@ -460,7 +466,11 @@ public class Painter {
 	// TODO - update to paint only visible areas + 1 row + 1 column
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private static void paintWorld(Graphics g, GameController game, Graphics2D g2, AffineTransform at) {
+	private static void paintWorld(Graphics g) {
+		Graphics2D g2 = (Graphics2D) g;
+		AffineTransform at = new AffineTransform();
+		g2.setTransform(at);
+
 		g.setColor(Color.BLACK);
 		g.setClip(new Rectangle(-16, -42, 704, 438));
 
@@ -516,7 +526,7 @@ public class Painter {
 	// Paint all components of the continue screen
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private static void paintContinueScreen(Graphics g, GameController game) {
+	private static void paintContinueScreen(Graphics g) {
 		g.drawImage(SpriteLibrary.getImage("Continue"), 0, 0, null);
 		g.drawImage(SpriteLibrary.getImage(ARROW), 13, 20 + 32 * game.getCurrentSelection(), null);
 	}
@@ -526,7 +536,7 @@ public class Painter {
 	// Paint all components of the title screen
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private static void paintTitle(Graphics g, GameController game) {
+	private static void paintTitle(Graphics g) {
 		g.drawImage(SpriteLibrary.getImage("Title"), 0, 0, null);
 		g.drawImage(SpriteLibrary.getImage("Start"), 0, 260, null);
 	}

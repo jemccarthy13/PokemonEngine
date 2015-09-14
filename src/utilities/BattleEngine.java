@@ -25,9 +25,7 @@ public class BattleEngine {
 
 	private GameController game = null;
 	public boolean playerTurn = false;
-	// public boolean inMain = true;
-	public boolean inFight = false;
-	public boolean inItem = false;
+	// public boolean inItem = false;
 	public boolean inPokemon = false;
 	public boolean playerWon = false;
 	public int currentSelectionMainX = -1;
@@ -79,7 +77,7 @@ public class BattleEngine {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public void inItemMenu() {
-		this.inItem = true;
+		game.setScreen(SCREEN.BATTLE_ITEM);
 		// TODO item menu logic
 		DebugUtility.printMessage("Item");
 	}
@@ -160,7 +158,6 @@ public class BattleEngine {
 		// reset logic
 		game.setPlayerWin(false);
 		game.setMovable(false);
-		inFight = false;
 
 		game.setCurrentMessage("Player won!");
 		game.setScreen(SCREEN.BATTLE_MESSAGE);
