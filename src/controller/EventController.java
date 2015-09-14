@@ -1,4 +1,4 @@
-package driver;
+package controller;
 
 import graphics.GamePanel;
 import graphics.SpriteLibrary;
@@ -18,7 +18,7 @@ import trainers.Player;
 import utilities.BattleEngine;
 import utilities.DebugUtility;
 import utilities.RandomNumUtils;
-import audio.AudioLibrary;
+import audio.AudioLibrary.SOUND_EFFECT;
 
 // ////////////////////////////////////////////////////////////////////////
 //
@@ -96,12 +96,12 @@ public class EventController implements Serializable {
 
 				if (playerPokemon.getStatusEffect() == 2) { // burned
 					playerPokemon.doDamage(2);
-					game.game.playClip(AudioLibrary.SE_DAMAGE);
+					game.game.playClip(SOUND_EFFECT.DAMAGE);
 					// TODO - convert to use message box
 					DebugUtility.printMessage(playerPokemon.getName() + " has been hurt by its burn");
 				} else if (playerPokemon.getStatusEffect() == 3) { // PSN
 					playerPokemon.doDamage(2);
-					game.game.playClip(AudioLibrary.SE_DAMAGE);
+					game.game.playClip(SOUND_EFFECT.DAMAGE);
 					// TODO - convert to use message box
 					DebugUtility.printMessage(playerPokemon.getName() + " has been hurt by its poison");
 				}
@@ -110,7 +110,7 @@ public class EventController implements Serializable {
 			}
 
 			// play sound when any button is pressed
-			game.game.playClip(AudioLibrary.SE_SELECT);
+			game.game.playClip(SOUND_EFFECT.SELECT);
 
 		} else if (game.game.getScreen() == SCREEN.BATTLE) {
 			// at main battle menu
@@ -142,7 +142,7 @@ public class EventController implements Serializable {
 					BattleEngine.getInstance().Run();
 				}
 			}
-			game.game.playClip(AudioLibrary.SE_SELECT);
+			game.game.playClip(SOUND_EFFECT.SELECT);
 
 		}
 	}
@@ -224,7 +224,7 @@ public class EventController implements Serializable {
 						* RandomNumUtils.generateRandom(85, 100) / 100.0);
 				((PartyMember) BattleEngine.getInstance().enemyPokemon.get(0)).doDamage(damage);
 
-				game.game.playClip(AudioLibrary.SE_DAMAGE);
+				game.game.playClip(SOUND_EFFECT.DAMAGE);
 			}
 			chosen.movePP--;
 		} else {
@@ -345,7 +345,7 @@ public class EventController implements Serializable {
 		}
 
 		// play key press sound effect
-		game.game.playClip(AudioLibrary.SE_SELECT);
+		game.game.playClip(SOUND_EFFECT.SELECT);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -390,13 +390,13 @@ public class EventController implements Serializable {
 				game.game.setPlayerWalking(true);
 			} else {
 				game.game.setPlayerSprite(SpriteLibrary.getSpriteForDir("PLAYER", toTravel));
-				game.game.playClip(AudioLibrary.SE_COLLISION);
+				game.game.playClip(SOUND_EFFECT.COLLISION);
 			}
 		} else if (keyCode == KeyEvent.VK_ENTER) {
-			game.game.playClip(AudioLibrary.SE_MENU);
+			game.game.playClip(SOUND_EFFECT.MENU);
 			game.game.setScreen(SCREEN.MENU);
 		} else if (keyCode == KeyEvent.VK_Z) {
-			game.game.playClip(AudioLibrary.SE_SELECT);
+			game.game.playClip(SOUND_EFFECT.SELECT);
 			// overhead cost for following logic
 			Player player = game.game.getPlayer();
 			DIR playerDir = player.getDirection();

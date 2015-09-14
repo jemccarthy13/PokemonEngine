@@ -1,37 +1,32 @@
-package tiles;
+package model;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import model.Coordinate;
-
 // ////////////////////////////////////////////////////////////////////////
 //
-// TileMap - equivalent to ArrayList<Tile> with some custom functions
+// GameMap - equivalent to ArrayList<List<Type>> with some custom functions
 //
 // ////////////////////////////////////////////////////////////////////////
-public class TileMap extends ArrayList<List<Tile>> {
+public class GameMap<Type> extends ArrayList<List<Type>> {
 
 	private static final long serialVersionUID = 5325017932787074716L;
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// set - sets the specified coordinate to the specified Tile type
+	// Sets the specified coordinate to the specified Tile type
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public void set(Coordinate c, Tile tile) {
-		int curRow = c.getY();
-		int curCol = c.getX();
-		this.get(curRow).set(curCol, tile);
+	public void set(Coordinate c, Type value) {
+		this.get(c.getY()).set(c.getX(), value);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// getTile functions - return the Tile at specified coordinate or in a
-	// specified direction relative to the coordinate
+	// Return the value at specified coordinate
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public Tile getTileAt(Coordinate c) {
+	public Type get(Coordinate c) {
 		return this.get(c.getY()).get(c.getX());
 	}
 }

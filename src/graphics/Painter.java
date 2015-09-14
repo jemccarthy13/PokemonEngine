@@ -7,6 +7,7 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 
+import controller.GameController;
 import model.Configuration;
 import party.PartyMember;
 import party.Party;
@@ -18,7 +19,6 @@ import trainers.Actor.DIR;
 import trainers.NPCLibrary;
 import trainers.Player;
 import utilities.BattleEngine;
-import driver.GameController;
 
 // ////////////////////////////////////////////////////////////////////////////
 //

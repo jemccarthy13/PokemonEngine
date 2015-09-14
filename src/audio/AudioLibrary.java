@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
+import model.Configuration;
 import utilities.DebugUtility;
 import utilities.RandomNumUtils;
 
@@ -16,71 +17,47 @@ import utilities.RandomNumUtils;
 // ////////////////////////////////////////////////////////////////////////
 public class AudioLibrary {
 
-	private static AudioLibrary m_instance = new AudioLibrary();
+	private static AudioTrack currentTrack = null;
+	private static JukeBox jukeBox = new JukeBox();
 
-	private MidiPlayer m_currentTrack = null;
-	private JukeBox m_JukeBox = new JukeBox();
+	private static ArrayList<String> encounterTrackNames = new ArrayList<String>();;
+	private static HashMap<String, AudioTrack> musicTracks = new HashMap<String, AudioTrack>();
 
-	private ArrayList<String> m_encounterTracks;
-	private HashMap<String, MidiPlayer> m_trackList;
+	public enum SOUND_EFFECT {
+		SELECT("Select"), DAMAGE("Damage"), COLLISION("Collision"), MENU("Menu");
 
-	public static String SE_SELECT = "Select";
-	public static String SE_DAMAGE = "Damage";
-	public static String SE_COLLISION = "Collision";
-	public static String SE_MENU = "Menu";
+		private String value;
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Load the audio library from disk
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	private AudioLibrary() {
-		DebugUtility.printHeader("Audio");
-		DebugUtility.printMessage("Initializing audio library...");
-
-		final String bgMusicPath = "resources/audio_lib/BGM/";
-		final String soundEffectsPath = "resources/audio_lib/SE/";
-
-		m_encounterTracks = new ArrayList<String>();
-		m_trackList = new HashMap<String, MidiPlayer>();
-
-		File[] listOfFiles = new File(bgMusicPath).listFiles();
-		DebugUtility.printMessage(" - Audio library tracks loaded: " + listOfFiles.length);
-
-		for (File file : listOfFiles) {
-			if (file.isFile()) {
-
-				String name_of_file = file.getName();
-
-				// compile a list of trainer / encounter music
-				Pattern p = Pattern.compile("^Encounter.*");
-				if (p.matcher(name_of_file).matches()) {
-					m_encounterTracks.add(name_of_file.replace(".mid", ""));
-				}
-			}
+		SOUND_EFFECT(String v) {
+			value = v;
 		}
 
-		DebugUtility.printMessage(" - " + "Enounter Tracks loaded: " + m_encounterTracks.size());
-
-		// load all of the sound effect files
-		DebugUtility.printMessage("Loading sound effects...");
-		listOfFiles = new File(soundEffectsPath).listFiles();
-		for (int i = 0; i < listOfFiles.length; i++) {
-			if (listOfFiles[i].isFile()) {
-				m_JukeBox.loadClip(soundEffectsPath + listOfFiles[i].getName(),
-						listOfFiles[i].getName().replace(".wav", ""));
-			}
+		String getValue() {
+			return value;
 		}
-		DebugUtility.printMessage(" - Sound effects loaded: " + listOfFiles.length);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// Singleton implementation - initialize the audio library once at startup
+	// Initialize some variables for the audio library
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public static AudioLibrary getInstance() {
-		return m_instance;
+	public AudioLibrary() {
+		DebugUtility.printHeader("Audio");
+		DebugUtility.printMessage("Initializing audio library...");
+
+		// create a list of encounter tracks
+		for (File file : new File(Configuration.MUSIC_PATH).listFiles()) {
+			if (file.isFile()) {
+				String name_of_file = file.getName();
+				Pattern p = Pattern.compile("^Encounter.*");
+				if (p.matcher(name_of_file).matches()) {
+					encounterTrackNames.add(name_of_file.replace(".mid", ""));
+				}
+			}
+		}
+
+		DebugUtility.printMessage("Enounter Tracks loaded.");
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -90,61 +67,52 @@ public class AudioLibrary {
 	// ////////////////////////////////////////////////////////////////////////
 	public void playBackgroundMusic(String songTitle) {
 		// stop the current track, if playing
-		if (m_currentTrack != null) {
-			m_currentTrack.stop();
-			m_currentTrack = null;
+		if (currentTrack != null) {
+			currentTrack.stop();
 		}
 
-		if (!m_trackList.containsKey(songTitle)) {
-			final String bgMusicPath = "resources/audio_lib/BGM/";
-			String pathToMusicFile = bgMusicPath + songTitle;
-
-			MidiPlayer musicTrack = new MidiPlayer(pathToMusicFile, true);
-
-			File f = new File(pathToMusicFile);
-
-			m_trackList.put(f.getName().replace("Location", "").replace(".mid", ""), musicTrack);
-
+		// if the track isn't loaded yet, load it from the disk
+		if (!musicTracks.containsKey(songTitle)) {
+			musicTracks.put(songTitle, new AudioTrack(songTitle));
 			DebugUtility.printMessage("Dynamically loaded " + songTitle);
 		}
 
 		// switch to the next track and play, if the track is valid
-		m_currentTrack = getInstance().m_trackList.get(songTitle);
-
-		if (m_currentTrack != null) {
-			m_currentTrack.start();
+		currentTrack = musicTracks.get(songTitle);
+		if (currentTrack != null) {
+			currentTrack.start();
 		}
-
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
 	// Pick a random enemy encounter track
 	//
-	// TODO - Looks like no encounter tracks are loaded
-	//
 	// ////////////////////////////////////////////////////////////////////////
 	public void pickTrainerMusic() {
-		if (m_encounterTracks.size() > 0) {
-			int choice = RandomNumUtils.generateRandom(m_encounterTracks.size(), 0);
-			String songTitle = m_encounterTracks.get(choice);
-			playBackgroundMusic(songTitle);
+		if (encounterTrackNames.size() > 0) {
+			int choice = RandomNumUtils.generateRandom(encounterTrackNames.size(), 0);
+			playBackgroundMusic(encounterTrackNames.get(choice));
 		}
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// Pauses the current music track, typically to
-	// interrupt the music thread with another song
+	// Pauses the current music track, typically to play another song
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public void pauseBackgrondMusic() {
-		if (m_currentTrack != null) {
-			m_currentTrack.stop();
+	public static void pauseBackgroundMusic() {
+		if (currentTrack != null) {
+			currentTrack.stop();
 		}
 	}
 
-	public void playClip(String string) {
-		m_JukeBox.playClip(string);
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Play the given sound effect
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public static void playClip(SOUND_EFFECT effect) {
+		jukeBox.playClip(effect);
 	}
 }

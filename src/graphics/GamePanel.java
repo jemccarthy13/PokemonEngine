@@ -22,10 +22,10 @@ import trainers.Player;
 import utilities.BattleEngine;
 import utilities.DebugUtility;
 import utilities.RandomNumUtils;
-import audio.AudioLibrary;
-import driver.EventController;
-import driver.GameController;
-import driver.GameKeyListener;
+import audio.AudioLibrary.SOUND_EFFECT;
+import controller.EventController;
+import controller.GameController;
+import controller.GameKeyListener;
 
 // ////////////////////////////////////////////////////////////////////////
 //
@@ -62,20 +62,21 @@ public class GamePanel extends JPanel implements ActionListener {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public GamePanel() {
-		DebugUtility.printMessage("Game session id: " + game.getId());
-
-		DebugUtility.printMessage("Registering for events...");
-		addKeyListener(kListener);
-		eventHandler = new EventController(this);
-		DebugUtility.printMessage("Registered for events.");
-
-		nameScreen = new NameScene();
-
 		try {
 			game.loadMap();
 		} catch (Exception e) {
 			DebugUtility.error("Unable to load map.");
 		}
+
+		addKeyListener(kListener);
+		eventHandler = new EventController(this);
+
+		DebugUtility.printHeader("Event Registration");
+		DebugUtility.printMessage("Added event handler.");
+		DebugUtility.printMessage("Registered for events.");
+
+		nameScreen = new NameScene();
+
 		setBackground(Color.BLACK);
 		setPreferredSize(new Dimension(480, 320));
 
@@ -119,7 +120,7 @@ public class GamePanel extends JPanel implements ActionListener {
 					repaint();
 					validate();
 				}
-				game.playClip(AudioLibrary.SE_SELECT);
+				game.playClip(SOUND_EFFECT.SELECT);
 				break;
 			case INTRO: // intro screen, advance oak's text
 				if (keyCode == KeyEvent.VK_Z) {

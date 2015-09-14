@@ -5,34 +5,29 @@ import java.text.DecimalFormat;
 
 // ////////////////////////////////////////////////////////////////////////
 //
-// TimeStruct - easier way to manipulate and update system time
+// Easier way to manipulate and update game time
 //
 // ////////////////////////////////////////////////////////////////////////
-public class TimeStruct implements Serializable {
+public class GameTime implements Serializable {
 
 	private static final long serialVersionUID = 6901548663761911865L;
 
-	public int seconds_total = 0, hours_total = 0, minutes_total = 0;
-	public int sessionSeconds = 0, sessionMinutes = 0, sessionHours = 0;
+	// Keep track of total time, and time for this game session
+	public int bankedHours = 0, bankedMinutes = 0, bankedSeconds = 0;
+	public int sessionHours = 0, sessionMinutes = 0, sessionSeconds = 0;
 
+	// the time that this session started
 	public long timeStarted = 0;
-
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// default constructor
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	public TimeStruct() {}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
 	// Initialization constructor
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public TimeStruct(int hours, int minutes, int seconds) {
-		hours_total = hours;
-		minutes_total = minutes;
-		seconds_total = seconds;
+	public GameTime(int hours, int minutes, int seconds) {
+		bankedHours = hours;
+		bankedMinutes = minutes;
+		bankedSeconds = seconds;
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -41,57 +36,52 @@ public class TimeStruct implements Serializable {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public void saveTime() {
-		seconds_total += sessionSeconds;
-		if (seconds_total > 60) {
-			minutes_total += seconds_total / 60;
-			seconds_total = 60 - (seconds_total / 60);
+		bankedSeconds += sessionSeconds;
+		if (bankedSeconds > 60) {
+			bankedMinutes += bankedSeconds / 60;
+			bankedSeconds = 60 - (bankedSeconds / 60);
 		}
-		minutes_total += sessionMinutes;
-		if (minutes_total > 60) {
-			hours_total += (minutes_total / 60);
-			minutes_total = 60 - (minutes_total / 60);
+		bankedMinutes += sessionMinutes;
+		if (bankedMinutes > 60) {
+			bankedHours += (bankedMinutes / 60);
+			bankedMinutes = 60 - (bankedMinutes / 60);
 		}
-		hours_total += sessionHours;
+		bankedHours += sessionHours;
 		timeStarted = System.currentTimeMillis();
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// Update the hours, minutes, seconds played based on current time. Add
-	// to running time bank. Time bank allows saved games to be adjusted by
-	// adding current session runtime to banked total.
+	// Update the session's hours, minutes, seconds based on current time
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public void updateTime() {
-		// get the time difference in hours, mins, seconds
-		sessionSeconds = (((int) ((System.currentTimeMillis() - timeStarted) / 1000L)));
+		sessionSeconds = (int) ((System.currentTimeMillis() - timeStarted) / 1000L);
 		sessionHours = sessionSeconds / 3600;
 		sessionMinutes = (sessionSeconds - (sessionHours * 3600)) / 60;
-
 		sessionSeconds = (sessionSeconds - sessionHours * 3600 - sessionMinutes * 60);
-
-		// do math to add current session time to total banked time
-
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// formatTime - formats the system time into a readable format
+	// Formats the current total time played into a readable format
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public String formatTime() {
 
-		int hours = 0, minutes = 0, seconds = 0;
+		// add session time to banked time
+		int hours = sessionHours + bankedHours;
+		int minutes = sessionMinutes + bankedMinutes;
+		int seconds = sessionSeconds + bankedSeconds;
 
-		seconds = sessionSeconds + seconds_total;
-		minutes = sessionMinutes + minutes_total;
-		hours = sessionHours + hours_total;
-
-		// do math to add current session time to total banked time
+		// add any overlap to the next category
+		// i.e seconds = 70, then that's +1 minute, 10 seconds
 		if (seconds > 60) {
 			minutes += seconds / 60;
 			seconds = 60 - (seconds / 60);
 		}
+
+		// then check if the new minutes is over an hour
 		if (minutes > 60) {
 			hours += (minutes / 60);
 			minutes = 60 - (minutes / 60);

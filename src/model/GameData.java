@@ -3,12 +3,8 @@ package model;
 import java.io.Serializable;
 import java.util.HashMap;
 
-import javax.swing.Timer;
-
-import party.Party;
-import tiles.TileMap;
-import trainers.Actor;
-import trainers.Player;
+import model.Configuration.PLAYER_SPEED;
+import tiles.Tile;
 import utilities.RandomNumUtils;
 
 // ////////////////////////////////////////////////////////////////////////
@@ -19,12 +15,8 @@ import utilities.RandomNumUtils;
 public class GameData implements Serializable {
 
 	// ======================= Serialization ================================//
-	private static final long serialVersionUID = 4753670767642154788L;
 
-	// =========================== CHEATS ===================================//
-	public boolean NOCLIP = false; // walk anywhere
-	public boolean DOBATTLES = true; // no wild/trainer battles
-	public boolean SHOWINTRO = false; // false = skip Oak intro
+	private static final long serialVersionUID = 4753670767642154788L;
 
 	//
 	// Trying something new and crazy
@@ -33,39 +25,39 @@ public class GameData implements Serializable {
 
 	public boolean isPlayerWalking = false; // player animation counter
 	public boolean movable = false;
-
-	// ==================== Game Data Control ==============================//
-
-	public Actor currentNPC;
-	public Player player;
 	public String currentMessage;
 	public int messageStage;
-	public int gameSessionID = RandomNumUtils.createTrainerID();
-	public Party currentEnemy = new Party();
 
-	// Timing Data
-	public TimeStruct gameTimeStruct = new TimeStruct();
-	public Timer gameSpeed; // controls the speed game events are handled
-
-	// ======================== Map Data ===================================//
-	public int map_width;
-	public int map_height;
-
-	// ====================== Graphics control variables ===================//
 	public enum SCREEN {
 		WORLD, MENU, INTRO, NAME, TITLE, CONTINUE, MESSAGE, BATTLE, BATTLE_FIGHT, BATTLE_MESSAGE, POKEDEX, POKEMON, BAG, POKEGEAR, TRAINERCARD, SAVE, OPTION, CONVERSATION;
 	}
 
 	public SCREEN screen = SCREEN.TITLE; // start at the title screen
 	public int introStage = 1;
+
+	// ============================ Game Data =============================//
+
+	public int gameSessionID = RandomNumUtils.createTrainerID();
+
+	// ======================== Map Data ===================================//
+
+	public int map_width;
+	public int map_height;
+
+	// ====================== Graphics control variables ===================//
 	public int offsetX = 0, offsetY = 0; // painting variables
 	public int start_coorX, start_coorY; // teleportation graphics variables
 
+	//
 	// stored as a map so each SCREEN can store it's own current selection
+	//
 	public HashMap<SCREEN, Integer> currentSelection = new HashMap<SCREEN, Integer>();
 
-	public int[][] imageMap = new int[3][21400];
-	public TileMap tileMap = new TileMap();
+	//
+	// one map to store tiles, one map to store images
+	//
+	public GameMap<Integer> imageMap = new GameMap<Integer>();
+	public GameMap<Tile> tileMap = new GameMap<Tile>();
 
 	// ======================= Battle information ==========================//
 	// ////////////////////////
@@ -78,12 +70,19 @@ public class GameData implements Serializable {
 
 	// ======================== User Data ==================================//
 
-	public int currentSpeed = Configuration.PLAYER_SPEED_WALK;
+	public PLAYER_SPEED currentSpeed = PLAYER_SPEED.WALK;
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Print the game information
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public String toString() {
-		String retStr = "Player: " + "\n";
-		retStr += player.tData.toString();
-		retStr += player.toString();
+		String retStr = "Sound on: " + option_sound + "\n";
+		retStr += "* Game ID: " + gameSessionID + "\n";
+		retStr += "* Current msg: " + currentMessage + "\n";
+		retStr += Configuration.getConfig() + "\n";
+		retStr += "* Current speed: " + this.currentSpeed;
 		return retStr;
 	}
 }

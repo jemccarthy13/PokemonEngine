@@ -24,7 +24,9 @@ public class GameFrame extends JFrame {
 		pokemonGame = new GamePanel();
 		pokemonGame.setFocusable(true);
 		pokemonGame.requestFocus();
-		pokemonGame.game.startNewTimer(pokemonGame);
+		pokemonGame.game.startGameTimer(pokemonGame);
+
+		pokemonGame.game.printData();
 		add(pokemonGame);
 	}
 
