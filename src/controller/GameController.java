@@ -27,6 +27,7 @@ import model.Coordinate;
 import model.GameData;
 import model.GameData.SCREEN;
 import model.GameTime;
+import model.NameBuilder;
 import party.Party;
 import party.PartyMember;
 import party.PartyMemberFactory;
@@ -54,9 +55,17 @@ public class GameController implements Serializable {
 	// handles any audio
 	private AudioLibrary audio = new AudioLibrary();
 
-	private Actor currentNPC; // current NPC - in conversation or in battle
-	private Player player; // the player Actor
-	private Party currentEnemy = new Party(); // the current battle enemy party
+	// builds names using the name screen - used to name PartyMembers
+	private NameBuilder nameBuilder = new NameBuilder();
+
+	// current NPC - in conversation or in battle
+	private Actor currentNPC;
+
+	// the player Actor
+	private Player player;
+
+	// the current battle enemy party
+	private Party currentEnemy = new Party();
 
 	// controls the speed game events are handled and the current game time
 	private GameTime gameTimeStruct = new GameTime(0, 0, 0);
@@ -64,24 +73,24 @@ public class GameController implements Serializable {
 
 	// NPC random movement controller
 	private NPCThread npcs = new NPCThread();
-	// name that and shrinks dynamically according to user's choices
-	private StringBuilder buildName = new StringBuilder();
 
-	// char selection information
-	private int rowSelection = 0;
-	private int colSelection = 0;
-
-	// the name screen layout makes it easer to get selected characters
-	private char[][] charArray = { { 'A', 'B', 'C', 'D', 'E', 'F' }, { 'G', 'H', 'I', 'J', 'K', 'L' },
-			{ 'M', 'N', 'O', 'P', 'Q', 'R' }, { 'S', 'T', 'U', 'V', 'W', 'X' }, { 'Y', 'Z', ' ', '!', '?', '.' } };
-
-	// the name of the object to be named
-	private String toBeNamed;
-
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Create a new controller to wrap around the game data
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public GameController() {
 		gData = new GameData();
 
 	}
+
+	/***************************************************************************
+	 * 
+	 * NAME CONTROL LOGIC
+	 * 
+	 * Helps control the name builder.
+	 * 
+	 **************************************************************************/
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
@@ -90,47 +99,65 @@ public class GameController implements Serializable {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public void setToBeNamed(String tbn) {
-		toBeNamed = tbn;
-	}
-
-	public void decrRowSelection() {
-		rowSelection--;
-	}
-
-	public void incrColSelection() {
-		colSelection++;
-	}
-
-	public void decrColSelection() {
-		colSelection--;
-	}
-
-	public void setColSelection(int i) {
-		colSelection = i;
-	}
-
-	public void setRowSelection(int i) {
-		rowSelection = i;
-	}
-
-	public int getRowSelection() {
-		return rowSelection;
-	}
-
-	public int getColSelection() {
-		return rowSelection;
-	}
-
-	public void incrRowSelection() {
-		rowSelection++;
-	}
-
-	public void inrColSelection() {
-		colSelection++;
+		nameBuilder.setToBeNamed(tbn);
 	}
 
 	public String getToBeNamed() {
-		return toBeNamed;
+		return nameBuilder.getToBeNamed();
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Increment and decrement for the row / col of character selection screen
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public void decrNameRowSelection() {
+		int row = nameBuilder.getRowSelection();
+		if (row > 0) {
+			nameBuilder.setRowSelection(row - 1);
+		}
+	}
+
+	public void incrNameRowSelection() {
+		int row = nameBuilder.getRowSelection();
+		if (row < nameBuilder.maxRows()) {
+			nameBuilder.setRowSelection(row + 1);
+		}
+	}
+
+	public void incrNameColSelection() {
+		int col = nameBuilder.getColSelection();
+		if (col < nameBuilder.maxCols()) {
+			nameBuilder.setColSelection(col + 1);
+		}
+	}
+
+	public void decrNameColSelection() {
+		int col = nameBuilder.getColSelection();
+		if (col > 0) {
+			nameBuilder.setColSelection(col - 1);
+		}
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Set and get the row / col selected for character selection
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public void setNameColSelection(int i) {
+		nameBuilder.setColSelection(i);
+	}
+
+	public void setNameRowSelection(int i) {
+		nameBuilder.setRowSelection(i);
+	}
+
+	public int getNameRowSelection() {
+		return nameBuilder.getRowSelection();
+	}
+
+	public int getNameColSelection() {
+		return nameBuilder.getColSelection();
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -139,9 +166,16 @@ public class GameController implements Serializable {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public void addSelectedChar() {
-		if (buildName.length() < Configuration.MAX_NAME_SIZE) {
-			buildName.append(charArray[rowSelection][colSelection]);
-		}
+		nameBuilder.addSelectedChar();
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Removes a char from the string in the process of being built
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public void removeChar() {
+		nameBuilder.removeChar();
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -150,36 +184,25 @@ public class GameController implements Serializable {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public String getChosenName() {
-		return buildName.toString();
+		return nameBuilder.toString();
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// Removes a char from the string in the proccess of being built
+	// Resets the name builder (clear all chars)
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public void removeChar() {
-		int size = buildName.length();
-		if (size > 0) {
-			buildName.deleteCharAt(size - 1);
-		}
+	public void resetNameBuilder() {
+		nameBuilder.reset();
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Resets the string builder (clear all chars)
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	public void reset() {
-		int size = buildName.length();
-		buildName.delete(0, size);
-	}
-
-	// ////////////////////////// GRAPHICS CONTROL LOGIC ///////////////////////
-
-	public void stopNPCMovement() {
-		npcs.stop = true;
-	}
+	/***************************************************************************
+	 * 
+	 * GRAPHICS CONTROL LOGIC
+	 * 
+	 * Helps control graphical display elements.
+	 * 
+	 **************************************************************************/
 
 	public void setMapImageAt(int layer, int y, int parseInt) {
 		gData.imageMap.set(new Coordinate(y, layer), parseInt);
@@ -342,6 +365,15 @@ public class GameController implements Serializable {
 		DebugUtility.printMessage("Loaded map.");
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Pause all NPC movement
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public void pauseNPCMovement() {
+		npcs.stop = true;
+	}
+
 	// ////////////////////////// MOVEMENT CONTROL LOGIC ///////////////////////
 
 	public boolean isMovable() {
@@ -392,7 +424,9 @@ public class GameController implements Serializable {
 			String name = "GOLD";
 			player = new Player(4, 2, name);
 			PartyMember charmander = PartyMemberFactory.createPokemon("Charmander", 7);
+			PartyMember sentret = PartyMemberFactory.createPokemon("Sentret", 3);
 			player.caughtPokemon(charmander);
+			player.caughtPokemon(sentret);
 			player.setMoney(1000000);
 			player.setCurLocation(LocationLibrary.getLocation("Route 27"));
 			playBackgroundMusic("NewBarkTown");
@@ -796,4 +830,5 @@ public class GameController implements Serializable {
 		DebugUtility.printHeader("Game Data");
 		DebugUtility.printMessage(gData.toString());
 	}
+
 }

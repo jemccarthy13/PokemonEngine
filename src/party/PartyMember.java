@@ -3,10 +3,12 @@ package party;
 import graphics.SpriteLibrary;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
 
+import party.MoveData.MOVECATEGORY;
 import utilities.DebugUtility;
 import utilities.RandomNumUtils;
 
@@ -19,22 +21,26 @@ import utilities.RandomNumUtils;
 public class PartyMember implements Serializable {
 	private static final long serialVersionUID = 3959217221984077560L;
 
+	public static enum STAT {
+		HP, ATTACK, DEFENSE, SP_ATTACK, SP_DEFENSE, SPEED, ACCURACY
+	}
+
+	public static enum STATUS {
+		PZN, BRN, FRZ, SLP, PAR, NORMAL
+	}
+
 	private int evolution_stage = 0;
 	private int level;
 	private boolean participated = false;
-	private MoveData[] moves = new MoveData[4];
-	private Integer[] stats = new Integer[7];
-	private Integer[] max_stats = new Integer[7];
-	private Integer accuracy = Integer.valueOf(100);
+	private MoveList moves;
 	private int curExp;
 	private ImageIcon party_icon, back_sprite, front_sprite;
-	private int statusEffect;
+	private STATUS statusEffect = STATUS.NORMAL;
 
 	PartyMemberData pData;
 
-	public static enum STATS {
-		HP, ATTACK, DEFENSE, SP_ATTACK, SP_DEFENSE, SPEED, ACCURACY;
-	}
+	private HashMap<STAT, Integer> stats = new HashMap<STAT, Integer>();
+	private HashMap<STAT, Integer> maxStats = new HashMap<STAT, Integer>();
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
@@ -45,38 +51,32 @@ public class PartyMember implements Serializable {
 	public PartyMember(PartyMemberData pData, int lev) {
 		this.pData = pData;
 		this.level = lev;
+		this.curExp = (this.level * this.level * this.level);
+
 		for (Integer x : pData.evolution_levels) {
 			if (level > x && x != 0) {
 				evolution_stage++;
 			}
 		}
-		this.stats[STATS.HP.ordinal()] = Integer.valueOf(RandomNumUtils.randomBaseStat(this.level));
-		this.stats[STATS.ATTACK.ordinal()] = Integer.valueOf(RandomNumUtils.randomBaseStat(this.level));
-		this.stats[STATS.DEFENSE.ordinal()] = Integer.valueOf(RandomNumUtils.randomBaseStat(this.level));
-		this.stats[STATS.SP_ATTACK.ordinal()] = Integer.valueOf(RandomNumUtils.randomBaseStat(this.level));
-		this.stats[STATS.SP_DEFENSE.ordinal()] = Integer.valueOf(RandomNumUtils.randomBaseStat(this.level));
-		this.stats[STATS.SPEED.ordinal()] = Integer.valueOf(RandomNumUtils.randomBaseStat(this.level));
-		this.stats[STATS.ACCURACY.ordinal()] = Integer.valueOf(100);
-		this.curExp = (this.level * this.level * this.level);
+
+		// create base max stats and initialize current stats to the maximums
+		for (STAT s : STAT.values()) {
+			maxStats.put(s, RandomNumUtils.randomBaseStat(level));
+			stats.put(s, maxStats.get(s));
+		}
+
+		moves = new MoveList(pData.name);
 
 		int idx = -1;
-		for (int x = 0; x < pData.moves.size(); x++) {
-
+		for (int x = 0; x < pData.movesLearned.size(); x++) {
 			if (level > pData.levelsLearned.get(x)) {
 				idx++;
 			}
 		}
 		for (int y = 0; y < 4; y++) {
-			if (idx - y <= pData.moves.size() && idx - y >= 0) {
-				moves[y] = MoveLibrary.getInstance().get(pData.moves.get(idx - y));
+			if (idx - y <= pData.movesLearned.size() && idx - y >= 0) {
+				moves.add(MoveLibrary.getInstance().get(pData.movesLearned.get(idx - y)), false);
 			}
-		}
-
-		for (int x = 0; x < this.stats.length; x++) {
-			if (this.stats[x].intValue() < 5) {
-				this.stats[x] = Integer.valueOf(5);
-			}
-			this.max_stats[x] = this.stats[x];
 		}
 
 		this.party_icon = SpriteLibrary.createImage(SpriteLibrary.libPath + "Icons/icon" + formatPokedexNumber(0)
@@ -120,15 +120,22 @@ public class PartyMember implements Serializable {
 	public void tryToThaw() {
 		Random rr = new Random();
 		if (rr.nextInt(5) <= 1) {
-			if (getStatusEffect() == 4) {
+			if (getStatusEffect() == STATUS.SLP) {
 				// TODO - convert to use message box
 				DebugUtility.printMessage(getName() + " has woken up.");
 			}
-			if (getStatusEffect() == 5) {
+			if (getStatusEffect() == STATUS.FRZ) {
 				// TODO - convert to use message box
 				DebugUtility.printMessage(getName() + " has broken free from the ice.");
 			}
-			setStatusEffect(0);
+			setStatusEffect(STATUS.NORMAL);
+		} else {
+			if (getStatusEffect() == STATUS.SLP) {
+				DebugUtility.printMessage(getName() + " is still asleep.");
+			}
+			if (getStatusEffect() == STATUS.FRZ) {
+				DebugUtility.printMessage(getName() + " is frozen solid.");
+			}
 		}
 	}
 
@@ -143,16 +150,16 @@ public class PartyMember implements Serializable {
 			// TODO - convert to use message box
 			DebugUtility.printMessage(getName() + " grew to level " + level + "!");
 		}
-		for (int x = 0; x < 6; x++) {
-			int incr = RandomNumUtils.randomStatIncr();
-			if (this.stats[x].intValue() + incr == 240) {
-				incr = 0;
-			}
+		for (STAT key : stats.keySet()) {
+			if (key != STAT.ACCURACY) {
+				int incr = RandomNumUtils.randomStatIncr();
+				int new_value = stats.get(key) + incr;
 
-			this.stats[x] = Integer.valueOf(this.stats[x].intValue() + incr);
+				if (new_value > 240) {
+					new_value = 240;
+				}
 
-			if (this.stats[x].intValue() > 240) {
-				this.stats[x] = Integer.valueOf(240);
+				stats.put(key, new_value);
 			}
 		}
 		if ((this.evolution_stage < 2) && (this.level == pData.evolution_levels.get(evolution_stage + 1))) {
@@ -161,74 +168,109 @@ public class PartyMember implements Serializable {
 			DebugUtility.printMessage("Congratulations!  Your " + pData.evolution_stages.get(evolution_stage - 1)
 					+ " has evolved into a " + pData.evolution_stages.get(evolution_stage) + "!");
 		}
-		for (int x = 0; x < pData.moves.size(); x++) {
+		for (int x = 0; x < pData.movesLearned.size(); x++) {
 			if (level == pData.levelsLearned.get(x))
 				// TODO convert to use message box
-				DebugUtility.printMessage(getName() + " learned " + pData.moves.get(x));
+				DebugUtility.printMessage(getName() + " learned " + pData.movesLearned.get(x));
 		}
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// doDamage - deals a given amount of damage to this Pokemon
-	// playSound flags whether or not to play damage sound (for poison vs
-	// in battle)
+	// Deals a given amount of damage to this Pokemon
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public void doDamage(int damage) {
-		setStat(STATS.HP, getStat(STATS.HP) - damage);
-		if (getStat(STATS.HP) < 0) {
-			setStat(STATS.HP, 0);
+		setStat(STAT.HP, getStat(STAT.HP) - damage);
+		if (getStat(STAT.HP) < 0) {
+			setStat(STAT.HP, 0);
 		}
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// heal - restore the given amount of health
+	// Deals damage based on the given move
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public void doDamage(MoveData move) {
+		int attackStat = 0;
+		int defStat = 0;
+		DebugUtility.printMessage(move.toString());
+		if (move.category == MOVECATEGORY.PHYSICAL) {
+			attackStat = (getStat(STAT.ATTACK));
+			defStat = getStat(STAT.DEFENSE);
+			DebugUtility.printMessage("Using physical attack...");
+			DebugUtility.printMessage("Defense stat is: " + defStat);
+		}
+		if (move.category == MOVECATEGORY.SPECIAL) {
+			attackStat = (getStat(STAT.SP_ATTACK));
+			defStat = getStat(STAT.SP_DEFENSE);
+		}
+		int damage = 0;
+		if (move.category != MOVECATEGORY.STAT) {
+			damage = (int) (((2 * (getLevel() / 5 + 2) * move.power * attackStat / 50 / defStat + 2)
+					* RandomNumUtils.generateRandom(85, 100) / 100.0));
+		}
+		move.movePP--;
+		doDamage(damage);
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Restore the given amount of health
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public void heal(int amount) {
-		if (amount == -1) {
-			this.stats[STATS.HP.ordinal()] = this.max_stats[STATS.HP.ordinal()];
+		int hp = stats.get(STAT.HP) + amount;
+		if (hp > maxStats.get(STAT.HP)) {
+			fullHeal();
 		} else {
-			int hp = STATS.HP.ordinal();
-			stats[hp] = Integer.valueOf(stats[hp].intValue() + amount);
-			if (this.stats[STATS.HP.ordinal()].intValue() > this.max_stats[STATS.HP.ordinal()].intValue()) {
-				heal(-1);
-			}
+			// restore the given amount
+			stats.put(STAT.HP, hp);
 		}
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// getStat - given a STAT get the current value
+	// Restore all health
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public int getStat(STATS stat) {
-		return this.stats[stat.ordinal()].intValue();
+	public void fullHeal() {
+		stats.put(STAT.HP, maxStats.get(STAT.HP));
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// getMaxStat - given a STAT return the highest value that stat could be
+	// Get the current value of a stat
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public int getMaxStat(STATS hp) {
-		return this.max_stats[hp.ordinal()].intValue();
+	public int getStat(STAT stat) {
+		return stats.get(stat);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// setStat - set the given stat to the given value
+	// Get the maximum value of a stat
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private void setStat(STATS hp, int i) {
-		this.stats[hp.ordinal()] = Integer.valueOf(i);
+	public int getMaxStat(STAT stat) {
+		return maxStats.get(stat);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// getName - return the name of this pokemon
+	// Set a stat to the given value
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	private void setStat(STAT stat, int i) {
+		stats.put(stat, i);
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Return the name of this PartyMember
+	//
+	// TODO - custom names
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public String getName() {
@@ -237,7 +279,7 @@ public class PartyMember implements Serializable {
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// getLevel - return the level of this pokemon
+	// Return the level of this PartyMember
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public int getLevel() {
@@ -246,31 +288,25 @@ public class PartyMember implements Serializable {
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// getMove - return the chosen move
+	// Get the chosen move
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public MoveData getMove(int choice) {
-		return moves[choice];
+		return moves.get(choice);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// getNumMoves - return the number of moves the pokemon knows
+	// Get the number of moves this PartyMember knows
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public int getNumMoves() {
-		int count = 0;
-		for (MoveData move : moves) {
-			if (move != null) {
-				count++;
-			}
-		}
-		return count;
+		return moves.size();
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// hasParticipated - return whether or not this pokemon has participated
+	// Return whether or not this PartyMember has participated
 	// in the current battle
 	//
 	// ////////////////////////////////////////////////////////////////////////
@@ -280,7 +316,7 @@ public class PartyMember implements Serializable {
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// setParticipated - set whether or not the pokemon has participated in
+	// Set whether or not the PartyMember has participated in
 	// the current battle
 	//
 	// ////////////////////////////////////////////////////////////////////////
@@ -290,7 +326,7 @@ public class PartyMember implements Serializable {
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// getIcon - return the image used as the party icon for this pokemon
+	// Return the image used as the party icon for this PartyMember
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public ImageIcon getIcon() {
@@ -299,7 +335,7 @@ public class PartyMember implements Serializable {
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// getBackSprite - return the image used as the back battle sprite
+	// Return the image used as the back battle sprite
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public ImageIcon getBackSprite() {
@@ -308,7 +344,7 @@ public class PartyMember implements Serializable {
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// getFrontSprite - return the image used as the front battle sprite
+	// Return the image used as the front battle sprite
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public ImageIcon getFrontSprite() {
@@ -317,7 +353,7 @@ public class PartyMember implements Serializable {
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// toString - debug information related to Pokemon
+	// Debug information related to PartyMember
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public String toString() {
@@ -334,19 +370,11 @@ public class PartyMember implements Serializable {
 		return String.format("%03d", Integer.parseInt(this.pData.pokedexNumber) + evolutionStage);
 	}
 
-	public Integer getAccuracy() {
-		return accuracy;
-	}
-
-	public void setAccuracy(Integer accuracy) {
-		this.accuracy = accuracy;
-	}
-
-	public int getStatusEffect() {
+	public STATUS getStatusEffect() {
 		return statusEffect;
 	}
 
-	public void setStatusEffect(int statusEffect) {
+	public void setStatusEffect(STATUS statusEffect) {
 		this.statusEffect = statusEffect;
 	}
 }

@@ -12,13 +12,14 @@ import java.util.ArrayList;
 public class PartyMemberData implements Serializable {
 
 	private static final long serialVersionUID = 6172701662394420909L;
+
 	public String name = null;
 	public String type = null;
 	public String pokedexNumber = null;
 	public ArrayList<String> evolution_stages = null;
 	public ArrayList<Integer> evolution_levels = null;
 	public int baseExp = 0;
-	public ArrayList<String> moves = null;
+	public ArrayList<String> movesLearned = null;
 	public ArrayList<Integer> levelsLearned = null;
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -35,8 +36,8 @@ public class PartyMemberData implements Serializable {
 			retStr += "  -" + this.evolution_stages.get(x) + " : " + this.evolution_levels.get(x) + "\n";
 		}
 		retStr += "Moves:\n";
-		for (int x = 0; x < this.moves.size(); x++) {
-			retStr += "  -" + this.moves.get(x) + " : " + this.levelsLearned.get(x) + "\n";
+		for (int x = 0; x < this.movesLearned.size(); x++) {
+			retStr += "  -" + this.movesLearned.get(x) + " : " + this.levelsLearned.get(x) + "\n";
 		}
 		return retStr;
 	}
@@ -55,7 +56,6 @@ public class PartyMemberData implements Serializable {
 	// ////////////////////////////////////////////////////////////////////////
 	public boolean isValidData() {
 		return (this.type != null && this.pokedexNumber != null && this.evolution_stages != null
-				&& this.evolution_levels != null && this.baseExp != 0 && this.moves != null
-				&& this.levelsLearned != null);
+				&& this.evolution_levels != null && this.baseExp != 0 && this.movesLearned != null && this.levelsLearned != null);
 	}
 }

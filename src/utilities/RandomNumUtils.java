@@ -79,9 +79,10 @@ public class RandomNumUtils {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	public static int randomBaseStat(int level) {
-		int start = (int) (2.4D * level) - 5;
-		int end = (int) (2.4D * level) + 5;
-		return generateRandom(start, end);
+		int start = (int) (2.4 * level) - 5;
+		int end = (int) (2.4 * level) + 5;
+		int stat = generateRandom(start, end);
+		return (stat < 5) ? 5 : stat;
 	}
 
 	// ////////////////////////////////////////////////////////////////////////

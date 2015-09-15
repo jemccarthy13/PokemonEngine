@@ -12,7 +12,8 @@ import model.Coordinate;
 import model.GameData.SCREEN;
 import party.Party;
 import party.PartyMember;
-import party.PartyMember.STATS;
+import party.PartyMember.STAT;
+import party.PartyMember.STATUS;
 import tiles.TileSet;
 import trainers.Actor;
 import trainers.Actor.DIR;
@@ -82,20 +83,7 @@ public class GamePanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 
 		game.updateTime();
-
-		if (game.getScreen() == SCREEN.BATTLE || game.getScreen() == SCREEN.BATTLE_FIGHT) {
-			if (BattleEngine.getInstance().playerCurrentPokemon.getStat(STATS.HP) <= 0) {
-				// TODO - player switch pokemon
-				BattleEngine.getInstance().playerSwitchPokemon();
-			}
-			if (BattleEngine.getInstance().enemyPokemon.get(0).getStat(STATS.HP) <= 0) {
-				// TODO - needs to check for all enemy pokemon health <= 0
-				BattleEngine.getInstance().Win();
-			}
-			if (!BattleEngine.getInstance().playerTurn) {
-				BattleEngine.getInstance().enemyTurn();
-			}
-		} else if (game.getScreen() == SCREEN.WORLD) {
+		if (game.getScreen() == SCREEN.WORLD) {
 			handleMovement();
 		}
 	}
@@ -143,7 +131,8 @@ public class GamePanel extends JPanel implements ActionListener {
 				}
 			}
 			for (PartyMember p : playerPokemon) { // deal PZN/BRN damage
-				if ((p.getStatusEffect() == 2) || (p.getStatusEffect() == 3))
+				STATUS partyStatus = p.getStatusEffect();
+				if (partyStatus == STATUS.BRN || partyStatus == STATUS.PZN)
 					p.doDamage(1);
 			}
 		}
@@ -151,7 +140,7 @@ public class GamePanel extends JPanel implements ActionListener {
 		// check for trainer encounter with any NPC
 		for (Actor curNPC : NPCLibrary.getInstance().values()) {
 			if (game.validEncounterConditions(curNPC)) {
-				game.stopNPCMovement();
+				game.pauseNPCMovement();
 				enemyTrainerAnimation(curNPC);
 				game.playBackgroundMusic("TrainerBattle");
 				game.doEncounter(curNPC.getPokemon(), curNPC.getName());

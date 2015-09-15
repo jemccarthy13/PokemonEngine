@@ -3,9 +3,9 @@ package trainers;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import party.BillsPC;
 import location.Location;
 import location.LocationLibrary;
+import party.BillsPC;
 import utilities.RandomNumUtils;
 
 //////////////////////////////////////////////////////////////////////////
@@ -43,15 +43,6 @@ public class Player extends Actor implements Serializable {
 		super(0, 0, n, "PLAYER");
 		curLoc = new Location(LocationLibrary.getInstance().get("New Bark Town"));
 		id = RandomNumUtils.createTrainerID();
-	}
-
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// beatTrainer - adds the beaten NPC to the list of beaten trainers
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	public void beatTrainer(Actor t) {
-		this.beatenTrainers.add(t.getName());
 	}
 
 	// ////////////////////////////////////////////////////////////////////////

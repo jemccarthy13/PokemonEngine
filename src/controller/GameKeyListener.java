@@ -5,31 +5,37 @@ import graphics.SpriteLibrary;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.Serializable;
-import java.util.Random;
 
 import model.GameData.SCREEN;
-import party.MoveData;
-import party.PartyMember;
-import party.PartyMember.STATS;
 import trainers.Actor;
 import trainers.Actor.DIR;
 import trainers.NPCLibrary;
 import trainers.Player;
 import utilities.BattleEngine;
+import utilities.BattleEngine.TURN;
 import utilities.DebugUtility;
-import utilities.RandomNumUtils;
 import audio.AudioLibrary.SOUND_EFFECT;
 
 public class GameKeyListener implements KeyListener, Serializable {
 
+	private static final long serialVersionUID = 433796777156267003L;
+
 	GameController gameControl;
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Listen for key events, using a game controller to perform logic
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public GameKeyListener(GameController controller) {
 		gameControl = controller;
 	}
 
-	private static final long serialVersionUID = 433796777156267003L;
-
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Fire this method any time a key is pressed
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public void keyPressed(KeyEvent e) {
 		int keyCode = e.getKeyCode();
 		switch (gameControl.getScreen()) {
@@ -69,38 +75,7 @@ public class GameKeyListener implements KeyListener, Serializable {
 			}
 			break;
 		case NAME:// name screen, add or remove chars
-			if (keyCode == KeyEvent.VK_X)
-				gameControl.removeChar();
-			if ((keyCode == KeyEvent.VK_Z)) {
-				if (gameControl.getRowSelection() == 5) {
-					// check for end or del
-					if (gameControl.getColSelection() == 1 && gameControl.getChosenName().length() > 0) {
-						gameControl.getPlayer().setName(gameControl.getChosenName());
-						gameControl.reset();
-						gameControl.setScreen(SCREEN.INTRO);
-					} else if (gameControl.getColSelection() == 0)
-						gameControl.removeChar();
-				} else {
-					gameControl.addSelectedChar();
-				}
-			}
-			if (keyCode == KeyEvent.VK_DOWN && gameControl.getRowSelection() < 5) {
-				gameControl.incrRowSelection();
-				if (gameControl.getRowSelection() == 5 && gameControl.getColSelection() < 3)
-					gameControl.setColSelection(0);
-				if (gameControl.getRowSelection() == 5 && gameControl.getColSelection() >= 3)
-					gameControl.setColSelection(1);
-			} else if (keyCode == KeyEvent.VK_UP && gameControl.getRowSelection() > 0) {
-				gameControl.decrRowSelection();
-			} else if (keyCode == KeyEvent.VK_LEFT && gameControl.getColSelection() > 0) {
-				gameControl.decrColSelection();
-			} else if (keyCode == KeyEvent.VK_RIGHT && gameControl.getRowSelection() == 5
-					&& gameControl.getColSelection() < 1) {
-				gameControl.incrColSelection();
-			} else if (keyCode == KeyEvent.VK_RIGHT && gameControl.getRowSelection() < 5
-					&& gameControl.getColSelection() < 5) {
-				gameControl.incrColSelection();
-			}
+			handleNameEvent(keyCode);
 			break;
 		case POKEMON:
 		case BAG:
@@ -127,7 +102,7 @@ public class GameKeyListener implements KeyListener, Serializable {
 			break;
 		default:
 			// otherwise, fire the eventHandler
-			if (gameControl.isMovable() && !gameControl.isInBattle() && !gameControl.isPlayerWalking()) {
+			if (gameControl.isMovable() && !gameControl.isPlayerWalking()) {
 				handleWorldEvent(keyCode);
 			}
 		}
@@ -142,7 +117,7 @@ public class GameKeyListener implements KeyListener, Serializable {
 	// handleBattleEvent handles a battle event - gets choices, deals damage
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public void handleBattleEvent(int keyCode) {
+	private void handleBattleEvent(int keyCode) {
 		switch (gameControl.getScreen()) {
 		case BATTLE_ITEM:
 			if (keyCode == KeyEvent.VK_X || keyCode == KeyEvent.VK_Z) {
@@ -158,7 +133,7 @@ public class GameKeyListener implements KeyListener, Serializable {
 			break;
 		case BATTLE_FIGHT:
 			// at move selection menu
-			PartyMember playerPokemon = BattleEngine.getInstance().playerCurrentPokemon;
+			// TODO - verify move exists at given selection
 			if (keyCode == KeyEvent.VK_X) {
 				gameControl.setScreen(SCREEN.BATTLE);
 			} else if (keyCode == KeyEvent.VK_UP) {
@@ -170,31 +145,9 @@ public class GameKeyListener implements KeyListener, Serializable {
 			} else if (keyCode == KeyEvent.VK_RIGHT) {
 				BattleEngine.getInstance().currentSelectionFightX = 1;
 			} else if (keyCode == KeyEvent.VK_Z) {
-
-				playerPokemon.tryToThaw();
-
-				// get Player's move if not FZN or SLP
-				// TODO convert to use BATTLE_STATUS enum
-				int move = -1;
-				move = ((playerPokemon.getStatusEffect() != 4) || (playerPokemon.getStatusEffect() != 5)) ? getSelectedMove(move)
-						: -1;
-
-				boolean checkPar = (playerPokemon.getStatusEffect() == 1) ? true : false;
-				evaluateAndDealDamage(checkPar, playerPokemon, move);
-
-				if (playerPokemon.getStatusEffect() == 2) { // burned
-					playerPokemon.doDamage(2);
-					gameControl.playClip(SOUND_EFFECT.DAMAGE);
-					// TODO - convert to use message box
-					DebugUtility.printMessage(playerPokemon.getName() + " has been hurt by its burn");
-				} else if (playerPokemon.getStatusEffect() == 3) { // PSN
-					playerPokemon.doDamage(2);
-					gameControl.playClip(SOUND_EFFECT.DAMAGE);
-					// TODO - convert to use message box
-					DebugUtility.printMessage(playerPokemon.getName() + " has been hurt by its poison");
-				}
-				gameControl.setScreen(SCREEN.BATTLE);
-				BattleEngine.getInstance().playerTurn = false;
+				int move = getSelectedMove();
+				BattleEngine.getInstance().takeTurn(TURN.PLAYER, move);
+				BattleEngine.getInstance().enemyTurn();
 			}
 
 			// play sound when any button is pressed
@@ -242,7 +195,8 @@ public class GameKeyListener implements KeyListener, Serializable {
 	// user's highlighted choice
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	private int getSelectedMove(int move) {
+	private int getSelectedMove() {
+		int move = -1;
 		if ((BattleEngine.getInstance().currentSelectionFightX == 0)
 				&& (BattleEngine.getInstance().currentSelectionFightY == 0)) {
 			move = 0;
@@ -264,50 +218,13 @@ public class GameKeyListener implements KeyListener, Serializable {
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// evaluateAndDealDamage - based on the seleted move and whether or not
-	// the pokemon was parlyzed, calculate the damage and deal it
-	//
-	// TODO - make this usable by the enemy as well. Possibly move to
-	// BattleEngine
-	// ////////////////////////////////////////////////////////////////////////
-	private void evaluateAndDealDamage(boolean checkPar, PartyMember playerPokemon, int move) {
-		Random r = new Random();
-		boolean par = (checkPar) ? r.nextInt(2) < 0 : false;
-		if (!par) {
-			MoveData chosen = playerPokemon.getMove(move);
-
-			int attackStat = 0;
-			int defStat = 0;
-
-			if (chosen.isStat) {
-				// TODO - logic for stat based moves
-				attackStat = playerPokemon.getStat(STATS.SP_ATTACK);
-				defStat = BattleEngine.getInstance().enemyPokemon.get(0).getStat(STATS.SP_DEFENSE);
-			} else {
-				// calculate and deal physical damage
-				attackStat = playerPokemon.getStat(STATS.ATTACK);
-				defStat = BattleEngine.getInstance().enemyPokemon.get(0).getStat(STATS.DEFENSE);
-				int damage = (int) (((2 * playerPokemon.getLevel() / 5 + 2) * chosen.power * attackStat / defStat / 50 + 2)
-						* RandomNumUtils.generateRandom(85, 100) / 100.0);
-				((PartyMember) BattleEngine.getInstance().enemyPokemon.get(0)).doDamage(damage);
-
-				gameControl.playClip(SOUND_EFFECT.DAMAGE);
-			}
-			chosen.movePP--;
-		} else {
-			DebugUtility.printMessage(playerPokemon.getName() + " is paralyzed. It can't move.");
-		}
-	}
-
-	// ////////////////////////////////////////////////////////////////////////
-	//
 	// handleMenuEvent handles a menu event - bag, options, party, save, etc
 	// Pretty much just a large batch of logic switching to control graphics
 	//
 	// TODO - implement save feature
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public void handleMenuEvent(int keyCode) {
+	private void handleMenuEvent(int keyCode) {
 		SCREEN curScreen = gameControl.getScreen();
 
 		if (keyCode == KeyEvent.VK_X) {
@@ -408,7 +325,7 @@ public class GameKeyListener implements KeyListener, Serializable {
 	// TODO - look into shortening or method-izing the border NPC check
 	//
 	// ////////////////////////////////////////////////////////////////////////
-	public void handleWorldEvent(int keyCode) {
+	private void handleWorldEvent(int keyCode) {
 		// match the key to a direction
 		DIR toTravel = null;
 		boolean moving = true;
@@ -481,6 +398,46 @@ public class GameKeyListener implements KeyListener, Serializable {
 				gameControl.setScreen(SCREEN.MESSAGE);
 				gameControl.getCurNPC().setStationary(true);
 			}
+		}
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Handle adding & removing characters to a temporary buffer
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	private void handleNameEvent(int keyCode) {
+		if (keyCode == KeyEvent.VK_X)
+			gameControl.removeChar();
+		if ((keyCode == KeyEvent.VK_Z)) {
+			if (gameControl.getNameRowSelection() == 5) {
+				// check for end or del
+				if (gameControl.getNameColSelection() == 1 && gameControl.getChosenName().length() > 0) {
+					gameControl.getPlayer().setName(gameControl.getChosenName());
+					gameControl.resetNameBuilder();
+					gameControl.setScreen(SCREEN.INTRO);
+				} else if (gameControl.getNameColSelection() == 0)
+					gameControl.removeChar();
+			} else {
+				gameControl.addSelectedChar();
+			}
+		}
+		if (keyCode == KeyEvent.VK_DOWN && gameControl.getNameRowSelection() < 5) {
+			gameControl.incrNameRowSelection();
+			if (gameControl.getNameRowSelection() == 5 && gameControl.getNameColSelection() < 3)
+				gameControl.setNameColSelection(0);
+			if (gameControl.getNameRowSelection() == 5 && gameControl.getNameColSelection() >= 3)
+				gameControl.setNameColSelection(1);
+		} else if (keyCode == KeyEvent.VK_UP && gameControl.getNameRowSelection() > 0) {
+			gameControl.decrNameRowSelection();
+		} else if (keyCode == KeyEvent.VK_LEFT && gameControl.getNameColSelection() > 0) {
+			gameControl.decrNameColSelection();
+		} else if (keyCode == KeyEvent.VK_RIGHT && gameControl.getNameRowSelection() == 5
+				&& gameControl.getNameColSelection() < 1) {
+			gameControl.incrNameColSelection();
+		} else if (keyCode == KeyEvent.VK_RIGHT && gameControl.getNameRowSelection() < 5
+				&& gameControl.getNameColSelection() < 5) {
+			gameControl.incrNameColSelection();
 		}
 	}
 }

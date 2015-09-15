@@ -10,7 +10,8 @@ import java.awt.geom.AffineTransform;
 import model.Configuration;
 import party.Party;
 import party.PartyMember;
-import party.PartyMember.STATS;
+import party.PartyMember.STAT;
+import party.PartyMember.STATUS;
 import tiles.Tile;
 import tiles.TileSet;
 import trainers.Actor;
@@ -122,13 +123,13 @@ public class Painter {
 	private static void paintNameInputScreen(Graphics g) {
 		g.drawImage(SpriteLibrary.getImage("Namescreen"), 0, 0, null);
 
-		if (game.getRowSelection() < 5) {
-			g.drawImage(SpriteLibrary.getImage(ARROW), (int) (40 + Tile.TILESIZE * 2 * game.getColSelection()), 100
-					+ Tile.TILESIZE * game.getRowSelection(), null);
+		if (game.getNameRowSelection() < 5) {
+			g.drawImage(SpriteLibrary.getImage(ARROW), (int) (40 + Tile.TILESIZE * 2 * game.getNameColSelection()), 100
+					+ Tile.TILESIZE * game.getNameRowSelection(), null);
 		}
-		if (game.getRowSelection() == 5) {
-			g.drawImage(SpriteLibrary.getImage(ARROW), (int) (100 + Tile.TILESIZE * 6 * game.getColSelection()), 100
-					+ Tile.TILESIZE * game.getRowSelection(), null);
+		if (game.getNameRowSelection() == 5) {
+			g.drawImage(SpriteLibrary.getImage(ARROW), (int) (100 + Tile.TILESIZE * 6 * game.getNameColSelection()),
+					100 + Tile.TILESIZE * game.getNameRowSelection(), null);
 		}
 
 		String name = game.getChosenName();
@@ -178,7 +179,7 @@ public class Painter {
 		g.drawImage(SpriteLibrary.getImage("BG"), 0, 0, null);
 
 		PartyMember playerPokemon = BattleEngine.getInstance().playerCurrentPokemon;
-		PartyMember enemyPokemon = BattleEngine.getInstance().enemyPokemon.get(0);
+		PartyMember enemyPokemon = BattleEngine.getInstance().enemyCurrentPokemon;
 
 		g.drawImage(playerPokemon.getBackSprite().getImage(),
 				120 - (playerPokemon.getBackSprite().getImage().getHeight(gamePanel)) / 2, 228 - playerPokemon
@@ -208,30 +209,14 @@ public class Painter {
 			g.drawImage(SpriteLibrary.getImage(ARROW), 384, 270, null);
 		}
 
-		// player status effect information
-		if (playerPokemon.getStatusEffect() == 1) {
-			g.drawImage(SpriteLibrary.getImage("StatusPAR"), 415, 140, null);
-		} else if (playerPokemon.getStatusEffect() == 2) {
-			g.drawImage(SpriteLibrary.getImage("StatusBRN"), 415, 140, null);
-		} else if (playerPokemon.getStatusEffect() == 3) {
-			g.drawImage(SpriteLibrary.getImage("StatusPSN"), 415, 140, null);
-		} else if (playerPokemon.getStatusEffect() == 4) {
-			g.drawImage(SpriteLibrary.getImage("StatusSLP"), 415, 140, null);
-		} else if (playerPokemon.getStatusEffect() == 5) {
-			g.drawImage(SpriteLibrary.getImage("StatusFRZ"), 415, 140, null);
+		STATUS playerPartyStatus = playerPokemon.getStatusEffect();
+		if (playerPartyStatus != STATUS.NORMAL) {
+			g.drawImage(SpriteLibrary.getImage("Status" + playerPartyStatus), 415, 140, null);
 		}
 
-		// enemy status effect information
-		if (enemyPokemon.getStatusEffect() == 1) {
-			g.drawImage(SpriteLibrary.getImage("StatusPAR"), 18, 60, null);
-		} else if (enemyPokemon.getStatusEffect() == 2) {
-			g.drawImage(SpriteLibrary.getImage("StatusBRN"), 18, 60, null);
-		} else if (enemyPokemon.getStatusEffect() == 3) {
-			g.drawImage(SpriteLibrary.getImage("StatusPSN"), 18, 60, null);
-		} else if (enemyPokemon.getStatusEffect() == 4) {
-			g.drawImage(SpriteLibrary.getImage("StatusSLP"), 18, 60, null);
-		} else if (enemyPokemon.getStatusEffect() == 5) {
-			g.drawImage(SpriteLibrary.getImage("StatusFRZ"), 18, 60, null);
+		STATUS enemyPartyStatus = enemyPokemon.getStatusEffect();
+		if (enemyPartyStatus != STATUS.NORMAL) {
+			g.drawImage(SpriteLibrary.getImage("Status" + enemyPartyStatus), 18, 60, null);
 		}
 
 		paintPokemonInfo(g);
@@ -281,18 +266,18 @@ public class Painter {
 	// ////////////////////////////////////////////////////////////////////////
 	private static void paintPokemonInfo(Graphics g) {
 		PartyMember playerPokemon = BattleEngine.getInstance().playerCurrentPokemon;
-		PartyMember enemyPokemon = BattleEngine.getInstance().enemyPokemon.get(0);
+		PartyMember enemyPokemon = BattleEngine.getInstance().enemyCurrentPokemon;
 
 		// player pokemon information
 		g.drawString(playerPokemon.getName(), 300, 175);
 		g.drawString(String.valueOf(playerPokemon.getLevel()), 435, 175);
-		g.drawString(String.valueOf(playerPokemon.getStat(STATS.HP)), 361, 207);
-		g.drawString(String.valueOf(playerPokemon.getMaxStat(STATS.HP)), 403, 207);
+		g.drawString(String.valueOf(playerPokemon.getStat(STAT.HP)), 361, 207);
+		g.drawString(String.valueOf(playerPokemon.getMaxStat(STAT.HP)), 403, 207);
 		// enemy pokemon information
 		g.drawString(enemyPokemon.getName(), 20, 25);
 		g.drawString(String.valueOf(enemyPokemon.getLevel()), 145, 25);
-		g.drawString(String.valueOf(enemyPokemon.getStat(STATS.HP)), 70, 45);
-		g.drawString(String.valueOf(enemyPokemon.getMaxStat(STATS.HP)), 112, 45);
+		g.drawString(String.valueOf(enemyPokemon.getStat(STAT.HP)), 70, 45);
+		g.drawString(String.valueOf(enemyPokemon.getMaxStat(STAT.HP)), 112, 45);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////

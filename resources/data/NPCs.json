@@ -17,6 +17,10 @@
 		    "name":"Rattatta",
 		    "level": 4
 	    	}
+			{
+			"name":"Rattatta",
+			"level":6
+			}
 	    ],
 	    "money": 64
 	},

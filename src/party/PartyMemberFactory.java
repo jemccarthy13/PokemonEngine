@@ -84,14 +84,14 @@ public class PartyMemberFactory extends HashMap<String, PartyMemberData> {
 				}
 
 				// get the pokemon's moves & levels they learn those moves
-				pd.moves = new ArrayList<String>();
+				pd.movesLearned = new ArrayList<String>();
 				pd.levelsLearned = new ArrayList<Integer>();
 
 				JSONArray json_moves = (JSONArray) pokemon_data.get("moves");
 				Iterator<?> moves_iterator = json_moves.iterator();
 				while (moves_iterator.hasNext()) {
 					JSONObject move = (JSONObject) moves_iterator.next();
-					pd.moves.add((String) move.get("name"));
+					pd.movesLearned.add((String) move.get("name"));
 					pd.levelsLearned.add(((Long) (move.get("level"))).intValue());
 				}
 
