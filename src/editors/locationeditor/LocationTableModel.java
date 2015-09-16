@@ -128,29 +128,42 @@ public class LocationTableModel extends AbstractTableModel {
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		LocationData obj = (LocationData) objects.get(rowIndex);
+
+		Object returned;
 		switch (columnIndex) {
 		case 0:
-			return obj.name;
+			returned = obj.name;
+			break;
 		case 1:
-			return obj.canFlyOutOf;
+			returned = obj.canFlyOutOf;
+			break;
 		case 2:
-			return obj.boundaries.get(DIR.NORTH);
+			returned = obj.boundaries.get(DIR.NORTH);
+			break;
 		case 3:
-			return obj.boundaries.get(DIR.EAST);
+			returned = obj.boundaries.get(DIR.EAST);
+			break;
 		case 4:
-			return obj.boundaries.get(DIR.WEST);
+			returned = obj.boundaries.get(DIR.WEST);
+			break;
 		case 5:
-			return obj.boundaries.get(DIR.SOUTH);
+			returned = obj.boundaries.get(DIR.SOUTH);
+			break;
 		case 6:
-			return obj.pokemon;
+			returned = obj.pokemon;
+			break;
 		case 7:
-			return obj.probabilities;
+			returned = obj.probabilities;
+			break;
 		case 8:
-			return obj.minLevels;
+			returned = obj.minLevels;
+			break;
 		case 9:
-			return obj.maxLevels;
+			returned = obj.maxLevels;
+			break;
 		default:
 			throw new IndexOutOfBoundsException();
 		}
+		return returned;
 	}
 }
