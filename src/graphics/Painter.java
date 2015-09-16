@@ -69,6 +69,15 @@ public class Painter {
 			paintBattle(g);
 			paintBattleFight(g);
 			break;
+		case BATTLE_MESSAGE:
+			paintBattle(g);
+			paintMessageBox(g, game);
+			break;
+		case BATTLE_ITEM:
+			paintBagScreen(g);
+			break;
+		case BATTLE_POKEMON:
+			paintPartyScreen(g);
 		case MENU:
 			paintWorld(g);
 			paintPauseMenu(g);
@@ -101,13 +110,6 @@ public class Painter {
 		case MESSAGE:
 			paintWorld(g);
 			paintMessageBox(g, game);
-			break;
-		case BATTLE_MESSAGE:
-			paintBattle(g);
-			paintMessageBox(g, game);
-			break;
-		case BATTLE_ITEM:
-			paintBagScreen(g);
 			break;
 		default:
 			paintWorld(g);
@@ -195,19 +197,15 @@ public class Painter {
 		g.drawString("PKMN", 400, 260);
 		g.drawString("ITEM", 290, 290);
 		g.drawString("RUN", 400, 290);
-		if ((BattleEngine.getInstance().currentSelectionMainX == 0)
-				&& (BattleEngine.getInstance().currentSelectionMainY == 0)) {
-			g.drawImage(SpriteLibrary.getImage(ARROW), 274, 240, null);
-		} else if ((BattleEngine.getInstance().currentSelectionMainX == 0)
-				&& (BattleEngine.getInstance().currentSelectionMainY == 1)) {
-			g.drawImage(SpriteLibrary.getImage(ARROW), 274, 270, null);
-		} else if ((BattleEngine.getInstance().currentSelectionMainX == 1)
-				&& (BattleEngine.getInstance().currentSelectionMainY == 0)) {
-			g.drawImage(SpriteLibrary.getImage(ARROW), 384, 240, null);
-		} else if ((BattleEngine.getInstance().currentSelectionMainX == 1)
-				&& (BattleEngine.getInstance().currentSelectionMainY == 1)) {
-			g.drawImage(SpriteLibrary.getImage(ARROW), 384, 270, null);
-		}
+
+		int[] arrowX = { 274, 240 };
+		int[] arrowY = { 384, 270 };
+
+		int selX = BattleEngine.getInstance().currentSelectionFightX;
+		int selY = BattleEngine.getInstance().currentSelectionFightY;
+
+		// draw the arrow based on current selection
+		g.drawImage(SpriteLibrary.getImage(ARROW), arrowX[selX], arrowY[selY], null);
 
 		STATUS playerPartyStatus = playerPokemon.getStatusEffect();
 		if (playerPartyStatus != STATUS.NORMAL) {
@@ -231,30 +229,23 @@ public class Painter {
 		PartyMember playerPokemon = BattleEngine.getInstance().playerCurrentPokemon;
 
 		g.drawImage(SpriteLibrary.getImage("BattleFight"), 0, 0, null);
-		g.drawString(playerPokemon.getMove(0).name, 200, 260);
-		if (playerPokemon.getNumMoves() > 1) {
-			g.drawString(playerPokemon.getMove(1).name, 345, 260);
-		}
-		if (playerPokemon.getNumMoves() > 2) {
-			g.drawString(playerPokemon.getMove(2).name, 200, 290);
-		}
-		if (playerPokemon.getNumMoves() > 3) {
-			g.drawString(playerPokemon.getMove(3).name, 345, 290);
+
+		int[] x = { 200, 345, 200, 345 };
+		int[] y = { 260, 260, 290, 290 };
+
+		// draw the moves
+		for (int i = 0; i < playerPokemon.getNumMoves(); i++) {
+			g.drawString(playerPokemon.getMove(i).name, x[i], y[i]);
 		}
 
-		if ((BattleEngine.getInstance().currentSelectionFightX == 0)
-				&& (BattleEngine.getInstance().currentSelectionFightY == 0)) {
-			g.drawImage(SpriteLibrary.getImage(ARROW), 184, 240, null);
-		} else if ((BattleEngine.getInstance().currentSelectionFightX == 0)
-				&& (BattleEngine.getInstance().currentSelectionFightY == 1)) {
-			g.drawImage(SpriteLibrary.getImage(ARROW), 184, 270, null);
-		} else if ((BattleEngine.getInstance().currentSelectionFightX == 1)
-				&& (BattleEngine.getInstance().currentSelectionFightY == 0)) {
-			g.drawImage(SpriteLibrary.getImage(ARROW), 329, 240, null);
-		} else if ((BattleEngine.getInstance().currentSelectionFightX == 1)
-				&& (BattleEngine.getInstance().currentSelectionFightY == 1)) {
-			g.drawImage(SpriteLibrary.getImage(ARROW), 329, 270, null);
-		}
+		int[] arrowX = { 184, 329 };
+		int[] arrowY = { 240, 270 };
+
+		int selX = BattleEngine.getInstance().currentSelectionFightX;
+		int selY = BattleEngine.getInstance().currentSelectionFightY;
+
+		// draw the arrow based on current selection
+		g.drawImage(SpriteLibrary.getImage(ARROW), arrowX[selX], arrowY[selY], null);
 
 		paintPokemonInfo(g);
 	}

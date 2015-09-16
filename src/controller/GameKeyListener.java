@@ -128,31 +128,52 @@ public class GameKeyListener implements KeyListener, Serializable {
 		case BATTLE_MESSAGE:
 			if (keyCode == KeyEvent.VK_X || keyCode == KeyEvent.VK_Z) {
 				gameControl.setScreen(SCREEN.WORLD);
-				BattleEngine.getInstance().inPokemon = false;
 				gameControl.setMovable(true);
 			}
 			break;
 		case BATTLE_FIGHT:
 			// at move selection menu
 			// TODO - verify move exists at given selection
-			if (keyCode == KeyEvent.VK_X) {
+			// press the arrow keys to change the bit mask of the current
+			// selection
+			int selX = BattleEngine.getInstance().currentSelectionFightX;
+			int selY = BattleEngine.getInstance().currentSelectionFightY;
+
+			switch (keyCode) {
+			case KeyEvent.VK_UP:
+				selX = 0;
+				break;
+			case KeyEvent.VK_DOWN:
+				selX = 1;
+				break;
+			case KeyEvent.VK_LEFT:
+				selY = 0;
+				break;
+			case KeyEvent.VK_RIGHT:
+				selY = 1;
+				break;
+			case KeyEvent.VK_X:
 				gameControl.setScreen(SCREEN.BATTLE);
-			} else if (keyCode == KeyEvent.VK_UP) {
-				BattleEngine.getInstance().currentSelectionFightY = 0;
-			} else if (keyCode == KeyEvent.VK_DOWN) {
-				BattleEngine.getInstance().currentSelectionFightY = 1;
-			} else if (keyCode == KeyEvent.VK_LEFT) {
-				BattleEngine.getInstance().currentSelectionFightX = 0;
-			} else if (keyCode == KeyEvent.VK_RIGHT) {
-				BattleEngine.getInstance().currentSelectionFightX = 1;
-			} else if (keyCode == KeyEvent.VK_Z) {
+				break;
+			case KeyEvent.VK_Z:
 				int move = getSelectedMove();
 				BattleEngine.getInstance().takeTurn(TURN.PLAYER, move);
 				BattleEngine.getInstance().enemyTurn();
+				break;
 			}
+
+			if (2 * selX + selY <= BattleEngine.getInstance().playerCurrentPokemon.getNumMoves()) {
+				BattleEngine.getInstance().currentSelectionFightX = selX;
+				BattleEngine.getInstance().currentSelectionFightY = selY;
+			}
+			// 00 - 0
+			// 01 - 2
+			// 11 - 3
+			// 10 - 1
 
 			// play sound when any button is pressed
 			gameControl.playClip(SOUND_EFFECT.SELECT);
+
 			break;
 		case BATTLE:
 			if (keyCode == KeyEvent.VK_UP) {
@@ -172,15 +193,18 @@ public class GameKeyListener implements KeyListener, Serializable {
 				}
 				if ((BattleEngine.getInstance().currentSelectionMainX == 1)
 						&& (BattleEngine.getInstance().currentSelectionMainY == 0)) {
-					BattleEngine.getInstance().inPokemonMenu();
+					gameControl.setScreen(SCREEN.BATTLE_POKEMON);
 				}
 				if ((BattleEngine.getInstance().currentSelectionMainX == 0)
 						&& (BattleEngine.getInstance().currentSelectionMainY == 1)) {
-					BattleEngine.getInstance().inItemMenu();
+					gameControl.setScreen(SCREEN.BATTLE_ITEM);
 				}
 				if ((BattleEngine.getInstance().currentSelectionMainX == 1)
 						&& (BattleEngine.getInstance().currentSelectionMainY == 1)) {
-					BattleEngine.getInstance().Run();
+					if (BattleEngine.getInstance().enemyName == null) {
+						DebugUtility.printMessage("Got away safely!");
+						gameControl.setScreen(SCREEN.WORLD);
+					}
 				}
 			}
 			gameControl.playClip(SOUND_EFFECT.SELECT);

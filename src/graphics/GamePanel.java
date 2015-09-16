@@ -95,46 +95,76 @@ public class GamePanel extends JPanel implements ActionListener {
 		// get all comparison variables up front
 		Player player = game.getPlayer();
 		DIR playerDir = player.getDirection();
-		Party playerPokemon = player.getPokemon();
 		Coordinate playerPos = player.getPosition();
 
-		if (game.isPlayerWalking()) { // take care of walking animation
-			// as the gameTimer increments,
-			animationStep += 1;
-			game.setOffsetY(playerDir);
-			game.setOffsetX(playerDir);
-
-			player.changeSprite(animationStep, isRightFoot);
-		}
-
 		// check for teleport at location
-		// if no teleport, check for animation completion
-		// when walking animation is done, handle poison damage
 		if (game.isTeleportTile(playerPos)) {
 			game.doTeleport(playerPos);
-		} else if (animationStep >= 16) {
-			animationStep = 0; // reset animation counter
-			game.setPlayerWalking(false); // player is no longer in animation
-			isRightFoot = (!isRightFoot);
-			if (game.canMoveInDir(playerDir)) {
-				player.move(playerDir);
-				// check for wild encounter
-				if (game.isBattleTile(player.getPosition())) {
-					if (RandomNumUtils.isWildEncounter()) {
-						game.setWildPokemon();
-						PartyMember wildP = game.getCurrentEnemy().get(0);
-						game.setCurrentMessage("Wild " + wildP.getName() + " appeared.");
-						game.doEncounter(game.getCurrentEnemy(), "");
-					}
-				}
+		} else {
+			Party playerPokemon = player.getPokemon();
+
+			if (game.isPlayerWalking()) { // take care of walking animation
+				// as the gameTimer increments,
+				animationStep += 1;
+				game.setOffsetY(playerDir);
+				game.setOffsetX(playerDir);
+
+				player.changeSprite(animationStep, isRightFoot);
 			}
-			for (PartyMember p : playerPokemon) { // deal PZN/BRN damage
-				STATUS partyStatus = p.getStatusEffect();
-				if (partyStatus == STATUS.BRN || partyStatus == STATUS.PZN)
-					p.doDamage(1);
+
+			// check for animation completion
+			// when walking animation is done, handle poison damage
+			if (animationStep >= 16) {
+				animationStep = 0; // reset animation counter
+				game.setPlayerWalking(false); // player is no longer in
+												// animation
+				isRightFoot = !isRightFoot;
+				if (game.canMoveInDir(playerDir)) {
+					player.move(playerDir);
+					checkForWildEncounter(player.getPosition());
+				}
+				checkForStatusDamage(playerPokemon);
+			}
+
+		}
+		checkForNPCEncounter();
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// If any party member has a harmful status effect, do damage
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	private void checkForStatusDamage(Party party) {
+		for (PartyMember p : party) {
+			STATUS partyStatus = p.getStatusEffect();
+			if (partyStatus == STATUS.BRN || partyStatus == STATUS.PZN)
+				p.doDamage(1);
+		}
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Check for valid wild encounter conditions
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	private void checkForWildEncounter(Coordinate position) {
+		if (game.isBattleTile(position)) {
+			if (RandomNumUtils.isWildEncounter()) {
+				game.setWildPokemon();
+				PartyMember wildP = game.getCurrentEnemy().get(0);
+				game.setCurrentMessage("Wild " + wildP.getName() + " appeared.");
+				game.doEncounter(game.getCurrentEnemy(), "");
 			}
 		}
+	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Check for valid trainer encounter conditions
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	private void checkForNPCEncounter() {
 		// check for trainer encounter with any NPC
 		for (Actor curNPC : NPCLibrary.getInstance().values()) {
 			if (game.validEncounterConditions(curNPC)) {

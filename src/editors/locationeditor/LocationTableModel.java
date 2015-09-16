@@ -19,6 +19,7 @@ public class LocationTableModel extends AbstractTableModel {
 			"minLevels", "maxLevels" };
 	Class<?>[] columnTypes = { String.class, Boolean.class, Integer.class, Integer.class, Integer.class, Integer.class,
 			String.class, String.class, String.class, String.class };
+	Object[] selection;
 
 	private static final long serialVersionUID = 2210111264024740816L;
 	private final List<Object> objects = new ArrayList<Object>();

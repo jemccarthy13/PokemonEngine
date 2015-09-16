@@ -17,8 +17,6 @@ import controller.GameController;
 //
 // BattleScene - holds all logic for a Pokemon battle - w/wild or Trainer
 //
-// TODO - implement player switching Pokemon
-// TODO - implement enemy switching Pokemon
 // TODO - change to message boxes for messages
 //
 //////////////////////////////////////////////////////////////////////////
@@ -27,7 +25,6 @@ public class BattleEngine {
 
 	private GameController game = null;
 	public boolean playerTurn = false;
-	public boolean inPokemon = false;
 	public boolean playerWon = false;
 	public int currentSelectionMainX = -1;
 	public int currentSelectionMainY = -1;
@@ -84,28 +81,6 @@ public class BattleEngine {
 
 		game.setMovable(false);
 		game.setScreen(SCREEN.BATTLE);
-	}
-
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Item - set variables for the item menu
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	public void inItemMenu() {
-		game.setScreen(SCREEN.BATTLE_ITEM);
-		// TODO item menu logic
-		DebugUtility.printMessage("Item");
-	}
-
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Pokemon - set variables for the party menu
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	public void inPokemonMenu() {
-		this.inPokemon = true;
-		// TODO - pokemon screen logic
-		DebugUtility.printMessage("Pokemon");
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -169,21 +144,6 @@ public class BattleEngine {
 			}
 		}
 		this.playerCurrentPokemon.gainExp(this.enemyCurrentPokemon.getExpGain(false, s));
-	}
-
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Run - set variables for running away from battle (or exiting the fight)
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	public void Run() {
-		if (enemyName == null) {
-			this.enemyCurrentPokemon.setStatusEffect(STATUS.NORMAL);
-
-			game.setScreen(SCREEN.WORLD);
-			// TODO - convert to message box
-			DebugUtility.printMessage("Got away safely!");
-		}
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
