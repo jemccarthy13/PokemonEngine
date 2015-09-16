@@ -90,6 +90,7 @@ public class GameKeyListener implements KeyListener, Serializable {
 		case BATTLE:
 		case BATTLE_FIGHT:
 		case BATTLE_ITEM:
+		case BATTLE_POKEMON:
 		case BATTLE_MESSAGE:
 			handleBattleEvent(keyCode);
 			break;
@@ -120,7 +121,8 @@ public class GameKeyListener implements KeyListener, Serializable {
 	// ////////////////////////////////////////////////////////////////////////
 	private void handleBattleEvent(int keyCode) {
 		switch (gameControl.getScreen()) {
-		case BATTLE_ITEM:
+		case BATTLE_ITEM: // temporary does the same thing
+		case BATTLE_POKEMON:
 			if (keyCode == KeyEvent.VK_X || keyCode == KeyEvent.VK_Z) {
 				gameControl.setScreen(SCREEN.BATTLE);
 			}
@@ -141,16 +143,16 @@ public class GameKeyListener implements KeyListener, Serializable {
 
 			switch (keyCode) {
 			case KeyEvent.VK_UP:
-				selX = 0;
-				break;
-			case KeyEvent.VK_DOWN:
-				selX = 1;
-				break;
-			case KeyEvent.VK_LEFT:
 				selY = 0;
 				break;
-			case KeyEvent.VK_RIGHT:
+			case KeyEvent.VK_DOWN:
 				selY = 1;
+				break;
+			case KeyEvent.VK_LEFT:
+				selX = 0;
+				break;
+			case KeyEvent.VK_RIGHT:
+				selX = 1;
 				break;
 			case KeyEvent.VK_X:
 				gameControl.setScreen(SCREEN.BATTLE);
@@ -162,14 +164,12 @@ public class GameKeyListener implements KeyListener, Serializable {
 				break;
 			}
 
-			if (2 * selX + selY <= BattleEngine.getInstance().playerCurrentPokemon.getNumMoves()) {
+			// make sure the move exists before we move the arrow there
+			double x = Math.pow(2, selX);
+			if (x + selY <= BattleEngine.getInstance().playerCurrentPokemon.getNumMoves() - 1) {
 				BattleEngine.getInstance().currentSelectionFightX = selX;
 				BattleEngine.getInstance().currentSelectionFightY = selY;
 			}
-			// 00 - 0
-			// 01 - 2
-			// 11 - 3
-			// 10 - 1
 
 			// play sound when any button is pressed
 			gameControl.playClip(SOUND_EFFECT.SELECT);
@@ -202,8 +202,15 @@ public class GameKeyListener implements KeyListener, Serializable {
 				if ((BattleEngine.getInstance().currentSelectionMainX == 1)
 						&& (BattleEngine.getInstance().currentSelectionMainY == 1)) {
 					if (BattleEngine.getInstance().enemyName == null) {
-						DebugUtility.printMessage("Got away safely!");
-						gameControl.setScreen(SCREEN.WORLD);
+						gameControl.setCurrentMessage("Got away safely!");
+						gameControl.setScreen(SCREEN.MESSAGE);
+					} else {
+						gameControl.setCurrentMessage("Can't run away from a trainer!");
+						gameControl.setScreen(SCREEN.BATTLE_MESSAGE);
+						// TODO BATTLE_MESSAGE should only quit battle when
+						// someone is out of pokemon
+						// otherwise, resume the battle (like this message-
+						// non-fatal message during battle)
 					}
 				}
 			}

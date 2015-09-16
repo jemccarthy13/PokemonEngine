@@ -26,10 +26,10 @@ public class BattleEngine {
 	private GameController game = null;
 	public boolean playerTurn = false;
 	public boolean playerWon = false;
-	public int currentSelectionMainX = -1;
-	public int currentSelectionMainY = -1;
-	public int currentSelectionFightX = -1;
-	public int currentSelectionFightY = -1;
+	public int currentSelectionMainX = 0;
+	public int currentSelectionMainY = 0;
+	public int currentSelectionFightX = 0;
+	public int currentSelectionFightY = 0;
 	public PartyMember playerCurrentPokemon = null;
 	public PartyMember enemyCurrentPokemon = null;
 	private Party enemyPokemon = null;

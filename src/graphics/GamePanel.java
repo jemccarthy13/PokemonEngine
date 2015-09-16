@@ -154,7 +154,7 @@ public class GamePanel extends JPanel implements ActionListener {
 				game.setWildPokemon();
 				PartyMember wildP = game.getCurrentEnemy().get(0);
 				game.setCurrentMessage("Wild " + wildP.getName() + " appeared.");
-				game.doEncounter(game.getCurrentEnemy(), "");
+				game.doEncounter(game.getCurrentEnemy(), null);
 			}
 		}
 	}

@@ -78,6 +78,7 @@ public class Painter {
 			break;
 		case BATTLE_POKEMON:
 			paintPartyScreen(g);
+			break;
 		case MENU:
 			paintWorld(g);
 			paintPauseMenu(g);
@@ -179,14 +180,19 @@ public class Painter {
 	// ////////////////////////////////////////////////////////////////////////
 	private static void paintBattle(Graphics g) {
 		g.drawImage(SpriteLibrary.getImage("BG"), 0, 0, null);
+		paintPokemonInfo(g);
 
 		PartyMember playerPokemon = BattleEngine.getInstance().playerCurrentPokemon;
 		PartyMember enemyPokemon = BattleEngine.getInstance().enemyCurrentPokemon;
 
-		g.drawImage(playerPokemon.getBackSprite().getImage(),
-				120 - (playerPokemon.getBackSprite().getImage().getHeight(gamePanel)) / 2, 228 - playerPokemon
-						.getBackSprite().getImage().getHeight(gamePanel), null);
-		g.drawImage(enemyPokemon.getFrontSprite().getImage(), 310, 25, null);
+		if (playerPokemon.getStat(STAT.HP) > 0) {
+			g.drawImage(playerPokemon.getBackSprite().getImage(),
+					120 - (playerPokemon.getBackSprite().getImage().getHeight(gamePanel)) / 2, 228 - playerPokemon
+							.getBackSprite().getImage().getHeight(gamePanel), null);
+		}
+		if (enemyPokemon.getStat(STAT.HP) > 0) {
+			g.drawImage(enemyPokemon.getFrontSprite().getImage(), 310, 25, null);
+		}
 
 		g.drawImage(SpriteLibrary.getImage("Battle"), 0, 0, null);
 		String battleMessage = game.getCurrentMessage(false);
@@ -198,11 +204,11 @@ public class Painter {
 		g.drawString("ITEM", 290, 290);
 		g.drawString("RUN", 400, 290);
 
-		int[] arrowX = { 274, 240 };
-		int[] arrowY = { 384, 270 };
+		int[] arrowX = { 274, 384 };
+		int[] arrowY = { 240, 270 };
 
-		int selX = BattleEngine.getInstance().currentSelectionFightX;
-		int selY = BattleEngine.getInstance().currentSelectionFightY;
+		int selX = BattleEngine.getInstance().currentSelectionMainX;
+		int selY = BattleEngine.getInstance().currentSelectionMainY;
 
 		// draw the arrow based on current selection
 		g.drawImage(SpriteLibrary.getImage(ARROW), arrowX[selX], arrowY[selY], null);
@@ -260,15 +266,21 @@ public class Painter {
 		PartyMember enemyPokemon = BattleEngine.getInstance().enemyCurrentPokemon;
 
 		// player pokemon information
-		g.drawString(playerPokemon.getName(), 300, 175);
-		g.drawString(String.valueOf(playerPokemon.getLevel()), 435, 175);
-		g.drawString(String.valueOf(playerPokemon.getStat(STAT.HP)), 361, 207);
-		g.drawString(String.valueOf(playerPokemon.getMaxStat(STAT.HP)), 403, 207);
+		int playerHealth = playerPokemon.getStat(STAT.HP);
+		if (playerHealth > 0) {
+			g.drawString(playerPokemon.getName(), 300, 175);
+			g.drawString(String.valueOf(playerPokemon.getLevel()), 435, 175);
+			g.drawString(String.valueOf(playerHealth), 361, 207);
+			g.drawString(String.valueOf(playerPokemon.getMaxStat(STAT.HP)), 403, 207);
+		}
 		// enemy pokemon information
-		g.drawString(enemyPokemon.getName(), 20, 25);
-		g.drawString(String.valueOf(enemyPokemon.getLevel()), 145, 25);
-		g.drawString(String.valueOf(enemyPokemon.getStat(STAT.HP)), 70, 45);
-		g.drawString(String.valueOf(enemyPokemon.getMaxStat(STAT.HP)), 112, 45);
+		int enemyHealth = enemyPokemon.getStat(STAT.HP);
+		if (enemyHealth > 0) {
+			g.drawString(enemyPokemon.getName(), 20, 25);
+			g.drawString(String.valueOf(enemyPokemon.getLevel()), 145, 25);
+			g.drawString(String.valueOf(enemyHealth), 70, 45);
+			g.drawString(String.valueOf(enemyPokemon.getMaxStat(STAT.HP)), 112, 45);
+		}
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
