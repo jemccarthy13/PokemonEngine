@@ -204,10 +204,11 @@ public class GameController implements Serializable {
 	 * 
 	 **************************************************************************/
 
-	public void setMapImageAt(int layer, int y, int parseInt) {
-		gData.imageMap.set(new Coordinate(y, layer), parseInt);
-	}
-
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Retrieve the tile image number at a given (layer, y) position
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public int getMapImageAt(int layer, int y) {
 		Integer i = gData.imageMap.get(new Coordinate(y, layer));
 		if (i == null) {
@@ -217,6 +218,20 @@ public class GameController implements Serializable {
 		}
 	}
 
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Set the tile image number at a given (layer, y) position
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public void setMapImageAt(int layer, int y, int parseInt) {
+		gData.imageMap.set(new Coordinate(y, layer), parseInt);
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// If the map image location doesn't exist, add it
+	//
+	// ////////////////////////////////////////////////////////////////////////
 	public void addMapImageAt(int x, int y, int parseInt) {
 		List<Integer> layer = null;
 		// set up a new layer if it doesn't exist
@@ -233,6 +248,14 @@ public class GameController implements Serializable {
 			}
 			layer.set(y, parseInt);
 		}
+	}
+
+	public Tile getMapTileAt(Coordinate c) {
+		return gData.tileMap.get(c);
+	}
+
+	public void setMapTileAt(Coordinate position, Tile tile) {
+		gData.tileMap.set(position, tile);
 	}
 
 	public int getOffsetX() {
@@ -314,7 +337,6 @@ public class GameController implements Serializable {
 						}
 					}
 					data.addMapImageAt(layer, y, Integer.parseInt(code));
-					// data.setMapImageAt(layer, y, Integer.parseInt(code));
 				}
 			}
 		}
@@ -496,14 +518,6 @@ public class GameController implements Serializable {
 
 	public void setMapWidth(int wdt) {
 		gData.map_width = wdt;
-	}
-
-	public Tile getMapTileAt(Coordinate c) {
-		return gData.tileMap.get(c);
-	}
-
-	public void setMapTileAt(Coordinate position, Tile tile) {
-		gData.tileMap.set(position, tile);
 	}
 
 	public int getStartX() {

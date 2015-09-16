@@ -12,14 +12,12 @@ import model.Coordinate;
 import model.GameData.SCREEN;
 import party.Party;
 import party.PartyMember;
-import party.PartyMember.STAT;
 import party.PartyMember.STATUS;
 import tiles.TileSet;
 import trainers.Actor;
 import trainers.Actor.DIR;
 import trainers.NPCLibrary;
 import trainers.Player;
-import utilities.BattleEngine;
 import utilities.DebugUtility;
 import utilities.RandomNumUtils;
 import controller.GameController;
@@ -94,11 +92,11 @@ public class GamePanel extends JPanel implements ActionListener {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	private void handleMovement() {
-		Player player = game.getPlayer();
 		// get all comparison variables up front
+		Player player = game.getPlayer();
 		DIR playerDir = player.getDirection();
 		Party playerPokemon = player.getPokemon();
-		Coordinate playerPos = player.tData.position;
+		Coordinate playerPos = player.getPosition();
 
 		if (game.isPlayerWalking()) { // take care of walking animation
 			// as the gameTimer increments,

@@ -94,8 +94,9 @@ public class GameKeyListener implements KeyListener, Serializable {
 			handleBattleEvent(keyCode);
 			break;
 		case MESSAGE:
+			// TODO - implement message queue such that VK_X or VK_Z here
+			// pops a message to display off of the queue
 			if (keyCode == KeyEvent.VK_X || keyCode == KeyEvent.VK_Z) {
-				// TODO messages with stages
 				gameControl.setScreen(SCREEN.WORLD);
 				gameControl.setMovable(true);
 			}

@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import model.Coordinate;
+
+import org.json.simple.JSONObject;
+
 import trainers.Actor.DIR;
 
 // ////////////////////////////////////////////////////////////////////////
@@ -12,7 +15,7 @@ import trainers.Actor.DIR;
 // LocationData - loads all data for a particular location from a file
 //
 // ////////////////////////////////////////////////////////////////////////
-public class LocationData implements Serializable {
+public class LocationData extends JSONObject implements Serializable {
 
 	private static final long serialVersionUID = 5824633156334142566L;
 	public String name = null;
@@ -22,6 +25,11 @@ public class LocationData implements Serializable {
 	public ArrayList<String> pokemon = null;
 	public ArrayList<Integer> probabilities = null;
 	public ArrayList<Integer> minLevels = null, maxLevels = null;
+
+	public Object[] toArray() {
+		return new Object[] { name, canFlyOutOf, boundaries.get(DIR.NORTH), boundaries.get(DIR.EAST),
+				boundaries.get(DIR.SOUTH), boundaries.get(DIR.WEST), pokemon, probabilities, minLevels, maxLevels };
+	}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
