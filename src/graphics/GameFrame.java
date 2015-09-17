@@ -3,17 +3,21 @@ package graphics;
 import javax.swing.JFrame;
 
 import utilities.DebugUtility;
+import controller.GameController;
 
+/**
+ * The main UI frame for the Game Engine. Creates and packs a game panel which
+ * houses most of the logic control. This class is more responsible for the
+ * "look and feel"
+ */
 public class GameFrame extends JFrame {
 
 	private static final long serialVersionUID = 8002391898226135401L;
 	static GamePanel pokemonGame;
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Default initializer for game.
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Default constructor for a GameFrame
+	 */
 	public GameFrame() {
 		// Title changes with each game release (along with version)
 		setTitle("Pokemon: Metallic Silver");
@@ -30,12 +34,22 @@ public class GameFrame extends JFrame {
 		add(pokemonGame);
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// The absolute main starting point for the Pokemon game.
-	// Creates the JFrame that houses all game logic.
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Allows access to the game controller (for testing validation purposes)
+	 * 
+	 * @return the current game controller
+	 */
+	public GameController getController() {
+		return pokemonGame.game;
+	}
+
+	/**
+	 * The absolute main starting point for the Pokemon game. Creates the JFrame
+	 * that houses all game logic.
+	 * 
+	 * @param args
+	 *            command line arguments
+	 */
 	public static void main(String[] args) {
 		GameFrame pf = new GameFrame();
 		pf.setVisible(true);
