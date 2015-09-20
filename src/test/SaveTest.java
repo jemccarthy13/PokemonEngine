@@ -2,20 +2,19 @@ package test;
 
 import graphics.GamePanel;
 
-// ////////////////////////////////////////////////////////////////////////
-//
-// Unit testing for Pokemon constructors and information
-// 
-// TODO - needs updating
-//
-// ////////////////////////////////////////////////////////////////////////
+import org.junit.Test;
+
+/**
+ * Test saving and loading the game.
+ */
 public class SaveTest {
+
+	/**
+	 * Test to save the game
+	 */
+	@Test
 	public static void testSave() {
 		GamePanel g = new GamePanel();
 		g.game.saveGame();
-	}
-
-	public static void main(String[] args) {
-		testSave();
 	}
 }

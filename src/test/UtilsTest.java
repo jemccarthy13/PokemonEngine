@@ -4,19 +4,23 @@ import java.util.ArrayList;
 
 import location.Location;
 import location.LocationLibrary;
+
+import org.junit.Test;
+
 import party.PartyMember;
 import party.PartyMemberFactory;
 import utilities.DebugUtility;
 import utilities.RandomNumUtils;
 
+/**
+ * Test the utilities class
+ */
 public class UtilsTest {
 
-	public static void runAllTests() {
-		testRandomLevel();
-		testRandomBaseStat();
-		testRandomPokemon();
-	}
-
+	/**
+	 * Test generating random levels
+	 */
+	@Test
 	public static void testRandomLevel() {
 		DebugUtility.printMessage("Random Levels (2-4):");
 		for (int x = 0; x < 10; x++) {
@@ -36,6 +40,10 @@ public class UtilsTest {
 		DebugUtility.printMessage();
 	}
 
+	/**
+	 * Test generating random base stats based on a level
+	 */
+	@Test
 	public static void testRandomBaseStat() {
 		DebugUtility.printMessage("Random Base Stats (Level 4):");
 		for (int x = 0; x < 10; x++) {
@@ -54,6 +62,10 @@ public class UtilsTest {
 		DebugUtility.printMessage();
 	}
 
+	/**
+	 * Test creating a random pokemon from "route 29"
+	 */
+	@Test
 	public static void testRandomPokemon() {
 		Location loc = LocationLibrary.getLocation("Route 29");
 
@@ -78,9 +90,5 @@ public class UtilsTest {
 			DebugUtility.printMessage(trainer.get(y - 1).toString());
 		}
 		DebugUtility.printMessage();
-	}
-
-	public static void main(String[] args) {
-		runAllTests();
 	}
 }

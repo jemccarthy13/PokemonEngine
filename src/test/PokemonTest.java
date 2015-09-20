@@ -10,7 +10,7 @@ import utilities.DebugUtility;
 import utilities.DebugUtility.DEBUG_LEVEL;
 
 /**
- * Unit testing for Pokemon constructors and information
+ * Unit testing for Party member constructors and information
  */
 public class PokemonTest {
 
@@ -33,10 +33,10 @@ public class PokemonTest {
 	}
 
 	/**
-	 * Test level up party member
+	 * Test level up evolution of a party member
 	 */
 	@Test
-	public void testPartyMemberLevelUp() {
+	public void testPartyMemberEvolution() {
 		DebugUtility.setLevel(DEBUG_LEVEL.DEBUG);
 		PartyMember member1 = PartyMemberFactory.createPokemon("Bulbasaur", 5);
 		PartyMember member2 = PartyMemberFactory.createPokemon("Bulbasaur", 10);
@@ -67,4 +67,9 @@ public class PokemonTest {
 		Assert.assertTrue(member2.getName().equals("Bulbasaur"));
 		Assert.assertTrue(member2.getLevel() == 10);
 	}
+
+	/**
+	 * Test level up moves learned (up to 4 and more than 4)
+	 */
+	public void testPartyMemberMovesLearned() {}
 }

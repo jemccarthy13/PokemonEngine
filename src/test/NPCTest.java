@@ -8,20 +8,26 @@ import java.awt.Graphics;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.junit.Test;
+
 import trainers.Actor;
 import trainers.NPCLibrary;
 
-//////////////////////////////////////////////////////////////////////////
-//
-// Unit testing for sprite generation.
-//
-// TODO - needs updating
-//
-//////////////////////////////////////////////////////////////////////////
-public class SpriteTest extends JFrame {
+/**
+ * 
+ * Unit testing for sprite generation.
+ * 
+ */
+public class NPCTest extends JFrame {
 
+	/**
+	 * Serialization information
+	 */
 	private static final long serialVersionUID = 8257946860941590572L;
 
+	/**
+	 * The main panel for testing
+	 */
 	JPanel p = new JPanel() {
 		private static final long serialVersionUID = 7322676857941810785L;
 
@@ -38,6 +44,9 @@ public class SpriteTest extends JFrame {
 		}
 	};
 
+	/**
+	 * The thread that powers random NPC directions
+	 */
 	Thread gameThread = new Thread() {
 		public void run() {
 			while (true) {
@@ -48,7 +57,10 @@ public class SpriteTest extends JFrame {
 		}
 	};
 
-	public SpriteTest() {
+	/**
+	 * Start NPC testing
+	 */
+	public NPCTest() {
 		NPCThread npct = new NPCThread();
 		npct.start();
 		gameThread.start();
@@ -60,8 +72,12 @@ public class SpriteTest extends JFrame {
 		setVisible(true);
 	}
 
-	public static void main(String[] args) {
-		SpriteTest frame = new SpriteTest();
+	/**
+	 * Run the test
+	 */
+	@Test
+	public static void testSpriteDraw() {
+		NPCTest frame = new NPCTest();
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
