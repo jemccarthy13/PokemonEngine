@@ -3,6 +3,7 @@ package utilities;
 import java.util.ArrayList;
 import java.util.Random;
 
+import model.Configuration;
 import model.GameData.SCREEN;
 import party.MoveData;
 import party.Party;
@@ -13,100 +14,174 @@ import trainers.Actor.DIR;
 import audio.AudioLibrary.SOUND_EFFECT;
 import controller.GameController;
 
-//////////////////////////////////////////////////////////////////////////
-//
-// BattleScene - holds all logic for a Pokemon battle - w/wild or Trainer
-//
-// TODO - change to message boxes for messages
-//
-//////////////////////////////////////////////////////////////////////////
+/**
+ * Holds all logic for a Pokemon battle, either a wild encounter or trainer
+ * encounter
+ */
 public class BattleEngine {
+	/**
+	 * Singleton instance variable for a BattleEngine
+	 */
 	private static BattleEngine m_instance = new BattleEngine();
 
+	/**
+	 * The GameController to perform game events
+	 */
 	private GameController game = null;
+	/**
+	 * Is it the player's turn?
+	 */
 	public boolean playerTurn = false;
+	/**
+	 * Has the player won?
+	 */
 	public boolean playerWon = false;
+	/**
+	 * The current selection (x) on the main battle menu
+	 */
 	public int currentSelectionMainX = 0;
+	/**
+	 * Current selection (y) on the main battle menu
+	 */
 	public int currentSelectionMainY = 0;
+	/**
+	 * The current selection (x) on the fight battle menu
+	 */
 	public int currentSelectionFightX = 0;
+	/**
+	 * The current selection (y) on the fight battle menu
+	 */
 	public int currentSelectionFightY = 0;
+	/**
+	 * Player's current fighting party member
+	 */
 	public PartyMember playerCurrentPokemon = null;
+	/**
+	 * enemy's current fighting party member
+	 */
 	public PartyMember enemyCurrentPokemon = null;
+	/**
+	 * The enemies party
+	 */
 	private Party enemyPokemon = null;
+	/**
+	 * The name of the enemy Trainer
+	 */
 	public String enemyName = null;
 
+	/**
+	 * An enumeration of whose turn it is
+	 */
 	public enum TURN {
-		ENEMY, PLAYER;
+		/**
+		 * Enemy turn
+		 */
+		OPPONENT,
+		/**
+		 * Player turn
+		 */
+		PLAYER;
 
+		/**
+		 * Get the opposite Actor's turn from this one
+		 * 
+		 * @return opposite TURN
+		 */
 		public TURN opposite() {
-			if (this == ENEMY) {
+			if (this == OPPONENT) {
 				return PLAYER;
 			} else {
-				return ENEMY;
+				return OPPONENT;
 			}
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Constructor - keeps a local copy of the game and the current npc
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Empty default constructor using singleton pattern
+	 */
 	private BattleEngine() {}
 
+	/**
+	 * Get the BattleEngine instance
+	 * 
+	 * @return the singleton instance of the BattleEngine
+	 */
 	public static BattleEngine getInstance() {
 		return m_instance;
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Start - set all variables for the start of a battle
-	//
-	// TODO - first pokemon isn't always the pokemon to fight: change to first
-	// Pokemon above 0 health
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Set all variables for the start of a battle
+	 * 
+	 * @param enemyPkmn
+	 *            - the enemy's party
+	 * @param g
+	 *            - the game controller
+	 * @param opponentName
+	 *            - the name of the opponent
+	 */
 	public void fight(Party enemyPkmn, GameController g, String opponentName) {
-		game = g;
-		m_instance.currentSelectionMainX = 0;
-		m_instance.currentSelectionFightX = 0;
-		m_instance.currentSelectionMainY = 0;
-		m_instance.currentSelectionFightY = 0;
-		m_instance.playerCurrentPokemon = game.getPlayer().getPokemon().get(0);
-		m_instance.playerCurrentPokemon.setParticipated();
-		m_instance.enemyPokemon = enemyPkmn;
-		m_instance.enemyCurrentPokemon = enemyPkmn.get(0);
-		m_instance.playerTurn = true;
-		m_instance.enemyName = opponentName;
+		if (Configuration.DOBATTLES) {
+			game = g;
+			m_instance.currentSelectionMainX = 0;
+			m_instance.currentSelectionFightX = 0;
+			m_instance.currentSelectionMainY = 0;
+			m_instance.currentSelectionFightY = 0;
 
-		game.setMovable(false);
-		game.setScreen(SCREEN.BATTLE);
+			int idx = -1;
+			for (int x = 0; x < game.getPlayer().getPokemon().size(); x++) {
+				if (game.getPlayer().getPokemon().get(x).getStat(STAT.HP) > 0) {
+					idx = x;
+					x = game.getPlayer().getPokemon().size() + 1;
+				}
+			}
+			m_instance.playerCurrentPokemon = game.getPlayer().getPokemon().get(idx);
+			System.err.println(m_instance.playerCurrentPokemon);
+			m_instance.playerCurrentPokemon.setParticipated();
+			m_instance.enemyPokemon = enemyPkmn;
+			m_instance.enemyCurrentPokemon = enemyPkmn.get(0);
+			m_instance.playerTurn = true;
+			m_instance.enemyName = opponentName;
+
+			game.setMovable(false);
+			game.setScreen(SCREEN.BATTLE);
+		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// TODO check for white out condition, make comments
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Depending on the current TURN, handle switching party members
+	 * 
+	 * @TODO method-ize check for white out conditions
+	 * 
+	 * @param turn
+	 *            the current turn
+	 */
 	public void switchPokemon(TURN turn) {
 		switch (turn) {
 		case PLAYER:
 			boolean loss = true;
-			for (PartyMember p : game.getPlayer().getPokemon()) {
-				if (p.getStat(STAT.HP) > 0) {
+			DebugUtility.printMessage("Party has: " + this.game.getPlayer().getPokemon().size() + " party members.");
+
+			ArrayList<Integer> stillAlive = new ArrayList<Integer>();
+			for (int i = 0; i < this.game.getPlayer().getPokemon().size(); i++) {
+				if (this.game.getPlayer().getPokemon().get(i).getStat(STAT.HP) > 0) {
 					loss = false;
+					stillAlive.add(i);
 				}
 			}
-			if (loss)
+			if (loss) {
 				Lose();
-			else {
-				// chose pokemon
+			} else {
+				// random switch pokemon
+				int choice = RandomNumUtils.generateRandom(0, stillAlive.size() - 1);
+				this.playerCurrentPokemon = this.game.getPlayer().getPokemon().get(stillAlive.get(choice));
 			}
-		case ENEMY:
+			break;
+		case OPPONENT:
 			boolean enemyLoss = true;
 
 			DebugUtility.printMessage("Enemy had: " + this.enemyPokemon.size() + " party members.");
-			ArrayList<Integer> stillAlive = new ArrayList<Integer>();
+			stillAlive = new ArrayList<Integer>();
 			for (int i = 0; i < this.enemyPokemon.size(); i++) {
 				if (this.enemyPokemon.get(i).getStat(STAT.HP) > 0) {
 					enemyLoss = false;
@@ -118,24 +193,17 @@ public class BattleEngine {
 			} else {
 				// random switch pokemon
 				int choice = RandomNumUtils.generateRandom(0, stillAlive.size() - 1);
-				for (int x = 0; x < stillAlive.size(); x++) {
-					System.err.println("Party member: " + stillAlive.get(x) + " is alive.");
-					System.err.println("switching to " + choice);
-				}
 				this.enemyCurrentPokemon = this.enemyPokemon.get(stillAlive.get(choice));
-
 			}
+			break;
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// giveExp - give experience to all Pokemon that have participated
-	//
-	// Experience is calculated in the Pokemon class- based on the number
-	// of player's Pokemon that have participated in battle.
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Give experience to all PartyMembers that have participated. Experience is
+	 * calculated in the PartyMembers class, based on the number of player's
+	 * PartyMembers that have participated in battle.
+	 */
 	public void giveEXP() {
 		int s = 0;
 		for (int x = 0; x < game.getPlayer().getPokemon().size(); x++) {
@@ -146,11 +214,9 @@ public class BattleEngine {
 		this.playerCurrentPokemon.gainExp(this.enemyCurrentPokemon.getExpGain(false, s));
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Win - set the variables for a player win in a battle
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Perform logic when the player wins the battle.
+	 */
 	public void Win() {
 		giveEXP();
 		DebugUtility.printMessage("Player won!");
@@ -171,31 +237,37 @@ public class BattleEngine {
 		game.playBackgroundMusic();
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Lose - set the variables for a player loss (white out) in a battle
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Perform logic when the player loses the battle.
+	 */
 	public void Lose() {
 		this.enemyCurrentPokemon.setStatusEffect(STATUS.NORMAL);
-		// TODO - convert to message box
+		// TODO - change to message boxes
 		DebugUtility.printMessage("Player Pokemon has fainted");
 		DebugUtility.printMessage(game.getPlayer().getName() + " is all out of usable Pokemon!");
 		DebugUtility.printMessage(game.getPlayer().getName() + " whited out.");
 
 		game.setPlayerDirection(DIR.SOUTH);
-		game.getPlayer().getPokemon().get(0).heal(-1);
+		Party playerParty = game.getPlayer().getPokemon();
+		for (PartyMember member : playerParty) {
+			member.fullHeal();
+		}
 		game.setScreen(SCREEN.WORLD);
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Do TURN logic - assuming move has already been chosen
-	//
-	// TODO - change to message boxes
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Do TURN logic - assuming move has already been chosen
+	 * 
+	 * TODO - change to message boxes
+	 * 
+	 * @param turn
+	 *            - the current TURN
+	 * @param move
+	 *            - the selected move
+	 */
 	public void takeTurn(TURN turn, int move) {
+		DebugUtility.printHeader("Turn: " + turn);
+
 		// get the attacker and defender based on this TURN
 		PartyMember attacker = (turn == TURN.PLAYER) ? playerCurrentPokemon : enemyCurrentPokemon;
 		PartyMember defender = (turn == TURN.PLAYER) ? enemyCurrentPokemon : playerCurrentPokemon;
@@ -241,19 +313,18 @@ public class BattleEngine {
 		if (defender.getStat(STAT.HP) <= 0) {
 			switchPokemon(turn.opposite());
 		}
+		DebugUtility.printHeader("End turn");
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// enemyTurn - enemy chooses move and deals damage to player
-	//
-	// TODO - change to message boxes
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * enemy chooses move and deals damage to player
+	 * 
+	 * @TODO remove from BattleEngine?
+	 */
 	public void enemyTurn() {
 		// if (!this.playerWon) {
 		if (this.enemyCurrentPokemon.getStat(STAT.HP) > 0) {
-			takeTurn(TURN.ENEMY, RandomNumUtils.generateRandom(0, this.enemyCurrentPokemon.getNumMoves() - 1));
+			takeTurn(TURN.OPPONENT, RandomNumUtils.generateRandom(0, this.enemyCurrentPokemon.getNumMoves() - 1));
 		}
 		// }
 	}

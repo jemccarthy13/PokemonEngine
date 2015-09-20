@@ -5,15 +5,26 @@ import java.util.Random;
 import party.PartyMember;
 import trainers.Actor.DIR;
 
+/**
+ * Holds utilities for random number generation
+ */
 public class RandomNumUtils {
 
-	static Random randomGenerator = new Random();
+	/**
+	 * The random number generator
+	 */
+	private static Random randomGenerator = new Random();
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// generateRandom - the heart of random number generation in game
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * The core random number generator; generate a random number between start
+	 * and end
+	 * 
+	 * @param start
+	 *            - the minimum number
+	 * @param end
+	 *            - the maximum number
+	 * @return - a random number between start and end
+	 */
 	public static int generateRandom(int start, int end) {
 		double range = end - start + 1.0;
 		double fraction = (range * randomGenerator.nextDouble());
@@ -21,11 +32,11 @@ public class RandomNumUtils {
 		return num;
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// createTrainerID - creates a random Trainer ID for the player
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Create a random trainer ID for the player.
+	 * 
+	 * @return a random 6 digit ID
+	 */
 	public static int createTrainerID() {
 		int a = generateRandom(0, 9);
 		int b = generateRandom(0, 9);
@@ -35,11 +46,11 @@ public class RandomNumUtils {
 		return (10000 * a + 1000 * b + 100 * c + 10 * d + e);
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// randomDirection - generates a random direction for NPCs
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Generate a random direction (for moving NPCs)
+	 * 
+	 * @return a random DIR
+	 */
 	public static DIR randomDirection() {
 		int dir = generateRandom(1, 4);
 		switch (dir) {
@@ -55,29 +66,37 @@ public class RandomNumUtils {
 		return DIR.SOUTH;
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// for an enemy pokemon, pick a random move
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Pick a random move for a Party Member
+	 * 
+	 * @param p
+	 *            - the party member
+	 * @return a random move index
+	 */
 	public static int getMove(PartyMember p) {
 		return generateRandom(0, p.getNumMoves() - 1);
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// randomLevel - generates a random level between start and end, inclusive
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Generate a random level between start and end, inclusive
+	 * 
+	 * @param start
+	 *            - the minimum possible value
+	 * @param end
+	 *            - the maximum possible value
+	 * @return a random level
+	 */
 	public static int randomLevel(int start, int end) {
 		return generateRandom(start + 1, end - 1);
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// randomBaseStat - generates a random base stat based on the given level
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Generates a random base stat based on the given level
+	 * 
+	 * @param level
+	 *            - the level of the Party Member
+	 * @return a random int base stat for that level
+	 */
 	public static int randomBaseStat(int level) {
 		int start = (int) (2.4 * level) - 5;
 		int end = (int) (2.4 * level) + 5;
@@ -85,13 +104,14 @@ public class RandomNumUtils {
 		return (stat < 5) ? 5 : stat;
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// randomStatIncr - generates a number to incrase a stat by:
-	// 75% chance of +2
-	// 25% chance of +3
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * generates a number to incrase a stat by: 75% chance of +2, 25% chance of
+	 * +3
+	 * 
+	 * @TODO verify max stats increase when stats
+	 * 
+	 * @return a random stat increase
+	 */
 	public static int randomStatIncr() {
 		double fraction = (100 * randomGenerator.nextDouble());
 		if (fraction < 75) {
@@ -100,12 +120,11 @@ public class RandomNumUtils {
 		return 3;
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// isWildEncounter - with a frequency, determine if this wild tile will
-	// be a pokemon encounter
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Given a level of 'rarity', calculate whether there is a wild encounter
+	 * 
+	 * @return whether or not there should be a wild encounter
+	 */
 	public static boolean isWildEncounter() {
 		// common: 10
 		// rather common: 8.5
