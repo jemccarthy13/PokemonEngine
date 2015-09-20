@@ -13,46 +13,49 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import party.PartyMemberFactory;
 import party.Party;
+import party.PartyMemberFactory;
 import trainers.Actor.DIR;
 import utilities.DebugUtility;
 
-//////////////////////////////////////////////////////////////////////////
-//
-// Look through the NPC data files, creating each NPC and adding them to 
-// the list of active NPCs
-//
-//////////////////////////////////////////////////////////////////////////
+/**
+ * Creating each NPC and adding them to the list of active NPCs
+ */
 public class NPCLibrary extends HashMap<String, Actor> {
 
+	/**
+	 * Serialization variable
+	 */
 	private static final long serialVersionUID = 3371121853217236345L;
+	/**
+	 * Single instance of this library
+	 */
 	private static NPCLibrary m_instance = new NPCLibrary();
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Private constructor ensures only one instance
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Private constructor ensures only one instance. Loads data from the
+	 * NPCs.json file
+	 */
 	private NPCLibrary() {
 		String filename = "resources/data/NPCs.json";
 		populateMap(filename);
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Return the single instance of this library
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Return the single instance of this library
+	 * 
+	 * @return single library instance
+	 */
 	public static NPCLibrary getInstance() {
 		return m_instance;
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Reads the json formatted file and processes out the data
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Reads the json formatted file and processes out the data
+	 * 
+	 * @param filename
+	 *            - the file to use to populate the map
+	 */
 	public void populateMap(String filename) {
 		JSONParser parser = new JSONParser();
 		try {
@@ -65,7 +68,7 @@ public class NPCLibrary extends HashMap<String, Actor> {
 			// iterate through the array of NPC data to create the NPCs
 			Iterator<?> npcs_it = npc_data_all.iterator();
 			while (npcs_it.hasNext()) {
-				TrainerData td = new TrainerData();
+				ActorData td = new ActorData();
 
 				// this is the JSON object for a single NPC
 				JSONObject npc_data = (JSONObject) npcs_it.next();
@@ -111,7 +114,7 @@ public class NPCLibrary extends HashMap<String, Actor> {
 						pList.add(PartyMemberFactory.createPokemon(name, level));
 					}
 
-					td.pokemon = pList;
+					td.party = pList;
 					td.money = ((Long) npc_data.get("money")).intValue();
 				}
 
