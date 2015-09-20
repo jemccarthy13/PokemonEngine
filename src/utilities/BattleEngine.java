@@ -129,13 +129,13 @@ public class BattleEngine {
 			m_instance.currentSelectionFightY = 0;
 
 			int idx = -1;
-			for (int x = 0; x < game.getPlayer().getPokemon().size(); x++) {
-				if (game.getPlayer().getPokemon().get(x).getStat(STAT.HP) > 0) {
+			for (int x = 0; x < game.getPlayer().getParty().size(); x++) {
+				if (game.getPlayer().getParty().get(x).getStat(STAT.HP) > 0) {
 					idx = x;
-					x = game.getPlayer().getPokemon().size() + 1;
+					x = game.getPlayer().getParty().size() + 1;
 				}
 			}
-			m_instance.playerCurrentPokemon = game.getPlayer().getPokemon().get(idx);
+			m_instance.playerCurrentPokemon = game.getPlayer().getParty().get(idx);
 			System.err.println(m_instance.playerCurrentPokemon);
 			m_instance.playerCurrentPokemon.setParticipated();
 			m_instance.enemyPokemon = enemyPkmn;
@@ -160,11 +160,12 @@ public class BattleEngine {
 		switch (turn) {
 		case PLAYER:
 			boolean loss = true;
-			DebugUtility.printMessage("Party has: " + this.game.getPlayer().getPokemon().size() + " party members.");
+			Party playerParty = this.game.getPlayer().getParty();
+			DebugUtility.printMessage("Party has: " + playerParty.size() + " party members.");
 
 			ArrayList<Integer> stillAlive = new ArrayList<Integer>();
-			for (int i = 0; i < this.game.getPlayer().getPokemon().size(); i++) {
-				if (this.game.getPlayer().getPokemon().get(i).getStat(STAT.HP) > 0) {
+			for (int i = 0; i < playerParty.size(); i++) {
+				if (playerParty.get(i).getStat(STAT.HP) > 0) {
 					loss = false;
 					stillAlive.add(i);
 				}
@@ -174,7 +175,7 @@ public class BattleEngine {
 			} else {
 				// random switch pokemon
 				int choice = RandomNumUtils.generateRandom(0, stillAlive.size() - 1);
-				this.playerCurrentPokemon = this.game.getPlayer().getPokemon().get(stillAlive.get(choice));
+				this.playerCurrentPokemon = playerParty.get(stillAlive.get(choice));
 			}
 			break;
 		case OPPONENT:
@@ -206,8 +207,8 @@ public class BattleEngine {
 	 */
 	public void giveEXP() {
 		int s = 0;
-		for (int x = 0; x < game.getPlayer().getPokemon().size(); x++) {
-			if (((PartyMember) game.getPlayer().getPokemon().get(x)).hasParticipated()) {
+		for (int x = 0; x < game.getPlayer().getParty().size(); x++) {
+			if (((PartyMember) game.getPlayer().getParty().get(x)).hasParticipated()) {
 				s++;
 			}
 		}
@@ -248,7 +249,7 @@ public class BattleEngine {
 		DebugUtility.printMessage(game.getPlayer().getName() + " whited out.");
 
 		game.setPlayerDirection(DIR.SOUTH);
-		Party playerParty = game.getPlayer().getPokemon();
+		Party playerParty = game.getPlayer().getParty();
 		for (PartyMember member : playerParty) {
 			member.fullHeal();
 		}
