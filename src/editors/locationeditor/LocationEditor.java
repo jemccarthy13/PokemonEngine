@@ -20,35 +20,80 @@ import javax.swing.JTable;
 
 import location.LocationData;
 import location.LocationLibrary;
-
-import org.json.simple.JSONObject;
-
 import utilities.DebugUtility;
 
+/**
+ * A class that allows for easier editing of the location data
+ */
 public class LocationEditor extends JFrame {
 
+	/**
+	 * The frame's menu bar
+	 */
 	JMenuBar menuBar = new JMenuBar();
+	/**
+	 * The frame's file menu item
+	 */
 	JMenu fileMenu = new JMenu("File");
+	/**
+	 * The frame's save menu item
+	 */
 	JMenuItem saveItem = new JMenuItem("Save");
+	/**
+	 * The frame's open menu item
+	 */
 	JMenuItem openItem = new JMenuItem("Open");
+	/**
+	 * The frame's add menu item
+	 */
 	JMenuItem addItem = new JMenuItem("Add Location");
 
+	/**
+	 * The file of location data
+	 */
 	File locationFile = null;
-	JSONObject locationData = null;
+
+	/**
+	 * An instance of the location data storage
+	 */
 	LocationLibrary locLib = LocationLibrary.getInstance();
-
+	/**
+	 * The main display panel
+	 */
 	JPanel mainPanel = new JPanel();
+	/**
+	 * The scrollable panel that holds the table
+	 */
 	JScrollPane panel = new JScrollPane();
-
+	/**
+	 * The model for the table
+	 */
 	LocationTableModel ltm = null;
 
+	/**
+	 * Serialization variable
+	 */
 	private static final long serialVersionUID = 8629661000233778533L;
 
+	/**
+	 * Read the given location file
+	 * 
+	 * @param path
+	 *            - the file to read
+	 * @param encoding
+	 *            - the encoding of the file
+	 * @return - a string representing the contents of the file
+	 * @throws IOException
+	 *             if the file cannot be read
+	 */
 	static String readFile(String path, Charset encoding) throws IOException {
 		byte[] encoded = Files.readAllBytes(Paths.get(path));
 		return new String(encoded, encoding);
 	}
 
+	/**
+	 * Listens for actions on the frame
+	 */
 	public ActionListener listener = new ActionListener() {
 
 		@Override
@@ -96,6 +141,9 @@ public class LocationEditor extends JFrame {
 
 	};
 
+	/**
+	 * Construct a new frame
+	 */
 	public LocationEditor() {
 		setSize(1000, 700);
 		setResizable(true);
@@ -115,6 +163,12 @@ public class LocationEditor extends JFrame {
 		this.add(mainPanel);
 	}
 
+	/**
+	 * Main entry point for location editing
+	 * 
+	 * @param args
+	 *            - command line arguments
+	 */
 	public static void main(String[] args) {
 		LocationEditor le = new LocationEditor();
 		le.setVisible(true);

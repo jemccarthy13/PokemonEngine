@@ -15,38 +15,99 @@ import utilities.DebugUtility;
  */
 public class LocationTableModel extends AbstractTableModel {
 
+	/**
+	 * The names of the columns
+	 */
 	String[] columns = { "name", "canFlyOutOf", "north", "east", "south", "west", "pokemon", "probabilities",
 			"minLevels", "maxLevels" };
+	/**
+	 * The data types of the columns
+	 */
 	Class<?>[] columnTypes = { String.class, Boolean.class, Integer.class, Integer.class, Integer.class, Integer.class,
 			String.class, String.class, String.class, String.class };
+	/**
+	 * A representation of the current selection
+	 */
 	Object[] selection;
 
+	/**
+	 * Serialization variable
+	 */
 	private static final long serialVersionUID = 2210111264024740816L;
+	/**
+	 * A list of the objects in the table
+	 */
 	private final List<Object> objects = new ArrayList<Object>();
 
+	/**
+	 * Add an object to the table
+	 * 
+	 * @param obj
+	 *            - the object to add
+	 */
 	public void addObject(Object obj) {
 		addObject(obj, objects.size());
 	}
 
+	/**
+	 * Add an object at the given index
+	 * 
+	 * @param obj
+	 *            - the object to add
+	 * @param index
+	 *            - the location to add the object
+	 */
 	public void addObject(Object obj, int index) {
 		objects.add(index, obj);
 		fireTableRowsInserted(index, index);
 	}
 
+	/**
+	 * Remove an object from the table
+	 * 
+	 * @param obj
+	 *            - the object to remove
+	 */
 	public void removeObject(Object obj) {
 		int index = objects.indexOf(obj);
 		objects.remove(index);
 		fireTableRowsDeleted(index, index);
 	}
 
+	/**
+	 * Get an object from the table
+	 * 
+	 * @param rowIndex
+	 *            the row the object is at
+	 * @return a representation of the object in the table
+	 */
 	public Object getObject(int rowIndex) {
 		return objects.get(rowIndex);
 	}
 
+	/**
+	 * All cells are editable
+	 * 
+	 * @param row
+	 *            the row of the cell
+	 * @param col
+	 *            the column of the cell
+	 * @return true always
+	 */
 	public boolean isCellEditable(int row, int col) {
 		return true;
 	}
 
+	/**
+	 * Set the value of a given cell
+	 * 
+	 * @param value
+	 *            - the value to set
+	 * @param row
+	 *            - the row of the cell
+	 * @param col
+	 *            - the column of the cell
+	 */
 	public void setValueAt(Object value, int row, int col) {
 		LocationData obj = (LocationData) objects.get(row);
 		switch (col) {
@@ -97,11 +158,17 @@ public class LocationTableModel extends AbstractTableModel {
 		fireTableCellUpdated(row, col);
 	}
 
+	/**
+	 * The number of rows in this table
+	 */
 	@Override
 	public int getRowCount() {
 		return objects.size();
 	}
 
+	/**
+	 * The number of columns in this table
+	 */
 	@Override
 	public int getColumnCount() {
 		if (columns.length != columnTypes.length) {
@@ -110,6 +177,12 @@ public class LocationTableModel extends AbstractTableModel {
 		return columns.length;
 	}
 
+	/**
+	 * Get the name of a column
+	 * 
+	 * @param columnIndex
+	 *            the column to get the name of
+	 */
 	@Override
 	public String getColumnName(int columnIndex) {
 		if (columnIndex > columns.length) {
@@ -118,6 +191,12 @@ public class LocationTableModel extends AbstractTableModel {
 		return columns[columnIndex];
 	}
 
+	/**
+	 * Get the type of the given column
+	 * 
+	 * @param columnIndex
+	 *            the column to get the type of
+	 */
 	@Override
 	public Class<?> getColumnClass(int columnIndex) {
 		if (columnIndex > columnTypes.length) {
@@ -126,6 +205,14 @@ public class LocationTableModel extends AbstractTableModel {
 		return columnTypes[columnIndex];
 	}
 
+	/**
+	 * Retrieve a value from the table
+	 * 
+	 * @param rowIndex
+	 *            the row to get
+	 * @param colIndex
+	 *            the column to get
+	 */
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		LocationData obj = (LocationData) objects.get(rowIndex);
