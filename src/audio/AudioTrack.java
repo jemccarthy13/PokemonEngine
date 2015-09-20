@@ -9,20 +9,25 @@ import javax.sound.midi.Sequencer;
 import model.Configuration;
 import utilities.DebugUtility;
 
-// ////////////////////////////////////////////////////////////////////////
-//
-// AudioTrack - handles playing the back ground music
-//
-// ////////////////////////////////////////////////////////////////////////
+/**
+ * A representation of a music track
+ */
 public class AudioTrack {
+	/**
+	 * The AudioTrack class wraps this MIDI sequencer
+	 */
 	private Sequencer sequencer; // Audio track wraps MIDI sequencer
+	/**
+	 * The title of this audio track
+	 */
 	private String trackTitle;
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Construct an audio track given a title of the track
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Construct an audio track given the title of the track
+	 * 
+	 * @param songTitle
+	 *            - the title of the song
+	 */
 	public AudioTrack(String songTitle) {
 		trackTitle = songTitle;
 		String path = (Configuration.MUSIC_PATH + trackTitle.replace(" ", "") + ".mid").replace("resources", "");
@@ -38,22 +43,18 @@ public class AudioTrack {
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Start this audio track
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Start playing the track
+	 */
 	public void start() {
 		if (this.sequencer != null) {
 			this.sequencer.start();
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Stop this audio track
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Stop playing the track
+	 */
 	public void stop() {
 		if (this.sequencer != null) {
 			this.sequencer.stop();
@@ -61,11 +62,11 @@ public class AudioTrack {
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Return the track title of this track
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Returns the track title of the track
+	 * 
+	 * @return track title
+	 */
 	public String toString() {
 		return this.trackTitle;
 	}

@@ -9,39 +9,79 @@ import model.Configuration;
 import utilities.DebugUtility;
 import utilities.RandomNumUtils;
 
-// ////////////////////////////////////////////////////////////////////////
-//
-// AudioLibrary intializes variables to be used as constants in playing
-// music from this library.
-//
-// ////////////////////////////////////////////////////////////////////////
+/**
+ * AudioLibrary initializes variables to be used as constants in playing music
+ * from this library.
+ */
 public class AudioLibrary {
 
+	/**
+	 * The current track queued to be played
+	 */
 	private static AudioTrack currentTrack = null;
+	/**
+	 * JukeBox utility that plays sound effects
+	 */
 	private static JukeBox jukeBox = new JukeBox();
 
-	private static ArrayList<String> encounterTrackNames = new ArrayList<String>();;
+	/**
+	 * An ArrayList of available encounter track names
+	 */
+	private static ArrayList<String> encounterTrackNames = new ArrayList<String>();
+	/**
+	 * An ArrayList of the tracks that have been loaded already
+	 */
 	private static HashMap<String, AudioTrack> musicTracks = new HashMap<String, AudioTrack>();
 
+	/**
+	 * An enumeration for sound effects
+	 */
 	public enum SOUND_EFFECT {
-		SELECT("Select"), DAMAGE("Damage"), COLLISION("Collision"), MENU("Menu");
+		/**
+		 * The button press sound effect
+		 */
+		SELECT("Select"),
+		/**
+		 * The damage sound effect
+		 */
+		DAMAGE("Damage"),
+		/**
+		 * The collision sound effect
+		 */
+		COLLISION("Collision"),
+		/**
+		 * The menu sound effect
+		 */
+		MENU("Menu");
 
+		/**
+		 * The current value of this enumeration
+		 */
 		private String value;
 
+		/**
+		 * Enumerator constructor
+		 * 
+		 * @param v
+		 *            - the value of the enumerated value
+		 */
 		SOUND_EFFECT(String v) {
 			value = v;
 		}
 
+		/**
+		 * Get the current value of the enumeration
+		 * 
+		 * @return value of enumeration
+		 */
 		String getValue() {
 			return value;
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Initialize some variables for the audio library
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Constructor to initialize the audio library
+	 */
 	public AudioLibrary() {
 		DebugUtility.printHeader("Audio");
 		DebugUtility.printMessage("Initializing audio library...");
@@ -60,11 +100,12 @@ public class AudioLibrary {
 		DebugUtility.printMessage("Enounter Tracks loaded.");
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Given a midi track title, play the associated midi file
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Play a given music track
+	 * 
+	 * @param songTitle
+	 *            - the song to play
+	 */
 	public void playBackgroundMusic(String songTitle) {
 		// stop the current track, if playing
 		if (currentTrack != null) {
@@ -84,11 +125,9 @@ public class AudioLibrary {
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Pick a random enemy encounter track
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Pick and play a random encounter track
+	 */
 	public void pickTrainerMusic() {
 		if (encounterTrackNames.size() > 0) {
 			int choice = RandomNumUtils.generateRandom(encounterTrackNames.size(), 0);
@@ -96,22 +135,21 @@ public class AudioLibrary {
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Pauses the current music track, typically to play another song
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Pauses the current track
+	 */
 	public static void pauseBackgroundMusic() {
 		if (currentTrack != null) {
 			currentTrack.stop();
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Play the given sound effect
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Play the given sound effect clip
+	 * 
+	 * @param effect
+	 *            - the sound effect to play
+	 */
 	public static void playClip(SOUND_EFFECT effect) {
 		jukeBox.playClip(effect);
 	}

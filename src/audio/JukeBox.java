@@ -1,5 +1,6 @@
 package audio;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 
@@ -9,26 +10,29 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import model.Configuration;
 import utilities.DebugUtility;
 import audio.AudioLibrary.SOUND_EFFECT;
 
-// ////////////////////////////////////////////////////////////////////////
-//
-// Jukebox - handles playing clips
-//
-// ////////////////////////////////////////////////////////////////////////
+/**
+ * Handles playing clips
+ */
 public class JukeBox {
 
-	// saved clips that have already been loaded
+	/**
+	 * saved clips that have already been loaded
+	 */
 	private HashMap<String, SoundEffect> availableClips = new HashMap<String, SoundEffect>();
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Loads a given audio sound effect file and maps to given sound name
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Loads a given audio sound effect file and maps to given sound name
+	 * 
+	 * @param clipName
+	 *            - the name of the sound effect (should be same name as file)
+	 */
 	public void loadClip(String clipName) {
 		String resourcePath = (Configuration.SOUND_EFFECT_PATH + clipName + ".wav").replace("resources", "");
 		try {
@@ -40,11 +44,12 @@ public class JukeBox {
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Play a sound effect; load first if necessary
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Load a sound effect if it hasn't already been loaded, then play it
+	 * 
+	 * @param effect
+	 *            - the sound effect to play
+	 */
 	public void playClip(SOUND_EFFECT effect) {
 		// check if the sound has been loaded
 		if (!this.availableClips.containsKey(effect.getValue())) {
@@ -61,35 +66,50 @@ public class JukeBox {
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Class for sound effect sounds that get played by the Juke Box
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Representation of a sound effect sounds that get played by the Juke Box
+	 */
 	private class SoundEffect implements LineListener {
+		/**
+		 * SoundEffect wraps a clip
+		 */
 		private Clip m_clip;
 
-		// ////////////////////////////////////////////////////////////////////////
-		//
-		// Construct a sound effect from a given file
-		//
-		// ////////////////////////////////////////////////////////////////////////
-		public SoundEffect(String resourcePath) throws Exception {
+		/**
+		 * Construct a sound effect from a given file
+		 * 
+		 * @param resourcePath
+		 *            - the path to the audio resource
+		 * @throws Exception
+		 */
+		public SoundEffect(String resourcePath) {
 			// create the necessary steps to make a new Clip
 			InputStream resourceStream = JukeBox.class.getResourceAsStream(resourcePath);
-			AudioInputStream ais = AudioSystem.getAudioInputStream(resourceStream);
+			AudioInputStream ais = null;
+			try {
+				ais = AudioSystem.getAudioInputStream(resourceStream);
+			} catch (UnsupportedAudioFileException e) {
+				DebugUtility.printError("Unsupported audio file: " + resourcePath);
+			} catch (IOException e) {
+				DebugUtility.printError("Unable to read: " + resourcePath);
+			}
 			DataLine.Info info = new DataLine.Info(Clip.class, ais.getFormat());
 
 			// store the clip internal to this class
-			this.m_clip = (Clip) AudioSystem.getLine(info);
+			try {
+				this.m_clip = (Clip) AudioSystem.getLine(info);
+			} catch (LineUnavailableException e) {
+				DebugUtility.printError("Error reading: " + resourcePath);
+			}
 			this.m_clip.addLineListener(this);
 		}
 
-		// ////////////////////////////////////////////////////////////////////////
-		//
-		// LineListener necessary method
-		//
-		// ////////////////////////////////////////////////////////////////////////
+		/**
+		 * Implementation of the LineListener method
+		 * 
+		 * @param event
+		 *            - a line event that triggers an update
+		 */
 		public void update(LineEvent event) {
 			if (event.getType().equals(LineEvent.Type.STOP)) {
 				this.m_clip.stop();
@@ -97,11 +117,9 @@ public class JukeBox {
 			}
 		}
 
-		// ////////////////////////////////////////////////////////////////////////
-		//
-		// Play the loaded sound effect
-		//
-		// ////////////////////////////////////////////////////////////////////////
+		/**
+		 * Play the loaded sound effect
+		 */
 		public void play() {
 			this.m_clip.start();
 		}
