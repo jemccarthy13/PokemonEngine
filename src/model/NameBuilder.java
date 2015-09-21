@@ -1,5 +1,8 @@
 package model;
 
+/**
+ * Underlying data storage that helps to build a name
+ */
 public class NameBuilder {
 	// name that grows and shrinks dynamically according to user's choices
 	private StringBuilder buildName = new StringBuilder();
@@ -15,48 +18,101 @@ public class NameBuilder {
 	// the name of the object to be named
 	private String toBeNamed;
 
+	/**
+	 * @return the object currently being named
+	 */
 	public String getToBeNamed() {
 		return toBeNamed;
 	}
 
+	/**
+	 * Set the object currently being named
+	 * 
+	 * @param toBeNamed
+	 *            - the object to be named
+	 */
 	public void setToBeNamed(String toBeNamed) {
 		this.toBeNamed = toBeNamed;
 	}
 
+	/**
+	 * Retrieve the currently selected column
+	 * 
+	 * @return current column selection
+	 */
 	public int getColSelection() {
 		return colSelection;
 	}
 
+	/**
+	 * Set the currently selected column
+	 * 
+	 * @param colSelection
+	 *            - the column currently selected
+	 */
 	public void setColSelection(int colSelection) {
 		this.colSelection = colSelection;
 	}
 
+	/**
+	 * Retrieve the currently selected row
+	 * 
+	 * @return current row selection
+	 */
 	public int getRowSelection() {
 		return rowSelection;
 	}
 
+	/**
+	 * Set the currently selected row
+	 * 
+	 * @param rowSelection
+	 *            - the currently selected row
+	 */
 	public void setRowSelection(int rowSelection) {
 		this.rowSelection = rowSelection;
 	}
 
+	/**
+	 * Retrieve the maximum number of rows
+	 * 
+	 * @return max number of rows
+	 */
 	public int maxRows() {
 		return charArray.length;
 	}
 
+	/**
+	 * Retrieve the maximum number of columns
+	 * 
+	 * @return max columns
+	 */
 	public int maxCols() {
 		return charArray[0].length;
 	}
 
+	/**
+	 * Based on the current row / column, add the selected character to the name
+	 * buffer
+	 */
 	public void addSelectedChar() {
 		if (buildName.length() < Configuration.MAX_NAME_SIZE) {
 			buildName.append(charArray[rowSelection][colSelection]);
 		}
 	}
 
+	/**
+	 * Get what is currently in the name buffer
+	 * 
+	 * @return name string
+	 */
 	public String toString() {
 		return buildName.toString();
 	}
 
+	/**
+	 * Remove the last character from the name buffer
+	 */
 	public void removeChar() {
 		int size = buildName.length();
 		if (size > 0) {
@@ -64,6 +120,9 @@ public class NameBuilder {
 		}
 	}
 
+	/**
+	 * Delete all characters from the name buffer
+	 */
 	public void reset() {
 		int size = buildName.length();
 		buildName.delete(0, size);

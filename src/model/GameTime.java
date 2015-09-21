@@ -3,38 +3,67 @@ package model;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 
-// ////////////////////////////////////////////////////////////////////////
-//
-// Easier way to manipulate and update game time
-//
-// ////////////////////////////////////////////////////////////////////////
+/**
+ * A structure to manipulate and update game time
+ */
 public class GameTime implements Serializable {
 
 	private static final long serialVersionUID = 6901548663761911865L;
 
 	// Keep track of total time, and time for this game session
-	public int bankedHours = 0, bankedMinutes = 0, bankedSeconds = 0;
-	public int sessionHours = 0, sessionMinutes = 0, sessionSeconds = 0;
+	// TODO do these need to be public?
+	/**
+	 * The total number of hours played
+	 */
+	public int bankedHours = 0;
+	/**
+	 * The total number of minutes played
+	 */
+	public int bankedMinutes = 0;
+	/**
+	 * The total number of seconds played
+	 */
+	public int bankedSeconds = 0;
 
-	// the time that this session started
+	/**
+	 * The number of hours played in the current session
+	 */
+	public int sessionHours = 0;
+	/**
+	 * The number of minutes played in the current session
+	 */
+	public int sessionMinutes = 0;
+	/**
+	 * The number of seconds played in the current session
+	 */
+	public int sessionSeconds = 0;
+
+	/**
+	 * The time that this session started
+	 */
 	public long timeStarted = 0;
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Initialization constructor
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Initialize a new GameTime instance with the given values
+	 * 
+	 * @param hours
+	 *            - the number of total hours to start at
+	 * @param minutes
+	 *            - the number of total minutes to start at
+	 * @param seconds
+	 *            - the number of total seconds to start at
+	 */
 	public GameTime(int hours, int minutes, int seconds) {
 		bankedHours = hours;
 		bankedMinutes = minutes;
 		bankedSeconds = seconds;
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Bank the total time played and store for next session
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Bank the total time played and store for next session. This function
+	 * handles carry-over where session time puts the total number of minutes or
+	 * seconds over 60
+	 */
 	public void saveTime() {
 		bankedSeconds += sessionSeconds;
 		if (bankedSeconds > 60) {
@@ -50,11 +79,9 @@ public class GameTime implements Serializable {
 		timeStarted = System.currentTimeMillis();
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Update the session's hours, minutes, seconds based on current time
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Update the session's hours, minutes, seconds based on current time
+	 */
 	public void updateTime() {
 		sessionSeconds = (int) ((System.currentTimeMillis() - timeStarted) / 1000L);
 		sessionHours = sessionSeconds / 3600;
@@ -62,11 +89,12 @@ public class GameTime implements Serializable {
 		sessionSeconds = (sessionSeconds - sessionHours * 3600 - sessionMinutes * 60);
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Formats the current total time played into a readable format
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Formats the current total time (banked + session time) into a readable
+	 * format
+	 * 
+	 * @return a string representing total time played
+	 */
 	public String formatTime() {
 
 		// add session time to banked time

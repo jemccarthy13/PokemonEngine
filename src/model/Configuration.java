@@ -5,24 +5,76 @@ import java.util.HashMap;
 
 import model.GameData.SCREEN;
 
+/**
+ * Stores the configuration of the game
+ */
+// - Cheats
+// - Default sizes / distances
+// - Version information
+// - Map to use
+// - Location of sound/music files
+// - Speed of the game
 public class Configuration implements Serializable {
 	private static final long serialVersionUID = 3800907360431668204L;
 
 	// ==========Configuration information and game settings=================//
-	public static boolean NOCLIP = false; // walk anywhere
-	public static boolean DOBATTLES = true; // no wild/trainer battles
-	public static boolean SHOWINTRO = false; // false = skip Oak intro
+	/**
+	 * Walk anywhere
+	 */
+	public static boolean NOCLIP = false;
 
-	public static final int NPC_SIGHT_DISTANCE = 5; // NPC line of sight calc
-	public static final int MAX_NAME_SIZE = 7; // max name size for a character
+	/**
+	 * Do wild / opponent battles
+	 */
+	public static boolean DOBATTLES = false;
+	/**
+	 * False = skip Oak intro, True = do Oak intro
+	 */
+	public static boolean SHOWINTRO = false;
 
+	/**
+	 * NPC will see player <= this number of tiles away
+	 */
+	public static final int NPC_SIGHT_DISTANCE = 5;
+
+	/**
+	 * Max name size for a character or battler
+	 */
+	public static final int MAX_NAME_SIZE = 7;
+
+	/**
+	 * Version information
+	 */
 	public static final String VERSION = "Metallic Silver";
+	/**
+	 * Where to find this game's map
+	 */
 	public static final String MAP_TO_LOAD = "/maps/NewBarkTown.map";
+	/**
+	 * Where to find this game's music
+	 */
 	public static final String MUSIC_PATH = "resources/audio_lib/BGM/";
+	/**
+	 * Where to find this game's sound effects
+	 */
 	public static final String SOUND_EFFECT_PATH = "resources/audio_lib/SE/";
 
+	/**
+	 * Player's speed in game
+	 */
 	public enum PLAYER_SPEED {
-		WALK(80), RUN(90), BIKE(95);
+		/**
+		 * Player speed walking
+		 */
+		WALK(80),
+		/**
+		 * Player speed running
+		 */
+		RUN(90),
+		/**
+		 * Player speed on a bike
+		 */
+		BIKE(95);
 
 		private int value;
 
@@ -30,13 +82,24 @@ public class Configuration implements Serializable {
 			this.value = v;
 		}
 
+		/**
+		 * Get the value of the enumeration
+		 * 
+		 * @return int representing game speed
+		 */
 		public int getValue() {
 			return value;
 		}
 	}
 
+	/**
+	 * The number of options at each screen
+	 */
 	public HashMap<SCREEN, Integer> numSelections = new HashMap<SCREEN, Integer>();
 
+	/**
+	 * Default constructor initializes the number of selections at each screen
+	 */
 	public Configuration() {
 		numSelections.put(SCREEN.CONTINUE, 3);
 		numSelections.put(SCREEN.SAVE, 2);
@@ -45,6 +108,11 @@ public class Configuration implements Serializable {
 		numSelections.put(SCREEN.POKEGEAR, 4);
 	}
 
+	/**
+	 * Convert game information to a string
+	 * 
+	 * @return String representing game configuration
+	 */
 	public static String getConfig() {
 		String retStr = "* No clip: " + NOCLIP + "\n";
 		retStr += "* Do battles: " + DOBATTLES + "\n";
