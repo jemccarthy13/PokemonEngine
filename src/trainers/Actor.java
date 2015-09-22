@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import model.Coordinate;
 import party.Party;
-import party.PartyMember;
+import party.Battler;
 
 /**
  * The base class for any movable or interactable character or sprite
@@ -86,7 +86,7 @@ public class Actor implements Serializable {
 	 * 
 	 * @param p
 	 */
-	public void caughtWild(PartyMember p) {
+	public void caughtWild(Battler p) {
 		this.tData.party.add(p);
 	}
 

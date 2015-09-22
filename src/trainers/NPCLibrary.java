@@ -14,7 +14,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import party.Party;
-import party.PartyMemberFactory;
+import party.BattlerFactory;
 import trainers.Actor.DIR;
 import utilities.DebugUtility;
 
@@ -111,7 +111,7 @@ public class NPCLibrary extends HashMap<String, Actor> {
 						JSONObject pokemon = (JSONObject) pkmn_it.next();
 						String name = (String) pokemon.get("name");
 						int level = ((Long) pokemon.get("level")).intValue();
-						pList.add(PartyMemberFactory.createPokemon(name, level));
+						pList.add(BattlerFactory.createPokemon(name, level));
 					}
 
 					td.party = pList;
