@@ -3,7 +3,33 @@ This file will be replaced with a more in-depth documentation at some point in t
 For now this will be the location of any @TODO action items, desired features, and committed updates.  
 
 Also documented will be known bugs.
-
+===================================================================
+Version 3.0.0                                           21 Sep 2015
+===================================================================
+Features:
+- Update to MVC design pattern
+- Flyweight object construction
+- Graphics enhancements (added icons)
+- Battle engine enhancements
+  -- Wild encounters added
+  -- Switching pokemon added
+  -- Level up tested in battle
+- Abstracted out many "Pokemon" specific terminology / references
+- Added sample automated test
+- Partial convert to Javadoc style comments instead of
+  custom commenting
+ 
+ TODOs:
+- Need to enable more options (create better options scenes to paint)
+- Create sprites for more NPCs
+- Pokegear abstraction / implement sub-menus
+- Need to finish abstraction
+- Reduce McCabe Cyclomatic Complexity - interfaces / objects with
+  appropriate methods
+- Make editors for locations / pokemon / NPCs to allow easier
+  editing of the raw data
+- Analyze plug and play components for simplicity and potential
+  for redesign
 ===================================================================
 Version 2.0.0                                           30 June 2015
 ===================================================================
@@ -20,7 +46,7 @@ Features:
 - Deprecated unneeded classes
 
 TODO/KNOWN BUGS:
-- See repository issues page
+- See repository issues for more information
 
 ===================================================================
 Version 1.1.0                                           23 Jan 2014
