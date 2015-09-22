@@ -5,29 +5,82 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
 
+/**
+ * A representation of a tiled map
+ */
 public class Map {
+	/**
+	 * Default width of the tiles
+	 */
 	int tileWidth = 32;
+	/**
+	 * Default height of the tiles
+	 */
 	int tileHeight = 32;
+	/**
+	 * Default zoom width
+	 */
 	int zoomWidth = 32;
+	/**
+	 * Default zoom height
+	 */
 	int zoomHeight = 32;
+	/**
+	 * The view starts at 400 tiles wide
+	 */
 	int viewWidth = 400;
+	/**
+	 * The view starts at 400 tiles high
+	 */
 	int viewHeight = 400;
+	/**
+	 * The graphics bank holds tile images
+	 */
 	GraphicsBank gfx;
+	/**
+	 * All of the change listeners
+	 */
 	ArrayList<MapChangeListener> changeListeners;
+	/**
+	 * The map holds 3 layers
+	 */
 	static final int LAYERS = 3;
+	/**
+	 * The three layers of tiles are stored in this array
+	 */
 	MapTile[][][] tiles;
 
+	/**
+	 * Constructs the tile map and initializes change listeners
+	 * 
+	 * @param paramInt1
+	 *            - size of first tiles []
+	 * @param paramInt2
+	 *            - size of second tiles []
+	 */
 	public Map(int paramInt1, int paramInt2) {
 		this.tiles = new MapTile[paramInt1][paramInt2][3];
 		this.changeListeners = new ArrayList<MapChangeListener>();
 	}
 
-	public Map(int paramInt1, int paramInt2, int paramInt3, int paramInt4) {
+	/**
+	 * A constructor that takes in a width and height
+	 * 
+	 * @param paramInt1
+	 *            - parameter for default constructor
+	 * @param paramInt2
+	 *            - parameter for default constructor
+	 * @param width
+	 *            - used for tile width and zoom width
+	 * @param height
+	 *            - used for tile height and zoom height
+	 */
+	public Map(int paramInt1, int paramInt2, int width, int height) {
 		this(paramInt1, paramInt2);
-		this.tileWidth = paramInt3;
-		this.tileHeight = paramInt4;
-		this.zoomWidth = paramInt3;
-		this.zoomHeight = paramInt4;
+		this.tileWidth = width;
+		this.tileHeight = height;
+		this.zoomWidth = width;
+		this.zoomHeight = height;
 	}
 
 	public void setTile(int paramInt1, int paramInt2, int paramInt3, MapTile paramTile) {
@@ -213,11 +266,23 @@ public class Map {
 		setAllTiles(arrayOfInt, paramGraphicsBank);
 	}
 
-	public void addChangeListener(MapChangeListener paramMapChangeListener) {
-		this.changeListeners.add(paramMapChangeListener);
+	/**
+	 * Add a change listener to the map.
+	 * 
+	 * @param listenerToAdd
+	 *            - the change listener to add
+	 */
+	public void addChangeListener(MapChangeListener listenerToAdd) {
+		this.changeListeners.add(listenerToAdd);
 	}
 
-	public void removeChangeListener(MapChangeListener paramMapChangeListener) {
-		this.changeListeners.remove(paramMapChangeListener);
+	/**
+	 * Remove a change listener from the Map.
+	 * 
+	 * @param listenerToRemove
+	 *            - the listener to remove
+	 */
+	public void removeChangeListener(MapChangeListener listenerToRemove) {
+		this.changeListeners.remove(listenerToRemove);
 	}
 }

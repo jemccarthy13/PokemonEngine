@@ -1,7 +1,20 @@
 package editors.mapmaker;
 
+/**
+ * An interface describing a change listener for the map
+ */
 abstract interface MapChangeListener {
-	public abstract void mapChanging(boolean paramBoolean);
+	/**
+	 * Event fired when the map is changing
+	 * 
+	 * @param isChanging
+	 */
+	public abstract void mapChanging(boolean isChanging);
 
-	public abstract void mapChanged(boolean paramBoolean);
+	/**
+	 * Event fired when the map has changed
+	 * 
+	 * @param hasChanged
+	 */
+	public abstract void mapChanged(boolean hasChanged);
 }

@@ -7,11 +7,21 @@ import java.util.List;
 
 import utilities.DebugUtility;
 
+/**
+ * A utility to get the relative path to a file
+ */
 public class RelativePath {
-	private static List<String> getPathList(File paramFile) {
+	/**
+	 * Retrieve a list of paths to a file
+	 * 
+	 * @param file
+	 *            - the file to get paths for
+	 * @return the list of paths to that file
+	 */
+	private static List<String> getPathList(File file) {
 		ArrayList<String> localArrayList = new ArrayList<String>();
 		try {
-			File localFile = paramFile.getCanonicalFile();
+			File localFile = file.getCanonicalFile();
 			while (localFile != null) {
 				localArrayList.add(localFile.getName());
 				localFile = localFile.getParentFile();
@@ -23,37 +33,59 @@ public class RelativePath {
 		return localArrayList;
 	}
 
-	private static String matchPathLists(List<String> paramList1, List<String> paramList2) {
+	/**
+	 * Match the path lists of the two parameter file lists
+	 * 
+	 * @param fileList1
+	 * @param fileList2
+	 * @return relative path between file list 1 and file list 2
+	 */
+	private static String matchPathLists(List<String> fileList1, List<String> fileList2) {
 		String str = "";
-		int i = paramList1.size() - 1;
-		int j = paramList2.size() - 1;
+		int i = fileList1.size() - 1;
+		int j = fileList2.size() - 1;
 		do {
 			i--;
 			j--;
 			if ((i < 0) || (j < 0)) {
 				break;
 			}
-		} while (((String) paramList1.get(i)).equals(paramList2.get(j)));
+		} while (((String) fileList1.get(i)).equals(fileList2.get(j)));
 		for (; i >= 0; i--) {
 			str = str + ".." + File.separator;
 		}
 		for (; j >= 1; j--) {
-			str = str + (String) paramList2.get(j) + File.separator;
+			str = str + (String) fileList2.get(j) + File.separator;
 		}
-		str = str + (String) paramList2.get(j);
+		str = str + (String) fileList2.get(j);
 		return str;
 	}
 
-	public static String getRelativePath(File paramFile1, File paramFile2) {
-		List<String> localList1 = getPathList(paramFile1);
-		List<String> localList2 = getPathList(paramFile2);
-		String str = matchPathLists(localList1, localList2);
+	/**
+	 * Get the relative file path
+	 * 
+	 * @param file1
+	 *            - first file
+	 * @param file2
+	 *            - other file
+	 * @return a string matching relative path from file 1 to file 2
+	 */
+	public static String getRelativePath(File file1, File file2) {
+		List<String> fileList1 = getPathList(file1);
+		List<String> fileList2 = getPathList(file2);
+		String str = matchPathLists(fileList1, fileList2);
 
 		return str;
 	}
 
-	public static void main(String[] paramArrayOfString) {
-		if (paramArrayOfString.length != 2) {
+	/**
+	 * The main entry point of the RelativePath utility
+	 * 
+	 * @param args
+	 *            - command line arguments
+	 */
+	public static void main(String[] args) {
+		if (args.length != 2) {
 			DebugUtility.printMessage("RelativePath <home> <file>");
 			return;
 		}

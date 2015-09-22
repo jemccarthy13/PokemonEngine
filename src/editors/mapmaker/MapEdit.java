@@ -43,47 +43,60 @@ import javax.swing.event.ChangeListener;
 
 import utilities.DebugUtility;
 
+/**
+ * The main map editor JFrame
+ */
 public class MapEdit implements ActionListener, ChangeListener, KeyListener {
-	boolean compactToolbars = true;
-	boolean borderedButtons = true;
+	/**
+	 * Represents normal paint
+	 */
 	public static final int PAINT_NORMAL = 0;
+	/**
+	 * Represents paint fill
+	 */
 	public static final int PAINT_FILL = 1;
-	JFrame mainFrame;
-	MapComponent mapPanel;
-	JFileChooser chooser, tschooser;
-	static TileChooser tileChooser;
-	static JSplitPane split;
-	JScrollPane mapScroll;
-	JPanel chooserPanel, settingsPanel, tilesetSettingsPanel, colorDialog;
-	JSlider r, g, b, h, s;
-	boolean ignoreEffects = false;
-	File openFile;
-	Map map;
-	Scene scene;
-	GraphicsBank gfx;
-	JToolBar outerToolBar, innerToolBar;
-	JButton newBtn, openBtn, saveBtn, clearBtn;
-	JToggleButton[] layerButtons;
-	JToggleButton hideBtn, gridBtn;
-	JButton shiftRightBtn, shiftLeftBtn, shiftUpBtn, shiftDownBtn;
-	JButton increaseWidthBtn, decreaseWidthBtn;
-	JButton increaseHeightBtn, decreaseHeightBtn;
-	JToggleButton palletteBtn;
-	JButton zoomInBtn, zoomOutBtn, zoomFullBtn;
-	JToggleButton fillBtn;
-	static JButton undoBtn, redoBtn;
-	float zoomLevel;
-	JMenuBar menuBar;
-	JMenu fileMenu, editMenu, toolMenu, helpMenu;
-	JMenuItem undoMI, redoMI, openMI, newMI;
-	JMenuItem saveMI, saveAsMI, exitMI;
-	JMenuItem about, howToUse;
-	JPanel tilesetInfoPane;
-	JLabel tilesetFileLabel;
-	JButton tilesetOpenBtn, tilesetNewBtn, tilesetSaveBtn;
-	JSpinner tilesetGridWField, tilesetGridHField;
-	JButton effectsResetBtn;
 
+	private boolean compactToolbars = true;
+	private boolean borderedButtons = true;
+	private JFrame mainFrame;
+	private MapComponent mapPanel;
+	private JFileChooser chooser, tschooser;
+	private static TileChooser tileChooser;
+	private static JSplitPane split;
+	private JScrollPane mapScroll;
+	private JPanel chooserPanel, settingsPanel, tilesetSettingsPanel, colorDialog;
+	private JSlider r, g, b, h, s;
+	private boolean ignoreEffects = false;
+	private File openFile;
+	private Map map;
+	private Scene scene;
+	private GraphicsBank gfx;
+	private JToolBar outerToolBar, innerToolBar;
+	private JButton newBtn, openBtn, saveBtn, clearBtn;
+	private JToggleButton[] layerButtons;
+	private JToggleButton hideBtn, gridBtn;
+	private JButton shiftRightBtn, shiftLeftBtn, shiftUpBtn, shiftDownBtn;
+	private JButton increaseWidthBtn, decreaseWidthBtn;
+	private JButton increaseHeightBtn, decreaseHeightBtn;
+	private JToggleButton palletteBtn;
+	private JButton zoomInBtn, zoomOutBtn, zoomFullBtn;
+	private JToggleButton fillBtn;
+	private static JButton undoBtn, redoBtn;
+	private float zoomLevel;
+	private JMenuBar menuBar;
+	private JMenu fileMenu, editMenu, toolMenu, helpMenu;
+	private JMenuItem undoMI, redoMI, openMI, newMI;
+	private JMenuItem saveMI, saveAsMI, exitMI;
+	private JMenuItem about, howToUse;
+	private JPanel tilesetInfoPane;
+	private JLabel tilesetFileLabel;
+	private JButton tilesetOpenBtn, tilesetNewBtn, tilesetSaveBtn;
+	private JSpinner tilesetGridWField, tilesetGridHField;
+	private JButton effectsResetBtn;
+
+	/**
+	 * Default constructor
+	 */
 	public MapEdit() {
 		zoomLevel = 1.0F;
 		openFile = null;
@@ -182,7 +195,7 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 	private void setupMenus() {
 		menuBar = new JMenuBar();
 		fileMenu = new JMenu("File");
-		toolMenu = new JMenu("Tools");
+		setToolMenu(new JMenu("Tools"));
 		editMenu = new JMenu("Edit");
 		helpMenu = new JMenu("Help");
 		openMI = new JMenuItem("Open...");
@@ -314,14 +327,41 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 		layerButtons[0].setSelected(true);
 	}
 
-	public void keyPressed(KeyEvent paramKeyEvent) {}
+	/**
+	 * Event that occurs when a key is pressed
+	 * 
+	 * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
+	 * @param event
+	 *            - the event triggering this method
+	 */
+	public void keyPressed(KeyEvent event) {}
 
-	public void keyReleased(KeyEvent paramKeyEvent) {}
+	/**
+	 * Event that occurs when a key is relesed
+	 * 
+	 * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
+	 * @param event
+	 *            - the event triggering this method
+	 */
+	public void keyReleased(KeyEvent event) {}
 
-	public void keyTyped(KeyEvent paramKeyEvent) {}
+	/**
+	 * Event that occurs when a key is typed
+	 * 
+	 * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
+	 * @param event
+	 *            - the event triggering this method
+	 */
+	public void keyTyped(KeyEvent event) {}
 
-	public void actionPerformed(ActionEvent paramActionEvent) {
-		Object localObject = paramActionEvent.getSource();
+	/**
+	 * Method that is called when an action is performed
+	 * 
+	 * @param event
+	 *            - the event triggering this method
+	 */
+	public void actionPerformed(ActionEvent event) {
+		Object localObject = event.getSource();
 		if (localObject == zoomInBtn) {
 			if (zoomLevel < 5.0F) {
 				zoomLevel = ((float) (zoomLevel * 1.2D));
@@ -345,7 +385,7 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 			}
 		} else if ((localObject == saveBtn) || (localObject == saveMI)) {
 			if (openFile == null) {
-				actionPerformed(new ActionEvent(saveAsMI, paramActionEvent.getID(), paramActionEvent.getActionCommand()));
+				actionPerformed(new ActionEvent(saveAsMI, event.getID(), event.getActionCommand()));
 			} else {
 				saveFile(openFile);
 			}
@@ -438,7 +478,7 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 		}
 	}
 
-	JButton makeBtn(String paramString1, String paramString2, String paramString3) {
+	private JButton makeBtn(String paramString1, String paramString2, String paramString3) {
 		JButton localJButton;
 		try {
 			localJButton = new JButton(new ImageIcon(getClass().getResource(paramString2)));
@@ -472,6 +512,11 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 		return localJToggleButton;
 	}
 
+	/**
+	 * Retrieve the TileChooser's selected tile
+	 * 
+	 * @return a maptile
+	 */
 	public MapTile getSelectedTile() {
 		return tileChooser.getSelectedTile();
 	}
@@ -494,18 +539,29 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 		}
 	}
 
+	/**
+	 * Retrieve the current graphics bank
+	 * 
+	 * @return a GraphicsBank being used
+	 */
 	public GraphicsBank getCurrentGraphicsBank() {
 		return gfx;
 	}
 
-	public void saveFile(File paramFile) {
+	/**
+	 * Save the map to a file
+	 * 
+	 * @param fileToSave
+	 *            the file to save
+	 */
+	public void saveFile(File fileToSave) {
 		if (scene.getTileset().isUnsaved()) {
 			PromptDialog.tell("Please save your tileset first.", "OK");
 			return;
 		}
 		try {
-			scene.saveScene(paramFile);
-			openFile = paramFile;
+			scene.saveScene(fileToSave);
+			openFile = fileToSave;
 			mainFrame.validate();
 		} catch (Exception localException) {
 			PromptDialog.tell("Could not save: " + localException, "OK");
@@ -513,10 +569,16 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 		}
 	}
 
-	public void openFile(File paramFile) {
+	/**
+	 * Open a map file
+	 * 
+	 * @param fileToOpen
+	 *            the file to open
+	 */
+	public void openFile(File fileToOpen) {
 		try {
 			zoomLevel = 1.0F;
-			scene = Scene.loadScene(paramFile);
+			scene = Scene.loadScene(fileToOpen);
 			map = scene.getMap();
 			setGraphicsBank(scene.getTileset());
 
@@ -530,7 +592,7 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 			setIgnoreEffectChanges(false);
 			s.setValue((int) (scene.effect_sat * 100.0F));
 
-			openFile = paramFile;
+			openFile = fileToOpen;
 			mainFrame.validate();
 			mapPanel.validate();
 			mainFrame.repaint();
@@ -539,6 +601,9 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 		}
 	}
 
+	/**
+	 * Create a new map scene
+	 */
 	public void newFile() {
 		scene = new Scene(new Map(10, 10), new ArrayList<Object>(), gfx);
 		zoomLevel = 1.0F;
@@ -598,7 +663,13 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 		return localJPanel1;
 	}
 
-	public void stateChanged(ChangeEvent paramChangeEvent) {
+	/**
+	 * Method that occurs when the JFrames' state has changed
+	 * 
+	 * @param event
+	 *            - the event that caused state to change
+	 */
+	public void stateChanged(ChangeEvent event) {
 		if (!ignoreEffects) {
 			float[] fParams = { r.getValue() / 100.0F, g.getValue() / 100.0F, b.getValue() / 100.0F,
 					h.getValue() / 360.0F, s.getValue() / 100.0F, zoomLevel };
@@ -653,8 +724,90 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 		}
 	}
 
-	public static void main(String[] paramArrayOfString) {
+	/**
+	 * Main entry point for editing map files
+	 * 
+	 * @param args
+	 *            - command line arguments
+	 */
+	public static void main(String[] args) {
 		new MapEdit();
+	}
+
+	/**
+	 * Get the tileset settings panel
+	 * 
+	 * @return a JPanel for tileset settings
+	 */
+	public JPanel getTilesetSettingsPanel() {
+		return tilesetSettingsPanel;
+	}
+
+	/**
+	 * Set the tileset settings panel
+	 * 
+	 * @param tilesetSettingsPanel
+	 *            -a JPanel to set the tileset settings panel as
+	 */
+	public void setTilesetSettingsPanel(JPanel tilesetSettingsPanel) {
+		this.tilesetSettingsPanel = tilesetSettingsPanel;
+	}
+
+	/**
+	 * Get the tool menu
+	 * 
+	 * @return a JMenu that is the tool menu
+	 */
+	public JMenu getToolMenu() {
+		return toolMenu;
+	}
+
+	/**
+	 * Set the tool menu
+	 * 
+	 * @param toolMenu
+	 *            - the JMenu to set the tool menu as
+	 */
+	public void setToolMenu(JMenu toolMenu) {
+		this.toolMenu = toolMenu;
+	}
+
+	/**
+	 * Get the tilset grid height field
+	 * 
+	 * @return a JSpinner for the tileset grid height
+	 */
+	public JSpinner getTilesetGridHField() {
+		return tilesetGridHField;
+	}
+
+	/**
+	 * Set the tileset grid height field
+	 * 
+	 * @param tilesetGridHField
+	 *            - the JSpinner to set the grid height field to
+	 */
+	public void setTilesetGridHField(JSpinner tilesetGridHField) {
+		this.tilesetGridHField = tilesetGridHField;
+	}
+
+	/**
+	 * Get the tileset grid width field
+	 * 
+	 * @return a JSpinner for the tileset grid width
+	 */
+	public JSpinner getTilesetGridWField() {
+		return tilesetGridWField;
+	}
+
+	/**
+	 * Set the tileset grid width field
+	 * 
+	 * @param tilesetGridWField
+	 *            - the JSpinner to set the grid width field to
+	 */
+	public void setTilesetGridWField(JSpinner tilesetGridWField) {
+		this.tilesetGridWField = tilesetGridWField;
 	}
 
 	class redoAction extends AbstractAction {

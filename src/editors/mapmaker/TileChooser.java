@@ -39,30 +39,102 @@ import javax.swing.border.TitledBorder;
 
 import utilities.DebugUtility;
 
+/**
+ * The side panel for choosing tiles
+ */
 public class TileChooser extends JPanel implements ActionListener, GraphicsBankChangeListener {
+	/**
+	 * Serialization information
+	 */
 	private static final long serialVersionUID = 5090621430335043404L;
+	/**
+	 * The tiles in the chooser
+	 */
 	ArrayList<Object> tiles;
+	/**
+	 * Layout for this GUI
+	 */
 	GridLayout layout;
+	/**
+	 * Storage of the images
+	 */
 	GraphicsBank gfx;
+	/**
+	 * The width of tiles
+	 */
 	int tileWidth = 32;
+	/**
+	 * The currently selected tile
+	 */
 	MapTile selectedTile;
+	/**
+	 * Button grouping
+	 */
 	ButtonGroup group;
+	/**
+	 * The panel to hold tiles
+	 */
 	JPanel tilePanel;
+	/**
+	 * Another GUI panel
+	 */
 	JPanel spacer;
+	/**
+	 * A dialog for properties
+	 */
 	JDialog propertiesDialog;
+	/**
+	 * A tile for properties
+	 */
 	MapTile propertyTile;
+	/**
+	 * User entered text filed
+	 */
 	JTextField userText;
+	/**
+	 * Spinner representing the tile number
+	 */
 	JSpinner tileNumber;
+	/**
+	 * Text field representing the tile name
+	 */
 	JTextField tileName;
+	/**
+	 * Text field represeting the tile type
+	 */
 	JTextField tileType;
+	/**
+	 * The tile image
+	 */
 	JLabel tileImg;
+	/**
+	 * Apply button
+	 */
 	JButton applyBtn;
+	/**
+	 * Cancel button
+	 */
 	JButton cancelBtn;
+	/**
+	 * Delete button
+	 */
 	JButton deleteBtn;
+	/**
+	 * A text field representing the image file
+	 */
 	JTextField imageFile;
+	/**
+	 * A handler for dropping files into the tile chooser
+	 */
 	FileDropHandler fileDrop;
 
-	public TileChooser(GraphicsBank paramGraphicsBank) {
+	/**
+	 * Construct a TileChooser given a graphics bank
+	 * 
+	 * @param bank
+	 *            - the graphics bank to use
+	 */
+	public TileChooser(GraphicsBank bank) {
 		this.tilePanel = new JPanel();
 		this.layout = new GridLayout(0, 5);
 		this.tilePanel.setLayout(this.layout);
@@ -76,22 +148,36 @@ public class TileChooser extends JPanel implements ActionListener, GraphicsBankC
 
 		add(this.spacer, "Center");
 
-		this.gfx = paramGraphicsBank;
+		this.gfx = bank;
 		reset();
 
 		this.fileDrop = new FileDropHandler();
 		setTransferHandler(this.fileDrop);
-		paramGraphicsBank.addChangeListener(this);
+		bank.addChangeListener(this);
 		this.propertiesDialog = null;
 	}
 
-	public TileChooser(GraphicsBank paramGraphicsBank, JFrame paramJFrame) {
-		this(paramGraphicsBank);
-		createPropertiesDialog(paramJFrame);
+	/**
+	 * Create a TileChooser given a graphics bank and a frame
+	 * 
+	 * @param bank
+	 *            - the graphics bank to use
+	 * @param frame
+	 *            - the JFrame to create properties from
+	 */
+	public TileChooser(GraphicsBank bank, JFrame frame) {
+		this(bank);
+		createPropertiesDialog(frame);
 	}
 
-	void createPropertiesDialog(JFrame paramJFrame) {
-		this.propertiesDialog = new JDialog(paramJFrame, "Tile Properties");
+	/**
+	 * Construct a properties dialog
+	 * 
+	 * @param parentFrame
+	 *            - the parent container for the dialog
+	 */
+	void createPropertiesDialog(JFrame parentFrame) {
+		this.propertiesDialog = new JDialog(parentFrame, "Tile Properties");
 		this.propertiesDialog.setSize(300, 300);
 		this.propertiesDialog.setLocationRelativeTo(null);
 		this.tileName = new JTextField("", 20);
@@ -104,47 +190,47 @@ public class TileChooser extends JPanel implements ActionListener, GraphicsBankC
 		this.tileImg = new JLabel();
 		this.tileImg.setHorizontalAlignment(0);
 		this.tileImg.setBorder(new TitledBorder("Image"));
-		JPanel localJPanel1 = (JPanel) this.propertiesDialog.getContentPane();
-		localJPanel1.setLayout(new BorderLayout());
+		JPanel tileImagePanel = (JPanel) this.propertiesDialog.getContentPane();
+		tileImagePanel.setLayout(new BorderLayout());
 		JPanel localJPanel2 = new JPanel(new BorderLayout());
-		localJPanel1.add(localJPanel2, "Center");
-		localJPanel1.add(this.tileImg, "North");
-		JPanel localJPanel3 = new JPanel(new GridBagLayout());
-		GridBagConstraints localGridBagConstraints = new GridBagConstraints();
-		localGridBagConstraints.fill = 2;
-		localGridBagConstraints.insets = new Insets(3, 3, 3, 3);
+		tileImagePanel.add(localJPanel2, "Center");
+		tileImagePanel.add(this.tileImg, "North");
+		JPanel tileInformationPanel = new JPanel(new GridBagLayout());
+		GridBagConstraints constraints = new GridBagConstraints();
+		constraints.fill = 2;
+		constraints.insets = new Insets(3, 3, 3, 3);
 
-		localGridBagConstraints.gridx = 0;
-		localGridBagConstraints.gridy = 0;
-		localJPanel3.add(new JLabel("ID"), localGridBagConstraints);
-		localGridBagConstraints.gridx = 1;
-		localGridBagConstraints.ipadx = 30;
-		localGridBagConstraints.fill = 0;
-		localGridBagConstraints.anchor = 17;
-		localJPanel3.add(this.tileNumber, localGridBagConstraints);
-		localGridBagConstraints.ipadx = 0;
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		tileInformationPanel.add(new JLabel("ID"), constraints);
+		constraints.gridx = 1;
+		constraints.ipadx = 30;
+		constraints.fill = 0;
+		constraints.anchor = 17;
+		tileInformationPanel.add(this.tileNumber, constraints);
+		constraints.ipadx = 0;
 
-		localGridBagConstraints.fill = 2;
+		constraints.fill = 2;
 
-		localGridBagConstraints.gridx = 0;
-		localGridBagConstraints.gridy = 1;
-		localJPanel3.add(new JLabel("Type"), localGridBagConstraints);
-		localGridBagConstraints.gridx = 1;
-		localJPanel3.add(this.tileType, localGridBagConstraints);
-		localGridBagConstraints.gridx = 0;
-		localGridBagConstraints.gridy = 2;
+		constraints.gridx = 0;
+		constraints.gridy = 1;
+		tileInformationPanel.add(new JLabel("Type"), constraints);
+		constraints.gridx = 1;
+		tileInformationPanel.add(this.tileType, constraints);
+		constraints.gridx = 0;
+		constraints.gridy = 2;
 
-		localJPanel3.add(new JLabel("Name"), localGridBagConstraints);
-		localGridBagConstraints.gridx = 1;
-		localJPanel3.add(this.tileName, localGridBagConstraints);
+		tileInformationPanel.add(new JLabel("Name"), constraints);
+		constraints.gridx = 1;
+		tileInformationPanel.add(this.tileName, constraints);
 
-		localGridBagConstraints.gridx = 0;
-		localGridBagConstraints.gridy = 3;
-		localJPanel3.add(new JLabel("User Text"), localGridBagConstraints);
-		localGridBagConstraints.gridx = 1;
-		localJPanel3.add(this.userText, localGridBagConstraints);
+		constraints.gridx = 0;
+		constraints.gridy = 3;
+		tileInformationPanel.add(new JLabel("User Text"), constraints);
+		constraints.gridx = 1;
+		tileInformationPanel.add(this.userText, constraints);
 
-		localJPanel2.add(localJPanel3, "North");
+		localJPanel2.add(tileInformationPanel, "North");
 
 		this.applyBtn = new JButton("Save");
 		this.deleteBtn = new JButton("Delete Tile");
@@ -153,21 +239,24 @@ public class TileChooser extends JPanel implements ActionListener, GraphicsBankC
 		this.cancelBtn.addActionListener(this);
 		this.deleteBtn.addActionListener(this);
 
-		JPanel localJPanel4 = new JPanel(new GridLayout(1, 3));
-		localJPanel4.add(this.deleteBtn);
-		localJPanel4.add(this.applyBtn);
-		localJPanel4.add(this.cancelBtn);
+		JPanel applyDeletePanel = new JPanel(new GridLayout(1, 3));
+		applyDeletePanel.add(this.deleteBtn);
+		applyDeletePanel.add(this.applyBtn);
+		applyDeletePanel.add(this.cancelBtn);
 
-		localGridBagConstraints.gridx = 0;
-		localGridBagConstraints.gridy = 4;
-		localGridBagConstraints.gridwidth = 2;
+		constraints.gridx = 0;
+		constraints.gridy = 4;
+		constraints.gridwidth = 2;
 
-		localJPanel3.add(localJPanel4, localGridBagConstraints);
+		tileInformationPanel.add(applyDeletePanel, constraints);
 
 		this.propertiesDialog.setSize(300, 500);
 		this.propertiesDialog.setResizable(false);
 	}
 
+	/**
+	 * Reset the TileChooser
+	 */
 	public void reset() {
 		int i = 0;
 		this.tilePanel.removeAll();
@@ -194,23 +283,45 @@ public class TileChooser extends JPanel implements ActionListener, GraphicsBankC
 		repaint();
 	}
 
-	public void tilesetUpdated(GraphicsBank paramGraphicsBank) {
+	/**
+	 * Graphics bank change listener tile set updated
+	 * 
+	 * @param bank
+	 *            - the graphics bank to check against
+	 */
+	public void tilesetUpdated(GraphicsBank bank) {
 		DebugUtility.printMessage("tilset updated");
-		if (paramGraphicsBank == this.gfx) {
+		if (bank == this.gfx) {
 			reset();
 		}
 	}
 
-	public void tileRemoved(GraphicsBank paramGraphicsBank, MapTile paramTile) {
+	/**
+	 * Graphics bank change listener tile removed
+	 * 
+	 * @param bank
+	 *            - the graphics bank
+	 * @param removedTile
+	 *            - tile that was removed
+	 */
+	public void tileRemoved(GraphicsBank bank, MapTile removedTile) {
 		DebugUtility.printMessage("tilset updated");
-		if (paramGraphicsBank == this.gfx) {
+		if (bank == this.gfx) {
 			reset();
 		}
 	}
 
-	public void tileAdded(GraphicsBank paramGraphicsBank, MapTile paramTile) {
+	/**
+	 * Graphics bank change listener tile added
+	 * 
+	 * @param bank
+	 *            - the graphics bank
+	 * @param addedTile
+	 *            - tile that was added
+	 */
+	public void tileAdded(GraphicsBank bank, MapTile addedTile) {
 		DebugUtility.printMessage("tilset updated");
-		TileButton localTileButton = new TileButton(paramTile);
+		TileButton localTileButton = new TileButton(addedTile);
 		this.tilePanel.add(localTileButton);
 		this.group.add(localTileButton);
 
@@ -220,47 +331,70 @@ public class TileChooser extends JPanel implements ActionListener, GraphicsBankC
 		repaint();
 	}
 
-	public void actionPerformed(ActionEvent paramActionEvent) {
-		if ((paramActionEvent.getSource() == this.applyBtn) && (this.propertyTile != null)) {
+	/**
+	 * Function that is fired every time the TileChooser records an action
+	 * 
+	 * @param event
+	 *            - the event that occurred
+	 */
+	public void actionPerformed(ActionEvent event) {
+		if ((event.getSource() == this.applyBtn) && (this.propertyTile != null)) {
 			this.propertyTile.name = this.tileName.getText();
 			this.propertyTile.type = this.tileType.getText();
 			this.propertyTile.number = ((Integer) this.tileNumber.getValue()).intValue();
 			this.propertyTile.info = this.userText.getText();
 			this.propertiesDialog.dispose();
 			this.propertyTile = null;
-		} else if (paramActionEvent.getSource() == this.cancelBtn) {
+		} else if (event.getSource() == this.cancelBtn) {
 			this.propertiesDialog.dispose();
 			this.propertyTile = null;
-		} else if (paramActionEvent.getSource() == this.deleteBtn) {
+		} else if (event.getSource() == this.deleteBtn) {
 			if (this.propertyTile != null) {
 				this.gfx.remove(this.propertyTile);
 				this.propertyTile = null;
 			}
 			this.propertiesDialog.dispose();
 		} else {
-			DebugUtility.printError("Unknown button fired action. " + paramActionEvent);
+			DebugUtility.printError("Unknown button fired action. " + event);
 		}
 	}
 
-	public void setWidth(int paramInt) {
-		if (paramInt >= this.tileWidth + 8) {
-			this.layout.setColumns(paramInt / (this.tileWidth + 15));
+	/**
+	 * Set the width of this chooser
+	 * 
+	 * @param newWidth
+	 *            - the width to set
+	 */
+	public void setWidth(int newWidth) {
+		if (newWidth >= this.tileWidth + 8) {
+			this.layout.setColumns(newWidth / (this.tileWidth + 15));
 			this.tilePanel.revalidate();
 		}
 	}
 
+	/**
+	 * Get the selected tile
+	 * 
+	 * @return selected tile
+	 */
 	public MapTile getSelectedTile() {
 		return this.selectedTile;
 	}
 
-	void showProperties(MapTile paramTile) {
-		this.propertyTile = paramTile;
-		if (paramTile != null) {
-			this.userText.setText(paramTile.getInfo());
-			this.tileNumber.setValue(new Integer(paramTile.getNumber()));
-			this.tileName.setText(paramTile.getName());
-			this.tileType.setText(paramTile.getType());
-			this.tileImg.setIcon(new ImageIcon(paramTile.getImage()));
+	/**
+	 * Show the properties of a given tile
+	 * 
+	 * @param tileToShow
+	 *            - the tile to get the properties of
+	 */
+	void showProperties(MapTile tileToShow) {
+		this.propertyTile = tileToShow;
+		if (tileToShow != null) {
+			this.userText.setText(tileToShow.getInfo());
+			this.tileNumber.setValue(new Integer(tileToShow.getNumber()));
+			this.tileName.setText(tileToShow.getName());
+			this.tileType.setText(tileToShow.getType());
+			this.tileImg.setIcon(new ImageIcon(tileToShow.getImage()));
 
 			this.applyBtn.setEnabled(true);
 			this.deleteBtn.setEnabled(true);
@@ -286,20 +420,24 @@ public class TileChooser extends JPanel implements ActionListener, GraphicsBankC
 		this.propertiesDialog.setVisible(true);
 	}
 
-	public void importImageAsTile(File paramFile) throws IOException {
-		importImageAsTile(paramFile, 0);
-	}
-
-	public void importImageAsTile(File paramFile, int paramInt) throws IOException {
-		if (paramFile.isDirectory()) {
-			File[] arrayOfFile = paramFile.listFiles();
+	/**
+	 * Get an image and translate into a tile
+	 * 
+	 * @param fileToRead
+	 *            - the file to read
+	 * @throws IOException
+	 *             if the file cannot be read
+	 */
+	public void importImageAsTile(File fileToRead) throws IOException {
+		if (fileToRead.isDirectory()) {
+			File[] arrayOfFile = fileToRead.listFiles();
 			for (int j = 0; j < arrayOfFile.length; j++) {
 				importImageAsTile(arrayOfFile[j]);
 			}
 		}
-		DebugUtility.printMessage("Import " + paramFile);
+		DebugUtility.printMessage("Import " + fileToRead);
 		try {
-			ImageIO.read(paramFile);
+			ImageIO.read(fileToRead);
 		} catch (Exception localException) {
 			DebugUtility.printMessage("FAIL");
 			return;
@@ -308,36 +446,79 @@ public class TileChooser extends JPanel implements ActionListener, GraphicsBankC
 		DebugUtility.printMessage("?1");
 		int i = this.gfx.getUnusedNumber();
 		DebugUtility.printMessage("?2");
-		MapTile localTile = new MapTile(i, paramFile.getAbsolutePath(), "New Tile " + i, "No Type");
+		MapTile localTile = new MapTile(i, fileToRead.getAbsolutePath(), "New Tile " + i, "No Type");
 
-		DebugUtility.printMessage("Adding " + paramFile);
+		DebugUtility.printMessage("Adding " + fileToRead);
 		this.gfx.add(localTile);
 		if (this.propertiesDialog != null) {
 			showProperties(localTile);
 		}
 	}
 
-	public void MapTileRemoved(GraphicsBank paramGraphicsBank, MapTile paramTile) {}
+	/**
+	 * Change listener implementation for a map tile being removed
+	 * 
+	 * @param bank
+	 *            - the graphics bank
+	 * @param removedTile
+	 *            - the tile that was removed
+	 */
+	public void MapTileRemoved(GraphicsBank bank, MapTile removedTile) {}
 
-	public void MapTileAdded(GraphicsBank paramGraphicsBank, MapTile paramTile) {}
+	/**
+	 * Change listener implementation for a map tile being added
+	 * 
+	 * @param bank
+	 *            - the graphics bank
+	 * @param addedTile
+	 *            - the tile that was added
+	 */
+	public void MapTileAdded(GraphicsBank bank, MapTile addedTile) {}
 
+	/**
+	 * Class that represents a file drop
+	 */
 	class FileDropHandler extends TransferHandler {
+		/**
+		 * Serialization information
+		 */
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Default constructor
+		 */
 		FileDropHandler() {}
 
-		public boolean canImport(JComponent paramJComponent, DataFlavor[] paramArrayOfDataFlavor) {
-			for (int i = 0; i < paramArrayOfDataFlavor.length; i++) {
-				if (paramArrayOfDataFlavor[i].equals(DataFlavor.javaFileListFlavor)) {
+		/**
+		 * Return whether or not the data can be imported
+		 * 
+		 * @param ignored
+		 *            - a JComponent that gets passed in to this function
+		 * @param data
+		 *            - the data to be imported
+		 * @return whether or not the data can be imported
+		 */
+		public boolean canImport(JComponent ignored, DataFlavor[] data) {
+			for (int i = 0; i < data.length; i++) {
+				if (data[i].equals(DataFlavor.javaFileListFlavor)) {
 					return true;
 				}
 			}
 			return false;
 		}
 
-		public boolean importData(JComponent paramJComponent, Transferable paramTransferable) {
+		/**
+		 * Perform a data import
+		 * 
+		 * @param ignored
+		 *            - a JComponent that gets passed in to this function
+		 * @param dataholder
+		 *            - the data to be imported
+		 * @return whether or not the data can be imported
+		 */
+		public boolean importData(JComponent ignored, Transferable dataholder) {
 			try {
-				List<?> localList = (List<?>) paramTransferable.getTransferData(DataFlavor.javaFileListFlavor);
+				List<?> localList = (List<?>) dataholder.getTransferData(DataFlavor.javaFileListFlavor);
 				if (localList.size() > 4) {}
 				Iterator<?> localIterator = localList.iterator();
 				while (localIterator.hasNext()) {
@@ -355,14 +536,29 @@ public class TileChooser extends JPanel implements ActionListener, GraphicsBankC
 		}
 	}
 
+	/**
+	 * A tile is also a pressable button
+	 */
 	class TileButton extends JToggleButton implements ActionListener, MouseListener {
+		/**
+		 * Serialization information
+		 */
 		private static final long serialVersionUID = 1L;
+		/**
+		 * This class holds a representation of a tile
+		 */
 		MapTile tile;
 
-		public TileButton(MapTile arg2) {
+		/**
+		 * Construct a TileButton given an encompassed map tile
+		 * 
+		 * @param tile
+		 *            - the tile this button should represent
+		 */
+		public TileButton(MapTile tile) {
 			BufferedImage localBufferedImage = new BufferedImage(TileChooser.this.gfx.getBaseMapTileSize().width,
 					TileChooser.this.gfx.getBaseMapTileSize().height, 2);
-			MapTile localObject = arg2;
+			MapTile localObject = tile;
 			if (localObject != null) {
 				Image localImage = localObject.getImage();
 				localBufferedImage.getGraphics().drawImage(localImage, 0, 0, 32, 32, null);
@@ -377,24 +573,65 @@ public class TileChooser extends JPanel implements ActionListener, GraphicsBankC
 			addActionListener(this);
 		}
 
-		public void actionPerformed(ActionEvent paramActionEvent) {
+		/**
+		 * On an action, update the selected tile.
+		 * 
+		 * @param event
+		 *            - the event that triggered an action
+		 */
+		public void actionPerformed(ActionEvent event) {
 			TileChooser.this.selectedTile = this.tile;
 		}
 
-		public void mouseEntered(MouseEvent paramMouseEvent) {}
+		/**
+		 * Required no-op mouse listener method
+		 * 
+		 * @param ignored
+		 *            an event that is ignored
+		 */
+		public void mouseEntered(MouseEvent ignored) {}
 
-		public void mouseExited(MouseEvent paramMouseEvent) {}
+		/**
+		 * Required no-op mouse listener method
+		 * 
+		 * @param ignored
+		 *            an event that is ignored
+		 */
+		public void mouseExited(MouseEvent ignored) {}
 
-		public void mousePressed(MouseEvent paramMouseEvent) {}
+		/**
+		 * Required no-op mouse listener method
+		 * 
+		 * @param ignored
+		 *            an event that is ignored
+		 */
+		public void mousePressed(MouseEvent ignored) {}
 
-		public void mouseReleased(MouseEvent paramMouseEvent) {}
+		/**
+		 * Required no-op mouse listener method
+		 * 
+		 * @param ignored
+		 *            an event that is ignored
+		 */
+		public void mouseReleased(MouseEvent ignored) {}
 
-		public void mouseClicked(MouseEvent paramMouseEvent) {
-			if (SwingUtilities.isRightMouseButton(paramMouseEvent)) {
+		/**
+		 * On a right click, display the tile's properties
+		 * 
+		 * @param mouseClick
+		 *            - the mouse click event
+		 */
+		public void mouseClicked(MouseEvent mouseClick) {
+			if (SwingUtilities.isRightMouseButton(mouseClick)) {
 				TileChooser.this.showProperties(this.tile);
 			}
 		}
 
+		/**
+		 * Get the tile of this button
+		 * 
+		 * @return a map tile
+		 */
 		public MapTile getTile() {
 			return this.tile;
 		}

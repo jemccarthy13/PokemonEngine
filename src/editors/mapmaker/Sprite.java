@@ -2,9 +2,22 @@ package editors.mapmaker;
 
 import java.awt.Graphics;
 
+/**
+ * @author John
+ * 
+ */
 public abstract interface Sprite {
+	/**
+	 * 
+	 */
 	public static final float RIGHT = 0.0F;
+	/**
+	 * 
+	 */
 	public static final float DOWN_RIGHT = 0.7853982F;
+	/**
+	 * 
+	 */
 	public static final float DOWN = 1.570796F;
 	public static final float DOWN_LEFT = 2.356195F;
 	public static final float LEFT = 3.141593F;
