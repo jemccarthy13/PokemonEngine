@@ -6,18 +6,21 @@ import trainers.Actor;
 import trainers.NPCLibrary;
 import utilities.RandomNumUtils;
 
-// ////////////////////////////////////////////////////////////////////////////
-//
-// NPCThread handles random movement for NPCs every second
-//
-// ////////////////////////////////////////////////////////////////////////////
+/**
+ * Handles random movement for NPCs once every second
+ */
 public class NPCThread extends Thread implements Serializable {
 
 	private static final long serialVersionUID = 1650659865966804001L;
+	/**
+	 * Thread stop signal
+	 */
 	public boolean stop = false;
 
-	public NPCThread() {}
-
+	/**
+	 * Extension of Thread, must implement "run" - this performs the random
+	 * movement of the NPCs
+	 */
 	public void run() {
 		while (true) {
 			if (stop) {

@@ -10,9 +10,9 @@ import javax.swing.JPanel;
 
 import model.Coordinate;
 import model.GameData.SCREEN;
+import party.Battler;
+import party.Battler.STATUS;
 import party.Party;
-import party.PartyMember;
-import party.PartyMember.STATUS;
 import tiles.TileSet;
 import trainers.Actor;
 import trainers.Actor.DIR;
@@ -23,12 +23,9 @@ import utilities.RandomNumUtils;
 import controller.GameController;
 import controller.GameKeyListener;
 
-// ////////////////////////////////////////////////////////////////////////
-//
-// Main panel - holds the key listener, event handler, and graphics painter
-// essentially controls all game flow logic and holds game data.
-//
-// ////////////////////////////////////////////////////////////////////////
+/**
+ * Holds the actionlistener. This is where the graphics are pained
+ */
 public class GamePanel extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 5951510422984321057L;
@@ -36,30 +33,33 @@ public class GamePanel extends JPanel implements ActionListener {
 	// ================== Display control variables =========================//
 	private int animationStep = 0; // movement (animation) counter
 	private boolean isRightFoot = false; // animation flag
+	/**
+	 * The current message for display
+	 */
 	public String displayMessage;
 
 	// ===================== Game logic controller ==========================//
+	/**
+	 * Single point of access for control of the game - abstraction between the
+	 * view and the data (model)
+	 */
+	public GameController gameController = new GameController();
 
-	public GameController game = new GameController();
-
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Default constructor for Main panel. This is the panel that all
-	// aspects of the game are painted to / from.
-	//
-	// Constructor initializes event handler, all the scenes that get
-	// painted during gameplay, and the timer that handles sprite movement
-	// speeds. Also sets up input controller (key listener).
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Default constructor for Main panel. This is the panel that all aspects of
+	 * the game are painted to.
+	 * 
+	 * Constructor loads the map, registeres to listen for key events, and
+	 * starts the title music (sets up the start of gameplay)
+	 */
 	public GamePanel() {
 		try {
-			game.loadMap();
+			gameController.loadMap();
 		} catch (Exception e) {
 			DebugUtility.error("Unable to load map.");
 		}
 
-		addKeyListener(new GameKeyListener(game));
+		addKeyListener(new GameKeyListener(gameController));
 
 		DebugUtility.printHeader("Event Registration");
 		DebugUtility.printMessage("Added event handler.");
@@ -69,45 +69,41 @@ public class GamePanel extends JPanel implements ActionListener {
 		setPreferredSize(new Dimension(480, 320));
 
 		DebugUtility.printMessage("Playing title music...");
-		game.playBackgroundMusic("Title");
+		gameController.playBackgroundMusic("Title");
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Any time an action is performed in the frame, this method is called.
-	// In Pokemon game, this method is constantly listening for actions
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Any time an action is performed in the frame, this method updates the
+	 * time and handles world actions.
+	 */
 	public void actionPerformed(ActionEvent e) {
-
-		game.updateTime();
-		if (game.getScreen() == SCREEN.WORLD) {
+		gameController.updateTime();
+		if (gameController.getScreen() == SCREEN.WORLD) {
 			handleMovement();
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Handles player movement on keyboard input
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Handles player movement & animation on keyboard input
+	 */
 	private void handleMovement() {
 		// get all comparison variables up front
-		Player player = game.getPlayer();
+		Player player = gameController.getPlayer();
 		DIR playerDir = player.getDirection();
 		Coordinate playerPos = player.getPosition();
 
 		// check for teleport at location
-		if (game.isTeleportTile(playerPos)) {
-			game.doTeleport(playerPos);
+		if (gameController.isTeleportTile(playerPos)) {
+			gameController.doTeleport(playerPos);
 		} else {
-			Party playerPokemon = player.getPokemon();
+			Party playerPokemon = player.getParty();
 
-			if (game.isPlayerWalking()) { // take care of walking animation
+			if (gameController.isPlayerWalking()) { // take care of walking
+													// animation
 				// as the gameTimer increments,
 				animationStep += 1;
-				game.setOffsetY(playerDir);
-				game.setOffsetX(playerDir);
+				gameController.setOffsetY(playerDir);
+				gameController.setOffsetX(playerDir);
 
 				player.changeSprite(animationStep, isRightFoot);
 			}
@@ -116,10 +112,11 @@ public class GamePanel extends JPanel implements ActionListener {
 			// when walking animation is done, handle poison damage
 			if (animationStep >= 16) {
 				animationStep = 0; // reset animation counter
-				game.setPlayerWalking(false); // player is no longer in
-												// animation
+				gameController.setPlayerWalking(false); // player is no longer
+														// in
+				// animation
 				isRightFoot = !isRightFoot;
-				if (game.canMoveInDir(playerDir)) {
+				if (gameController.canMoveInDir(playerDir)) {
 					player.move(playerDir);
 					checkForWildEncounter(player.getPosition());
 				}
@@ -130,75 +127,73 @@ public class GamePanel extends JPanel implements ActionListener {
 		checkForNPCEncounter();
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// If any party member has a harmful status effect, do damage
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * On movement, if any party member has a harmful status effect, do damage
+	 * 
+	 * @param party
+	 */
 	private void checkForStatusDamage(Party party) {
-		for (PartyMember p : party) {
+		for (Battler p : party) {
 			STATUS partyStatus = p.getStatusEffect();
 			if (partyStatus == STATUS.BRN || partyStatus == STATUS.PZN)
 				p.doDamage(1);
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Check for valid wild encounter conditions
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Checks the current tile for a wild encounter
+	 * 
+	 * @param position
+	 *            - the map position to check
+	 */
 	private void checkForWildEncounter(Coordinate position) {
-		if (game.isBattleTile(position)) {
+		if (gameController.isBattleTile(position)) {
 			if (RandomNumUtils.isWildEncounter()) {
-				game.setWildPokemon();
-				PartyMember wildP = game.getCurrentEnemy().get(0);
-				game.setCurrentMessage("Wild " + wildP.getName() + " appeared.");
-				game.doEncounter(game.getCurrentEnemy(), null);
+				gameController.setWildPokemon();
+				Battler wildP = gameController.getCurrentEnemy().get(0);
+				gameController.setCurrentMessage("Wild " + wildP.getName() + " appeared.");
+				gameController.doEncounter(gameController.getCurrentEnemy(), null);
 			}
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Check for valid trainer encounter conditions
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Checks if the player is in sight range of any NPC and the NPC is looking
+	 * at the player and the player's walking animation is finished
+	 */
 	private void checkForNPCEncounter() {
 		// check for trainer encounter with any NPC
 		for (Actor curNPC : NPCLibrary.getInstance().values()) {
-			if (game.validEncounterConditions(curNPC)) {
-				game.pauseNPCMovement();
+			if (gameController.validEncounterConditions(curNPC)) {
+				gameController.pauseNPCMovement();
 				enemyTrainerAnimation(curNPC);
-				game.playBackgroundMusic("TrainerBattle");
-				game.doEncounter(curNPC.getPokemon(), curNPC.getName());
+				gameController.playBackgroundMusic("TrainerBattle");
+				gameController.doEncounter(curNPC.getParty(), curNPC.getName());
 			} else {
-				game.setMovable(true);
+				gameController.setMovable(true);
 			}
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Upon NPC seeing player, move to confront player.
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * When an NPC sees the player, move to confront them
+	 * 
+	 * @param curNPC
+	 *            - the enemy NPC
+	 */
 	private void enemyTrainerAnimation(Actor curNPC) {
 
-		game.playTrainerMusic();
+		gameController.playTrainerMusic();
 
-		try { // show ! and wait before moving
-				// TODO show ! - before this function is called, set the screen
-				// to SCREEN.TRAINER_SIGHTED
-				// screen logic will paint for 2 seconds
+		try {
+			// TODO - ! needs to be pained here
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {}
 
-		// overhead preparation / calculations before moving NPC
 		DIR NPC_DIR = curNPC.getDirection();
 		int distToTravel = 0;
 
-		Player player = game.getPlayer();
+		Player player = gameController.getPlayer();
 
 		if (NPC_DIR == DIR.NORTH) {
 			player.setDirection(DIR.SOUTH);
@@ -216,7 +211,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
 		// until NPC reaches player, place a normal tile, move NPC, repaint
 		for (int x = 0; x < distToTravel; x++) {
-			game.setMapTileAt(curNPC.tData.position, TileSet.NORMAL);
+			gameController.setMapTileAt(curNPC.tData.position, TileSet.NORMAL);
 			curNPC.move(NPC_DIR);
 			paintComponent(getGraphics());
 			try {
@@ -225,11 +220,9 @@ public class GamePanel extends JPanel implements ActionListener {
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Paint component - calls PAINTER and refershes screen
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Calls the painter to paint it's graphics, refreshes the screen
+	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Painter.paintComponent(g, this);

@@ -28,9 +28,9 @@ public class GameFrame extends JFrame {
 		pokemonGame = new GamePanel();
 		pokemonGame.setFocusable(true);
 		pokemonGame.requestFocus();
-		pokemonGame.game.startGameTimer(pokemonGame);
+		pokemonGame.gameController.startGameTimer(pokemonGame);
 
-		pokemonGame.game.printData();
+		pokemonGame.gameController.printData();
 		add(pokemonGame);
 	}
 
@@ -40,7 +40,7 @@ public class GameFrame extends JFrame {
 	 * @return the current game controller
 	 */
 	public GameController getController() {
-		return pokemonGame.game;
+		return pokemonGame.gameController;
 	}
 
 	/**
