@@ -3,6 +3,11 @@ package party;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import utilities.DebugUtility;
+
+/**
+ * Represents the list of moves a Party Member knows
+ */
 public class MoveList extends ArrayList<MoveData> {
 
 	private static final long serialVersionUID = 5121990509346726333L;
@@ -10,23 +15,43 @@ public class MoveList extends ArrayList<MoveData> {
 	private String name = "";
 	private int capacity = 4;
 
+	/**
+	 * 
+	 * @param memberName
+	 */
 	public MoveList(String memberName) {
 		name = memberName;
 	}
 
-	public boolean add(MoveData move, boolean overwrite) {
-		if (capacity < 4) {
+	/**
+	 * Try to add a move to the move list. If the party member knows 'capacity'
+	 * moves, check if overwrite or not. If not overwrite, remove the first move
+	 * and add the newest.
+	 * 
+	 * If the capacity is -1, always add the move.
+	 * 
+	 * @param move
+	 *            - the move to add
+	 * @param askForOverwrite
+	 *            - whether or not to ask for an overwrite
+	 * @return whether or not the move was added
+	 */
+	public boolean add(MoveData move, boolean askForOverwrite) {
+		boolean success = false;
+		if (capacity < 4 || capacity == -1) {
 			this.add(move);
+			success = true;
 		} else {
-			if (overwrite) {
-				System.out.println(name + " already knows 4 moves.  Make room for another?");
+			if (askForOverwrite) {
+				DebugUtility.printMessage(name + " already knows 4 moves.  Make room for another?");
 				Scanner s = new Scanner(System.in);
 				String str = s.nextLine();
 				if (str.contains("y")) {
-					System.out.println("Which move to delete?");
+					DebugUtility.printMessage("Which move to delete?");
 					Integer delete = Integer.parseInt(s.nextLine());
 					this.remove(delete);
 					add(move);
+					success = true;
 				}
 				s.close();
 			} else {
@@ -34,8 +59,9 @@ public class MoveList extends ArrayList<MoveData> {
 					this.remove(0);
 				}
 				add(move);
+				success = true;
 			}
 		}
-		return true;
+		return success;
 	}
 }

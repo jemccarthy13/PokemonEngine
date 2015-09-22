@@ -4,22 +4,18 @@ import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Scanner;
 
-// ////////////////////////////////////////////////////////////////////////
-//
-// Look through the Move data file, map move Name->Data for each move
-// in that file
-//
-// ////////////////////////////////////////////////////////////////////////
+/**
+ * Look through the Move data file, map move Name->Data for each move in that
+ * file
+ */
 public class MoveLibrary extends HashMap<String, MoveData> {
 
 	private static final long serialVersionUID = 2297312743092782181L;
-	static MoveLibrary m_instance = new MoveLibrary();
+	private static MoveLibrary m_instance = new MoveLibrary();
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Maps location Name->Data
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Creates a new move library by mapping move name -> data
+	 */
 	private MoveLibrary() {
 		String filePath = "resources/data/MOVES.MDAT";
 		FileInputStream fs = null;
@@ -36,11 +32,11 @@ public class MoveLibrary extends HashMap<String, MoveData> {
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// get the single instance of the MoveLibrary
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Single instance access to the move library
+	 * 
+	 * @return one instance of the MoveLibrary
+	 */
 	public static MoveLibrary getInstance() {
 		return m_instance;
 	}

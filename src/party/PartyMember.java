@@ -18,15 +18,77 @@ import utilities.RandomNumUtils;
 // and holds moves + sprite data
 //
 // ////////////////////////////////////////////////////////////////////////
+/**
+ * Generated from Party Member data, calculates stats based on a level and holds
+ * moves / sprite data
+ */
 public class PartyMember implements Serializable {
 	private static final long serialVersionUID = 3959217221984077560L;
 
+	/**
+	 * The configuration of a Party member's stats
+	 */
 	public static enum STAT {
-		HP, ATTACK, DEFENSE, SP_ATTACK, SP_DEFENSE, SPEED, ACCURACY
+		/**
+		 * Health available
+		 */
+		HP,
+		/**
+		 * How strong offensively
+		 */
+		ATTACK,
+		/**
+		 * How strong defensively
+		 */
+		DEFENSE,
+		/**
+		 * How strong special offense is
+		 */
+		SP_ATTACK,
+		/**
+		 * How strong special defense is
+		 */
+		SP_DEFENSE,
+		/**
+		 * How fast the party member is
+		 * 
+		 * TODO in battle, check for fastest party member to go first
+		 */
+		SPEED,
+		/**
+		 * How accurate the party member is
+		 */
+		ACCURACY
 	}
 
+	/**
+	 * The current status of the party member
+	 */
 	public static enum STATUS {
-		PZN, BRN, FRZ, SLP, PAR, NORMAL
+		/**
+		 * Poisoned
+		 */
+		PZN,
+		/**
+		 * Burned
+		 */
+		BRN,
+		/**
+		 * Frozen and can't move
+		 */
+		FRZ,
+		/**
+		 * Asleep and can't move
+		 */
+		SLP,
+		/**
+		 * Paralyzed and maybe can't move
+		 */
+		PAR,
+		/**
+		 * Nothing's wrong
+		 */
+		NORMAL
 	}
 
 	private int evolution_stage = 0;
@@ -37,17 +99,20 @@ public class PartyMember implements Serializable {
 	private ImageIcon party_icon, back_sprite, front_sprite;
 	private STATUS statusEffect = STATUS.NORMAL;
 
-	PartyMemberData pData;
+	private PartyMemberData pData;
 
 	private HashMap<STAT, Integer> stats = new HashMap<STAT, Integer>();
 	private HashMap<STAT, Integer> maxStats = new HashMap<STAT, Integer>();
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Constructor - given PokemonData and a level, fill in the blanks
-	// (stats, evolution stage, moves, sprites)
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Given PartyMemberData and a level, fill in the blanks // (stats,
+	 * evolution stage, moves, sprites)
+	 * 
+	 * @param pData
+	 *            - party member data object
+	 * @param lev
+	 *            - the level of the party member
+	 */
 	public PartyMember(PartyMemberData pData, int lev) {
 		this.pData = pData;
 		this.level = lev;
@@ -79,53 +144,56 @@ public class PartyMember implements Serializable {
 			}
 		}
 
-		this.party_icon = SpriteLibrary.createImage(SpriteLibrary.libPath + "Icons/icon" + formatPokedexNumber(0)
-				+ ".png");
-		this.back_sprite = SpriteLibrary.createImage(SpriteLibrary.libPath + "Battlers/"
-				+ formatPokedexNumber(evolution_stage) + "b.png");
-		this.front_sprite = SpriteLibrary.createImage(SpriteLibrary.libPath + "Battlers/"
-				+ formatPokedexNumber(evolution_stage) + ".png");
+		String number = formatPokedexNumber();
+		this.party_icon = SpriteLibrary.createImage(SpriteLibrary.libPath + "Icons/icon" + number + ".png");
+		this.back_sprite = SpriteLibrary.createImage(SpriteLibrary.libPath + "Battlers/" + number + "b.png");
+		this.front_sprite = SpriteLibrary.createImage(SpriteLibrary.libPath + "Battlers/" + number + ".png");
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// getExpGain - calculate the exp gained from defeating a pokemon in the
-	// current battle
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Calculate the exp gained from defeating a battler in the current battle
+	 * 
+	 * @param trainerOwned
+	 *            - is the battler owned by an opponent
+	 * @param numParticipants
+	 *            - the number of party members that participated in this battle
+	 * @return the experience gained by this party member
+	 */
 	public int getExpGain(boolean trainerOwned, int numParticipants) {
 		double a = trainerOwned ? 1.5 : 1;
 		int b = pData.baseExp;
 		return (int) (a * b * level) / (7 * numParticipants);
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// gainExp - give the pokemon the calculated exp
-	// if it's over the next level amount, level up
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Give the pokemon the calculated exp if it's over the next level amount,
+	 * level up
+	 * 
+	 * @param expGain
+	 *            - the amount of experience to add
+	 */
 	public void gainExp(int expGain) {
 		this.curExp += expGain;
-		// TODO - convert to use message box
+		// TODO - change to message boxes
 		DebugUtility.printMessage("Gained " + expGain + " exp");
+
 		if (this.curExp >= (this.level + 1) * (this.level + 1) * (this.level + 1)) {
 			levelUp();
 		}
 	}
 
-	//
-	// TODO change to use BATTLE_STATUS enum
-	//
+	/**
+	 * Try to thaw this party member - 20% chance of returning to normal status
+	 */
 	public void tryToThaw() {
 		Random rr = new Random();
 		if (rr.nextInt(5) <= 1) {
 			if (getStatusEffect() == STATUS.SLP) {
-				// TODO - convert to use message box
+				// TODO - change to message boxes
 				DebugUtility.printMessage(getName() + " has woken up.");
 			}
 			if (getStatusEffect() == STATUS.FRZ) {
-				// TODO - convert to use message box
+				// TODO - change to message boxes
 				DebugUtility.printMessage(getName() + " has broken free from the ice.");
 			}
 			setStatusEffect(STATUS.NORMAL);
@@ -139,11 +207,9 @@ public class PartyMember implements Serializable {
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Level up, increase stats, check for evolution, check for moves learned
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Level up, increase stats, check for evolution, check for moves learned
+	 */
 	public void levelUp() {
 		if (this.level < 100) {
 			this.level += 1;
@@ -169,17 +235,20 @@ public class PartyMember implements Serializable {
 					+ " has evolved into a " + pData.evolution_stages.get(evolution_stage) + "!");
 		}
 		for (int x = 0; x < pData.movesLearned.size(); x++) {
-			if (level == pData.levelsLearned.get(x))
+			if (level == pData.levelsLearned.get(x)) {
+				this.moves.add(MoveLibrary.getInstance().get(pData.movesLearned.get(x)));
 				// TODO convert to use message box
 				DebugUtility.printMessage(getName() + " learned " + pData.movesLearned.get(x));
+			}
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Deals a given amount of damage to this Pokemon
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Deals a given amount of damage to this Pokemon
+	 * 
+	 * @param damage
+	 *            - the amount of damage to deal
+	 */
 	public void doDamage(int damage) {
 		setStat(STAT.HP, getStat(STAT.HP) - damage);
 		if (getStat(STAT.HP) < 0) {
@@ -187,20 +256,20 @@ public class PartyMember implements Serializable {
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Deals damage based on the given move
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Deals damage based on the given move
+	 * 
+	 * TODO implement "STAT" damage
+	 * 
+	 * @param move
+	 *            - the move data of the opponent's move
+	 */
 	public void doDamage(MoveData move) {
 		int attackStat = 0;
 		int defStat = 0;
-		DebugUtility.printMessage(move.toString());
 		if (move.category == MOVECATEGORY.PHYSICAL) {
 			attackStat = (getStat(STAT.ATTACK));
 			defStat = getStat(STAT.DEFENSE);
-			DebugUtility.printMessage("Using physical attack...");
-			DebugUtility.printMessage("Defense stat is: " + defStat);
 		}
 		if (move.category == MOVECATEGORY.SPECIAL) {
 			attackStat = (getStat(STAT.SP_ATTACK));
@@ -212,14 +281,17 @@ public class PartyMember implements Serializable {
 					* RandomNumUtils.generateRandom(85, 100) / 100.0));
 		}
 		move.movePP--;
+
+		DebugUtility.printMessage("Dealing " + damage + " damage to " + getName());
 		doDamage(damage);
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Restore the given amount of health
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Restore the given amount of health
+	 * 
+	 * @param amount
+	 *            - the amount to heal
+	 */
 	public void heal(int amount) {
 		int hp = stats.get(STAT.HP) + amount;
 		if (hp > maxStats.get(STAT.HP)) {
@@ -230,150 +302,172 @@ public class PartyMember implements Serializable {
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Restore all health
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Restore all health
+	 */
 	public void fullHeal() {
 		stats.put(STAT.HP, maxStats.get(STAT.HP));
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Get the current value of a stat
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Get the current value of a stat
+	 * 
+	 * @param stat
+	 *            - the STAT to get the value of
+	 * @return int value of the STAT
+	 */
 	public int getStat(STAT stat) {
 		return stats.get(stat);
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Get the maximum value of a stat
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Get the maximum value of a stat
+	 * 
+	 * @param stat
+	 *            - the STAT to get the value of
+	 * @return int max value of stat
+	 */
 	public int getMaxStat(STAT stat) {
 		return maxStats.get(stat);
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Set a stat to the given value
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	private void setStat(STAT stat, int i) {
-		stats.put(stat, i);
+	/**
+	 * Set a stat to the given value
+	 * 
+	 * @param stat
+	 *            - the stat to set
+	 * @param value
+	 *            - the value to set it to
+	 */
+	private void setStat(STAT stat, int value) {
+		stats.put(stat, value);
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Return the name of this PartyMember
-	//
-	// TODO - custom names
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Return the name of this PartyMember
+	 * 
+	 * TODO custom names
+	 * 
+	 * @return the string name of Party member
+	 */
 	public String getName() {
 		return pData.evolution_stages.get(evolution_stage);
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Return the level of this PartyMember
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * The current level of this party member
+	 * 
+	 * @return int level
+	 */
 	public int getLevel() {
 		return level;
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Get the chosen move
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Get the chosen move
+	 * 
+	 * @param choice
+	 *            - index of the move
+	 * @return MoveData representing chosen move
+	 */
 	public MoveData getMove(int choice) {
 		return moves.get(choice);
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Get the number of moves this PartyMember knows
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Retrieve the number of moves this party member knows
+	 * 
+	 * @return int number of moves
+	 */
 	public int getNumMoves() {
 		return moves.size();
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Return whether or not this PartyMember has participated
-	// in the current battle
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Has this Party member participated in the current battle?
+	 * 
+	 * @return whether or not party member participated
+	 */
 	public boolean hasParticipated() {
 		return this.participated;
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Set whether or not the PartyMember has participated in
-	// the current battle
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Set whether or not the party member participated in the current battle
+	 */
 	public void setParticipated() {
 		this.participated = true;
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Return the image used as the party icon for this PartyMember
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Get the image used as the party icon for this party member
+	 * 
+	 * @return ImageIcon party icon
+	 */
 	public ImageIcon getIcon() {
 		return this.party_icon;
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Return the image used as the back battle sprite
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Retrieve the image used as the back battle sprite
+	 * 
+	 * @return ImageIcon back sprite
+	 */
 	public ImageIcon getBackSprite() {
 		return this.back_sprite;
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Return the image used as the front battle sprite
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Retrieve the image used as the front battle sprite
+	 * 
+	 * @return ImageIcon front sprite
+	 */
 	public ImageIcon getFrontSprite() {
 		return this.front_sprite;
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Debug information related to PartyMember
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * String representation of the PartyMember
+	 * 
+	 * @return String representation
+	 */
 	public String toString() {
-		return pData.toString() + "Level: " + this.level;
+		String retStr = pData.toString();
+		retStr += "Level: " + this.level + "\n";
+		retStr += "Cur Exp: " + this.curExp + "\n";
+		int expNext = (int) Math.pow(this.level + 1, 3);
+		retStr += "Next level: " + expNext + "\n";
+		retStr += "Remainder: " + (expNext - curExp) + " \n";
+		return retStr;
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// formatPokedexNumber - takes the base number, adds the stage, and then
-	// formats it to 3 digits
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	public String formatPokedexNumber(int evolutionStage) {
-		return String.format("%03d", Integer.parseInt(this.pData.pokedexNumber) + evolutionStage);
+	/**
+	 * takes the base number, adds the current evolution stage, and then formats
+	 * it to 3 digits
+	 * 
+	 * @param evolutionStage
+	 *            - the current evolution stage
+	 * @return String representation of the pokedex number
+	 */
+	public String formatPokedexNumber() {
+		return String.format("%03d", Integer.parseInt(this.pData.pokedexNumber) + evolution_stage);
 	}
 
+	/**
+	 * Retrieve this party member's current battle status
+	 * 
+	 * @return STATUS current status
+	 */
 	public STATUS getStatusEffect() {
 		return statusEffect;
 	}
 
+	/**
+	 * Set this party member's current battle status
+	 * 
+	 * @param statusEffect
+	 *            the effect to apply to the party member
+	 */
 	public void setStatusEffect(STATUS statusEffect) {
 		this.statusEffect = statusEffect;
 	}
