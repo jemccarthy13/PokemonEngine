@@ -7,9 +7,9 @@ import model.Configuration;
 import model.GameData.SCREEN;
 import party.MoveData;
 import party.Party;
-import party.PartyMember;
-import party.PartyMember.STAT;
-import party.PartyMember.STATUS;
+import party.Battler;
+import party.Battler.STAT;
+import party.Battler.STATUS;
 import trainers.Actor.DIR;
 import audio.AudioLibrary.SOUND_EFFECT;
 import controller.GameController;
@@ -55,11 +55,11 @@ public class BattleEngine {
 	/**
 	 * Player's current fighting party member
 	 */
-	public PartyMember playerCurrentPokemon = null;
+	public Battler playerCurrentPokemon = null;
 	/**
 	 * enemy's current fighting party member
 	 */
-	public PartyMember enemyCurrentPokemon = null;
+	public Battler enemyCurrentPokemon = null;
 	/**
 	 * The enemies party
 	 */
@@ -208,7 +208,7 @@ public class BattleEngine {
 	public void giveEXP() {
 		int s = 0;
 		for (int x = 0; x < game.getPlayer().getParty().size(); x++) {
-			if (((PartyMember) game.getPlayer().getParty().get(x)).hasParticipated()) {
+			if (((Battler) game.getPlayer().getParty().get(x)).hasParticipated()) {
 				s++;
 			}
 		}
@@ -250,7 +250,7 @@ public class BattleEngine {
 
 		game.setPlayerDirection(DIR.SOUTH);
 		Party playerParty = game.getPlayer().getParty();
-		for (PartyMember member : playerParty) {
+		for (Battler member : playerParty) {
 			member.fullHeal();
 		}
 		game.setScreen(SCREEN.WORLD);
@@ -270,8 +270,8 @@ public class BattleEngine {
 		DebugUtility.printHeader("Turn: " + turn);
 
 		// get the attacker and defender based on this TURN
-		PartyMember attacker = (turn == TURN.PLAYER) ? playerCurrentPokemon : enemyCurrentPokemon;
-		PartyMember defender = (turn == TURN.PLAYER) ? enemyCurrentPokemon : playerCurrentPokemon;
+		Battler attacker = (turn == TURN.PLAYER) ? playerCurrentPokemon : enemyCurrentPokemon;
+		Battler defender = (turn == TURN.PLAYER) ? enemyCurrentPokemon : playerCurrentPokemon;
 
 		// get the chosen move
 		MoveData chosen = attacker.getMove(move);

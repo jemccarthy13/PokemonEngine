@@ -2,7 +2,7 @@ package utilities;
 
 import java.util.Random;
 
-import party.PartyMember;
+import party.Battler;
 import trainers.Actor.DIR;
 
 /**
@@ -73,7 +73,7 @@ public class RandomNumUtils {
 	 *            - the party member
 	 * @return a random move index
 	 */
-	public static int getMove(PartyMember p) {
+	public static int getMove(Battler p) {
 		return generateRandom(0, p.getNumMoves() - 1);
 	}
 
