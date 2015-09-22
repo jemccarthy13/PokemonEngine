@@ -42,6 +42,9 @@ import utilities.DebugUtility;
 import audio.AudioLibrary;
 import audio.AudioLibrary.SOUND_EFFECT;
 
+/**
+ * Controls game logic flow by providing an interface between view and data
+ */
 public class GameController implements Serializable {
 
 	private static final long serialVersionUID = 968834933407220662L;
@@ -750,6 +753,7 @@ public class GameController implements Serializable {
 		gData.playerWin = false;
 	}
 
+	// TODO - message queue instead
 	public void setCurrentMessage(String string) {
 		gData.currentMessage = string;
 	}

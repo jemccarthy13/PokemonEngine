@@ -5,15 +5,21 @@ import java.util.Map;
 
 import model.Coordinate;
 
-//////////////////////////////////////////////////////////////////////////
-//
-// Populates a map of teleport locations
-//
-//////////////////////////////////////////////////////////////////////////
+/**
+ * Populates a map of teleport locations
+ */
 public class TeleportLibrary {
 
+	/**
+	 * The container of one way teleport locations
+	 * 
+	 * @TODO reciprocal teleportation
+	 */
 	static Map<Coordinate, Coordinate> teleports = new HashMap<Coordinate, Coordinate>();
 
+	/**
+	 * Constructs a new teleportation library
+	 */
 	public TeleportLibrary() {
 		/*
 		 * Coordinate first = new Coordinate(15, 7); Coordinate second = new
@@ -25,7 +31,12 @@ public class TeleportLibrary {
 		 */
 	}
 
-	public static Map<Coordinate, Coordinate> getListofTeleports() {
+	/**
+	 * Returns the list of teleport coordinates
+	 * 
+	 * @return a map of teleport coordinates
+	 */
+	public static Map<Coordinate, Coordinate> getList() {
 		return teleports;
 	}
 }

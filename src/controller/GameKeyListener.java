@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.Serializable;
 
+import model.Coordinate;
 import model.GameData.SCREEN;
 import trainers.Actor;
 import trainers.Actor.DIR;
@@ -16,26 +17,37 @@ import utilities.BattleEngine.TURN;
 import utilities.DebugUtility;
 import audio.AudioLibrary.SOUND_EFFECT;
 
+/**
+ * Listens for keypresses in the game
+ */
 public class GameKeyListener implements KeyListener, Serializable {
 
+	/**
+	 * Serialization value
+	 */
 	private static final long serialVersionUID = 433796777156267003L;
 
+	/**
+	 * Game logic controller
+	 */
 	GameController gameControl;
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Listen for key events, using a game controller to perform logic
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Constructor given a game controller to use to perform logic
+	 * 
+	 * @param controller
+	 */
 	public GameKeyListener(GameController controller) {
 		gameControl = controller;
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Fire this method any time a key is pressed
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Handles the game logic of converting the key press to a series of game
+	 * controller commands.
+	 * 
+	 * @param e
+	 *            - the key that was pressed
+	 */
 	public void keyPressed(KeyEvent e) {
 		int keyCode = e.getKeyCode();
 		switch (gameControl.getScreen()) {
@@ -95,8 +107,8 @@ public class GameKeyListener implements KeyListener, Serializable {
 			handleBattleEvent(keyCode);
 			break;
 		case MESSAGE:
-			// TODO - implement message queue such that VK_X or VK_Z here
-			// pops a message to display off of the queue
+			// TODO - implement message queue such that VK_X or VK_Z here pops a
+			// message to display off of the queue
 			if (keyCode == KeyEvent.VK_X || keyCode == KeyEvent.VK_Z) {
 				gameControl.setScreen(SCREEN.WORLD);
 				gameControl.setMovable(true);
@@ -110,15 +122,28 @@ public class GameKeyListener implements KeyListener, Serializable {
 		}
 	}
 
+	/**
+	 * Handles logic on a key being released
+	 * 
+	 * @param e
+	 *            - the key that was released
+	 */
 	public void keyReleased(KeyEvent e) {}
 
+	/**
+	 * Handles logic on a key being typed
+	 * 
+	 * @param e
+	 *            - the key that was typed
+	 */
 	public void keyTyped(KeyEvent e) {}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// handleBattleEvent handles a battle event - gets choices, deals damage
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * handles a battle event: handles fighting key presses
+	 * 
+	 * @param keyCode
+	 *            - the key that was pressed
+	 */
 	private void handleBattleEvent(int keyCode) {
 		switch (gameControl.getScreen()) {
 		case BATTLE_ITEM: // temporary does the same thing
@@ -135,9 +160,6 @@ public class GameKeyListener implements KeyListener, Serializable {
 			break;
 		case BATTLE_FIGHT:
 			// at move selection menu
-			// TODO - verify move exists at given selection
-			// press the arrow keys to change the bit mask of the current
-			// selection
 			int selX = BattleEngine.getInstance().currentSelectionFightX;
 			int selY = BattleEngine.getInstance().currentSelectionFightY;
 
@@ -186,21 +208,19 @@ public class GameKeyListener implements KeyListener, Serializable {
 				BattleEngine.getInstance().currentSelectionMainX = 1;
 			}
 			if (keyCode == KeyEvent.VK_Z) {
-				// TODO - maybe shorten this to "changeToMenu(XX)"
-				if ((BattleEngine.getInstance().currentSelectionMainX == 0)
-						&& (BattleEngine.getInstance().currentSelectionMainY == 0)) {
+				// do logic based on current selection
+				switch ((int) Math.pow(2, BattleEngine.getInstance().currentSelectionMainY)
+						+ BattleEngine.getInstance().currentSelectionMainX) {
+				case 0:
 					gameControl.setScreen(SCREEN.BATTLE_FIGHT);
-				}
-				if ((BattleEngine.getInstance().currentSelectionMainX == 1)
-						&& (BattleEngine.getInstance().currentSelectionMainY == 0)) {
+					break;
+				case 1:
 					gameControl.setScreen(SCREEN.BATTLE_POKEMON);
-				}
-				if ((BattleEngine.getInstance().currentSelectionMainX == 0)
-						&& (BattleEngine.getInstance().currentSelectionMainY == 1)) {
+					break;
+				case 2:
 					gameControl.setScreen(SCREEN.BATTLE_ITEM);
-				}
-				if ((BattleEngine.getInstance().currentSelectionMainX == 1)
-						&& (BattleEngine.getInstance().currentSelectionMainY == 1)) {
+					break;
+				case 3:
 					if (BattleEngine.getInstance().enemyName == null) {
 						gameControl.setCurrentMessage("Got away safely!");
 						gameControl.setScreen(SCREEN.MESSAGE);
@@ -212,6 +232,7 @@ public class GameKeyListener implements KeyListener, Serializable {
 						// otherwise, resume the battle (like this message-
 						// non-fatal message during battle)
 					}
+					break;
 				}
 			}
 			gameControl.playClip(SOUND_EFFECT.SELECT);
@@ -221,41 +242,26 @@ public class GameKeyListener implements KeyListener, Serializable {
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// getSelectedMove - returns the currently selected move based on
-	// user's highlighted choice
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Return the currently selected mvoe based on the user's highlighted choice
+	 * 
+	 * 2^y + x is the conversion from X,Y to move number
+	 * 
+	 * @return the number of the selected move
+	 */
 	private int getSelectedMove() {
-		int move = -1;
-		if ((BattleEngine.getInstance().currentSelectionFightX == 0)
-				&& (BattleEngine.getInstance().currentSelectionFightY == 0)) {
-			move = 0;
-		}
-		if ((BattleEngine.getInstance().currentSelectionFightX == 1)
-				&& (BattleEngine.getInstance().currentSelectionFightY == 0)) {
-			move = 1;
-		}
-		if ((BattleEngine.getInstance().currentSelectionFightX == 0)
-				&& (BattleEngine.getInstance().currentSelectionFightY == 1)) {
-			move = 2;
-		}
-		if ((BattleEngine.getInstance().currentSelectionFightX == 1)
-				&& (BattleEngine.getInstance().currentSelectionFightY == 1)) {
-			move = 3;
-		}
+		int move = (int) Math.pow(2, BattleEngine.getInstance().currentSelectionFightY);
+		move += BattleEngine.getInstance().currentSelectionFightX;
 		return move;
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// handleMenuEvent handles a menu event - bag, options, party, save, etc
-	// Pretty much just a large batch of logic switching to control graphics
-	//
-	// TODO - implement save feature
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Handles a menu event - bag, options, party, save, etc Pretty much just a
+	 * large batch of logic switching to control graphics
+	 * 
+	 * @param keyCode
+	 *            - the key that was pressed
+	 */
 	private void handleMenuEvent(int keyCode) {
 		SCREEN curScreen = gameControl.getScreen();
 
@@ -347,22 +353,47 @@ public class GameKeyListener implements KeyListener, Serializable {
 		gameControl.playClip(SOUND_EFFECT.SELECT);
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// handleWorldEvent handles all world events - moveing the sprite, pausing
-	// interacting with the environment, and conversing with characters
-	//
-	// TODO - add interactive environment (say, items on the ground, message
-	// signs, surfing / water, etc
-	// TODO - look into shortening or method-izing the border NPC check
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Check cur NPC coordinate w/ an adjusted coordinate & player direction.
+	 * 
+	 * @param curNpc
+	 *            - the NPC to check against
+	 * @param c
+	 *            - the coordinate of the player
+	 * @param playerDir
+	 *            - the direction the player is facing
+	 * @param keyCode
+	 *            - the key code of the key pressed
+	 */
+	public void tryBorderNPC(Actor curNpc, Coordinate c, DIR playerDir) {
+		Coordinate c1 = curNpc.getPosition();
+		if (c1.equals(c)) {
+			curNpc.setDirectionOpposite(playerDir);
+			gameControl.setCurNPC(curNpc);
+			gameControl.setCurrentMessage(curNpc.getConversationText().get(0));
+			gameControl.setScreen(SCREEN.MESSAGE);
+			gameControl.getCurNPC().setStationary(true);
+		}
+	}
+
+	/**
+	 * Handles all world events - moving the sprite, pausing interacting with
+	 * the environment, and conversing with characters
+	 * 
+	 * TODO - add interactive environment (items on the ground, message signs,
+	 * surfing / water, etc)
+	 * 
+	 * @param keyCode
+	 *            - the key that was pressed
+	 */
 	private void handleWorldEvent(int keyCode) {
 		// match the key to a direction
 		DIR toTravel = null;
-		boolean moving = true;
-
 		switch (keyCode) {
+		case KeyEvent.VK_ENTER:
+			gameControl.playClip(SOUND_EFFECT.MENU);
+			gameControl.setScreen(SCREEN.MENU);
+			break;
 		case KeyEvent.VK_UP:
 			toTravel = DIR.NORTH;
 			break;
@@ -375,13 +406,28 @@ public class GameKeyListener implements KeyListener, Serializable {
 		case KeyEvent.VK_RIGHT:
 			toTravel = DIR.EAST;
 			break;
+		case KeyEvent.VK_Z:
+			gameControl.playClip(SOUND_EFFECT.SELECT);
+			// overhead cost for following logic
+			Player player = gameControl.getPlayer();
+			DIR playerDir = player.getDirection();
+			for (Actor curNPC : NPCLibrary.getInstance().values()) {
+				if (playerDir == DIR.WEST) {
+					tryBorderNPC(curNPC, new Coordinate(player.getCurrentX() - 1, player.getCurrentY()), playerDir);
+				} else if (playerDir == DIR.NORTH) {
+					tryBorderNPC(curNPC, new Coordinate(player.getCurrentX(), player.getCurrentY() - 1), playerDir);
+				} else if (playerDir == DIR.EAST) {
+					tryBorderNPC(curNPC, new Coordinate(player.getCurrentX() + 1, player.getCurrentY()), playerDir);
+				} else if (playerDir == DIR.SOUTH) {
+					tryBorderNPC(curNPC, new Coordinate(player.getCurrentX(), player.getCurrentY() + 1), playerDir);
+				}
+			}
+			break;
 		default:
-			// the button pressed wasn't a moving button, so don't do movement
-			moving = false;
-			toTravel = DIR.SOUTH;
+			break;
 		}
 
-		if (moving) {
+		if (toTravel != null) {
 			// one of the movement buttons was pressed, so try to move in that
 			// direction
 			gameControl.setPlayerDirection(toTravel);
@@ -391,53 +437,18 @@ public class GameKeyListener implements KeyListener, Serializable {
 				gameControl.setPlayerSprite(SpriteLibrary.getSpriteForDir("PLAYER", toTravel));
 				gameControl.playClip(SOUND_EFFECT.COLLISION);
 			}
-		} else if (keyCode == KeyEvent.VK_ENTER) {
-			gameControl.playClip(SOUND_EFFECT.MENU);
-			gameControl.setScreen(SCREEN.MENU);
 		} else if (keyCode == KeyEvent.VK_Z) {
-			gameControl.playClip(SOUND_EFFECT.SELECT);
-			// overhead cost for following logic
-			Player player = gameControl.getPlayer();
-			DIR playerDir = player.getDirection();
-			int playerCurX = player.getCurrentX();
-			int playerCurY = player.getCurrentY();
-			for (Actor curNPC : NPCLibrary.getInstance().values()) {
-				int NPC_X = curNPC.getCurrentX();
-				int NPC_Y = curNPC.getCurrentY();
-				if (playerDir == DIR.WEST) {
-					if ((playerCurX - 1 == NPC_X) && (playerCurY == NPC_Y)) {
-						curNPC.setDirectionOpposite(playerDir);
-						gameControl.setCurNPC(curNPC);
-					}
-				} else if (playerDir == DIR.NORTH) {
-					if ((playerCurX == NPC_X) && (playerCurY == NPC_Y + 1)) {
-						curNPC.setDirectionOpposite(playerDir);
-						gameControl.setCurNPC(curNPC);
-					}
-				} else if (playerDir == DIR.EAST) {
-					if ((playerCurX == NPC_X - 1) && (playerCurY == NPC_Y)) {
-						curNPC.setDirectionOpposite(playerDir);
-						gameControl.setCurNPC(curNPC);
-					}
-				} else if (playerDir == DIR.SOUTH) {
-					if ((playerCurX == NPC_X) && (playerCurY == NPC_Y - 1)) {
-						curNPC.setDirectionOpposite(playerDir);
-						gameControl.setCurNPC(curNPC);
-					}
-				}
-			}
-			if (gameControl.getCurNPC() != null) {
-				gameControl.setScreen(SCREEN.MESSAGE);
-				gameControl.getCurNPC().setStationary(true);
-			}
+
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Handle adding & removing characters to a temporary buffer
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Handles a name screen event (adding / removing characters, custom names
+	 * of PartyMembers)
+	 * 
+	 * @param keyCode
+	 *            - the key that was pressed
+	 */
 	private void handleNameEvent(int keyCode) {
 		if (keyCode == KeyEvent.VK_X)
 			gameControl.removeChar();
