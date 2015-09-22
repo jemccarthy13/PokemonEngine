@@ -14,33 +14,29 @@ import org.json.simple.parser.JSONParser;
 import utilities.DebugUtility;
 import utilities.RandomNumUtils;
 
-// ////////////////////////////////////////////////////////////////////////
-//
-// Look through the Pokemon data directory, map name->data
-//
-// Can create pokemon from this data given a level
-//
-// ////////////////////////////////////////////////////////////////////////
+/**
+ * Look through the Party Member data file and map name->data. Factory pattern
+ * can create Party Members from this data given a level
+ */
 public class PartyMemberFactory extends HashMap<String, PartyMemberData> {
 
 	private static final long serialVersionUID = 6443726917122609755L;
 	private static PartyMemberFactory m_instance = new PartyMemberFactory();
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Private constructor allows resource loading to happen once and only once
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Private constructor allows resource loading to happen once and only once
+	 */
 	private PartyMemberFactory() {
 		String filename = "resources/data/PartyInfo.json";
 		populateMap(filename);
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Reads the JSON formatted file and parses out the pokemon data
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Reads the JSON formatted file and parses out the pokemon data
+	 * 
+	 * @param filename
+	 *            - the JSON file where the data is located
+	 */
 	public void populateMap(String filename) {
 		JSONParser parser = new JSONParser();
 		try {
@@ -109,30 +105,41 @@ public class PartyMemberFactory extends HashMap<String, PartyMemberData> {
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Return the one and only instance of this singleton for use
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Return the one and only instance of this singleton for use
+	 * 
+	 * @return this factory instance
+	 */
 	public static PartyMemberFactory getInstance() {
 		return m_instance;
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Get the data from the Pokemon map, and create a new pokemon at given lvl
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Get the data from the Pokemon map, and create a new pokemon at given lvl
+	 * 
+	 * @param name
+	 *            - the name of the party member to find data for
+	 * @param level
+	 *            - the level of the party member to generate
+	 * @return a new Party Member from the retrieved data
+	 */
 	public static PartyMember createPokemon(String name, int level) {
 		return new PartyMember(m_instance.get(name), level);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
 	//
-	// Given a location, generate a random pokemon from the
-	// wild pokemon chart in that region
+	//
 	//
 	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Given a location, generate a random party member from the wild battler
+	 * chart of that region
+	 * 
+	 * @param location
+	 *            - where the party member should be generated from
+	 * @return a new party member
+	 */
 	public PartyMember randomPokemon(Location location) {
 		String name = location.getPokemon(RandomNumUtils.generateRandom(0, 100));
 		int level = RandomNumUtils.randomLevel(location.getMaxLevel(name), location.getMinLevel(name));
