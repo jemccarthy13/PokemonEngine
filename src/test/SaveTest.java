@@ -15,6 +15,6 @@ public class SaveTest {
 	@Test
 	public static void testSave() {
 		GamePanel g = new GamePanel();
-		g.game.saveGame();
+		g.gameController.saveGame();
 	}
 }
