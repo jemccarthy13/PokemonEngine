@@ -7,8 +7,8 @@ import location.LocationLibrary;
 
 import org.junit.Test;
 
-import party.PartyMember;
-import party.PartyMemberFactory;
+import party.Battler;
+import party.BattlerFactory;
 import utilities.DebugUtility;
 import utilities.RandomNumUtils;
 
@@ -72,15 +72,15 @@ public class UtilsTest {
 		DebugUtility.printMessage("Random Pokemon (Route 29):");
 		for (int x = 0; x < 10; x++) {
 			DebugUtility.printMessage("-------- " + x + " --------");
-			PartyMember p = PartyMemberFactory.getInstance().randomPokemon(loc);
+			Battler p = BattlerFactory.getInstance().randomPokemon(loc);
 			DebugUtility.printMessage(p.toString());
 		}
 
 		DebugUtility.printMessage();
 
-		ArrayList<PartyMember> trainer = new ArrayList<PartyMember>();
+		ArrayList<Battler> trainer = new ArrayList<Battler>();
 		for (int y = 0; y < 5; y++) {
-			trainer.add(PartyMemberFactory.getInstance().randomPokemon(loc));
+			trainer.add(BattlerFactory.getInstance().randomPokemon(loc));
 		}
 		DebugUtility.printMessage();
 		DebugUtility.printMessage("Trainer's Random Pokemon");

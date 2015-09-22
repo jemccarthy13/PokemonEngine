@@ -3,9 +3,9 @@ package test;
 import org.junit.Assert;
 import org.junit.Test;
 
-import party.PartyMember;
-import party.PartyMember.STAT;
-import party.PartyMemberFactory;
+import party.Battler;
+import party.Battler.STAT;
+import party.BattlerFactory;
 import utilities.DebugUtility;
 import utilities.DebugUtility.DEBUG_LEVEL;
 
@@ -19,7 +19,7 @@ public class PokemonTest {
 	 */
 	@Test
 	public void testPartyMemberHealth() {
-		PartyMember member1 = PartyMemberFactory.createPokemon("Bulbasaur", 5);
+		Battler member1 = BattlerFactory.createPokemon("Bulbasaur", 5);
 		int health = member1.getMaxStat(STAT.HP);
 		member1.doDamage(health / 2);
 
@@ -38,8 +38,8 @@ public class PokemonTest {
 	@Test
 	public void testPartyMemberEvolution() {
 		DebugUtility.setLevel(DEBUG_LEVEL.DEBUG);
-		PartyMember member1 = PartyMemberFactory.createPokemon("Bulbasaur", 5);
-		PartyMember member2 = PartyMemberFactory.createPokemon("Bulbasaur", 10);
+		Battler member1 = BattlerFactory.createPokemon("Bulbasaur", 5);
+		Battler member2 = BattlerFactory.createPokemon("Bulbasaur", 10);
 
 		DebugUtility.printMessage(member1.toString());
 
