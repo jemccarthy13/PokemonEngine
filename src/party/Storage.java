@@ -16,7 +16,7 @@ public class Storage implements Serializable {
 
 	// since the above two parameters can change, the boxes themselves must be
 	// flexible enough to grow or shrink as necessary
-	private ArrayList<ArrayList<PartyMember>> boxes = new ArrayList<ArrayList<PartyMember>>();
+	private ArrayList<ArrayList<Battler>> boxes = new ArrayList<ArrayList<Battler>>();
 
 	// TODO - Implement items & item storage
 	// public ArrayList<ItemList> items = new ArrayList<ItemList>();
@@ -27,7 +27,7 @@ public class Storage implements Serializable {
 	public Storage() {
 		// initialize all of the boxes up front
 		for (int x = 0; x < max_num_boxes; x++) {
-			ArrayList<PartyMember> box = new ArrayList<PartyMember>();
+			ArrayList<Battler> box = new ArrayList<Battler>();
 			boxes.add(box);
 		}
 	}
@@ -39,9 +39,9 @@ public class Storage implements Serializable {
 	 *            - the party member to add
 	 * @return whether or not the party member was successfully added
 	 */
-	public boolean depositPokemon(PartyMember p) {
+	public boolean depositPokemon(Battler p) {
 		boolean added = false;
-		for (ArrayList<PartyMember> box : boxes) {
+		for (ArrayList<Battler> box : boxes) {
 			if (box.size() < BOX_CAPACITY) {
 				box.add(p);
 				added = true;
@@ -57,8 +57,8 @@ public class Storage implements Serializable {
 	 *            - the party member to withdraw
 	 * @return whether or not the party member was withdrawn
 	 */
-	public boolean withdrawPokemon(PartyMember p) {
-		for (ArrayList<PartyMember> box : boxes) {
+	public boolean withdrawPokemon(Battler p) {
+		for (ArrayList<Battler> box : boxes) {
 			if (box.contains(p)) {
 				return box.remove(p);
 			}

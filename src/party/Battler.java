@@ -12,17 +12,11 @@ import party.MoveData.MOVECATEGORY;
 import utilities.DebugUtility;
 import utilities.RandomNumUtils;
 
-// ////////////////////////////////////////////////////////////////////////
-//
-// ParyMember - generated from PokemonData, calculates stats based on a level
-// and holds moves + sprite data
-//
-// ////////////////////////////////////////////////////////////////////////
 /**
- * Generated from Party Member data, calculates stats based on a level and holds
+ * Generated from Battler data, calculates stats based on a level and holds
  * moves / sprite data
  */
-public class PartyMember implements Serializable {
+public class Battler implements Serializable {
 	private static final long serialVersionUID = 3959217221984077560L;
 
 	/**
@@ -99,7 +93,7 @@ public class PartyMember implements Serializable {
 	private ImageIcon party_icon, back_sprite, front_sprite;
 	private STATUS statusEffect = STATUS.NORMAL;
 
-	private PartyMemberData pData;
+	private BattlerData pData;
 
 	private HashMap<STAT, Integer> stats = new HashMap<STAT, Integer>();
 	private HashMap<STAT, Integer> maxStats = new HashMap<STAT, Integer>();
@@ -113,7 +107,7 @@ public class PartyMember implements Serializable {
 	 * @param lev
 	 *            - the level of the party member
 	 */
-	public PartyMember(PartyMemberData pData, int lev) {
+	public Battler(BattlerData pData, int lev) {
 		this.pData = pData;
 		this.level = lev;
 		this.curExp = (this.level * this.level * this.level);

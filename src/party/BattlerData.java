@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * TODO consolidate evol_stages & evol_levels to MAP TODO consolidate
  * movesLearned & levelsLearned to MAP
  */
-public class PartyMemberData implements Serializable {
+public class BattlerData implements Serializable {
 
 	private static final long serialVersionUID = 6172701662394420909L;
 

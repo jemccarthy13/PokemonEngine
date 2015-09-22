@@ -18,15 +18,15 @@ import utilities.RandomNumUtils;
  * Look through the Party Member data file and map name->data. Factory pattern
  * can create Party Members from this data given a level
  */
-public class PartyMemberFactory extends HashMap<String, PartyMemberData> {
+public class BattlerFactory extends HashMap<String, BattlerData> {
 
 	private static final long serialVersionUID = 6443726917122609755L;
-	private static PartyMemberFactory m_instance = new PartyMemberFactory();
+	private static BattlerFactory m_instance = new BattlerFactory();
 
 	/**
 	 * Private constructor allows resource loading to happen once and only once
 	 */
-	private PartyMemberFactory() {
+	private BattlerFactory() {
 		String filename = "resources/data/PartyInfo.json";
 		populateMap(filename);
 	}
@@ -51,7 +51,7 @@ public class PartyMemberFactory extends HashMap<String, PartyMemberData> {
 			// iterate through the array of pokemon data
 			Iterator<?> pokedex = pokemon_data_all.iterator();
 			while (pokedex.hasNext()) {
-				PartyMemberData pd = new PartyMemberData();
+				BattlerData pd = new BattlerData();
 
 				// this is the JSON object for a pokemon
 				JSONObject pokemon_data = (JSONObject) pokedex.next();
@@ -110,7 +110,7 @@ public class PartyMemberFactory extends HashMap<String, PartyMemberData> {
 	 * 
 	 * @return this factory instance
 	 */
-	public static PartyMemberFactory getInstance() {
+	public static BattlerFactory getInstance() {
 		return m_instance;
 	}
 
@@ -123,8 +123,8 @@ public class PartyMemberFactory extends HashMap<String, PartyMemberData> {
 	 *            - the level of the party member to generate
 	 * @return a new Party Member from the retrieved data
 	 */
-	public static PartyMember createPokemon(String name, int level) {
-		return new PartyMember(m_instance.get(name), level);
+	public static Battler createPokemon(String name, int level) {
+		return new Battler(m_instance.get(name), level);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
@@ -140,7 +140,7 @@ public class PartyMemberFactory extends HashMap<String, PartyMemberData> {
 	 *            - where the party member should be generated from
 	 * @return a new party member
 	 */
-	public PartyMember randomPokemon(Location location) {
+	public Battler randomPokemon(Location location) {
 		String name = location.getPokemon(RandomNumUtils.generateRandom(0, 100));
 		int level = RandomNumUtils.randomLevel(location.getMaxLevel(name), location.getMinLevel(name));
 		return createPokemon(name, level);
