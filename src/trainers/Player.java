@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import location.Location;
 import location.LocationLibrary;
-import party.BillsPC;
+import party.Storage;
 import utilities.RandomNumUtils;
 
 /**
@@ -42,7 +42,7 @@ public class Player extends Actor implements Serializable {
 	 * 
 	 * TODO - abstract from Pokemon game (rename)
 	 */
-	public BillsPC billsPC = new BillsPC();
+	public Storage storage = new Storage();
 
 	/**
 	 * Player constructor given location and a name
