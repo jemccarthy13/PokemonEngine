@@ -12,31 +12,28 @@ import org.json.simple.parser.JSONParser;
 import trainers.Actor.DIR;
 import utilities.DebugUtility;
 
-// ////////////////////////////////////////////////////////////////////////
-//
-// Look through the Location data files and map Name->Data for each
-//
-// ////////////////////////////////////////////////////////////////////////
+/**
+ * Look through the Location data file and map Name->Data
+ */
 public class LocationLibrary extends HashMap<String, LocationData> {
 
 	private static final long serialVersionUID = 9095738634104025461L;
 	private static LocationLibrary m_instance = new LocationLibrary();
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Private constructor causes single instance behavior
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Private constructor causes single instance behavior
+	 */
 	private LocationLibrary() {
 		String filename = "resources/data/Locations.json";
 		populateMap(filename);
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Reads the JSON formatted file and parses out the pokemon data
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Reads the JSON formatted file and parses out the location data
+	 * 
+	 * @param filename
+	 *            - the path of the Locations data file
+	 */
 	public void populateMap(String filename) {
 		JSONParser parser = new JSONParser();
 		try {
@@ -99,15 +96,22 @@ public class LocationLibrary extends HashMap<String, LocationData> {
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Get instance returns the single instance of the LocationLibrary
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * The single instance of the LocationLibrary
+	 * 
+	 * @return LocationLibrary instance
+	 */
 	public static LocationLibrary getInstance() {
 		return m_instance;
 	}
 
+	/**
+	 * Retrieve a location from the location library by name
+	 * 
+	 * @param name
+	 *            - the location to look up
+	 * @return a Location by that name
+	 */
 	public static Location getLocation(String name) {
 		return new Location(m_instance.get(name));
 	}
