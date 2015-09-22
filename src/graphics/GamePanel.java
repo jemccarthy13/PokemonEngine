@@ -9,17 +9,12 @@ import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 
 import model.Coordinate;
-import model.GameData.SCREEN;
-import party.Battler;
-import party.Battler.STATUS;
-import party.Party;
 import tiles.TileSet;
 import trainers.Actor;
 import trainers.Actor.DIR;
 import trainers.NPCLibrary;
 import trainers.Player;
 import utilities.DebugUtility;
-import utilities.RandomNumUtils;
 import controller.GameController;
 import controller.GameKeyListener;
 
@@ -58,8 +53,9 @@ public class GamePanel extends JPanel implements ActionListener {
 		} catch (Exception e) {
 			DebugUtility.error("Unable to load map.");
 		}
-
-		addKeyListener(new GameKeyListener(gameController));
+		// setup key press listening
+		GameKeyListener.getInstance().setGameController(gameController);
+		addKeyListener(GameKeyListener.getInstance());
 
 		DebugUtility.printHeader("Event Registration");
 		DebugUtility.printMessage("Added event handler.");
@@ -78,83 +74,44 @@ public class GamePanel extends JPanel implements ActionListener {
 	 */
 	public void actionPerformed(ActionEvent e) {
 		gameController.updateTime();
-		if (gameController.getScreen() == SCREEN.WORLD) {
-			handleMovement();
-		}
-	}
+		if (gameController.getScene() == WorldScene.instance) {
+			// get all comparison variables up front
+			Player player = gameController.getPlayer();
+			DIR playerDir = player.getDirection();
+			Coordinate playerPos = player.getPosition();
 
-	/**
-	 * Handles player movement & animation on keyboard input
-	 */
-	private void handleMovement() {
-		// get all comparison variables up front
-		Player player = gameController.getPlayer();
-		DIR playerDir = player.getDirection();
-		Coordinate playerPos = player.getPosition();
+			// check for teleport at location
+			if (gameController.isTeleportTile(playerPos)) {
+				gameController.doTeleport(playerPos);
+			} else {
+				// Party playerPokemon = player.getParty();
 
-		// check for teleport at location
-		if (gameController.isTeleportTile(playerPos)) {
-			gameController.doTeleport(playerPos);
-		} else {
-			Party playerPokemon = player.getParty();
+				if (gameController.isPlayerWalking()) { // take care of walking
+					// animation
+					// as the gameTimer increments,
+					animationStep += 1;
+					gameController.setOffsetY(playerDir);
+					gameController.setOffsetX(playerDir);
 
-			if (gameController.isPlayerWalking()) { // take care of walking
-													// animation
-				// as the gameTimer increments,
-				animationStep += 1;
-				gameController.setOffsetY(playerDir);
-				gameController.setOffsetX(playerDir);
-
-				player.changeSprite(animationStep, isRightFoot);
-			}
-
-			// check for animation completion
-			// when walking animation is done, handle poison damage
-			if (animationStep >= 16) {
-				animationStep = 0; // reset animation counter
-				gameController.setPlayerWalking(false); // player is no longer
-														// in
-				// animation
-				isRightFoot = !isRightFoot;
-				if (gameController.canMoveInDir(playerDir)) {
-					player.move(playerDir);
-					checkForWildEncounter(player.getPosition());
+					player.changeSprite(animationStep, isRightFoot);
 				}
-				checkForStatusDamage(playerPokemon);
-			}
 
+				// check for animation completion
+				// when walking animation is done, handle poison damage
+				if (animationStep >= 16) {
+					animationStep = 0; // reset animation counter
+					gameController.setPlayerWalking(false);
+					isRightFoot = !isRightFoot;
+					if (gameController.canMoveInDir(playerDir)) {
+						player.move(playerDir);
+					}
+
+					// after the player has moved, do the necessary checks
+					gameController.postMovementChecks();
+				}
+			}
 		}
 		checkForNPCEncounter();
-	}
-
-	/**
-	 * On movement, if any party member has a harmful status effect, do damage
-	 * 
-	 * @param party
-	 */
-	private void checkForStatusDamage(Party party) {
-		for (Battler p : party) {
-			STATUS partyStatus = p.getStatusEffect();
-			if (partyStatus == STATUS.BRN || partyStatus == STATUS.PZN)
-				p.doDamage(1);
-		}
-	}
-
-	/**
-	 * Checks the current tile for a wild encounter
-	 * 
-	 * @param position
-	 *            - the map position to check
-	 */
-	private void checkForWildEncounter(Coordinate position) {
-		if (gameController.isBattleTile(position)) {
-			if (RandomNumUtils.isWildEncounter()) {
-				gameController.setWildPokemon();
-				Battler wildP = gameController.getCurrentEnemy().get(0);
-				gameController.setCurrentMessage("Wild " + wildP.getName() + " appeared.");
-				gameController.doEncounter(gameController.getCurrentEnemy(), null);
-			}
-		}
 	}
 
 	/**

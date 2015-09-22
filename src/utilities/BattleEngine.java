@@ -1,15 +1,18 @@
 package utilities;
 
+import graphics.BattleMessageScene;
+import graphics.BattleScene;
+import graphics.WorldScene;
+
 import java.util.ArrayList;
 import java.util.Random;
 
 import model.Configuration;
-import model.GameData.SCREEN;
-import party.MoveData;
-import party.Party;
 import party.Battler;
 import party.Battler.STAT;
 import party.Battler.STATUS;
+import party.MoveData;
+import party.Party;
 import trainers.Actor.DIR;
 import audio.AudioLibrary.SOUND_EFFECT;
 import controller.GameController;
@@ -144,7 +147,7 @@ public class BattleEngine {
 			m_instance.enemyName = opponentName;
 
 			game.setMovable(false);
-			game.setScreen(SCREEN.BATTLE);
+			game.setScreen(BattleScene.instance);
 		}
 	}
 
@@ -222,11 +225,10 @@ public class BattleEngine {
 		giveEXP();
 		DebugUtility.printMessage("Player won!");
 		// reset logic
-		game.setPlayerWin(false);
 		game.setMovable(false);
 
 		game.setCurrentMessage("Player won!");
-		game.setScreen(SCREEN.BATTLE_MESSAGE);
+		game.setScreen(BattleMessageScene.instance);
 
 		game.getPlayer().beatenTrainers.add(enemyName);
 
@@ -253,7 +255,7 @@ public class BattleEngine {
 		for (Battler member : playerParty) {
 			member.fullHeal();
 		}
-		game.setScreen(SCREEN.WORLD);
+		game.setScreen(WorldScene.instance);
 	}
 
 	/**

@@ -1,5 +1,8 @@
 package model;
 
+import graphics.Scene;
+import graphics.TitleScene;
+
 import java.io.Serializable;
 import java.util.HashMap;
 
@@ -28,7 +31,7 @@ public class GameData implements Serializable {
 	/**
 	 * Can the player move
 	 */
-	public boolean movable = false;
+	public boolean playerCanMove = false;
 	/**
 	 * Current message of the game
 	 */
@@ -39,96 +42,9 @@ public class GameData implements Serializable {
 	public int messageStage;
 
 	/**
-	 * An enumeration representing what screen the game is currently displaying
-	 */
-	public enum SCREEN {
-		/**
-		 * The main world scene
-		 */
-		WORLD,
-		/**
-		 * The main menu scene
-		 */
-		MENU,
-		/**
-		 * The introduction scene/animation
-		 */
-		INTRO,
-		/**
-		 * Creating a name scene
-		 */
-		NAME,
-		/**
-		 * The opening credits scene
-		 */
-		TITLE,
-		/**
-		 * The scene with option to load a game or create a new game
-		 */
-		CONTINUE,
-		/**
-		 * Scene to display a message (TODO - remove)
-		 */
-		MESSAGE,
-		/**
-		 * Main Scene in a battle
-		 */
-		BATTLE,
-		/**
-		 * Displays available moves
-		 */
-		BATTLE_FIGHT,
-		/**
-		 * Victory message at the end of a battle (TODO - replace with message
-		 * queue)
-		 */
-		BATTLE_MESSAGE,
-		/**
-		 * Selecting an item in battle
-		 */
-		BATTLE_ITEM,
-		/**
-		 * Switching party members in battle (TODO rename)
-		 */
-		BATTLE_POKEMON,
-		/**
-		 * Information on encountered characters (TODO rename)
-		 */
-		POKEDEX,
-		/**
-		 * Current party (TODO rename)
-		 */
-		POKEMON,
-		/**
-		 * View available items
-		 */
-		BAG,
-		/**
-		 * Information display (helper) (TODO rename)
-		 */
-		POKEGEAR,
-		/**
-		 * Player & session information (TODO rename)
-		 */
-		TRAINERCARD,
-		/**
-		 * Save scene
-		 */
-		SAVE,
-		/**
-		 * Game options scene
-		 */
-		OPTION,
-		/**
-		 * Scene in conversation with an NPC
-		 */
-		CONVERSATION;
-	}
-
-	/**
 	 * The current screen, defaults to main credits
 	 */
-	public SCREEN screen = SCREEN.TITLE; // start at the title screen
+	public Scene screen = TitleScene.instance; // start at the title screen
 	/**
 	 * The stage of the introduction
 	 */
@@ -174,7 +90,7 @@ public class GameData implements Serializable {
 	/**
 	 * Stored as a map so each SCREEN can store it's own current selection
 	 */
-	public HashMap<SCREEN, Integer> currentSelection = new HashMap<SCREEN, Integer>();
+	public HashMap<Scene, Integer> currentSelection = new HashMap<Scene, Integer>();
 
 	/**
 	 * Representation of the map images

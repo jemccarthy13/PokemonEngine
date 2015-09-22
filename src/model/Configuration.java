@@ -1,9 +1,14 @@
 package model;
 
+import graphics.ContinueScene;
+import graphics.MenuScene;
+import graphics.OptionScene;
+import graphics.PokegearScene;
+import graphics.SaveScene;
+import graphics.Scene;
+
 import java.io.Serializable;
 import java.util.HashMap;
-
-import model.GameData.SCREEN;
 
 /**
  * Stores the configuration of the game
@@ -26,7 +31,7 @@ public class Configuration implements Serializable {
 	/**
 	 * Do wild / opponent battles
 	 */
-	public static boolean DOBATTLES = false;
+	public static boolean DOBATTLES = true;
 	/**
 	 * False = skip Oak intro, True = do Oak intro
 	 */
@@ -95,17 +100,17 @@ public class Configuration implements Serializable {
 	/**
 	 * The number of options at each screen
 	 */
-	public HashMap<SCREEN, Integer> numSelections = new HashMap<SCREEN, Integer>();
+	public HashMap<Scene, Integer> numSelections = new HashMap<Scene, Integer>();
 
 	/**
 	 * Default constructor initializes the number of selections at each screen
 	 */
 	public Configuration() {
-		numSelections.put(SCREEN.CONTINUE, 3);
-		numSelections.put(SCREEN.SAVE, 2);
-		numSelections.put(SCREEN.OPTION, 6);
-		numSelections.put(SCREEN.MENU, 8);
-		numSelections.put(SCREEN.POKEGEAR, 4);
+		numSelections.put(ContinueScene.instance, 3);
+		numSelections.put(SaveScene.instance, 2);
+		numSelections.put(OptionScene.instance, 6);
+		numSelections.put(MenuScene.instance, 8);
+		numSelections.put(PokegearScene.instance, 4);
 	}
 
 	/**

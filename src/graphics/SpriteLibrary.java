@@ -240,9 +240,7 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 		}
 		path = "/" + path.replace("resources/", "").replace("resources\\", "");
 		URL iconURL = System.class.getResource(path);
-		if (iconURL != null) {
-			DebugUtility.printMessage(iconURL.getPath());
-		} else {
+		if (iconURL == null) {
 			DebugUtility.error("Cannot find resource" + path);
 		}
 		ImageIcon thisIcon = new ImageIcon(System.class.getResource(path));

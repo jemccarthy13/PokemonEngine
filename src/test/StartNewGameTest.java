@@ -1,6 +1,9 @@
 package test;
 
+import graphics.ContinueScene;
 import graphics.GameFrame;
+import graphics.TitleScene;
+import graphics.WorldScene;
 
 import java.awt.AWTException;
 import java.awt.Robot;
@@ -9,7 +12,6 @@ import java.awt.event.KeyEvent;
 import javax.swing.JFrame;
 
 import model.Configuration;
-import model.GameData.SCREEN;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -57,7 +59,7 @@ public class StartNewGameTest {
 		}
 
 		// assert we are at the tile screen
-		Assert.assertEquals(SCREEN.TITLE, game.getScreen());
+		Assert.assertEquals(TitleScene.instance, game.getScene());
 
 		// assert the game controller has been loaded
 		Assert.assertNotNull(game);
@@ -71,7 +73,7 @@ public class StartNewGameTest {
 		Thread.sleep(250);
 
 		// assert the continue screen was loaded
-		Assert.assertEquals(SCREEN.CONTINUE, game.getScreen());
+		Assert.assertEquals(ContinueScene.instance, game.getScene());
 
 		robot.keyPress(KeyEvent.VK_DOWN);
 		Thread.sleep(250);
@@ -84,7 +86,7 @@ public class StartNewGameTest {
 		}
 
 		// finally the game is started and we're at the world
-		Assert.assertEquals(SCREEN.WORLD, game.getScreen());
+		Assert.assertEquals(WorldScene.instance, game.getScene());
 		Thread.sleep(250);
 
 		DebugUtility.printMessage(game.getPlayer().getPosition().toString());

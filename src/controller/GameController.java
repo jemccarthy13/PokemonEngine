@@ -1,7 +1,11 @@
 package controller;
 
+import graphics.IntroScene;
+import graphics.MessageScene;
 import graphics.NPCThread;
+import graphics.Scene;
 import graphics.SpriteLibrary;
+import graphics.WorldScene;
 
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -18,39 +22,41 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import javax.swing.ImageIcon;
 import javax.swing.Timer;
 
 import location.LocationLibrary;
 import model.Configuration;
 import model.Coordinate;
 import model.GameData;
-import model.GameData.SCREEN;
 import model.GameTime;
+import model.MessageQueue;
 import model.NameBuilder;
+import party.Battler;
+import party.Battler.STATUS;
+import party.BattlerFactory;
 import party.Party;
-import party.PartyMember;
-import party.PartyMemberFactory;
 import tiles.BattleTile;
 import tiles.Tile;
 import tiles.TileSet;
 import trainers.Actor;
 import trainers.Actor.DIR;
+import trainers.NPCLibrary;
 import trainers.Player;
 import utilities.BattleEngine;
 import utilities.DebugUtility;
+import utilities.RandomNumUtils;
 import audio.AudioLibrary;
 import audio.AudioLibrary.SOUND_EFFECT;
 
 /**
  * Controls game logic flow by providing an interface between view and data
+ * 
+ * TODO add column to Configuration selections so name screen and battle scenes
+ * can use the same selection map
  */
 public class GameController implements Serializable {
 
 	private static final long serialVersionUID = 968834933407220662L;
-
-	// main game logic
-	private GameData gData;
 
 	// configuration details
 	private Configuration config = new Configuration();
@@ -58,30 +64,31 @@ public class GameController implements Serializable {
 	// handles any audio
 	private AudioLibrary audio = new AudioLibrary();
 
+	// controls the speed game events are handled and the current game time
+	private GameTime gameTimeStruct = new GameTime(0, 0, 0);
+	private Timer gameSpeed;
+
+	// main game logic
+	private GameData gData;
+
+	// add messages to be painted
+	private MessageQueue messages = new MessageQueue();
+
 	// builds names using the name screen - used to name PartyMembers
 	private NameBuilder nameBuilder = new NameBuilder();
-
-	// current NPC - in conversation or in battle
-	private Actor currentNPC;
 
 	// the player Actor
 	private Player player;
 
 	// the current battle enemy party
-	private Party currentEnemy = new Party();
-
-	// controls the speed game events are handled and the current game time
-	private GameTime gameTimeStruct = new GameTime(0, 0, 0);
-	private Timer gameSpeed;
+	private Party currentEnemyParty = new Party();
 
 	// NPC random movement controller
 	private NPCThread npcs = new NPCThread();
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Create a new controller to wrap around the game data
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Create a new controller to wrap around the game data
+	 */
 	public GameController() {
 		gData = new GameData();
 
@@ -95,25 +102,29 @@ public class GameController implements Serializable {
 	 * 
 	 **************************************************************************/
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Sets the toBeNamed object. Used for graphics painting
-	// to get the sprite of the thing to be named.
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Sets the toBeNamed object. Used for graphics painting to get the sprite
+	 * of the thing to be named.
+	 * 
+	 * @param tbn
+	 *            - new to be named object
+	 */
 	public void setToBeNamed(String tbn) {
 		nameBuilder.setToBeNamed(tbn);
 	}
 
+	/**
+	 * Retrieve the thing currently being named
+	 * 
+	 * @return string name of being named object
+	 */
 	public String getToBeNamed() {
 		return nameBuilder.getToBeNamed();
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Increment and decrement for the row / col of character selection screen
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Decrement the row selection of the name editing screen
+	 */
 	public void decrNameRowSelection() {
 		int row = nameBuilder.getRowSelection();
 		if (row > 0) {
@@ -121,6 +132,9 @@ public class GameController implements Serializable {
 		}
 	}
 
+	/**
+	 * Increment the row selection of the name editing screen
+	 */
 	public void incrNameRowSelection() {
 		int row = nameBuilder.getRowSelection();
 		if (row < nameBuilder.maxRows()) {
@@ -128,6 +142,9 @@ public class GameController implements Serializable {
 		}
 	}
 
+	/**
+	 * Increment the col selection of the name editing screen
+	 */
 	public void incrNameColSelection() {
 		int col = nameBuilder.getColSelection();
 		if (col < nameBuilder.maxCols()) {
@@ -135,6 +152,9 @@ public class GameController implements Serializable {
 		}
 	}
 
+	/**
+	 * Decrement the col selection of the name editing screen
+	 */
 	public void decrNameColSelection() {
 		int col = nameBuilder.getColSelection();
 		if (col > 0) {
@@ -142,59 +162,70 @@ public class GameController implements Serializable {
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Set and get the row / col selected for character selection
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Set the col selection for the name editing screen
+	 * 
+	 * @param i
+	 *            - new column selection
+	 */
 	public void setNameColSelection(int i) {
 		nameBuilder.setColSelection(i);
 	}
 
+	/**
+	 * Set the row selection for the name editing screen
+	 * 
+	 * @param i
+	 *            - new column selection
+	 */
 	public void setNameRowSelection(int i) {
 		nameBuilder.setRowSelection(i);
 	}
 
+	/**
+	 * Get the row selection for the name editing screen
+	 * 
+	 * @return row number
+	 */
 	public int getNameRowSelection() {
 		return nameBuilder.getRowSelection();
 	}
 
+	/**
+	 * Get the col selection for the name editing screen
+	 * 
+	 * @return col number
+	 */
 	public int getNameColSelection() {
 		return nameBuilder.getColSelection();
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Add the selected character to the name builder
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Add the selected character to the name builder
+	 */
 	public void addSelectedChar() {
 		nameBuilder.addSelectedChar();
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Removes a char from the string in the process of being built
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Removes a char from the string in the process of being built
+	 */
 	public void removeChar() {
 		nameBuilder.removeChar();
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Retrieve the name built by the user in the current session
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Retrieve the name built by the user in the current session
+	 * 
+	 * @return built name
+	 */
 	public String getChosenName() {
 		return nameBuilder.toString();
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Resets the name builder (clear all chars)
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Clears all characters from the name builder
+	 */
 	public void resetNameBuilder() {
 		nameBuilder.reset();
 	}
@@ -207,11 +238,15 @@ public class GameController implements Serializable {
 	 * 
 	 **************************************************************************/
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Retrieve the tile image number at a given (layer, y) position
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Retrieve the tile image number at a given (layer, y) position
+	 * 
+	 * @param layer
+	 *            - the layer to look in
+	 * @param y
+	 *            - the index of the image
+	 * @return int representing which tile of the tileset should be painted
+	 */
 	public int getMapImageAt(int layer, int y) {
 		Integer i = gData.imageMap.get(new Coordinate(y, layer));
 		if (i == null) {
@@ -221,21 +256,31 @@ public class GameController implements Serializable {
 		}
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Set the tile image number at a given (layer, y) position
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	public void setMapImageAt(int layer, int y, int parseInt) {
-		gData.imageMap.set(new Coordinate(y, layer), parseInt);
+	/**
+	 * Set the tile image number at a given (layer, y) position
+	 * 
+	 * @param layer
+	 *            - the layer to look in
+	 * @param y
+	 *            - the index of the image
+	 * @param value
+	 *            - the new image number value
+	 */
+	public void setMapImageAt(int layer, int y, int value) {
+		gData.imageMap.set(new Coordinate(y, layer), value);
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// If the map image location doesn't exist, add it
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	public void addMapImageAt(int x, int y, int parseInt) {
+	/**
+	 * If the map image location doesn't exit, add it
+	 * 
+	 * @param x
+	 *            - layer index
+	 * @param y
+	 *            - element index within the layer
+	 * @param value
+	 *            - the value to add
+	 */
+	public void addMapImageAt(int x, int y, int value) {
 		List<Integer> layer = null;
 		// set up a new layer if it doesn't exist
 		try {
@@ -249,32 +294,60 @@ public class GameController implements Serializable {
 					layer.add(0);
 				}
 			}
-			layer.set(y, parseInt);
+			layer.set(y, value);
 		}
 	}
 
+	/**
+	 * Retrieve a tile given a coordinate
+	 * 
+	 * @param c
+	 *            - the coordinate to look at
+	 * @return a Tile of the map
+	 */
 	public Tile getMapTileAt(Coordinate c) {
 		return gData.tileMap.get(c);
 	}
 
+	/**
+	 * Set a tile at a given coordinate
+	 * 
+	 * @param position
+	 *            - the coordinate to set
+	 * @param tile
+	 *            - the tile to set that index to
+	 */
 	public void setMapTileAt(Coordinate position, Tile tile) {
 		gData.tileMap.set(position, tile);
 	}
 
+	/**
+	 * Get the current graphical offset (x direction)
+	 * 
+	 * @return int x offset
+	 */
 	public int getOffsetX() {
 		return gData.offsetX;
 	}
 
+	/**
+	 * Get the current graphical offset (y direction)
+	 * 
+	 * @return int y offset
+	 */
 	public int getOffsetY() {
 		return gData.offsetY;
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// loadMap - given a path to a map file, populate the Image and Tile data
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	public void loadMap() throws Exception {
+	/**
+	 * From the Configuration map file path, populate the image / tile data
+	 * 
+	 * @throws IOException
+	 *             - if the file cannot be read
+	 * @throws InterruptedException
+	 *             - if the reader threads are interrupted
+	 */
+	public void loadMap() throws IOException, InterruptedException {
 
 		class SynchronizedReader {
 			BufferedReader reader;
@@ -390,103 +463,158 @@ public class GameController implements Serializable {
 		DebugUtility.printMessage("Loaded map.");
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Pause all NPC movement
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Pause all NPC movement
+	 */
 	public void pauseNPCMovement() {
 		npcs.stop = true;
 	}
 
-	// ////////////////////////// MOVEMENT CONTROL LOGIC ///////////////////////
+	/**
+	 * Get the height of the map
+	 * 
+	 * @return int height of map
+	 */
+	public int getMapHeight() {
+		return gData.map_height;
+	}
 
+	/**
+	 * Get the width of the map
+	 * 
+	 * @return int width of map
+	 */
+	public int getMapWidth() {
+		return gData.map_width;
+	}
+
+	/**
+	 * Set the height of the map
+	 * 
+	 * @param hgt
+	 *            - the new height of the map
+	 */
+	private void setMapHeight(int hgt) {
+		gData.map_height = hgt;
+	}
+
+	/**
+	 * Set the width of the map
+	 * 
+	 * @param wdt
+	 *            - the new width of the map
+	 */
+	private void setMapWidth(int wdt) {
+		gData.map_width = wdt;
+	}
+
+	/**
+	 * Get the original start X (before offsets where added)
+	 * 
+	 * @return x start coordinate
+	 */
+	public int getStartX() {
+		return gData.start_coorX;
+	}
+
+	/**
+	 * Get the original start Y (before offsets where added)
+	 * 
+	 * @return y start coordinate
+	 */
+	public int getStartY() {
+		return gData.start_coorY;
+	}
+
+	/***************************************************************************
+	 * 
+	 * MOVEMENT CONTROL LOGIC
+	 * 
+	 * Helps control movement on screen
+	 * 
+	 **************************************************************************/
+
+	/**
+	 * Can the player move?
+	 * 
+	 * @return whether or not the player can move
+	 */
 	public boolean isMovable() {
-		return gData.movable;
+		return gData.playerCanMove;
 	}
 
+	/**
+	 * Set whether the player can move
+	 * 
+	 * @param b
+	 *            - new value for can the player move
+	 */
 	public void setMovable(boolean b) {
-		gData.movable = b;
+		gData.playerCanMove = b;
 	}
 
+	/**
+	 * Is the player currently walking?
+	 * 
+	 * @return whether or not player is in walking animation
+	 */
 	public boolean isPlayerWalking() {
 		return gData.isPlayerWalking;
 	}
 
+	/**
+	 * Set whether or not the player is walking
+	 * 
+	 * @param isPlayerWalking
+	 *            - new value for player in walking animation
+	 */
 	public void setPlayerWalking(boolean isPlayerWalking) {
 		gData.isPlayerWalking = isPlayerWalking;
 	}
 
+	/**
+	 * Start the game timer to fire game events
+	 * 
+	 * @param theGame
+	 *            - the ActionListner to base this timer on
+	 */
 	public void startGameTimer(ActionListener theGame) {
 		gameSpeed = new Timer(100 - gData.currentSpeed.getValue(), theGame);
 		gameSpeed.start();
 	}
 
-	// //////////////////////////// TIME CONTROL //////////////////////////////
+	/***************************************************************************
+	 * 
+	 * TIME CONTROL LOGIC
+	 * 
+	 * Helps control time and gameplay speed
+	 * 
+	 **************************************************************************/
 
+	/**
+	 * Update the current game time
+	 */
 	public void updateTime() {
 		gameTimeStruct.updateTime();
 	}
 
+	/**
+	 * Format the time into a readable string
+	 * 
+	 * @return HH:MM:SS game time
+	 */
 	public String formatTime() {
 		return gameTimeStruct.formatTime();
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// start the game, based off a save file or as a new game
-	//
-	// ////////////////////////////////////////////////////////////////////////
-	public GameData startGame(boolean continued) {
-
-		DebugUtility.printHeader("Starting game:");
-		if (continued) {
-			loadGame();
-			if (!player.tData.isValidData()) {
-				DebugUtility.error("Unable to continue game from save file. Corrupt data:\n" + player.tData.toString());
-			}
-		} else {
-			String name = "GOLD";
-			player = new Player(4, 2, name);
-			PartyMember charmander = PartyMemberFactory.createPokemon("Charmander", 7);
-			PartyMember sentret = PartyMemberFactory.createPokemon("Sentret", 3);
-			player.caughtPokemon(charmander);
-			player.caughtPokemon(sentret);
-			player.setMoney(1000000);
-			player.setCurLocation(LocationLibrary.getLocation("Route 27"));
-			playBackgroundMusic("NewBarkTown");
-			gData.start_coorX = (Tile.TILESIZE * (8 - player.getCurrentX()));
-			gData.start_coorY = (Tile.TILESIZE * (6 - player.getCurrentY()));
-			if (Configuration.SHOWINTRO) {
-				gData.introStage = 1;
-				gData.screen = SCREEN.INTRO;
-			}
-			DebugUtility.printMessage("Started new game.");
-		}
-
-		// initialize the player sprite
-		player.tData.sprite_name = "PLAYER";
-		player.tData.sprite = SpriteLibrary.getSprites("PLAYER").get(player.getDirection().ordinal() * 3);
-
-		// get out of any menus
-		gData.screen = SCREEN.WORLD;
-
-		npcs.start();
-
-		// start clock for current session
-		gameTimeStruct.timeStarted = System.currentTimeMillis();
-
-		DebugUtility.printMessage("- " + player.tData.toString());
-		DebugUtility.printMessage("Rendered session id: " + gData.gameSessionID);
-		return gData;
-	}
-
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// canMoveInDir - makes a temporary coordinate, and checks to see if the
-	// actor can move in the specified direction
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Makes a temporary coordinate, and checks to see if the actor can move in
+	 * the specified direction
+	 * 
+	 * @param dir
+	 *            - the direction to check
+	 * @return - whether or not the player can move there
+	 */
 	public boolean canMoveInDir(DIR dir) {
 		boolean canMove = false;
 
@@ -507,47 +635,106 @@ public class GameController implements Serializable {
 		return canMove;
 	}
 
-	public int getMapHeight() {
-		return gData.map_height;
-	}
-
-	public int getMapWidth() {
-		return gData.map_width;
-	}
-
-	public void setMapHeight(int hgt) {
-		gData.map_height = hgt;
-	}
-
-	public void setMapWidth(int wdt) {
-		gData.map_width = wdt;
-	}
-
-	public int getStartX() {
-		return gData.start_coorX;
-	}
-
-	public int getStartY() {
-		return gData.start_coorY;
-	}
-
+	/**
+	 * Retrieve the current player instance
+	 * 
+	 * @return player
+	 */
 	public Player getPlayer() {
 		return player;
 	}
 
+	/**
+	 * Retrieve the current session (player) ID
+	 * 
+	 * @return a new ID
+	 */
 	public int getId() {
 		return gData.gameSessionID;
 	}
 
+	/**
+	 * Set the player sprite in a specified direction
+	 * 
+	 * @param dir
+	 *            - player's new direction
+	 */
 	public void setPlayerDirection(DIR dir) {
-		setPlayerSprite(SpriteLibrary.getSpriteForDir("PLAYER", dir));
+
+		getPlayer().tData.sprite = SpriteLibrary.getSpriteForDir("PLAYER", dir);
 		getPlayer().setDirection(dir);
 	}
 
-	public void setPlayerSprite(ImageIcon imageIcon) {
-		getPlayer().tData.sprite = imageIcon;
+	/***************************************************************************
+	 * 
+	 * TIME CONTROL LOGIC
+	 * 
+	 * Helps control time and gameplay speed
+	 * 
+	 **************************************************************************/
+	/**
+	 * Start the game, based off a save file or as a new game
+	 * 
+	 * @param continued
+	 *            - whether or not to continue the default save game
+	 * @return a new GameData instance representing the game state
+	 */
+	public GameData startGame(boolean continued) {
+
+		DebugUtility.printHeader("Starting game:");
+		if (continued) {
+			loadGame();
+			if (!player.tData.isValidData()) {
+				DebugUtility.error("Unable to continue game from save file. Corrupt data:\n" + player.tData.toString());
+			}
+			// get out of continue menu
+			gData.screen = WorldScene.instance;
+		} else {
+			String name = "GOLD";
+			player = new Player(4, 2, name);
+			Battler charmander = BattlerFactory.createPokemon("Charmander", 7);
+			Battler sentret = BattlerFactory.createPokemon("Sentret", 3);
+			player.caughtWild(charmander);
+			player.caughtWild(sentret);
+			player.setMoney(1000000);
+			player.setCurLocation(LocationLibrary.getLocation("Route 27"));
+			playBackgroundMusic();
+			gData.start_coorX = (Tile.TILESIZE * (8 - player.getCurrentX()));
+			gData.start_coorY = (Tile.TILESIZE * (6 - player.getCurrentY()));
+			gData.introStage = 1;
+			if (Configuration.SHOWINTRO) {
+				gData.screen = IntroScene.instance;
+				addAllMessages(NPCLibrary.getInstance().get("Professor Oak").getConversationText().toArray());
+			} else {
+				gData.screen = WorldScene.instance;
+			}
+			DebugUtility.printMessage("Started new game.");
+		}
+
+		// initialize the player sprite
+		player.tData.sprite_name = "PLAYER";
+		player.tData.sprite = SpriteLibrary.getSprites("PLAYER").get(player.getDirection().ordinal() * 3);
+
+		npcs.start();
+
+		// start clock for current session
+		gameTimeStruct.timeStarted = System.currentTimeMillis();
+
+		DebugUtility.printMessage("- " + player.tData.toString());
+		DebugUtility.printMessage("Rendered session id: " + gData.gameSessionID);
+		return gData;
 	}
 
+	/***************************************************************************
+	 * 
+	 * SOUND CONTROL LOGIC
+	 * 
+	 * Helps control playing of sounds.
+	 * 
+	 **************************************************************************/
+	/**
+	 * Toggle the master volume control
+	 */
 	public void toggleSound() {
 		gData.option_sound = !gData.option_sound;
 		if (gData.option_sound) {
@@ -557,42 +744,54 @@ public class GameController implements Serializable {
 		}
 	}
 
+	/**
+	 * Play the given sound effect clip
+	 * 
+	 * @param select
+	 *            - sound effect selected
+	 */
 	public void playClip(SOUND_EFFECT select) {
 		if (gData.option_sound) {
 			AudioLibrary.playClip(select);
 		}
 	}
 
+	/**
+	 * Choose a random trainer music and play it
+	 */
 	public void playTrainerMusic() {
 		if (gData.option_sound) {
 			audio.pickTrainerMusic();
 		}
 	}
 
-	public void playBackgroundMusic(String string) {
+	/**
+	 * Play the given background music (by track title)
+	 * 
+	 * @param songTitle
+	 *            - sound effect selected
+	 */
+	public void playBackgroundMusic(String songTitle) {
 		if (gData.option_sound) {
-			audio.playBackgroundMusic(string);
+			audio.playBackgroundMusic(songTitle);
 		}
 	}
 
+	/**
+	 * Play the background music for the player's current location
+	 */
 	public void playBackgroundMusic() {
 		if (gData.option_sound) {
 			audio.playBackgroundMusic(getPlayer().getCurLoc().getName());
 		}
 	}
 
-	public int getIntroStage() {
-		return gData.introStage;
-	}
-
-	public void incrIntroStage() {
-		gData.introStage += 2;
-	}
-
-	public boolean isInBattle() {
-		return gData.inBattle;
-	}
-
+	/**
+	 * Add to the offset (y direction) given a direction the player is moving
+	 * 
+	 * @param playerDir
+	 *            - Direction player is facing
+	 */
 	public void setOffsetY(DIR playerDir) {
 		if (canMoveInDir(playerDir)) {
 			switch (playerDir) {
@@ -608,6 +807,12 @@ public class GameController implements Serializable {
 		}
 	}
 
+	/**
+	 * Add to the offset (x direction) given a direction the player is moving
+	 * 
+	 * @param playerDir
+	 *            - Direction player is facing
+	 */
 	public void setOffsetX(DIR playerDir) {
 		if (canMoveInDir(playerDir)) {
 			switch (playerDir) {
@@ -623,26 +828,58 @@ public class GameController implements Serializable {
 		}
 	}
 
+	/**
+	 * Set the start X coordinate for a teleport
+	 * 
+	 * @param i
+	 *            - start X coordinate
+	 */
 	public void setStartCoordX(int i) {
 		gData.start_coorX = i;
 	}
 
+	/**
+	 * Set the start Y coordinate for a teleport
+	 * 
+	 * @param i
+	 *            - start y coordinate
+	 */
 	public void setStartCoordY(int i) {
 		gData.start_coorY = i;
 	}
 
+	/**
+	 * Is the player standing on a battle tile?
+	 * 
+	 * @param position
+	 *            - current player position
+	 * @return whether or not the postion is a battle position
+	 */
 	public boolean isBattleTile(Coordinate position) {
 		return getMapTileAt(position).getClass().equals(BattleTile.class);
 	}
 
-	public boolean isTeleportTile(Coordinate playerPos) {
-		return TeleportLibrary.getListofTeleports().containsKey(playerPos);
+	/**
+	 * Is the map tile at the given position on a teleport tile?
+	 * 
+	 * @param position
+	 *            - map position
+	 * @return whether or not the postion is a teleport position
+	 */
+	public boolean isTeleportTile(Coordinate position) {
+		return TeleportLibrary.getList().containsKey(position);
 	}
 
+	/**
+	 * Perform a teleport given the player's current position
+	 * 
+	 * @param playerPos
+	 *            - current player position
+	 */
 	public void doTeleport(Coordinate playerPos) {
 		Player player = getPlayer();
 
-		player.setLoc(TeleportLibrary.getListofTeleports().get(playerPos));
+		player.setLoc(TeleportLibrary.getList().get(playerPos));
 
 		setStartCoordX((player.getCurrentX() - playerPos.getX()) * -1 * Tile.TILESIZE);
 		setStartCoordY((player.getCurrentY() - playerPos.getY()) * -1 * Tile.TILESIZE);
@@ -652,26 +889,38 @@ public class GameController implements Serializable {
 		player.turnAround();
 	}
 
+	/**
+	 * Are we at the world screen, does the NPC see the player, is the player
+	 * not walking, is the master control for battles turned on, and the player
+	 * is not beaten?
+	 * 
+	 * @param npc
+	 *            - npc to check
+	 * @return whether or not the above conditions are met
+	 */
 	public boolean validEncounterConditions(Actor npc) {
 		boolean isValid = false;
-		if (getScreen() == SCREEN.WORLD) {
+		if (getScene() == WorldScene.instance) {
 			isValid = npc.isTrainer() && !isPlayerWalking() && Configuration.DOBATTLES
 					&& !getPlayer().beatenTrainers.contains(npc.getName()) && npcSeesPlayer(npc);
 		}
 		return isValid;
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// Given an NPC, check if that NPC sees the player
-	//
-	// Sight rules:
-	// NORTH - columns match, playerY < NPC_Y, within sight distance
-	// SOUTH - columns match, playerY > NPC_Y, within sight distance
-	// EAST - rows match, playerX > NPC_X, within sight distance
-	// WEST - rows match, playerX < NPC_X, within sight distance
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * Given an NPC, check if that NPC sees the player
+	 * 
+	 * Sight rules:
+	 * 
+	 * @NORTH - columns match, playerY < NPC_Y, within sight distance
+	 * @SOUTH - columns match, playerY > NPC_Y, within sight distance
+	 * @EAST - rows match, playerX > NPC_X, within sight distance
+	 * @WEST - rows match, playerX < NPC_X, within sight distance
+	 * 
+	 * @param curNPC
+	 *            - the npc to check against
+	 * @return whether or not the NPC sees the player
+	 */
 	private boolean npcSeesPlayer(Actor curNPC) {
 		Player player = getPlayer();
 		int playerCurY = player.getCurrentY();
@@ -687,36 +936,102 @@ public class GameController implements Serializable {
 				&& (playerCurX - NPC_X <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.EAST)))));
 	}
 
-	public void resetMenuLogic() {
-		gData.screen = SCREEN.WORLD;
-		gData.inBattle = false;
-		gData.introStage = 1;
+	/**
+	 * Perform these sets of checks after player movement
+	 */
+	public void postMovementChecks() {
+		// check for wild encounter
+		if (isBattleTile(player.getPosition())) {
+			if (RandomNumUtils.isWildEncounter()) {
+				currentEnemyParty.clear();
+				currentEnemyParty.add(BattlerFactory.getInstance().randomPokemon(getPlayer().getCurLoc()));
+				setCurrentMessage("Wild " + currentEnemyParty.get(0).getName() + " appeared");
+				doEncounter(currentEnemyParty, null);
+			}
+		}
+		for (Battler p : getPlayer().getParty()) {
+			STATUS partyStatus = p.getStatusEffect();
+			if (partyStatus == STATUS.BRN || partyStatus == STATUS.PZN)
+				p.doDamage(1);
+		}
 	}
 
+	/**
+	 * Start an encounter with the given party and opponent name
+	 * 
+	 * @param pokemon
+	 *            - the party to use
+	 * @param name
+	 *            - opponent's name
+	 */
+	public void doEncounter(Party pokemon, String name) {
+		BattleEngine.getInstance().fight(pokemon, this, name);
+	}
+
+	/**
+	 * Is master volume on?
+	 * 
+	 * @return whether or not music/sound should be played
+	 */
 	public boolean isSoundOn() {
 		return gData.option_sound;
 	}
 
+	/**
+	 * Get the selection for the current screen
+	 * 
+	 * @return int current selection for this screen
+	 */
 	public int getCurrentSelection() {
-		SCREEN curScreen = getScreen();
-		if (!gData.currentSelection.containsKey(curScreen)) {
+		if (!gData.currentSelection.containsKey(getScene())) {
 			setCurrentSelection(0);
 		}
-		return gData.currentSelection.get(curScreen);
+		return gData.currentSelection.get(getScene());
 	}
 
-	public void setCurrentSelection(int i) {
-		if (gData.currentSelection.containsKey(getScreen())) {
-			gData.currentSelection.replace(getScreen(), i);
-		} else {
-			gData.currentSelection.put(getScreen(), 0);
+	/**
+	 * Check cur NPC coordinate w/ an adjusted coordinate & player direction.
+	 * 
+	 * @param curNpc
+	 *            - the NPC to check against
+	 * @param c
+	 *            - the coordinate of the player
+	 * @param playerDir
+	 *            - the direction the player is facing
+	 * @param keyCode
+	 *            - the key code of the key pressed
+	 */
+	public void tryBorderNPC(Actor curNpc, Coordinate c, DIR playerDir) {
+		Coordinate c1 = curNpc.getPosition();
+		if (c1.equals(c)) {
+			curNpc.setDirectionOpposite(playerDir);
+			curNpc.setStationary(true);
+			setCurrentMessage(curNpc.getConversationText().get(0));
+			setScreen(MessageScene.instance);
 		}
 	}
 
+	/**
+	 * Set the selection for the current screen
+	 * 
+	 * @param i
+	 *            - the new selection index
+	 */
+	public void setCurrentSelection(int i) {
+		if (gData.currentSelection.containsKey(getScene())) {
+			gData.currentSelection.replace(getScene(), i);
+		} else {
+			gData.currentSelection.put(getScene(), 0);
+		}
+	}
+
+	/**
+	 * Decrement the selection at the current screen
+	 */
 	public void decrementSelection() {
-		if (gData.currentSelection.containsKey(getScreen())) {
-			int curSel = gData.currentSelection.get(getScreen());
-			if (getCurrentSelection() > 0 && getScreen() != SCREEN.WORLD) {
+		if (gData.currentSelection.containsKey(getScene())) {
+			int curSel = gData.currentSelection.get(getScene());
+			if (getCurrentSelection() > 0 && getScene() != WorldScene.instance) {
 				setCurrentSelection(curSel - 1);
 			}
 		} else {
@@ -724,11 +1039,14 @@ public class GameController implements Serializable {
 		}
 	}
 
+	/**
+	 * Increment the selection at the current screen
+	 */
 	public void incrementSelection() {
-		if (gData.currentSelection.containsKey(getScreen())) {
-			int curSel = gData.currentSelection.get(getScreen());
-			if (config.numSelections.containsKey(getScreen())) {
-				if (getCurrentSelection() < config.numSelections.get(getScreen()) - 1) {
+		if (gData.currentSelection.containsKey(getScene())) {
+			int curSel = gData.currentSelection.get(getScene());
+			if (config.numSelections.containsKey(getScene())) {
+				if (getCurrentSelection() < config.numSelections.get(getScene()) - 1) {
 					setCurrentSelection(curSel + 1);
 				}
 			}
@@ -737,68 +1055,102 @@ public class GameController implements Serializable {
 		}
 	}
 
-	public boolean isInNameScreen() {
-		return gData.screen == SCREEN.NAME;
-	}
-
-	public SCREEN getScreen() {
+	/**
+	 * Control which screen is printed and which logic is handled
+	 * 
+	 * @return current screen to be painted
+	 */
+	public Scene getScene() {
 		return gData.screen;
 	}
 
-	public void setScreen(SCREEN curScreen) {
+	/**
+	 * Control which screen is printed and which logic is handled
+	 * 
+	 * @param curScreen
+	 *            - the new current screen
+	 */
+	public void setScreen(Scene curScreen) {
 		gData.screen = curScreen;
 	}
 
-	public void setPlayerWin(boolean b) {
-		gData.playerWin = false;
-	}
-
-	// TODO - message queue instead
+	/**
+	 * TODO replace with message queue
+	 * 
+	 * @param string
+	 */
 	public void setCurrentMessage(String string) {
-		gData.currentMessage = string;
+		messages.add(string);
 	}
 
-	public String getCurrentMessage(boolean npc) {
-		if (npc)
-			return getCurNPC().getText(getMessageStage());
-		else
-			return gData.currentMessage;
+	/**
+	 * Add all lines of text to the current conversation / message
+	 * 
+	 * @param strings
+	 *            - a list of messages
+	 */
+	public void addAllMessages(Object[] strings) {
+		for (Object message : strings) {
+			messages.add(message.toString());
+		}
 	}
 
-	public void initialize() {
-		gData = new GameData();
+	/**
+	 * Get the next message in the queue
+	 * 
+	 * @return String next message
+	 */
+	public String[] getCurrentMessage() {
+		return messages.getMessages();
 	}
 
-	public Party getCurrentEnemy() {
-		return currentEnemy;
+	/**
+	 * Get the current stage of the intro scene
+	 * 
+	 * TODO consolidate all these message control functions into a message queue
+	 * 
+	 * @return int intro scene stage
+	 */
+	public int getIntroStage() {
+		return gData.introStage;
 	}
 
-	public void setWildPokemon() {
-		currentEnemy.clear();
-		currentEnemy.add(PartyMemberFactory.getInstance().randomPokemon(getPlayer().getCurLoc()));
+	/**
+	 * Increment to get the next 2 messages for the intro scene
+	 */
+	public void incrIntroStage() {
+		gData.introStage += 2;
 	}
 
-	public void doEncounter(Party pokemon, String name) {
-		BattleEngine.getInstance().fight(pokemon, this, name);
-	}
-
+	/**
+	 * Retrieve the current message stage
+	 * 
+	 * @return int stage of conversation
+	 */
 	public int getMessageStage() {
 		return gData.messageStage;
 	}
 
-	public Actor getCurNPC() {
-		return currentNPC;
+	/**
+	 * Does the message queue have another message?
+	 * 
+	 * @return whether or not there is another message in the queue
+	 */
+	public boolean hasNextMessage() {
+		return messages.peek() != null;
 	}
 
-	public void setCurNPC(Actor npc) {
-		currentNPC = npc;
+	/**
+	 * Move to the next two messages in the queue
+	 */
+	public void nextMessage() {
+		messages.poll();
+		messages.poll();
 	}
 
-	public void exitMenu() {
-		getCurNPC().setStationary(false);
-		setScreen(SCREEN.WORLD);
-	}
-
+	/**
+	 * Save game object to a default .SAV file
+	 */
 	public void saveGame() {
 		gameTimeStruct.saveTime();
 
@@ -821,11 +1173,9 @@ public class GameController implements Serializable {
 		DebugUtility.printMessage("** Saved game.");
 	}
 
-	// ////////////////////////////////////////////////////////////////////////
-	//
-	// loadGame - loads game object from a default .SAV file
-	//
-	// ////////////////////////////////////////////////////////////////////////
+	/**
+	 * loads game object from a default .SAV file
+	 */
 	public void loadGame() {
 		GameData data = null;
 		FileInputStream fout = null;
@@ -844,9 +1194,29 @@ public class GameController implements Serializable {
 		gData = data;
 	}
 
+	/**
+	 * Print the current game state
+	 */
 	public void printData() {
 		DebugUtility.printHeader("Game Data");
 		DebugUtility.printMessage(gData.toString());
+	}
+
+	/**
+	 * Attempt to leave a battle
+	 */
+	public void runAway() {
+		if (BattleEngine.getInstance().enemyName == null) {
+			setCurrentMessage("Got away safely!");
+			setScreen(MessageScene.instance);
+		} else {
+			setCurrentMessage("Can't run away from a opponent!");
+			// setScreen(BattleMessageScene.instance);
+			// TODO BATTLE_MESSAGE should only quit battle when
+			// someone is out of pokemon
+			// otherwise, resume the battle (like this message-
+			// non-fatal message during battle)
+		}
 	}
 
 }
