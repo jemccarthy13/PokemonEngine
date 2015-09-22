@@ -25,9 +25,6 @@ import controller.GameController;
 //
 // Painter class paints all grahpics
 //
-// TODO - add badges printing
-// TODO - only paint the visible portions of the map
-//
 // ////////////////////////////////////////////////////////////////////////////
 public class Painter {
 

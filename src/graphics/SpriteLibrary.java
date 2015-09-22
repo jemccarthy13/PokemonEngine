@@ -3,6 +3,7 @@ package graphics;
 import java.awt.Image;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -214,6 +215,12 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 			DebugUtility.error("Image path does not exist: " + path);
 		}
 		path = "/" + path.replace("resources/", "").replace("resources\\", "");
+		URL iconURL = System.class.getResource(path);
+		if (iconURL != null) {
+			DebugUtility.printTrace(iconURL.getPath());
+		} else {
+			DebugUtility.error("Cannot find resource" + path);
+		}
 		ImageIcon thisIcon = new ImageIcon(System.class.getResource(path));
 		return thisIcon;
 	}
