@@ -139,9 +139,9 @@ public class Battler implements Serializable {
 		}
 
 		String number = formatPokedexNumber();
-		this.party_icon = SpriteLibrary.createImage(SpriteLibrary.libPath + "Icons/icon" + number + ".png");
-		this.back_sprite = SpriteLibrary.createImage(SpriteLibrary.libPath + "Battlers/" + number + "b.png");
-		this.front_sprite = SpriteLibrary.createImage(SpriteLibrary.libPath + "Battlers/" + number + ".png");
+		this.party_icon = SpriteLibrary.createImage(SpriteLibrary.getLibPath() + "Icons/icon" + number + ".png");
+		this.back_sprite = SpriteLibrary.createImage(SpriteLibrary.getLibPath() + "Battlers/" + number + "b.png");
+		this.front_sprite = SpriteLibrary.createImage(SpriteLibrary.getLibPath() + "Battlers/" + number + ".png");
 	}
 
 	/**
