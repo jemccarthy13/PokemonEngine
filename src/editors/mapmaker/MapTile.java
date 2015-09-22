@@ -10,7 +10,13 @@ import java.awt.image.WritableRaster;
 
 import javax.swing.ImageIcon;
 
+/**
+ * Representation of a map tile
+ */
 public class MapTile {
+	/**
+	 * 
+	 */
 	public static boolean effects_enabled = true;
 	BufferedImage effectImage = null;
 	float effect_rScale;
@@ -30,6 +36,12 @@ public class MapTile {
 	String info = null;
 	Image image = null;
 
+	/**
+	 * @param paramInt
+	 * @param paramString1
+	 * @param paramString2
+	 * @param paramString3
+	 */
 	public MapTile(int paramInt, String paramString1, String paramString2, String paramString3) {
 		this.type = paramString3;
 		this.number = paramInt;
@@ -46,6 +58,13 @@ public class MapTile {
 		this.zoomHeight = this.imageHeight;
 	}
 
+	/**
+	 * @param paramInt
+	 * @param paramString1
+	 * @param paramString2
+	 * @param paramString3
+	 * @param paramString4
+	 */
 	public MapTile(int paramInt, String paramString1, String paramString2, String paramString3, String paramString4) {
 		this(paramInt, paramString1, paramString2, paramString3);
 		if (paramString4.indexOf(',') >= 0) {
@@ -54,6 +73,9 @@ public class MapTile {
 		this.info = paramString4;
 	}
 
+	/**
+	 * @param paramTile
+	 */
 	public MapTile(MapTile paramTile) {
 		this.number = paramTile.number;
 		this.type = paramTile.type;
@@ -66,6 +88,10 @@ public class MapTile {
 		return this.path;
 	}
 
+	/**
+	 * @param paramTile
+	 * @return whether or not the two MapTiles are equal
+	 */
 	public boolean equals(MapTile paramTile) {
 		if (paramTile == null) {
 			return false;
@@ -86,30 +112,51 @@ public class MapTile {
 		return false;
 	}
 
+	/**
+	 * 
+	 */
 	public MapTile() {
 		this.image = null;
 	}
 
+	/**
+	 * @return Image on the tile
+	 */
 	public Image getImage() {
 		return this.image;
 	}
 
+	/**
+	 * @return type of tile
+	 */
 	public String getType() {
 		return this.type;
 	}
 
+	/**
+	 * @return int number of map tile image
+	 */
 	public int getNumber() {
 		return this.number;
 	}
 
+	/**
+	 * @return string name of map tile
+	 */
 	public String getName() {
 		return this.name;
 	}
 
+	/**
+	 * @return String tile info
+	 */
 	public String getInfo() {
 		return this.info;
 	}
 
+	/**
+	 * @return String path
+	 */
 	public String getPath() {
 		return this.path;
 	}
@@ -173,6 +220,13 @@ public class MapTile {
 		}
 	}
 
+	/**
+	 * Render map tile graphics
+	 * 
+	 * @param paramGraphics
+	 * @param paramInt1
+	 * @param paramInt2
+	 */
 	public void render(Graphics paramGraphics, int paramInt1, int paramInt2) {
 		if ((effects_enabled) && (this.effectImage != null)) {
 			paramGraphics.drawImage(this.effectImage, paramInt1 - this.zoomWidth, paramInt2 - this.zoomHeight, null);

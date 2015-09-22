@@ -69,7 +69,7 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 	private boolean ignoreEffects = false;
 	private File openFile;
 	private Map map;
-	private Scene scene;
+	Scene scene;
 	private GraphicsBank gfx;
 	private JToolBar outerToolBar, innerToolBar;
 	private JButton newBtn, openBtn, saveBtn, clearBtn;

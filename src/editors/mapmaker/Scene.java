@@ -15,6 +15,9 @@ import java.util.StringTokenizer;
 
 import utilities.DebugUtility;
 
+/**
+ * A map Scene for editing
+ */
 public class Scene {
 	int offsetX = 0;
 	int offsetY = 0;
@@ -27,21 +30,35 @@ public class Scene {
 	ArrayList<?> sprites;
 	GraphicsBank tileset;
 
+	/**
+	 * @param paramMap
+	 * @param paramArrayList
+	 * @param paramGraphicsBank
+	 */
 	public Scene(Map paramMap, ArrayList<?> paramArrayList, GraphicsBank paramGraphicsBank) {
 		this.map = paramMap;
 		this.sprites = paramArrayList;
 		this.tileset = paramGraphicsBank;
 	}
 
+	/**
+	 * 
+	 */
 	public Scene() {
 		this.map = new Map(10, 10, 32, 32);
 		this.tileset = new GraphicsBank();
 	}
 
+	/**
+	 * @return the tileset being used
+	 */
 	public GraphicsBank getTileset() {
 		return this.tileset;
 	}
 
+	/**
+	 * @param paramGraphicsBank
+	 */
 	public void setTileset(GraphicsBank paramGraphicsBank) {
 		this.tileset = paramGraphicsBank;
 		this.map.setTileset(paramGraphicsBank);
@@ -113,6 +130,9 @@ public class Scene {
 		return localScene;
 	}
 
+	/**
+	 * @param paramFile
+	 */
 	public void saveScene(File paramFile) {
 		if (this.tileset.isUnsaved()) {
 			throw new RuntimeException("Tileset is unsaved. Cannot save the scene");
@@ -175,18 +195,38 @@ public class Scene {
 		this.map.render(paramGraphics, this.offsetX, this.offsetY);
 	}
 
+	/**
+	 * @param paramGraphics
+	 * @param paramInt1
+	 * @param paramInt2
+	 */
 	public void render(Graphics paramGraphics, int paramInt1, int paramInt2) {
 		this.map.render(paramGraphics, paramInt1, paramInt2);
 	}
 
+	/**
+	 * @param paramGraphics
+	 * @param paramCamera
+	 */
 	public void render(Graphics paramGraphics, Camera paramCamera) {
 		this.map.render(paramGraphics, paramCamera);
 	}
 
+	/**
+	 * @param paramGraphics
+	 * @param paramPoint
+	 * @param paramDimension
+	 */
 	public void render(Graphics paramGraphics, Point paramPoint, Dimension paramDimension) {
 		this.map.render(paramGraphics, paramPoint, paramDimension);
 	}
 
+	/**
+	 * @param paramGraphics
+	 * @param paramPoint
+	 * @param paramDimension
+	 * @param paramInt
+	 */
 	public void render(Graphics paramGraphics, Point paramPoint, Dimension paramDimension, int paramInt) {
 		this.map.render(paramGraphics, paramPoint, paramDimension, paramInt);
 	}
@@ -200,6 +240,9 @@ public class Scene {
 		this.offsetY = paramInt2;
 	}
 
+	/**
+	 * @param floatParams
+	 */
 	public void setEffect(float[] floatParams) {
 		this.effect_rScale = floatParams[0];
 		this.effect_gScale = floatParams[1];
@@ -210,6 +253,9 @@ public class Scene {
 		this.map.setZoom(floatParams[5]);
 	}
 
+	/**
+	 * @return the current Map
+	 */
 	public Map getMap() {
 		return this.map;
 	}

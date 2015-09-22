@@ -83,6 +83,18 @@ public class Map {
 		this.zoomHeight = height;
 	}
 
+	/**
+	 * Set a tile value at a speicied location
+	 * 
+	 * @param paramInt1
+	 *            - first location parameter
+	 * @param paramInt2
+	 *            - second location parameter
+	 * @param paramInt3
+	 *            - third location parameter
+	 * @param paramTile
+	 *            - the value to set at the specified location
+	 */
 	public void setTile(int paramInt1, int paramInt2, int paramInt3, MapTile paramTile) {
 		this.tiles[paramInt1][paramInt2][paramInt3] = paramTile;
 	}
@@ -92,11 +104,29 @@ public class Map {
 		this.zoomHeight = ((int) (this.tileHeight * paramFloat));
 	}
 
-	public void setViewSize(int paramInt1, int paramInt2) {
-		this.viewWidth = paramInt1;
-		this.viewHeight = paramInt2;
+	/**
+	 * Set the viewport size
+	 * 
+	 * @param width
+	 *            - the new width
+	 * @param height
+	 *            - the new height
+	 */
+	public void setViewSize(int width, int height) {
+		this.viewWidth = width;
+		this.viewHeight = height;
 	}
 
+	/**
+	 * Render graphics for a specific area
+	 * 
+	 * @param paramGraphics
+	 *            - the graphics to paint with
+	 * @param paramInt1
+	 *            - the x distance to render
+	 * @param paramInt2
+	 *            - the y distance to render
+	 */
 	public void render(Graphics paramGraphics, int paramInt1, int paramInt2) {
 		int i = Math.max(paramInt1 / this.zoomWidth, 0);
 		int j = Math.min((paramInt1 + this.viewWidth) / this.zoomWidth, this.tiles.length);
@@ -115,18 +145,36 @@ public class Map {
 		}
 	}
 
+	/**
+	 * Render graphics with a given camera position
+	 * 
+	 * @param paramGraphics
+	 *            - the graphics to paint
+	 * @param paramCamera
+	 *            - the camera position
+	 */
 	public void render(Graphics paramGraphics, Camera paramCamera) {
 		setViewSize(paramCamera.viewWidth, paramCamera.viewHeight);
 		render(paramGraphics, (int) (paramCamera.viewx - this.viewWidth / 2),
 				(int) (paramCamera.viewy - this.viewHeight / 2));
 	}
 
-	public void render(Graphics paramGraphics, Point paramPoint, Dimension paramDimension) {
+	/**
+	 * Render graphics with a given point and given boundary
+	 * 
+	 * @param paramGraphics
+	 *            - the graphics to paint
+	 * @param paramPoint
+	 *            - the point
+	 * @param renderBoundary
+	 *            - dimension
+	 */
+	public void render(Graphics paramGraphics, Point paramPoint, Dimension renderBoundary) {
 		double d1 = Math.max(paramPoint.getX() / this.zoomWidth, 0.0D);
-		double d2 = Math.min((paramPoint.getX() + paramDimension.getWidth()) / this.zoomWidth, this.tiles.length);
+		double d2 = Math.min((paramPoint.getX() + renderBoundary.getWidth()) / this.zoomWidth, this.tiles.length);
 
 		double d3 = Math.max(paramPoint.getY() / this.zoomHeight, 0.0D);
-		double d4 = Math.min((paramPoint.getY() + paramDimension.getHeight()) / this.zoomHeight, this.tiles[0].length);
+		double d4 = Math.min((paramPoint.getY() + renderBoundary.getHeight()) / this.zoomHeight, this.tiles[0].length);
 		for (int i = 0; i < 3; i++) {
 			for (int j = (int) d3; j < d4; j++) {
 				for (int k = (int) d1; k < d2; k++) {
@@ -139,13 +187,25 @@ public class Map {
 		}
 	}
 
-	public void render(Graphics paramGraphics, Point paramPoint, Dimension paramDimension, int paramInt) {
+	/**
+	 * Render graphics of a given point w/ a given boundary, for a layer
+	 * 
+	 * @param paramGraphics
+	 *            - the graphics to use
+	 * @param paramPoint
+	 *            - the point to start at
+	 * @param boundary
+	 *            - the boundary of the render
+	 * @param layer
+	 *            - the layer to look at
+	 */
+	public void render(Graphics paramGraphics, Point paramPoint, Dimension boundary, int layer) {
 		double d1 = Math.max(paramPoint.getX() / this.zoomWidth, 0.0D);
-		double d2 = Math.min((paramPoint.getX() + paramDimension.getWidth()) / this.zoomWidth, this.tiles.length);
+		double d2 = Math.min((paramPoint.getX() + boundary.getWidth()) / this.zoomWidth, this.tiles.length);
 
 		double d3 = Math.max(paramPoint.getY() / this.zoomHeight, 0.0D);
-		double d4 = Math.min((paramPoint.getY() + paramDimension.getHeight()) / this.zoomHeight, this.tiles[0].length);
-		int i = paramInt;
+		double d4 = Math.min((paramPoint.getY() + boundary.getHeight()) / this.zoomHeight, this.tiles[0].length);
+		int i = layer;
 		for (int j = (int) d3; j < d4; j++) {
 			for (int k = (int) d1; k < d2; k++) {
 				if (this.tiles[k][j][i] != null) {
@@ -156,30 +216,71 @@ public class Map {
 		}
 	}
 
+	/**
+	 * Get the width of the map
+	 * 
+	 * @return int width
+	 */
 	public int getWidth() {
 		return this.tiles.length;
 	}
 
+	/**
+	 * Get the height of the map
+	 * 
+	 * @return int height
+	 */
 	public int getHeight() {
 		return this.tiles[0].length;
 	}
 
+	/**
+	 * Get the width of a map tile
+	 * 
+	 * @return int tile width
+	 */
 	public int getTileWidth() {
 		return this.tileWidth;
 	}
 
+	/**
+	 * Get the height of a map tile
+	 * 
+	 * @return int tile height
+	 */
 	public int getTileHeight() {
 		return this.tileHeight;
 	}
 
+	/**
+	 * Get the zoom width of the map
+	 * 
+	 * @return int zoom width
+	 */
 	public int getZoomWidth() {
 		return this.zoomWidth;
 	}
 
+	/**
+	 * Get the zoom height of the map
+	 * 
+	 * @return int zoom height
+	 */
 	public int getZoomHeight() {
 		return this.zoomHeight;
 	}
 
+	/**
+	 * Get a tile from a given location in the tile map
+	 * 
+	 * @param paramInt1
+	 *            - first location point
+	 * @param paramInt2
+	 *            - second location point
+	 * @param paramInt3
+	 *            - third location point
+	 * @return a MapTile from the given location
+	 */
 	public MapTile getTile(int paramInt1, int paramInt2, int paramInt3) {
 		return this.tiles[paramInt1][paramInt2][paramInt3];
 	}
@@ -233,6 +334,12 @@ public class Map {
 		}
 	}
 
+	/**
+	 * Convert the map to an array of int for processing
+	 * 
+	 * @return int[][][] representing the map as numbered tiles for rendering by
+	 *         the game engine
+	 */
 	public int[][][] toIntArray() {
 		int[][][] arrayOfInt = new int[this.tiles.length][this.tiles[0].length][this.tiles[0][0].length];
 		for (int i = 0; i < this.tiles.length; i++) {
@@ -249,21 +356,35 @@ public class Map {
 		return arrayOfInt;
 	}
 
-	public void setAllTiles(int[][][] paramArrayOfInt, GraphicsBank paramGraphicsBank) {
-		this.gfx = paramGraphicsBank;
+	/**
+	 * Set all the current map's tiles to be the argument 'map's tiles
+	 * 
+	 * @param map
+	 *            - the int[][][] to copy data from
+	 * @param bank
+	 *            - the graphics bank to use for painting the map
+	 */
+	public void setAllTiles(int[][][] map, GraphicsBank bank) {
+		this.gfx = bank;
 		resize(this.tiles.length, this.tiles[0].length, this.tiles[0][0].length);
 		for (int i = 0; i < this.tiles.length; i++) {
 			for (int j = 0; j < this.tiles[0].length; j++) {
 				for (int k = 0; k < 3; k++) {
-					this.tiles[i][j][k] = paramGraphicsBank.getMapTile(paramArrayOfInt[i][j][k]);
+					this.tiles[i][j][k] = bank.getMapTile(map[i][j][k]);
 				}
 			}
 		}
 	}
 
-	public void setTileset(GraphicsBank paramGraphicsBank) {
+	/**
+	 * Create a new tileset from a graphics bank
+	 * 
+	 * @param bank
+	 *            - the graphics bank to uses
+	 */
+	public void setTileset(GraphicsBank bank) {
 		int[][][] arrayOfInt = toIntArray();
-		setAllTiles(arrayOfInt, paramGraphicsBank);
+		setAllTiles(arrayOfInt, bank);
 	}
 
 	/**

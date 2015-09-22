@@ -16,6 +16,9 @@ import javax.swing.JViewport;
 
 import utilities.DebugUtility;
 
+/**
+ * A component of the map editor
+ */
 public class MapComponent extends JComponent implements MouseListener, MouseMotionListener, MapChangeListener {
 
 	private static final long serialVersionUID = 5804948335596277170L;
@@ -42,6 +45,10 @@ public class MapComponent extends JComponent implements MouseListener, MouseMoti
 	int oldX = 0;
 	int oldY = 0;
 
+	/**
+	 * @param paramMap
+	 * @param paramMapEdit
+	 */
 	public MapComponent(Map paramMap, MapEdit paramMapEdit) {
 		this.map = paramMap;
 		this.mapEdit = paramMapEdit;
@@ -59,10 +66,16 @@ public class MapComponent extends JComponent implements MouseListener, MouseMoti
 		this.stateChanged = true;
 	}
 
+	/**
+	 * @param paramJViewport
+	 */
 	public void setViewport(JViewport paramJViewport) {
 		this.viewport = paramJViewport;
 	}
 
+	/**
+	 * @param paramMap
+	 */
 	public synchronized void setMap(Map paramMap) {
 		this.map = paramMap;
 
@@ -87,6 +100,9 @@ public class MapComponent extends JComponent implements MouseListener, MouseMoti
 		repaint();
 	}
 
+	/**
+	 * 
+	 */
 	public synchronized void paintComponent(Graphics paramGraphics) {
 		paramGraphics.setColor(Color.white);
 		paramGraphics.fillRect(0, 0, this.width * this.tileWidth, this.height * this.tileHeight);
@@ -114,6 +130,10 @@ public class MapComponent extends JComponent implements MouseListener, MouseMoti
 				* this.tileHeight);
 	}
 
+	/**
+	 * @param paramInt1
+	 * @param paramInt2
+	 */
 	public void mapClicked(int paramInt1, int paramInt2) {
 		paramInt1 /= this.tileWidth;
 		paramInt2 /= this.tileHeight;
@@ -131,6 +151,13 @@ public class MapComponent extends JComponent implements MouseListener, MouseMoti
 		}
 	}
 
+	/**
+	 * @param paramInt1
+	 * @param paramInt2
+	 * @param paramInt3
+	 * @param paramTile1
+	 * @param paramTile2
+	 */
 	public void recursiveFlood(int paramInt1, int paramInt2, int paramInt3, MapTile paramTile1, MapTile paramTile2) {
 		if ((paramInt1 < 0) || (paramInt1 > this.map.getWidth() - 1) || (paramInt2 < 0)
 				|| (paramInt2 > this.map.getHeight() - 1)) {
@@ -164,16 +191,30 @@ public class MapComponent extends JComponent implements MouseListener, MouseMoti
 		}
 	}
 
-	public void setActiveLayer(int paramInt) {
-		if ((paramInt >= 0) && (paramInt < 3)) {
-			this.activeLayer = paramInt;
+	/**
+	 * Set the currently selected layers
+	 * 
+	 * @param newLayer
+	 *            - the layer to set active layer to
+	 */
+	public void setActiveLayer(int newLayer) {
+		if ((newLayer >= 0) && (newLayer < 3)) {
+			this.activeLayer = newLayer;
 		}
 	}
 
+	/**
+	 * Get the currently selected layer
+	 * 
+	 * @return int layer number
+	 */
 	public int getActiveLayer() {
 		return this.activeLayer;
 	}
 
+	/**
+	 * Method that is fired when a mouse pressed event occurs
+	 */
 	public void mousePressed(MouseEvent paramMouseEvent) {
 		if (this.stateChanged) {
 			saveUndoState();
@@ -193,6 +234,9 @@ public class MapComponent extends JComponent implements MouseListener, MouseMoti
 		}
 	}
 
+	/**
+	 * Method that is fired when a mouse released event occurs
+	 */
 	public void mouseReleased(MouseEvent paramMouseEvent) {
 		switch (paramMouseEvent.getButton()) {
 		case 1:
@@ -214,8 +258,15 @@ public class MapComponent extends JComponent implements MouseListener, MouseMoti
 		}
 	}
 
+	/**
+	 * Method that is fired when a mouse entered event occurs
+	 */
 	public void mouseEntered(MouseEvent paramMouseEvent) {}
 
+	/**
+	 * Method that is fired when a mouse dragged event occurs This paints all
+	 * tiles touched with the currently selected tile
+	 */
 	public void mouseDragged(MouseEvent paramMouseEvent) {
 		if ((this.btn1Pressed) && (this.mapEdit.getPaintMode() != 1)) {
 			mapClicked(paramMouseEvent.getX(), paramMouseEvent.getY());
@@ -232,20 +283,38 @@ public class MapComponent extends JComponent implements MouseListener, MouseMoti
 		}
 	}
 
+	/**
+	 * Method that is fired when a mouse exited event occurs
+	 */
 	public void mouseExited(MouseEvent paramMouseEvent) {}
 
+	/**
+	 * Method that is fired when a mouse clicked event occurs
+	 */
 	public void mouseClicked(MouseEvent paramMouseEvent) {}
 
+	/**
+	 * Method that is fired when a mouse moved event occurs
+	 */
 	public void mouseMoved(MouseEvent paramMouseEvent) {}
 
+	/**
+	 * @param paramBoolean
+	 */
 	public void setGrid(boolean paramBoolean) {
 		this.showGrid = paramBoolean;
 	}
 
+	/**
+	 * @param paramBoolean
+	 */
 	public void setHideLayers(boolean paramBoolean) {
 		this.hideLayers = paramBoolean;
 	}
 
+	/**
+	 * 
+	 */
 	public void mapChanging(boolean paramBoolean) {
 		if (!paramBoolean) {
 			saveUndoState();
@@ -254,10 +323,16 @@ public class MapComponent extends JComponent implements MouseListener, MouseMoti
 		}
 	}
 
+	/**
+	 * 
+	 */
 	public void mapChanged(boolean paramBoolean) {
 		repaint();
 	}
 
+	/**
+	 * 
+	 */
 	public void clearUndoInfo() {
 		this.redoStack.clear();
 		this.undoStack.clear();
