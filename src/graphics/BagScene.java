@@ -1,8 +1,12 @@
 package graphics;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
+import com.sun.glass.events.KeyEvent;
+
 import controller.GameController;
+import controller.GameKeyListener;
 
 /**
  * A representation of a title scene
@@ -19,28 +23,33 @@ public class BagScene implements Scene {
 	 */
 	private BagScene() {
 		Painter.getInstance().register(this);
+		GameKeyListener.getInstance().register(this);
 	};
 
 	/**
 	 * The maps will use this ID to reference the Scene objects
 	 */
-	public static int ID = 1;
+	public int ID = 9;
 
 	/**
-	 * Render the title scene.
+	 * Render the bag scene.
 	 */
 	@Override
 	public void render(Graphics g, GameController gameControl) {
-		g.drawImage(SpriteLibrary.getImage("Title"), 0, 0, null);
-		g.drawImage(SpriteLibrary.getImage("Start"), 0, 260, null);
+		g.setColor(Color.BLACK);
+		g.drawImage(SpriteLibrary.getImage("BagScreen"), 0, 0, null);
 	}
 
 	/**
-	 * Handle a key press at the title scene
+	 * Handle a key press at the bag scene
+	 * 
+	 * TODO implement item selection / use logic and rendering
 	 */
 	@Override
 	public void keyPress(int keyCode, GameController control) {
-		// TODO Auto-generated method stub
+		if (keyCode == KeyEvent.VK_X || keyCode == KeyEvent.VK_Z) {
+			control.setScreen(MenuScene.instance);
+		}
 	}
 
 	/**
@@ -48,7 +57,7 @@ public class BagScene implements Scene {
 	 */
 	@Override
 	public Integer getId() {
-		return ID;
+		return this.ID;
 	}
 
 }

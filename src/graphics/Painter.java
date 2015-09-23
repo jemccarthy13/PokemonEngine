@@ -86,11 +86,10 @@ public class Painter {
 			instance.scenePainters.get(7).render(g, game);
 			break;
 		case 8:
-			// paintPartyScreen(g);
+			instance.scenePainters.get(8).render(g, game);
 			break;
 		case 9:
-			instance.scenePainters.get(69).render(g, game);
-			paintPauseMenu(g);
+			instance.scenePainters.get(9).render(g, game);
 			break;
 		case 10:
 			// paintPartyScreen(g);
@@ -298,17 +297,6 @@ public class Painter {
 	 */
 	private static void paintPokedexScreen(Graphics g) {
 		g.drawImage(SpriteLibrary.getImage("PokedexBG"), 0, 0, null);
-	}
-
-	/**
-	 * Paint components of the pause menu
-	 * 
-	 * @param g
-	 *            - the graphics to paint
-	 */
-	private static void paintPauseMenu(Graphics g) {
-		g.drawImage(SpriteLibrary.getImage("Menu"), 0, 0, null);
-		g.drawImage(SpriteLibrary.getImage(ARROW), 335, 20 + 32 * game.getCurrentSelection(), null);
 	}
 
 	/**

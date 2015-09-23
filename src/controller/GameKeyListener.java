@@ -138,7 +138,11 @@ public class GameKeyListener implements KeyListener, Serializable {
 				actionPerformers.get(7).keyPress(keyCode, gameControl);
 				break;
 			case 8:
+				actionPerformers.get(8).keyPress(keyCode, gameControl);
+				break;
 			case 9:
+				actionPerformers.get(9).keyPress(keyCode, gameControl);
+				break;
 			case 10:
 			case 11:
 				handleMenuEvent(keyCode);
