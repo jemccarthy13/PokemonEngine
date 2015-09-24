@@ -90,7 +90,7 @@ public class GameData implements Serializable {
 	/**
 	 * Stored as a map so each SCREEN can store it's own current selection
 	 */
-	public HashMap<Scene, Integer> currentSelection = new HashMap<Scene, Integer>();
+	public HashMap<Scene, Coordinate> currentSelection = new HashMap<Scene, Coordinate>();
 
 	/**
 	 * Representation of the map images

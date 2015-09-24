@@ -62,10 +62,10 @@ public class PokemonScene implements Scene {
 			control.setScreen(MenuScene.instance);
 		}
 		if (keyCode == KeyEvent.VK_UP) {
-			control.decrementSelection();
+			control.decrementRowSelection();
 		}
 		if (keyCode == KeyEvent.VK_DOWN) {
-			control.incrementSelection();
+			control.incrementRowSelection();
 		}
 	}
 

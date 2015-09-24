@@ -39,7 +39,7 @@ public class OptionScene implements Scene {
 	public void render(Graphics g, GameController gameControl) {
 		String imageName = gameControl.isSoundOn() ? "OptionBG_SoundOn" : "OptionBG_SoundOff";
 		g.drawImage(SpriteLibrary.getImage(imageName), 0, 0, null);
-		g.drawImage(SpriteLibrary.getImage("Arrow"), 22, 85 + 32 * gameControl.getCurrentSelection(), null);
+		g.drawImage(SpriteLibrary.getImage("Arrow"), 22, 85 + 32 * gameControl.getCurrentRowSelection(), null);
 	}
 
 	/**
@@ -47,17 +47,17 @@ public class OptionScene implements Scene {
 	 */
 	@Override
 	public void keyPress(int keyCode, GameController control) {
-		if (keyCode == KeyEvent.VK_UP) {
-			control.decrementSelection();
+		if (keyCode == KeyEvent.VK_UP && control.getCurrentRowSelection() > 0) {
+			control.decrementRowSelection();
 		}
-		if (keyCode == KeyEvent.VK_DOWN) {
-			control.incrementSelection();
+		if (keyCode == KeyEvent.VK_DOWN && control.getCurrentRowSelection() < 6) {
+			control.incrementRowSelection();
 		}
 		if (keyCode == KeyEvent.VK_X) {
 			control.setScreen(MenuScene.instance);
 		}
 		if (keyCode == KeyEvent.VK_Z) {
-			if (control.getCurrentSelection() == 5) {
+			if (control.getCurrentRowSelection() == 5) {
 				control.toggleSound();
 			}
 		}

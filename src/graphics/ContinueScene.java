@@ -37,7 +37,7 @@ public class ContinueScene implements Scene {
 	@Override
 	public void render(Graphics g, GameController gameControl) {
 		g.drawImage(SpriteLibrary.getImage("Continue"), 0, 0, null);
-		g.drawImage(SpriteLibrary.getImage("Arrow"), 13, 20 + 32 * gameControl.getCurrentSelection(), null);
+		g.drawImage(SpriteLibrary.getImage("Arrow"), 13, 20 + 32 * gameControl.getCurrentRowSelection(), null);
 	}
 
 	/**
@@ -47,16 +47,16 @@ public class ContinueScene implements Scene {
 	public void keyPress(int keyCode, GameController gameControl) {
 		// continue screen choice select
 		if (keyCode == KeyEvent.VK_UP) {
-			if (gameControl.getCurrentSelection() > 0)
-				gameControl.decrementSelection();
+			if (gameControl.getCurrentRowSelection() > 0)
+				gameControl.decrementRowSelection();
 		} else if (keyCode == KeyEvent.VK_DOWN) {
-			if (gameControl.getCurrentSelection() < 2)
-				gameControl.incrementSelection();
+			if (gameControl.getCurrentRowSelection() < 2)
+				gameControl.incrementRowSelection();
 		}
 		if (keyCode == KeyEvent.VK_Z) {
-			if (gameControl.getCurrentSelection() == 0) {
+			if (gameControl.getCurrentRowSelection() == 0) {
 				gameControl.startGame(true);
-			} else if (gameControl.getCurrentSelection() == 1) {
+			} else if (gameControl.getCurrentRowSelection() == 1) {
 				gameControl.startGame(false);
 			}
 		}

@@ -53,7 +53,7 @@ public class MenuScene implements Scene {
 	public void render(Graphics g, GameController gameControl) {
 		WorldScene.instance.render(g, gameControl);
 		g.drawImage(SpriteLibrary.getImage("Menu"), 0, 0, null);
-		g.drawImage(SpriteLibrary.getImage("Arrow"), 335, 20 + 32 * gameControl.getCurrentSelection(), null);
+		g.drawImage(SpriteLibrary.getImage("Arrow"), 335, 20 + 32 * gameControl.getCurrentRowSelection(), null);
 	}
 
 	/**
@@ -63,17 +63,17 @@ public class MenuScene implements Scene {
 	public void keyPress(int keyCode, GameController control) {
 		if (keyCode == KeyEvent.VK_X)
 			control.setScreen(WorldScene.instance);
-		if (keyCode == KeyEvent.VK_UP) {
-			control.decrementSelection();
+		if (keyCode == KeyEvent.VK_UP && control.getCurrentRowSelection() > 0) {
+			control.decrementRowSelection();
 		}
-		if (keyCode == KeyEvent.VK_DOWN) {
-			control.incrementSelection();
+		if (keyCode == KeyEvent.VK_DOWN && control.getCurrentRowSelection() < 7) {
+			control.incrementRowSelection();
 		}
 		if (keyCode == KeyEvent.VK_ENTER) {
 			control.setScreen(WorldScene.instance);
 		}
 		if (keyCode == KeyEvent.VK_Z) {
-			control.setScreen(menuSelections.get(control.getCurrentSelection()));
+			control.setScreen(menuSelections.get(control.getCurrentRowSelection()));
 		}
 	}
 

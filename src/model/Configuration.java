@@ -1,14 +1,6 @@
 package model;
 
-import graphics.ContinueScene;
-import graphics.MenuScene;
-import graphics.OptionScene;
-import graphics.PokegearScene;
-import graphics.SaveScene;
-import graphics.Scene;
-
 import java.io.Serializable;
-import java.util.HashMap;
 
 /**
  * Stores the configuration of the game
@@ -98,20 +90,9 @@ public class Configuration implements Serializable {
 	}
 
 	/**
-	 * The number of options at each screen
-	 */
-	public HashMap<Scene, Integer> numSelections = new HashMap<Scene, Integer>();
-
-	/**
 	 * Default constructor initializes the number of selections at each screen
 	 */
-	public Configuration() {
-		numSelections.put(ContinueScene.instance, 3);
-		numSelections.put(SaveScene.instance, 2);
-		numSelections.put(OptionScene.instance, 6);
-		numSelections.put(MenuScene.instance, 8);
-		numSelections.put(PokegearScene.instance, 4);
-	}
+	public Configuration() {}
 
 	/**
 	 * Convert game information to a string

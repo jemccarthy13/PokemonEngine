@@ -91,17 +91,20 @@ public class NameScene implements Scene {
 				gameControl.addSelectedChar();
 			}
 		}
-		if (keyCode == KeyEvent.VK_DOWN && gameControl.getNameRowSelection() < 5) {
-			gameControl.incrNameRowSelection();
-			if (gameControl.getNameRowSelection() == 5)
-				gameControl.setNameColSelection(0);
-		} else if (keyCode == KeyEvent.VK_UP && gameControl.getNameRowSelection() > 0) {
+		// TODO cleanup
+		if (keyCode == KeyEvent.VK_UP && gameControl.getNameRowSelection() > 0) {
 			gameControl.decrNameRowSelection();
 		} else if (keyCode == KeyEvent.VK_LEFT && gameControl.getNameColSelection() > 0) {
 			gameControl.decrNameColSelection();
 		} else if (keyCode == KeyEvent.VK_RIGHT && gameControl.getNameRowSelection() == 5
 				&& gameControl.getNameColSelection() < 1) {
 			gameControl.incrNameColSelection();
+		}
+
+		if (keyCode == KeyEvent.VK_DOWN && gameControl.getNameRowSelection() < 5) {
+			gameControl.incrNameRowSelection();
+			if (gameControl.getNameRowSelection() == 5)
+				gameControl.setNameColSelection(0);
 		} else if (keyCode == KeyEvent.VK_RIGHT && gameControl.getNameRowSelection() < 5
 				&& gameControl.getNameColSelection() < 5) {
 			gameControl.incrNameColSelection();

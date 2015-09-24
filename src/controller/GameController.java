@@ -58,9 +58,6 @@ public class GameController implements Serializable {
 
 	private static final long serialVersionUID = 968834933407220662L;
 
-	// configuration details
-	private Configuration config = new Configuration();
-
 	// handles any audio
 	private AudioLibrary audio = new AudioLibrary();
 
@@ -978,15 +975,27 @@ public class GameController implements Serializable {
 	}
 
 	/**
+	 * Get the current row selection for the current screen
+	 * 
+	 * @return int current selection for this screen
+	 */
+	public int getCurrentRowSelection() {
+		if (!gData.currentSelection.containsKey(getScene())) {
+			setCurrentSelection(new Coordinate(0, 0));
+		}
+		return gData.currentSelection.get(getScene()).getX();
+	}
+
+	/**
 	 * Get the selection for the current screen
 	 * 
 	 * @return int current selection for this screen
 	 */
-	public int getCurrentSelection() {
+	public int getCurrentColSelection() {
 		if (!gData.currentSelection.containsKey(getScene())) {
-			setCurrentSelection(0);
+			setCurrentSelection(new Coordinate(0, 0));
 		}
-		return gData.currentSelection.get(getScene());
+		return gData.currentSelection.get(getScene()).getY();
 	}
 
 	/**
@@ -1017,42 +1026,35 @@ public class GameController implements Serializable {
 	 * @param i
 	 *            - the new selection index
 	 */
-	public void setCurrentSelection(int i) {
+	public void setCurrentSelection(Coordinate i) {
 		if (gData.currentSelection.containsKey(getScene())) {
 			gData.currentSelection.replace(getScene(), i);
 		} else {
-			gData.currentSelection.put(getScene(), 0);
+			gData.currentSelection.put(getScene(), new Coordinate(0, 0));
 		}
 	}
 
 	/**
-	 * Decrement the selection at the current screen
+	 * Decrement the row selection at the current screen
 	 */
-	public void decrementSelection() {
-		if (gData.currentSelection.containsKey(getScene())) {
-			int curSel = gData.currentSelection.get(getScene());
-			if (getCurrentSelection() > 0 && getScene() != WorldScene.instance) {
-				setCurrentSelection(curSel - 1);
-			}
-		} else {
-			setCurrentSelection(0);
-		}
+	public void decrementRowSelection() {
+		setCurrentSelection(getCurrentSelection().move(DIR.WEST));
 	}
 
 	/**
 	 * Increment the selection at the current screen
 	 */
-	public void incrementSelection() {
-		if (gData.currentSelection.containsKey(getScene())) {
-			int curSel = gData.currentSelection.get(getScene());
-			if (config.numSelections.containsKey(getScene())) {
-				if (getCurrentSelection() < config.numSelections.get(getScene()) - 1) {
-					setCurrentSelection(curSel + 1);
-				}
-			}
-		} else {
-			setCurrentSelection(1);
-		}
+	public void incrementRowSelection() {
+		setCurrentSelection(getCurrentSelection().move(DIR.EAST));
+	}
+
+	/**
+	 * Retrieve the current selection
+	 * 
+	 * @return the current selection
+	 */
+	public Coordinate getCurrentSelection() {
+		return gData.currentSelection.get(getScene());
 	}
 
 	/**

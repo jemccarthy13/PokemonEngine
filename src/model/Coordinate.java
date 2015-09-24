@@ -46,7 +46,7 @@ public class Coordinate implements Serializable {
 	/**
 	 * Access the x value of the coordinate
 	 * 
-	 * @return x value
+	 * @return x value (row value)
 	 */
 	public int getX() {
 		return this.x;
@@ -55,7 +55,7 @@ public class Coordinate implements Serializable {
 	/**
 	 * Access the y value of the coordinate
 	 * 
-	 * @return y value
+	 * @return y value (column value)
 	 */
 	public int getY() {
 		return this.y;
