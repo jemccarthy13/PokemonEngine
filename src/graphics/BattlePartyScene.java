@@ -1,10 +1,8 @@
 package graphics;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 
-import party.Party;
 import controller.GameController;
 import controller.GameKeyListener;
 
@@ -13,6 +11,7 @@ import controller.GameKeyListener;
  */
 public class BattlePartyScene implements Scene {
 
+	private static final long serialVersionUID = 4495645750145027698L;
 	/**
 	 * Singleton instance
 	 */
@@ -38,20 +37,7 @@ public class BattlePartyScene implements Scene {
 	 */
 	@Override
 	public void render(Graphics g, GameController gameControl) {
-		g.setColor(Color.BLACK);
-		g.drawImage(SpriteLibrary.getImage(partyBackground), 0, 0, null);
-		g.drawImage(SpriteLibrary.getImage(partyFirstMember), 40, 20, null);
-		g.drawImage(SpriteLibrary.getImage(partyMember), 190, 20, null);
-		g.drawImage(SpriteLibrary.getImage(partyMember), 190, 70, null);
-		g.drawImage(SpriteLibrary.getImage(partyMember), 190, 120, null);
-		g.drawImage(SpriteLibrary.getImage(partyMember), 190, 170, null);
-		g.drawImage(SpriteLibrary.getImage(partyMember), 190, 220, null);
-
-		Party playerPokemon = gameControl.getPlayer().getParty();
-		if (playerPokemon.size() > 0) {
-			g.drawImage((playerPokemon.get(0)).getIcon().getImage(), 75, 40, null);
-			g.drawString((playerPokemon.get(0)).getName(), 65, 130);
-		}
+		PokemonScene.instance.render(g, gameControl);
 	}
 
 	/**

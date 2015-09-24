@@ -13,6 +13,7 @@ import controller.GameKeyListener;
  */
 public class BagScene implements Scene {
 
+	private static final long serialVersionUID = 6315775737915830498L;
 	/**
 	 * Singleton instance
 	 */
@@ -47,7 +48,7 @@ public class BagScene implements Scene {
 	 */
 	@Override
 	public void keyPress(int keyCode, GameController control) {
-		if (keyCode == KeyEvent.VK_X || keyCode == KeyEvent.VK_Z) {
+		if (keyCode == KeyEvent.VK_X) {
 			control.setScreen(MenuScene.instance);
 		}
 	}

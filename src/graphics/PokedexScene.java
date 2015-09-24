@@ -1,14 +1,17 @@
 package graphics;
 
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 
 import controller.GameController;
+import controller.GameKeyListener;
 
 /**
  * A representation of a title scene
  */
 public class PokedexScene implements Scene {
 
+	private static final long serialVersionUID = 5686250415092668247L;
 	/**
 	 * Singleton instance
 	 */
@@ -19,20 +22,20 @@ public class PokedexScene implements Scene {
 	 */
 	private PokedexScene() {
 		Painter.getInstance().register(this);
+		GameKeyListener.getInstance().register(this);
 	};
 
 	/**
 	 * The maps will use this ID to reference the Scene objects
 	 */
-	public static int ID = 0;
+	public int ID = 11;
 
 	/**
 	 * Render the title scene.
 	 */
 	@Override
 	public void render(Graphics g, GameController gameControl) {
-		g.drawImage(SpriteLibrary.getImage("Title"), 0, 0, null);
-		g.drawImage(SpriteLibrary.getImage("Start"), 0, 260, null);
+		g.drawImage(SpriteLibrary.getImage("PokedexBG"), 0, 0, null);
 	}
 
 	/**
@@ -40,7 +43,15 @@ public class PokedexScene implements Scene {
 	 */
 	@Override
 	public void keyPress(int keyCode, GameController control) {
-		// TODO Auto-generated method stub
+		if (keyCode == KeyEvent.VK_X) {
+			control.setScreen(MenuScene.instance);
+		}
+		if (keyCode == KeyEvent.VK_UP) {
+			control.decrementSelection();
+		}
+		if (keyCode == KeyEvent.VK_DOWN) {
+			control.incrementSelection();
+		}
 	}
 
 	/**
@@ -48,7 +59,7 @@ public class PokedexScene implements Scene {
 	 */
 	@Override
 	public Integer getId() {
-		return ID;
+		return this.ID;
 	}
 
 }

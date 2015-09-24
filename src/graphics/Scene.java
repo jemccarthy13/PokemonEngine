@@ -1,6 +1,7 @@
 package graphics;
 
 import java.awt.Graphics;
+import java.io.Serializable;
 
 import controller.GameController;
 
@@ -11,7 +12,7 @@ import controller.GameController;
  * The Painter pulls Scenes out of the registration map and calls the render
  * method to paint the graphics.
  */
-public interface Scene {
+public interface Scene extends Serializable {
 
 	/**
 	 * String locator for the party first member image

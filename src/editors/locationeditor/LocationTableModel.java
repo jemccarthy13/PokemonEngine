@@ -216,42 +216,6 @@ public class LocationTableModel extends AbstractTableModel {
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		LocationData obj = (LocationData) objects.get(rowIndex);
-
-		Object returned;
-		switch (columnIndex) {
-		case 0:
-			returned = obj.name;
-			break;
-		case 1:
-			returned = obj.canFlyOutOf;
-			break;
-		case 2:
-			returned = obj.boundaries.get(DIR.NORTH);
-			break;
-		case 3:
-			returned = obj.boundaries.get(DIR.EAST);
-			break;
-		case 4:
-			returned = obj.boundaries.get(DIR.WEST);
-			break;
-		case 5:
-			returned = obj.boundaries.get(DIR.SOUTH);
-			break;
-		case 6:
-			returned = obj.pokemon;
-			break;
-		case 7:
-			returned = obj.probabilities;
-			break;
-		case 8:
-			returned = obj.minLevels;
-			break;
-		case 9:
-			returned = obj.maxLevels;
-			break;
-		default:
-			throw new IndexOutOfBoundsException();
-		}
-		return returned;
+		return obj.toArray()[columnIndex];
 	}
 }

@@ -1,14 +1,19 @@
 package graphics;
 
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 
+import trainers.Player;
 import controller.GameController;
+import controller.GameKeyListener;
 
 /**
  * A representation of a title scene
  */
 public class SaveScene implements Scene {
 
+	private static final long serialVersionUID = 7495740703088409291L;
 	/**
 	 * Singleton instance
 	 */
@@ -19,20 +24,36 @@ public class SaveScene implements Scene {
 	 */
 	private SaveScene() {
 		Painter.getInstance().register(this);
+		GameKeyListener.getInstance().register(this);
 	};
 
 	/**
 	 * The maps will use this ID to reference the Scene objects
 	 */
-	public static int ID = 0;
+	public int ID = 15;
 
 	/**
 	 * Render the title scene.
 	 */
 	@Override
 	public void render(Graphics g, GameController gameControl) {
-		g.drawImage(SpriteLibrary.getImage("Title"), 0, 0, null);
-		g.drawImage(SpriteLibrary.getImage("Start"), 0, 260, null);
+
+		WorldScene.instance.render(g, gameControl);
+
+		g.setColor(Color.BLACK);
+
+		Player player = gameControl.getPlayer();
+
+		g.drawImage(SpriteLibrary.getImage("Save"), 0, 0, null);
+		g.drawString(player.getName(), 100, 68);
+		g.drawString(((Integer) player.getBadges()).toString(), 100, 101);
+		g.drawString("1", 110, 134);
+		g.drawString(gameControl.formatTime(), 76, 166);
+		if (gameControl.getCurrentSelection() == 0) {
+			g.drawImage(SpriteLibrary.getImage("Arrow"), 394, 148, null);
+		} else if (gameControl.getCurrentSelection() == 1) {
+			g.drawImage(SpriteLibrary.getImage("Arrow"), 394, 180, null);
+		}
 	}
 
 	/**
@@ -40,7 +61,22 @@ public class SaveScene implements Scene {
 	 */
 	@Override
 	public void keyPress(int keyCode, GameController control) {
-		// TODO Auto-generated method stub
+		if (keyCode == KeyEvent.VK_X) {
+			control.setScreen(MenuScene.instance);
+		}
+		if (keyCode == KeyEvent.VK_UP) {
+			control.decrementSelection();
+		}
+		if (keyCode == KeyEvent.VK_DOWN) {
+			control.incrementSelection();
+		}
+		if (keyCode == KeyEvent.VK_Z) {
+			if (control.getCurrentSelection() == 0) {
+				control.saveGame();
+				control.setCurrentMessage("Game saved successfully!");
+			}
+			control.setScreen(MenuScene.instance);
+		}
 	}
 
 	/**
@@ -48,7 +84,7 @@ public class SaveScene implements Scene {
 	 */
 	@Override
 	public Integer getId() {
-		return ID;
+		return this.ID;
 	}
 
 }

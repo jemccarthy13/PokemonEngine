@@ -9,6 +9,7 @@ import controller.GameController;
  */
 public class MessageScene implements Scene {
 
+	private static final long serialVersionUID = 6187821792280306195L;
 	/**
 	 * Singleton instance
 	 */

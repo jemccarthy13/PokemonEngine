@@ -7,20 +7,23 @@ import java.util.HashMap;
 import party.Battler;
 import party.Battler.STAT;
 import tiles.Tile;
-import trainers.Player;
 import utilities.BattleEngine;
 import controller.GameController;
 
 /**
- * Paints all grahpics
+ * One central location where all painting objects can register to be
+ * 'rendered'.
+ * 
+ * The "Scenes" of the game register with the Painter, and when an update is
+ * requested the Painter will call the Scene's "render" method based on the
+ * game's current scene state.
  */
 public class Painter {
 
-	private static String ARROW = "Arrow";
-
-	static GameController game;
-	static GamePanel gamePanel;
-
+	/**
+	 * The data structure that stores all the Scenes that know how to render
+	 * game graphics
+	 */
 	HashMap<Integer, Scene> scenePainters = new HashMap<Integer, Scene>();
 
 	/**
@@ -57,76 +60,17 @@ public class Painter {
 	 */
 	public static void paintComponent(Graphics g, GamePanel panel) {
 
-		game = panel.gameController;
-		gamePanel = panel;
+		GameController control = panel.gameController;
 
-		switch (game.getScene().getId()) {
-		case 0:
-			instance.scenePainters.get(0).render(g, game);
-			break;
-		case 1:
-			instance.scenePainters.get(1).render(g, game);
-			break;
-		case 2:
-			instance.scenePainters.get(2).render(g, game);
-			break;
-		case 3:
-			instance.scenePainters.get(3).render(g, game);
-			break;
-		case 4:
-			instance.scenePainters.get(4).render(g, game);
-			break;
-		case 5:
-			instance.scenePainters.get(5).render(g, game);
-			break;
-		case 6:
-			instance.scenePainters.get(6).render(g, game);
-			break;
-		case 7:
-			instance.scenePainters.get(7).render(g, game);
-			break;
-		case 8:
-			instance.scenePainters.get(8).render(g, game);
-			break;
-		case 9:
-			instance.scenePainters.get(9).render(g, game);
-			break;
-		case 10:
-			// paintPartyScreen(g);
-			break;
-		case 11:
-			paintPokedexScreen(g);
-			break;
-		case 12:
-			// instance.scenePainters.get(6).render(g, game);
-			// paintBagScreen(g);
-			break;
-		case 13:
-			paintPokegearScreen(g);
-			break;
-		case 14:
-			paintPlayerCard(g);
-			break;
-		case 15:
-			paintOptionScreen(g);
-			break;
-		case 16:
-			instance.scenePainters.get(69).render(g, game);
-			paintSaveMenu(g);
-			break;
-		case 17:
-			instance.scenePainters.get(69).render(g, game);
-			paintConversation(g, game);
-		case 18:
-			instance.scenePainters.get(69).render(g, game);
-			break;
-		default:
-			instance.scenePainters.get(69).render(g, game);
-			break;
-		}
+		// based on the current scene, render the appropriate images
+		Integer sceneToRender = control.getScene().getId();
+		instance.scenePainters.get(sceneToRender).render(g, control);
 
-		if (game.getScene() != NameScene.instance) {
-			String[] message = game.getCurrentMessage();
+		// At any scene other than the name screen, message boxes
+		// will interrupt any underlying functionality and take priority until
+		// they are dismissed
+		if (control.getScene() != NameScene.instance) {
+			String[] message = control.getCurrentMessage();
 			if (message != null) {
 				paintMessageBox(g, message);
 			}
@@ -190,128 +134,6 @@ public class Painter {
 			g.drawString(String.valueOf(enemyHealth), 70, 45);
 			g.drawString(String.valueOf(enemyPokemon.getMaxStat(STAT.HP)), 112, 45);
 		}
-	}
-
-	/**
-	 * Paint components of the intro screen
-	 * 
-	 * TODO paint options based on current options
-	 * 
-	 * @param g
-	 *            - the graphics to paint
-	 */
-	private static void paintOptionScreen(Graphics g) {
-		String imageName = game.isSoundOn() ? "OptionBG_SoundOn" : "OptionBG_SoundOff";
-		g.drawImage(SpriteLibrary.getImage(imageName), 0, 0, null);
-		g.drawImage(SpriteLibrary.getImage(ARROW), 22, 85 + 32 * game.getCurrentSelection(), null);
-	}
-
-	/**
-	 * Paint components of the save menu
-	 * 
-	 * @param g
-	 *            - the graphics to paint
-	 */
-	private static void paintSaveMenu(Graphics g) {
-		g.setColor(Color.BLACK);
-
-		Player player = game.getPlayer();
-
-		g.drawImage(SpriteLibrary.getImage("Save"), 0, 0, null);
-		g.drawString(player.getName(), 100, 68);
-		g.drawString(((Integer) player.getBadges()).toString(), 100, 101);
-		g.drawString("1", 110, 134);
-		g.drawString(game.formatTime(), 76, 166);
-		if (game.getCurrentSelection() == 0) {
-			g.drawImage(SpriteLibrary.getImage(ARROW), 394, 148, null);
-		} else if (game.getCurrentSelection() == 1) {
-			g.drawImage(SpriteLibrary.getImage(ARROW), 394, 180, null);
-		}
-	}
-
-	/**
-	 * Pad a given string with appropriate spacing
-	 * 
-	 * @param toBePadded
-	 *            - the string to be padded
-	 * @return string + 12-len(string) spaces
-	 */
-	public static String getPadding(String toBePadded) {
-		int numSpaces = 12 - toBePadded.length();
-		String retStr = "";
-		for (int x = 0; x < numSpaces; x++) {
-			retStr += " ";
-		}
-		return retStr;
-	}
-
-	/**
-	 * Paint components of the player card
-	 * 
-	 * @param g
-	 *            - the graphics to paint
-	 */
-	private static void paintPlayerCard(Graphics g) {
-		g.setColor(Color.BLACK);
-		g.drawImage(SpriteLibrary.getImage("TrainerCard"), 0, 0, null);
-		g.drawImage(SpriteLibrary.getImage("Male"), 320, 100, null);
-
-		Player player = game.getPlayer();
-		g.drawString("ID:  " + player.getID(), 295, 54);
-		g.drawString("Name:" + getPadding("Name:") + player.getName(), 64, 93);
-		g.drawString("Money:" + getPadding("Money:") + "$" + player.getMoney(), 64, 150);
-		g.drawString("Pokedex:" + getPadding("Pokedex:") + player.getNumPokemonOwned(), 64, 183);
-		g.drawString("Time:  " + getPadding("Time:") + game.formatTime(), 64, 213);
-	}
-
-	/**
-	 * Paint components of the pokegear screen
-	 * 
-	 * @param g
-	 *            - the graphics to paint
-	 */
-	private static void paintPokegearScreen(Graphics g) {
-		g.setColor(Color.BLACK);
-		g.drawImage(SpriteLibrary.getImage("PokegearBG"), 0, 0, null);
-		switch (game.getCurrentSelection()) {
-		case 0:
-			g.drawImage(SpriteLibrary.getImage("PokegearMap"), 0, 0, null);
-			break;
-		case 1:
-			g.drawImage(SpriteLibrary.getImage("PokegearRadio"), 0, 0, null);
-			break;
-		case 2:
-			g.drawImage(SpriteLibrary.getImage("PokegearPhone"), 0, 0, null);
-			break;
-		case 3:
-			g.drawImage(SpriteLibrary.getImage("PokegearExit"), 0, 0, null);
-			break;
-		}
-	}
-
-	/**
-	 * Paint components of the pokedex screen
-	 * 
-	 * @param g
-	 *            - the graphics to paint
-	 */
-	private static void paintPokedexScreen(Graphics g) {
-		g.drawImage(SpriteLibrary.getImage("PokedexBG"), 0, 0, null);
-	}
-
-	/**
-	 * Paint the current conversation
-	 * 
-	 * @param g
-	 *            - the graphics to paint with
-	 * @param game
-	 *            - the game controller of the game
-	 */
-	private static void paintConversation(Graphics g, GameController game) {
-		g.setColor(Color.BLACK);
-		g.drawImage(SpriteLibrary.getImage("MessageBox"), 0, 0, null);
-		g.drawString(game.getCurrentMessage()[0], 30, 260);
-		g.drawString(game.getCurrentMessage()[1], 30, 290);
 	}
 
 	/**

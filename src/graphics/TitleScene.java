@@ -11,6 +11,7 @@ import controller.GameKeyListener;
  */
 public class TitleScene implements Scene {
 
+	private static final long serialVersionUID = 8904865279363446269L;
 	/**
 	 * Singleton instance
 	 */

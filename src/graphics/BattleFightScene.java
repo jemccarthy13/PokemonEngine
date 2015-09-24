@@ -15,6 +15,7 @@ import controller.GameKeyListener;
  */
 public class BattleFightScene implements Scene {
 
+	private static final long serialVersionUID = 1420590933250593485L;
 	/**
 	 * Singleton instance
 	 */

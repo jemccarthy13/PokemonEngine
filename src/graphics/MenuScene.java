@@ -12,6 +12,8 @@ import controller.GameKeyListener;
  */
 public class MenuScene implements Scene {
 
+	private static final long serialVersionUID = 6499638524909742225L;
+
 	/**
 	 * Singleton instance
 	 */

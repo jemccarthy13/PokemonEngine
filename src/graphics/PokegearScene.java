@@ -1,14 +1,19 @@
 package graphics;
 
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 
+import utilities.DebugUtility;
 import controller.GameController;
+import controller.GameKeyListener;
 
 /**
  * A representation of a title scene
  */
 public class PokegearScene implements Scene {
 
+	private static final long serialVersionUID = 8611728687807704267L;
 	/**
 	 * Singleton instance
 	 */
@@ -19,20 +24,35 @@ public class PokegearScene implements Scene {
 	 */
 	private PokegearScene() {
 		Painter.getInstance().register(this);
+		GameKeyListener.getInstance().register(this);
 	};
 
 	/**
 	 * The maps will use this ID to reference the Scene objects
 	 */
-	public static int ID = 0;
+	public int ID = 12;
 
 	/**
 	 * Render the title scene.
 	 */
 	@Override
 	public void render(Graphics g, GameController gameControl) {
-		g.drawImage(SpriteLibrary.getImage("Title"), 0, 0, null);
-		g.drawImage(SpriteLibrary.getImage("Start"), 0, 260, null);
+		g.setColor(Color.BLACK);
+		g.drawImage(SpriteLibrary.getImage("PokegearBG"), 0, 0, null);
+		switch (gameControl.getCurrentSelection()) {
+		case 0:
+			g.drawImage(SpriteLibrary.getImage("PokegearMap"), 0, 0, null);
+			break;
+		case 1:
+			g.drawImage(SpriteLibrary.getImage("PokegearRadio"), 0, 0, null);
+			break;
+		case 2:
+			g.drawImage(SpriteLibrary.getImage("PokegearPhone"), 0, 0, null);
+			break;
+		case 3:
+			g.drawImage(SpriteLibrary.getImage("PokegearExit"), 0, 0, null);
+			break;
+		}
 	}
 
 	/**
@@ -40,7 +60,31 @@ public class PokegearScene implements Scene {
 	 */
 	@Override
 	public void keyPress(int keyCode, GameController control) {
-		// TODO Auto-generated method stub
+		if (keyCode == KeyEvent.VK_X) {
+			control.setScreen(MenuScene.instance);
+		}
+		if (keyCode == KeyEvent.VK_UP) {
+			control.decrementSelection();
+		}
+		if (keyCode == KeyEvent.VK_DOWN) {
+			control.incrementSelection();
+		}
+		if (keyCode == KeyEvent.VK_Z) {
+			if (control.getCurrentSelection() == 0) {
+				// TODO - add Map painting
+				DebugUtility.printMessage("Map");
+			} else if (control.getCurrentSelection() == 1) {
+				// TODO - add Radio painting
+				DebugUtility.printMessage("Radio");
+			} else if (control.getCurrentSelection() == 2) {
+				// TODO - add Phone painting
+				DebugUtility.printMessage("Phone");
+			} else if (control.getCurrentSelection() == 3) {
+				control.setScreen(MenuScene.instance);
+			}
+			control.setCurrentSelection(0);
+		}
+
 	}
 
 	/**
@@ -48,7 +92,7 @@ public class PokegearScene implements Scene {
 	 */
 	@Override
 	public Integer getId() {
-		return ID;
+		return this.ID;
 	}
 
 }

@@ -14,6 +14,7 @@ import controller.GameKeyListener;
  */
 public class NameScene implements Scene {
 
+	private static final long serialVersionUID = 840972645178452462L;
 	/**
 	 * Singleton instance
 	 */
@@ -64,6 +65,18 @@ public class NameScene implements Scene {
 		g.drawImage(SpriteLibrary.getSpriteForDir(gameControl.getToBeNamed(), DIR.SOUTH).getImage(), 80, 30, null);
 	}
 
+	private void doEndDel(GameController gameControl) {
+		// end the name screen logic
+		if (gameControl.getNameColSelection() == 1 && gameControl.getChosenName().length() > 0) {
+			gameControl.getPlayer().setName(gameControl.getChosenName());
+			gameControl.resetNameBuilder();
+			gameControl.setScreen(IntroScene.instance);
+		}
+		// del to backspace one character
+		else if (gameControl.getNameColSelection() == 0)
+			gameControl.removeChar();
+	}
+
 	/**
 	 * Handle a key press at the title scene
 	 */
@@ -73,25 +86,15 @@ public class NameScene implements Scene {
 			gameControl.removeChar();
 		if ((keyCode == KeyEvent.VK_Z)) {
 			if (gameControl.getNameRowSelection() == 5) {
-				// check for end
-				if (gameControl.getNameColSelection() == 1 && gameControl.getChosenName().length() > 0) {
-					gameControl.getPlayer().setName(gameControl.getChosenName());
-					gameControl.resetNameBuilder();
-					gameControl.setScreen(IntroScene.instance);
-				}
-				// check for del
-				else if (gameControl.getNameColSelection() == 0)
-					gameControl.removeChar();
+				doEndDel(gameControl);
 			} else {
 				gameControl.addSelectedChar();
 			}
 		}
 		if (keyCode == KeyEvent.VK_DOWN && gameControl.getNameRowSelection() < 5) {
 			gameControl.incrNameRowSelection();
-			if (gameControl.getNameRowSelection() == 5 && gameControl.getNameColSelection() < 3)
+			if (gameControl.getNameRowSelection() == 5)
 				gameControl.setNameColSelection(0);
-			if (gameControl.getNameRowSelection() == 5 && gameControl.getNameColSelection() >= 3)
-				gameControl.setNameColSelection(1);
 		} else if (keyCode == KeyEvent.VK_UP && gameControl.getNameRowSelection() > 0) {
 			gameControl.decrNameRowSelection();
 		} else if (keyCode == KeyEvent.VK_LEFT && gameControl.getNameColSelection() > 0) {

@@ -24,6 +24,7 @@ import controller.GameKeyListener;
  */
 public class WorldScene implements Scene {
 
+	private static final long serialVersionUID = 1476556509051786242L;
 	/**
 	 * Singleton instance
 	 */
@@ -102,17 +103,16 @@ public class WorldScene implements Scene {
 	}
 
 	/**
-	 * Handle a key press at the world scene
+	 * Take a given key input and convert to a DIRection if it is a directional
+	 * key press
+	 * 
+	 * @param keyCode
+	 *            - the key pressed
+	 * @return a DIR from the direction buttons if applicable
 	 */
-	@Override
-	public void keyPress(int keyCode, GameController control) {
-		// match the key to a direction
+	private DIR getDirFromButton(int keyCode) {
 		DIR toTravel = null;
 		switch (keyCode) {
-		case KeyEvent.VK_ENTER:
-			control.playClip(SOUND_EFFECT.MENU);
-			control.setScreen(MenuScene.instance);
-			break;
 		case KeyEvent.VK_UP:
 			toTravel = DIR.NORTH;
 			break;
@@ -125,30 +125,18 @@ public class WorldScene implements Scene {
 		case KeyEvent.VK_RIGHT:
 			toTravel = DIR.EAST;
 			break;
-		case KeyEvent.VK_Z:
-			control.playClip(SOUND_EFFECT.SELECT);
-			// overhead cost for following logic
-			Player player = control.getPlayer();
-			DIR playerDir = player.getDirection();
-			for (Actor curNPC : NPCLibrary.getInstance().values()) {
-				if (playerDir == DIR.WEST) {
-					control.tryBorderNPC(curNPC, new Coordinate(player.getCurrentX() - 1, player.getCurrentY()),
-							playerDir);
-				} else if (playerDir == DIR.NORTH) {
-					control.tryBorderNPC(curNPC, new Coordinate(player.getCurrentX(), player.getCurrentY() - 1),
-							playerDir);
-				} else if (playerDir == DIR.EAST) {
-					control.tryBorderNPC(curNPC, new Coordinate(player.getCurrentX() + 1, player.getCurrentY()),
-							playerDir);
-				} else if (playerDir == DIR.SOUTH) {
-					control.tryBorderNPC(curNPC, new Coordinate(player.getCurrentX(), player.getCurrentY() + 1),
-							playerDir);
-				}
-			}
-			break;
-		default:
-			break;
 		}
+		return toTravel;
+	}
+
+	/**
+	 * Handle a key press at the world scene
+	 */
+	@Override
+	public void keyPress(int keyCode, GameController control) {
+		// match the key to a direction, is null if the button was not
+		// UP, LEFT, DOWN, or RIGHT
+		DIR toTravel = getDirFromButton(keyCode);
 
 		if (toTravel != null) {
 			// one of the movement buttons was pressed, so try to move in that
@@ -158,6 +146,36 @@ public class WorldScene implements Scene {
 				control.setPlayerWalking(true);
 			} else {
 				control.playClip(SOUND_EFFECT.COLLISION);
+			}
+		} else {
+			switch (keyCode) {
+			case KeyEvent.VK_ENTER:
+				control.playClip(SOUND_EFFECT.MENU);
+				control.setScreen(MenuScene.instance);
+				break;
+			case KeyEvent.VK_Z:
+				control.playClip(SOUND_EFFECT.SELECT);
+				// overhead cost for following logic
+				Player player = control.getPlayer();
+				DIR playerDir = player.getDirection();
+				for (Actor curNPC : NPCLibrary.getInstance().values()) {
+					if (playerDir == DIR.WEST) {
+						control.tryBorderNPC(curNPC, new Coordinate(player.getCurrentX() - 1, player.getCurrentY()),
+								playerDir);
+					} else if (playerDir == DIR.NORTH) {
+						control.tryBorderNPC(curNPC, new Coordinate(player.getCurrentX(), player.getCurrentY() - 1),
+								playerDir);
+					} else if (playerDir == DIR.EAST) {
+						control.tryBorderNPC(curNPC, new Coordinate(player.getCurrentX() + 1, player.getCurrentY()),
+								playerDir);
+					} else if (playerDir == DIR.SOUTH) {
+						control.tryBorderNPC(curNPC, new Coordinate(player.getCurrentX(), player.getCurrentY() + 1),
+								playerDir);
+					}
+				}
+				break;
+			default:
+				break;
 			}
 		}
 	}

@@ -16,6 +16,7 @@ import controller.GameKeyListener;
  */
 public class BattleScene implements Scene {
 
+	private static final long serialVersionUID = 2665700331714781084L;
 	/**
 	 * Singleton instance
 	 */
@@ -88,10 +89,12 @@ public class BattleScene implements Scene {
 	}
 
 	/**
-	 * Handle a key press at the battle scene
+	 * Change this scene's selectors based on key input
+	 * 
+	 * @param keyCode
+	 *            - the key that was pressed
 	 */
-	@Override
-	public void keyPress(int keyCode, GameController gameControl) {
+	private void changeSelection(int keyCode) {
 		if (keyCode == KeyEvent.VK_UP) {
 			BattleEngine.getInstance().currentSelectionMainY = 0;
 		} else if (keyCode == KeyEvent.VK_DOWN) {
@@ -100,7 +103,15 @@ public class BattleScene implements Scene {
 			BattleEngine.getInstance().currentSelectionMainX = 0;
 		} else if (keyCode == KeyEvent.VK_RIGHT) {
 			BattleEngine.getInstance().currentSelectionMainX = 1;
-		} else if (keyCode == KeyEvent.VK_Z) {
+		}
+	}
+
+	/**
+	 * Handle a key press at the battle scene
+	 */
+	@Override
+	public void keyPress(int keyCode, GameController gameControl) {
+		if (keyCode == KeyEvent.VK_Z) {
 			// do logic based on current selection
 			switch (2 * BattleEngine.getInstance().currentSelectionMainY
 					+ BattleEngine.getInstance().currentSelectionMainX) {
@@ -114,9 +125,19 @@ public class BattleScene implements Scene {
 				gameControl.setScreen(BattleItemScene.instance);
 				break;
 			case 3:
-				gameControl.runAway();
+				// try to run away if wild
+				if (BattleEngine.getInstance().enemyName == null) {
+					// TODO probability of running away...
+					gameControl.setCurrentMessage("Got away safely!");
+					gameControl.setScreen(WorldScene.instance);
+				} else {
+					// but if it's an opponent, player is stuck
+					gameControl.setCurrentMessage("Can't run away from a opponent!");
+				}
 				break;
 			}
+		} else {
+			changeSelection(keyCode);
 		}
 		gameControl.playClip(SOUND_EFFECT.SELECT);
 	}

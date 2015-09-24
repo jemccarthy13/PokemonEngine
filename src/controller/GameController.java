@@ -1201,22 +1201,4 @@ public class GameController implements Serializable {
 		DebugUtility.printHeader("Game Data");
 		DebugUtility.printMessage(gData.toString());
 	}
-
-	/**
-	 * Attempt to leave a battle
-	 */
-	public void runAway() {
-		if (BattleEngine.getInstance().enemyName == null) {
-			setCurrentMessage("Got away safely!");
-			setScreen(MessageScene.instance);
-		} else {
-			setCurrentMessage("Can't run away from a opponent!");
-			// setScreen(BattleMessageScene.instance);
-			// TODO BATTLE_MESSAGE should only quit battle when
-			// someone is out of pokemon
-			// otherwise, resume the battle (like this message-
-			// non-fatal message during battle)
-		}
-	}
-
 }
