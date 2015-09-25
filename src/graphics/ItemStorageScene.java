@@ -8,13 +8,13 @@ import controller.GameController;
 /**
  * A representation of a bag scene
  */
-public class BagScene extends BaseScene {
+public class ItemStorageScene extends BaseScene {
 
 	private static final long serialVersionUID = 6315775737915830498L;
 	/**
 	 * Singleton instance
 	 */
-	public static BagScene instance = new BagScene();
+	public static ItemStorageScene instance = new ItemStorageScene();
 
 	/**
 	 * Render the bag scene.

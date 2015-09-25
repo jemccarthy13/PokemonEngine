@@ -89,7 +89,44 @@ public class Painter {
 	 * @param startY
 	 *            - the starting y location
 	 */
+	static void paintSmallString(Graphics g, String string, int startX, int startY) {
+		string = string.toUpperCase();
+		int offset = ((int) (Tile.TILESIZE / 2.7));
+		for (int x = 0; x < string.toCharArray().length; x++) {
+			switch (string.toCharArray()[x]) {
+			case '?':
+				g.drawImage(SpriteLibrary.getImage("QUESTION"), startX + offset * x, startY, null);
+				break;
+			case '.':
+				g.drawImage(SpriteLibrary.getImage("PERIOD"), startX + offset * x, startY, null);
+				break;
+			case ' ':
+				g.drawImage(SpriteLibrary.getImage("SPACE_small"), startX + offset * x, startY, null);
+				break;
+			case ':':
+				g.drawImage(SpriteLibrary.getImage("COLON_small"), startX + offset * x, startY, null);
+				break;
+			default:
+				g.drawImage(SpriteLibrary.getInstance().getSmallFontChar(string.toCharArray()[x]).getImage(), startX
+						+ offset * x, startY, null);
+			}
+		}
+	}
+
+	/**
+	 * Paint a given string to a given location of the screen
+	 * 
+	 * @param g
+	 *            - the graphics to paint with
+	 * @param string
+	 *            - the string to paint
+	 * @param startX
+	 *            - the starting x location
+	 * @param startY
+	 *            - the starting y location
+	 */
 	static void paintString(Graphics g, String string, int startX, int startY) {
+		string = string.toUpperCase();
 		for (int x = 0; x < string.toCharArray().length; x++) {
 			switch (string.toCharArray()[x]) {
 			case '?':
@@ -100,6 +137,9 @@ public class Painter {
 				break;
 			case ' ':
 				g.drawImage(SpriteLibrary.getImage("SPACE"), startX + Tile.TILESIZE * x, startY, null);
+				break;
+			case ':':
+				g.drawImage(SpriteLibrary.getImage("COLON"), startX + Tile.TILESIZE * x, startY, null);
 				break;
 			default:
 				g.drawImage(SpriteLibrary.getInstance().getFontChar(string.toCharArray()[x]).getImage(), startX

@@ -66,6 +66,23 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 	}
 
 	/**
+	 * Returns the Font character Image corresponding to the given char
+	 * 
+	 * @param c
+	 *            - the character to look up
+	 * @return an ImageIcon for a text character
+	 */
+	public ImageIcon getSmallFontChar(Character c) {
+		String name = c.toString() + "_small.png";
+		if (containsKey(name)) {
+			return get(name).get(0);
+		} else {
+			getImageIcon(c.toString() + "_small");
+			return get(name).get(0);
+		}
+	}
+
+	/**
 	 * Get the set of 12 directional sprites that correspond to the given name
 	 * 
 	 * @param name

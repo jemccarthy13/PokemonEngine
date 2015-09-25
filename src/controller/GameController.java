@@ -613,8 +613,16 @@ public class GameController implements Serializable {
 			player = new Player(4, 2, name);
 			Battler charmander = BattlerFactory.createPokemon("Charmander", 7);
 			Battler sentret = BattlerFactory.createPokemon("Sentret", 3);
+			Battler charizard = BattlerFactory.createPokemon("Charmander", 99);
+			Battler pidgey = BattlerFactory.createPokemon("Pidgey", 20);
+			Battler mewtwo = BattlerFactory.createPokemon("Mewtwo", 50);
+			Battler squirtle = BattlerFactory.createPokemon("Squirtle", 50);
 			player.caughtWild(charmander);
 			player.caughtWild(sentret);
+			player.caughtWild(charizard);
+			player.caughtWild(pidgey);
+			player.caughtWild(mewtwo);
+			player.caughtWild(squirtle);
 			player.setMoney(1000000);
 			player.setCurLocation(LocationLibrary.getLocation("Route 27"));
 			playBackgroundMusic();

@@ -28,11 +28,11 @@ public class MenuScene extends BaseScene {
 	private MenuScene() {
 		super();
 
-		menuSelections.put(0, PokedexScene.instance);
-		menuSelections.put(1, PokemonScene.instance);
-		menuSelections.put(2, BagScene.instance);
-		menuSelections.put(3, PokegearScene.instance);
-		menuSelections.put(4, TrainerCardScene.instance);
+		menuSelections.put(0, EncycopediaScene.instance);
+		menuSelections.put(1, PartyScene.instance);
+		menuSelections.put(2, ItemStorageScene.instance);
+		menuSelections.put(3, HelpScene.instance);
+		menuSelections.put(4, PlayerInfoScene.instance);
 		menuSelections.put(5, SaveScene.instance);
 		menuSelections.put(6, OptionScene.instance);
 		menuSelections.put(7, WorldScene.instance);

@@ -7,13 +7,13 @@ import controller.GameController;
 /**
  * A representation of a pokedex scene
  */
-public class PokedexScene extends BaseScene {
+public class EncycopediaScene extends BaseScene {
 
 	private static final long serialVersionUID = 5686250415092668247L;
 	/**
 	 * Singleton instance
 	 */
-	public static PokedexScene instance = new PokedexScene();
+	public static EncycopediaScene instance = new EncycopediaScene();
 
 	/**
 	 * Render the title scene.

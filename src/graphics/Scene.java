@@ -13,18 +13,6 @@ import controller.GameController;
  * method to paint the graphics.
  */
 public interface Scene extends Serializable {
-	/**
-	 * String locator for the party first member image
-	 */
-	static String partyFirstMember = "PartyFirst";
-	/**
-	 * String locator for the party member image box
-	 */
-	static String partyMember = "PartyBar";
-	/**
-	 * String locator for the party member background image
-	 */
-	static String partyBackground = "PartyBG";
 
 	/**
 	 * Render graphics for a Scene

@@ -23,7 +23,7 @@ public class BattlePartyScene extends BaseScene {
 	 */
 	@Override
 	public void render(Graphics g, GameController gameControl) {
-		PokemonScene.instance.render(g, gameControl);
+		PartyScene.instance.render(g, gameControl);
 	}
 
 	/**

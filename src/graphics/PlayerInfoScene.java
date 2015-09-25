@@ -7,15 +7,15 @@ import trainers.Player;
 import controller.GameController;
 
 /**
- * A representation of a title scene
+ * A representation of player information
  */
-public class TrainerCardScene extends BaseScene {
+public class PlayerInfoScene extends BaseScene {
 
 	private static final long serialVersionUID = 3015914725120653475L;
 	/**
 	 * Singleton instance
 	 */
-	public static TrainerCardScene instance = new TrainerCardScene();
+	public static PlayerInfoScene instance = new PlayerInfoScene();
 
 	/**
 	 * Pad a given string with appropriate spacing
@@ -43,11 +43,12 @@ public class TrainerCardScene extends BaseScene {
 		g.drawImage(SpriteLibrary.getImage("Male"), 320, 100, null);
 
 		Player player = gameControl.getPlayer();
-		g.drawString("ID:  " + player.getID(), 295, 54);
-		g.drawString("Name:" + getPadding("Name:") + player.getName(), 64, 93);
-		g.drawString("Money:" + getPadding("Money:") + "$" + player.getMoney(), 64, 150);
-		g.drawString("Pokedex:" + getPadding("Pokedex:") + player.getNumPokemonOwned(), 64, 183);
-		g.drawString("Time:  " + getPadding("Time:") + gameControl.formatTime(), 64, 213);
+
+		Painter.paintSmallString(g, "ID " + player.getID(), 295, 40);
+		Painter.paintSmallString(g, "Name:" + getPadding("Name:") + player.getName(), 65, 80);
+		Painter.paintSmallString(g, "Money:" + getPadding("Money:") + "$" + player.getMoney(), 65, 140);
+		Painter.paintSmallString(g, "Pokedex:" + getPadding("Pokedex:") + player.getNumPokemonOwned(), 65, 170);
+		Painter.paintSmallString(g, "Time:" + getPadding("Time:") + gameControl.formatTime(), 65, 200);
 	}
 
 	/**
