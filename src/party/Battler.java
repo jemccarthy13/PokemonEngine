@@ -222,6 +222,18 @@ public class Battler implements Serializable {
 				stats.put(key, new_value);
 			}
 		}
+		for (STAT key : maxStats.keySet()) {
+			if (key != STAT.ACCURACY) {
+				int incr = RandomNumUtils.randomStatIncr();
+				int new_value = maxStats.get(key) + incr;
+
+				if (new_value > 240) {
+					new_value = 240;
+				}
+
+				maxStats.put(key, new_value);
+			}
+		}
 		if ((this.evolution_stage < 2) && (this.level == pData.evolution_levels.get(evolution_stage + 1))) {
 			this.evolution_stage += 1;
 			// TODO Convert to use message box

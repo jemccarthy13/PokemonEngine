@@ -1,18 +1,17 @@
 package graphics;
 
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
 
 import model.Configuration;
+import model.Coordinate;
 import tiles.Tile;
 import trainers.Actor.DIR;
 import controller.GameController;
-import controller.GameKeyListener;
 
 /**
- * A representation of a title scene
+ * A representation of the rename scene
  */
-public class NameScene implements Scene {
+public class NameScene extends BaseScene {
 
 	private static final long serialVersionUID = 840972645178452462L;
 	/**
@@ -21,34 +20,21 @@ public class NameScene implements Scene {
 	public static NameScene instance = new NameScene();
 
 	/**
-	 * When it is created, register itself for Painting and KeyPress
-	 */
-	private NameScene() {
-		Painter.getInstance().register(this);
-		GameKeyListener.getInstance().register(this);
-	};
-
-	/**
-	 * The maps will use this ID to reference the Scene objects
-	 */
-	public int ID = 3;
-
-	/**
 	 * Render the Name scene.
 	 */
 	@Override
 	public void render(Graphics g, GameController gameControl) {
 		g.drawImage(SpriteLibrary.getImage("Namescreen"), 0, 0, null);
 
-		if (gameControl.getNameRowSelection() < 5) {
+		if (gameControl.getCurrentRowSelection() < 5) {
 			g.drawImage(SpriteLibrary.getImage("Arrow"),
-					(int) (40 + Tile.TILESIZE * 2 * gameControl.getNameColSelection()), 100 + Tile.TILESIZE
-							* gameControl.getNameRowSelection(), null);
+					(int) (40 + Tile.TILESIZE * 2 * gameControl.getCurrentColSelection()), 100 + Tile.TILESIZE
+							* gameControl.getCurrentRowSelection(), null);
 		}
-		if (gameControl.getNameRowSelection() == 5) {
+		if (gameControl.getCurrentRowSelection() == 5) {
 			g.drawImage(SpriteLibrary.getImage("Arrow"),
-					(int) (100 + Tile.TILESIZE * 6 * gameControl.getNameColSelection()), 100 + Tile.TILESIZE
-							* gameControl.getNameRowSelection(), null);
+					(int) (100 + Tile.TILESIZE * 6 * gameControl.getCurrentColSelection()), 100 + Tile.TILESIZE
+							* gameControl.getCurrentRowSelection(), null);
 		}
 
 		String name = gameControl.getChosenName();
@@ -67,56 +53,101 @@ public class NameScene implements Scene {
 
 	private void doEndDel(GameController gameControl) {
 		// end the name screen logic
-		if (gameControl.getNameColSelection() == 1 && gameControl.getChosenName().length() > 0) {
+		if (gameControl.getCurrentColSelection() == 1 && gameControl.getChosenName().length() > 0) {
 			gameControl.getPlayer().setName(gameControl.getChosenName());
 			gameControl.resetNameBuilder();
-			gameControl.setScreen(IntroScene.instance);
+			gameControl.setScene(IntroScene.instance);
 		}
 		// del to backspace one character
-		else if (gameControl.getNameColSelection() == 0)
+		else if (gameControl.getCurrentColSelection() == 0)
 			gameControl.removeChar();
 	}
 
 	/**
-	 * Handle a key press at the title scene
+	 * Perform an action (the "Z" button was pressed)
+	 * 
+	 * @param gameControl
+	 *            - the controller to perform game functions
+	 */
+	public void doAction(GameController gameControl) {
+		if (gameControl.getCurrentRowSelection() == 5) {
+			doEndDel(gameControl);
+		} else {
+			gameControl.addSelectedChar();
+		}
+	}
+
+	/**
+	 * "x" button press
+	 * 
+	 * @param gameControl
+	 *            - the controller to perform game functions
+	 */
+	public void doBack(GameController gameControl) {
+		gameControl.removeChar();
+	}
+
+	/**
+	 * up arrow button press
+	 * 
+	 * @param gameControl
+	 *            - the controller to perform game functions
+	 */
+	public void doUp(GameController gameControl) {
+		if (gameControl.getCurrentRowSelection() > 0) {
+			gameControl.decrementRowSelection();
+		}
+	}
+
+	/**
+	 * left arrow button press
+	 * 
+	 * @param gameControl
+	 *            - the controller to perform game functions
+	 */
+	public void doLeft(GameController gameControl) {
+		if (gameControl.getCurrentColSelection() > 0) {
+			gameControl.decrementColSelection();
+		}
+	}
+
+	/**
+	 * right arrow button press
+	 * 
+	 * @param gameControl
+	 *            - the controller to perform game functions
+	 */
+	public void doRight(GameController gameControl) {
+		if (gameControl.getCurrentRowSelection() == 5) {
+			// last row, right key press moves to "END"
+			gameControl.setCurrentSelection(new Coordinate(5, 1));
+		} else {
+			gameControl.incrementColSelection();
+		}
+	}
+
+	/**
+	 * down arrow button press
+	 * 
+	 * @param gameControl
+	 *            - the controller to perform game functions
+	 */
+	public void doDown(GameController gameControl) {
+		if (gameControl.getCurrentRowSelection() < 5) {
+			gameControl.incrementRowSelection();
+		}
+	}
+
+	/**
+	 * Key was pressed
 	 */
 	@Override
 	public void keyPress(int keyCode, GameController gameControl) {
-		if (keyCode == KeyEvent.VK_X)
-			gameControl.removeChar();
-		if ((keyCode == KeyEvent.VK_Z)) {
-			if (gameControl.getNameRowSelection() == 5) {
-				doEndDel(gameControl);
-			} else {
-				gameControl.addSelectedChar();
-			}
-		}
-		// TODO cleanup
-		if (keyCode == KeyEvent.VK_UP && gameControl.getNameRowSelection() > 0) {
-			gameControl.decrNameRowSelection();
-		} else if (keyCode == KeyEvent.VK_LEFT && gameControl.getNameColSelection() > 0) {
-			gameControl.decrNameColSelection();
-		} else if (keyCode == KeyEvent.VK_RIGHT && gameControl.getNameRowSelection() == 5
-				&& gameControl.getNameColSelection() < 1) {
-			gameControl.incrNameColSelection();
-		}
 
-		if (keyCode == KeyEvent.VK_DOWN && gameControl.getNameRowSelection() < 5) {
-			gameControl.incrNameRowSelection();
-			if (gameControl.getNameRowSelection() == 5)
-				gameControl.setNameColSelection(0);
-		} else if (keyCode == KeyEvent.VK_RIGHT && gameControl.getNameRowSelection() < 5
-				&& gameControl.getNameColSelection() < 5) {
-			gameControl.incrNameColSelection();
-		}
-	}
+		super.keyPress(keyCode, gameControl);
 
-	/**
-	 * @return the ID of this scene
-	 */
-	@Override
-	public Integer getId() {
-		return this.ID;
+		if (gameControl.getCurrentRowSelection() == 5)
+			gameControl.setCurrentSelection(new Coordinate(5, 0));
 	}
 
 }

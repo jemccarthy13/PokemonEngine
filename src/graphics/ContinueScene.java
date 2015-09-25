@@ -1,16 +1,13 @@
 package graphics;
 
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
 
-import audio.AudioLibrary.SOUND_EFFECT;
 import controller.GameController;
-import controller.GameKeyListener;
 
 /**
- * A representation of a title scene
+ * A representation of the continue scene
  */
-public class ContinueScene implements Scene {
+public class ContinueScene extends BaseScene {
 
 	private static final long serialVersionUID = 2882429066379575720L;
 	/**
@@ -19,20 +16,7 @@ public class ContinueScene implements Scene {
 	public static ContinueScene instance = new ContinueScene();
 
 	/**
-	 * When it is created, register itself for Painting and KeyPress
-	 */
-	private ContinueScene() {
-		Painter.getInstance().register(this);
-		GameKeyListener.getInstance().register(this);
-	};
-
-	/**
-	 * The maps will use this ID to reference the Scene objects
-	 */
-	public int ID = 1;
-
-	/**
-	 * Render the title scene.
+	 * Render the continue scene.
 	 */
 	@Override
 	public void render(Graphics g, GameController gameControl) {
@@ -41,34 +25,30 @@ public class ContinueScene implements Scene {
 	}
 
 	/**
-	 * Handle a key press at the continue scene
+	 * Up arrow button press
 	 */
-	@Override
-	public void keyPress(int keyCode, GameController gameControl) {
-		// continue screen choice select
-		if (keyCode == KeyEvent.VK_UP) {
-			if (gameControl.getCurrentRowSelection() > 0)
-				gameControl.decrementRowSelection();
-		} else if (keyCode == KeyEvent.VK_DOWN) {
-			if (gameControl.getCurrentRowSelection() < 2)
-				gameControl.incrementRowSelection();
-		}
-		if (keyCode == KeyEvent.VK_Z) {
-			if (gameControl.getCurrentRowSelection() == 0) {
-				gameControl.startGame(true);
-			} else if (gameControl.getCurrentRowSelection() == 1) {
-				gameControl.startGame(false);
-			}
-		}
-		gameControl.playClip(SOUND_EFFECT.SELECT);
+	public void doUp(GameController gameControl) {
+		if (gameControl.getCurrentRowSelection() > 0)
+			gameControl.decrementRowSelection();
 	}
 
 	/**
-	 * @return the ID of this scene
+	 * Down arrow button press
 	 */
-	@Override
-	public Integer getId() {
-		return this.ID;
+	public void doDown(GameController gameControl) {
+		if (gameControl.getCurrentRowSelection() < 2)
+			gameControl.incrementRowSelection();
 	}
 
+	/**
+	 * "z" button press
+	 */
+	public void doAction(GameController gameControl) {
+		if (gameControl.getCurrentRowSelection() == 0) {
+			gameControl.startGame(true);
+		} else if (gameControl.getCurrentRowSelection() == 1) {
+			gameControl.startGame(false);
+
+		}
+	}
 }

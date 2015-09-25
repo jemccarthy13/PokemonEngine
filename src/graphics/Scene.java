@@ -13,7 +13,6 @@ import controller.GameController;
  * method to paint the graphics.
  */
 public interface Scene extends Serializable {
-
 	/**
 	 * String locator for the party first member image
 	 */
@@ -38,21 +37,58 @@ public interface Scene extends Serializable {
 	public void render(Graphics g, GameController gameControl);
 
 	/**
-	 * Series of events that should be performed when the scene receives a
-	 * keypress call
+	 * Perform Action ("z" button click)
 	 * 
-	 * @param keyCode
-	 *            - the key that was pressed
 	 * @param gameControl
 	 *            - the controller to use to perform actions
 	 */
-	void keyPress(int keyCode, GameController gameControl);
+	public void doAction(GameController gameControl);
 
 	/**
-	 * Get the ID by which this scene will be referenced
+	 * Perform back ("x" button click)
 	 * 
-	 * @return integer ID
+	 * @param gameControl
+	 *            - the controller to use to perform actions
 	 */
-	public Integer getId();
+	public void doBack(GameController gameControl);
 
+	/**
+	 * Do left arrow press
+	 * 
+	 * @param gameControl
+	 *            - the controller to use to perform actions
+	 */
+	public void doLeft(GameController gameControl);
+
+	/**
+	 * Do right arrow press
+	 * 
+	 * @param gameControl
+	 *            - the controller to use to perform actions
+	 */
+	public void doRight(GameController gameControl);
+
+	/**
+	 * Do up arrow press
+	 * 
+	 * @param gameControl
+	 *            - the controller to use to perform actions
+	 */
+	public void doUp(GameController gameControl);
+
+	/**
+	 * Do down arrow press
+	 * 
+	 * @param gameControl
+	 *            - the controller to use to perform actions
+	 */
+	public void doDown(GameController gameControl);
+
+	/**
+	 * Do enter button press
+	 * 
+	 * @param gameControl
+	 *            - the controller to use to perform actions
+	 */
+	public void doEnter(GameController gameControl);
 }

@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JPanel;
 
@@ -48,10 +49,11 @@ public class GamePanel extends JPanel implements ActionListener {
 	 * starts the title music (sets up the start of gameplay)
 	 */
 	public GamePanel() {
+
 		try {
 			gameController.loadMap();
-		} catch (Exception e) {
-			DebugUtility.error("Unable to load map.");
+		} catch (IOException | InterruptedException e) {
+			DebugUtility.printError("Unable to load map!");
 		}
 		// setup key press listening
 		GameKeyListener.getInstance().setGameController(gameController);

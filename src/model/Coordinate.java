@@ -26,9 +26,9 @@ public class Coordinate implements Serializable {
 	 * Initializes a coordinate
 	 * 
 	 * @param X
-	 *            x location
+	 *            x (row) location
 	 * @param Y
-	 *            y location
+	 *            y (col) location
 	 */
 	public Coordinate(int X, int Y) {
 		this.x = X;

@@ -1,16 +1,14 @@
 package graphics;
 
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
 import java.util.HashMap;
 
 import controller.GameController;
-import controller.GameKeyListener;
 
 /**
- * A representation of a title scene
+ * A representation of the pause menu scene
  */
-public class MenuScene implements Scene {
+public class MenuScene extends BaseScene {
 
 	private static final long serialVersionUID = 6499638524909742225L;
 
@@ -22,14 +20,13 @@ public class MenuScene implements Scene {
 	/**
 	 * A map of the menu selection to the corresponding scene
 	 */
-	HashMap<Integer, Scene> menuSelections = new HashMap<Integer, Scene>();
+	HashMap<Integer, BaseScene> menuSelections = new HashMap<Integer, BaseScene>();
 
 	/**
 	 * When it is created, register itself for Painting and KeyPress
 	 */
 	private MenuScene() {
-		Painter.getInstance().register(this);
-		GameKeyListener.getInstance().register(this);
+		super();
 
 		menuSelections.put(0, PokedexScene.instance);
 		menuSelections.put(1, PokemonScene.instance);
@@ -42,11 +39,6 @@ public class MenuScene implements Scene {
 	};
 
 	/**
-	 * The maps will use this ID to reference the Scene objects
-	 */
-	public int ID = 8;
-
-	/**
 	 * Render the pause scene.
 	 */
 	@Override
@@ -57,32 +49,39 @@ public class MenuScene implements Scene {
 	}
 
 	/**
-	 * Handle a key press at the pause scene
+	 * "Z" button pressed
 	 */
-	@Override
-	public void keyPress(int keyCode, GameController control) {
-		if (keyCode == KeyEvent.VK_X)
-			control.setScreen(WorldScene.instance);
-		if (keyCode == KeyEvent.VK_UP && control.getCurrentRowSelection() > 0) {
-			control.decrementRowSelection();
-		}
-		if (keyCode == KeyEvent.VK_DOWN && control.getCurrentRowSelection() < 7) {
-			control.incrementRowSelection();
-		}
-		if (keyCode == KeyEvent.VK_ENTER) {
-			control.setScreen(WorldScene.instance);
-		}
-		if (keyCode == KeyEvent.VK_Z) {
-			control.setScreen(menuSelections.get(control.getCurrentRowSelection()));
-		}
+	public void doAction(GameController control) {
+		control.setScene(menuSelections.get(control.getCurrentRowSelection()));
 	}
 
 	/**
-	 * @return the ID of this scene
+	 * up button pressed
 	 */
-	@Override
-	public Integer getId() {
-		return this.ID;
+	public void doUp(GameController control) {
+		if (control.getCurrentRowSelection() > 0)
+			control.decrementRowSelection();
 	}
 
+	/**
+	 * down button pressed
+	 */
+	public void doDown(GameController control) {
+		if (control.getCurrentRowSelection() < 7)
+			control.incrementRowSelection();
+	}
+
+	/**
+	 * "x" button pressed
+	 */
+	public void doBack(GameController control) {
+		control.setScene(WorldScene.instance);
+	}
+
+	/**
+	 * Enter button pressed
+	 */
+	public void doEnter(GameController control) {
+		control.setScene(WorldScene.instance);
+	}
 }

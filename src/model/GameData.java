@@ -1,5 +1,6 @@
 package model;
 
+import graphics.BaseScene;
 import graphics.Scene;
 import graphics.TitleScene;
 
@@ -44,7 +45,7 @@ public class GameData implements Serializable {
 	/**
 	 * The current screen, defaults to main credits
 	 */
-	public Scene screen = TitleScene.instance; // start at the title screen
+	public BaseScene scene = TitleScene.instance; // start at the title screen
 	/**
 	 * The stage of the introduction
 	 */
@@ -134,7 +135,8 @@ public class GameData implements Serializable {
 		retStr += "* Game ID: " + gameSessionID + "\n";
 		retStr += "* Current msg: " + currentMessage + "\n";
 		retStr += Configuration.getConfig() + "\n";
-		retStr += "* Current speed: " + this.currentSpeed;
+		retStr += "* Current speed: " + currentSpeed + "\n";
+		retStr += "* Current scene: " + scene;
 		return retStr;
 	}
 }

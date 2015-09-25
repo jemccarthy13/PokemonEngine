@@ -2,16 +2,14 @@ package graphics;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
 
 import party.Party;
 import controller.GameController;
-import controller.GameKeyListener;
 
 /**
- * A representation of a title scene
+ * A representation of the party scene
  */
-public class PokemonScene implements Scene {
+public class PokemonScene extends BaseScene {
 
 	private static final long serialVersionUID = 4269262897256769883L;
 	/**
@@ -20,20 +18,7 @@ public class PokemonScene implements Scene {
 	public static PokemonScene instance = new PokemonScene();
 
 	/**
-	 * When it is created, register itself for Painting and KeyPress
-	 */
-	private PokemonScene() {
-		Painter.getInstance().register(this);
-		GameKeyListener.getInstance().register(this);
-	};
-
-	/**
-	 * The maps will use this ID to reference the Scene objects
-	 */
-	public int ID = 13;
-
-	/**
-	 * Render the title scene.
+	 * Render the party scene.
 	 */
 	@Override
 	public void render(Graphics g, GameController gameControl) {
@@ -54,27 +39,23 @@ public class PokemonScene implements Scene {
 	}
 
 	/**
-	 * Handle a key press at the title scene
+	 * "x" button press at Party scene
 	 */
-	@Override
-	public void keyPress(int keyCode, GameController control) {
-		if (keyCode == KeyEvent.VK_X) {
-			control.setScreen(MenuScene.instance);
-		}
-		if (keyCode == KeyEvent.VK_UP) {
-			control.decrementRowSelection();
-		}
-		if (keyCode == KeyEvent.VK_DOWN) {
-			control.incrementRowSelection();
-		}
+	public void doBack(GameController control) {
+		control.setScene(MenuScene.instance);
 	}
 
 	/**
-	 * @return the ID of this scene
+	 * up arrow button press at Party scene
 	 */
-	@Override
-	public Integer getId() {
-		return this.ID;
+	public void doUp(GameController control) {
+		control.decrementRowSelection();
 	}
 
+	/**
+	 * up arrow button press at Party scene
+	 */
+	public void doDown(GameController control) {
+		control.incrementRowSelection();
+	}
 }

@@ -17,34 +17,21 @@ import trainers.NPCLibrary;
 import trainers.Player;
 import audio.AudioLibrary.SOUND_EFFECT;
 import controller.GameController;
-import controller.GameKeyListener;
 
 /**
- * A representation of a title scene
+ * A representation of the world scene
  */
-public class WorldScene implements Scene {
+public class WorldScene extends BaseScene {
 
 	private static final long serialVersionUID = 1476556509051786242L;
+
 	/**
 	 * Singleton instance
 	 */
 	public static WorldScene instance = new WorldScene();
 
 	/**
-	 * When it is created, register itself for Painting and KeyPress
-	 */
-	private WorldScene() {
-		Painter.getInstance().register(this);
-		GameKeyListener.getInstance().register(this);
-	};
-
-	/**
-	 * The maps will use this ID to reference the Scene objects
-	 */
-	public int ID = 69;
-
-	/**
-	 * Render the title scene.
+	 * Render the world scene.
 	 */
 	@Override
 	public void render(Graphics g, GameController control) {
@@ -130,10 +117,35 @@ public class WorldScene implements Scene {
 	}
 
 	/**
+	 * Perform "z" button click at the world scene
+	 */
+	public void doAction(GameController control) {
+		control.playClip(SOUND_EFFECT.SELECT);
+		// overhead cost for following logic
+		Player player = control.getPlayer();
+		DIR playerDir = player.getDirection();
+		for (Actor curNPC : NPCLibrary.getInstance().values()) {
+			if (playerDir == DIR.WEST) {
+				control.tryBorderNPC(curNPC, new Coordinate(player.getCurrentX() - 1, player.getCurrentY()), playerDir);
+			} else if (playerDir == DIR.NORTH) {
+				control.tryBorderNPC(curNPC, new Coordinate(player.getCurrentX(), player.getCurrentY() - 1), playerDir);
+			} else if (playerDir == DIR.EAST) {
+				control.tryBorderNPC(curNPC, new Coordinate(player.getCurrentX() + 1, player.getCurrentY()), playerDir);
+			} else if (playerDir == DIR.SOUTH) {
+				control.tryBorderNPC(curNPC, new Coordinate(player.getCurrentX(), player.getCurrentY() + 1), playerDir);
+			}
+		}
+	}
+
+	/**
 	 * Handle a key press at the world scene
 	 */
 	@Override
 	public void keyPress(int keyCode, GameController control) {
+		if (keyCode == KeyEvent.VK_ENTER) {
+			control.playClip(SOUND_EFFECT.MENU);
+			control.setScene(MenuScene.instance);
+		}
 		// match the key to a direction, is null if the button was not
 		// UP, LEFT, DOWN, or RIGHT
 		DIR toTravel = getDirFromButton(keyCode);
@@ -148,44 +160,7 @@ public class WorldScene implements Scene {
 				control.playClip(SOUND_EFFECT.COLLISION);
 			}
 		} else {
-			switch (keyCode) {
-			case KeyEvent.VK_ENTER:
-				control.playClip(SOUND_EFFECT.MENU);
-				control.setScreen(MenuScene.instance);
-				break;
-			case KeyEvent.VK_Z:
-				control.playClip(SOUND_EFFECT.SELECT);
-				// overhead cost for following logic
-				Player player = control.getPlayer();
-				DIR playerDir = player.getDirection();
-				for (Actor curNPC : NPCLibrary.getInstance().values()) {
-					if (playerDir == DIR.WEST) {
-						control.tryBorderNPC(curNPC, new Coordinate(player.getCurrentX() - 1, player.getCurrentY()),
-								playerDir);
-					} else if (playerDir == DIR.NORTH) {
-						control.tryBorderNPC(curNPC, new Coordinate(player.getCurrentX(), player.getCurrentY() - 1),
-								playerDir);
-					} else if (playerDir == DIR.EAST) {
-						control.tryBorderNPC(curNPC, new Coordinate(player.getCurrentX() + 1, player.getCurrentY()),
-								playerDir);
-					} else if (playerDir == DIR.SOUTH) {
-						control.tryBorderNPC(curNPC, new Coordinate(player.getCurrentX(), player.getCurrentY() + 1),
-								playerDir);
-					}
-				}
-				break;
-			default:
-				break;
-			}
+			super.keyPress(keyCode, control);
 		}
 	}
-
-	/**
-	 * @return the ID of this scene
-	 */
-	@Override
-	public Integer getId() {
-		return this.ID;
-	}
-
 }

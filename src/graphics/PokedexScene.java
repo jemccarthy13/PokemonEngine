@@ -1,34 +1,19 @@
 package graphics;
 
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
 
 import controller.GameController;
-import controller.GameKeyListener;
 
 /**
- * A representation of a title scene
+ * A representation of a pokedex scene
  */
-public class PokedexScene implements Scene {
+public class PokedexScene extends BaseScene {
 
 	private static final long serialVersionUID = 5686250415092668247L;
 	/**
 	 * Singleton instance
 	 */
 	public static PokedexScene instance = new PokedexScene();
-
-	/**
-	 * When it is created, register itself for Painting and KeyPress
-	 */
-	private PokedexScene() {
-		Painter.getInstance().register(this);
-		GameKeyListener.getInstance().register(this);
-	};
-
-	/**
-	 * The maps will use this ID to reference the Scene objects
-	 */
-	public int ID = 11;
 
 	/**
 	 * Render the title scene.
@@ -39,27 +24,23 @@ public class PokedexScene implements Scene {
 	}
 
 	/**
-	 * Handle a key press at the title scene
+	 * "x" button press at Pokedex scene
 	 */
-	@Override
-	public void keyPress(int keyCode, GameController control) {
-		if (keyCode == KeyEvent.VK_X) {
-			control.setScreen(MenuScene.instance);
-		}
-		if (keyCode == KeyEvent.VK_UP) {
-			control.decrementRowSelection();
-		}
-		if (keyCode == KeyEvent.VK_DOWN) {
-			control.incrementRowSelection();
-		}
+	public void doBack(GameController control) {
+		control.setScene(MenuScene.instance);
 	}
 
 	/**
-	 * @return the ID of this scene
+	 * up arrow button press at Pokedex scene
 	 */
-	@Override
-	public Integer getId() {
-		return this.ID;
+	public void doUp(GameController control) {
+		control.decrementRowSelection();
 	}
 
+	/**
+	 * up arrow button press at Pokedex scene
+	 */
+	public void doDown(GameController control) {
+		control.incrementRowSelection();
+	}
 }

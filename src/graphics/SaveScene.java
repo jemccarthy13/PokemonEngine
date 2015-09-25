@@ -2,17 +2,15 @@ package graphics;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
 
 import model.Coordinate;
 import trainers.Player;
 import controller.GameController;
-import controller.GameKeyListener;
 
 /**
- * A representation of a title scene
+ * A representation of a save scene
  */
-public class SaveScene implements Scene {
+public class SaveScene extends BaseScene {
 
 	private static final long serialVersionUID = 7495740703088409291L;
 	/**
@@ -21,20 +19,7 @@ public class SaveScene implements Scene {
 	public static SaveScene instance = new SaveScene();
 
 	/**
-	 * When it is created, register itself for Painting and KeyPress
-	 */
-	private SaveScene() {
-		Painter.getInstance().register(this);
-		GameKeyListener.getInstance().register(this);
-	};
-
-	/**
-	 * The maps will use this ID to reference the Scene objects
-	 */
-	public int ID = 15;
-
-	/**
-	 * Render the title scene.
+	 * Render the save scene.
 	 */
 	@Override
 	public void render(Graphics g, GameController gameControl) {
@@ -58,34 +43,35 @@ public class SaveScene implements Scene {
 	}
 
 	/**
-	 * Handle a key press at the title scene
+	 * "x" button pressed at Save scene
 	 */
-	@Override
-	public void keyPress(int keyCode, GameController control) {
-		if (keyCode == KeyEvent.VK_X) {
-			control.setScreen(MenuScene.instance);
-		}
-		if (keyCode == KeyEvent.VK_UP) {
-			control.setCurrentSelection(new Coordinate(0, 0));
-		}
-		if (keyCode == KeyEvent.VK_DOWN) {
-			control.setCurrentSelection(new Coordinate(1, 0));
-		}
-		if (keyCode == KeyEvent.VK_Z) {
-			if (control.getCurrentRowSelection() == 0) {
-				control.saveGame();
-				control.setCurrentMessage("Game saved successfully!");
-			}
-			control.setScreen(MenuScene.instance);
-		}
+	public void doBack(GameController control) {
+		control.setScene(MenuScene.instance);
 	}
 
 	/**
-	 * @return the ID of this scene
+	 * up arrow button pressed at Save scene
 	 */
-	@Override
-	public Integer getId() {
-		return this.ID;
+	public void doUp(GameController control) {
+		control.setCurrentSelection(new Coordinate(0, 0));
+	}
+
+	/**
+	 * down arrow button pressed at Save scene
+	 */
+	public void doDown(GameController control) {
+		control.setCurrentSelection(new Coordinate(1, 0));
+	}
+
+	/**
+	 * action button pressed at Save scene
+	 */
+	public void doAction(GameController control) {
+		if (control.getCurrentRowSelection() == 0) {
+			control.saveGame();
+			control.addMessage("Game saved successfully!");
+		}
+		control.setScene(MenuScene.instance);
 	}
 
 }

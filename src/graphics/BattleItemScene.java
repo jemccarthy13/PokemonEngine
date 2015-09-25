@@ -2,36 +2,21 @@ package graphics;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
 
 import controller.GameController;
-import controller.GameKeyListener;
 
 /**
  * A representation of a battle item scene
  * 
  * TODO battle item scene painting of items and logic to use items
  */
-public class BattleItemScene implements Scene {
+public class BattleItemScene extends BaseScene {
 
 	private static final long serialVersionUID = 4236362282505475572L;
 	/**
 	 * Singleton instance
 	 */
 	public static BattleItemScene instance = new BattleItemScene();
-
-	/**
-	 * When it is created, register itself for Painting and KeyPress
-	 */
-	private BattleItemScene() {
-		Painter.getInstance().register(this);
-		GameKeyListener.getInstance().register(this);
-	};
-
-	/**
-	 * The maps will use this ID to reference the Scene objects
-	 */
-	public int ID = 6;
 
 	/**
 	 * Render the battle item scene.
@@ -43,23 +28,16 @@ public class BattleItemScene implements Scene {
 	}
 
 	/**
-	 * Handle a key press at the battle item scene
-	 * 
-	 * TODO implement using an item
+	 * Perform "z" button click
 	 */
-	@Override
-	public void keyPress(int keyCode, GameController control) {
-		if (keyCode == KeyEvent.VK_X || keyCode == KeyEvent.VK_Z) {
-			control.setScreen(BattleScene.instance);
-		}
+	public void doAction(GameController control) {
+		control.setScene(BattleScene.instance);
 	}
 
 	/**
-	 * @return the ID of this scene
+	 * Perform "x" button click
 	 */
-	@Override
-	public Integer getId() {
-		return this.ID;
+	public void doBack(GameController control) {
+		control.setScene(BattleScene.instance);
 	}
-
 }

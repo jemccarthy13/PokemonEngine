@@ -1,9 +1,9 @@
 package controller;
 
+import graphics.BaseScene;
 import graphics.BattleMessageScene;
 import graphics.IntroScene;
 import graphics.NameScene;
-import graphics.Scene;
 import graphics.WorldScene;
 
 import java.awt.event.KeyEvent;
@@ -31,7 +31,7 @@ public class GameKeyListener implements KeyListener, Serializable {
 	/**
 	 * Hashmap of actions to occur at registered scenes
 	 */
-	static HashMap<Integer, Scene> actionPerformers = new HashMap<Integer, Scene>();
+	static HashMap<Integer, BaseScene> actionPerformers = new HashMap<Integer, BaseScene>();
 
 	/**
 	 * GameKeyListener instance
@@ -68,8 +68,8 @@ public class GameKeyListener implements KeyListener, Serializable {
 	 * @param scene
 	 *            - the scene to register
 	 */
-	public void register(Scene scene) {
-		actionPerformers.put(scene.getId(), scene);
+	public void register(BaseScene scene) {
+		actionPerformers.put(scene.getClass().hashCode(), scene);
 	}
 
 	/**
@@ -89,15 +89,14 @@ public class GameKeyListener implements KeyListener, Serializable {
 			if (gameControl.getScene() == IntroScene.instance) {
 				gameControl.incrIntroStage();
 				if (gameControl.getIntroStage() == 15) {
-					gameControl.setScreen(NameScene.instance);
+					gameControl.setScene(NameScene.instance);
 					gameControl.setToBeNamed("PLAYER");
 				}
-			} else if (gameControl.getScene() == BattleMessageScene.instance
-					|| gameControl.getScene() == NameScene.instance) {
-				gameControl.setScreen(WorldScene.instance);
+			} else if (gameControl.getScene() == BattleMessageScene.instance) {
+				gameControl.setScene(WorldScene.instance);
 			}
 		} else if (gameControl.getCurrentMessage() == null) {
-			Integer actionToPerform = gameControl.getScene().getId();
+			Integer actionToPerform = gameControl.getScene().getClass().hashCode();
 			actionPerformers.get(actionToPerform).keyPress(keyCode, gameControl);
 		}
 

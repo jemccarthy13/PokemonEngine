@@ -7,10 +7,6 @@ public class NameBuilder {
 	// name that grows and shrinks dynamically according to user's choices
 	private StringBuilder buildName = new StringBuilder();
 
-	// character selection information
-	private int rowSelection = 0;
-	private int colSelection = 0;
-
 	// the name screen layout makes it easer to get selected characters
 	private char[][] charArray = { { 'A', 'B', 'C', 'D', 'E', 'F' }, { 'G', 'H', 'I', 'J', 'K', 'L' },
 			{ 'M', 'N', 'O', 'P', 'Q', 'R' }, { 'S', 'T', 'U', 'V', 'W', 'X' }, { 'Y', 'Z', ' ', '!', '?', '.' } };
@@ -36,44 +32,6 @@ public class NameBuilder {
 	}
 
 	/**
-	 * Retrieve the currently selected column
-	 * 
-	 * @return current column selection
-	 */
-	public int getColSelection() {
-		return colSelection;
-	}
-
-	/**
-	 * Set the currently selected column
-	 * 
-	 * @param colSelection
-	 *            - the column currently selected
-	 */
-	public void setColSelection(int colSelection) {
-		this.colSelection = colSelection;
-	}
-
-	/**
-	 * Retrieve the currently selected row
-	 * 
-	 * @return current row selection
-	 */
-	public int getRowSelection() {
-		return rowSelection;
-	}
-
-	/**
-	 * Set the currently selected row
-	 * 
-	 * @param rowSelection
-	 *            - the currently selected row
-	 */
-	public void setRowSelection(int rowSelection) {
-		this.rowSelection = rowSelection;
-	}
-
-	/**
 	 * Retrieve the maximum number of rows
 	 * 
 	 * @return max number of rows
@@ -94,10 +52,13 @@ public class NameBuilder {
 	/**
 	 * Based on the current row / column, add the selected character to the name
 	 * buffer
+	 * 
+	 * @param selection
+	 *            current row / column
 	 */
-	public void addSelectedChar() {
+	public void addSelectedChar(Coordinate selection) {
 		if (buildName.length() < Configuration.MAX_NAME_SIZE) {
-			buildName.append(charArray[rowSelection][colSelection]);
+			buildName.append(charArray[selection.getX()][selection.getY()]);
 		}
 	}
 

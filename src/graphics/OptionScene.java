@@ -1,15 +1,13 @@
 package graphics;
 
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
 
 import controller.GameController;
-import controller.GameKeyListener;
 
 /**
- * A representation of a title scene
+ * A representation of a option scene
  */
-public class OptionScene implements Scene {
+public class OptionScene extends BaseScene {
 
 	private static final long serialVersionUID = 8790393353456574423L;
 	/**
@@ -18,20 +16,7 @@ public class OptionScene implements Scene {
 	public static OptionScene instance = new OptionScene();
 
 	/**
-	 * When it is created, register itself for Painting and KeyPress
-	 */
-	private OptionScene() {
-		Painter.getInstance().register(this);
-		GameKeyListener.getInstance().register(this);
-	};
-
-	/**
-	 * The maps will use this ID to reference the Scene objects
-	 */
-	public int ID = 10;
-
-	/**
-	 * Render the title scene.
+	 * Render the option scene.
 	 * 
 	 * TODO more choice in options
 	 */
@@ -43,32 +28,34 @@ public class OptionScene implements Scene {
 	}
 
 	/**
-	 * Handle a key press at the title scene
+	 * up arrow press
 	 */
-	@Override
-	public void keyPress(int keyCode, GameController control) {
-		if (keyCode == KeyEvent.VK_UP && control.getCurrentRowSelection() > 0) {
+	public void doUp(GameController control) {
+		if (control.getCurrentRowSelection() > 0)
 			control.decrementRowSelection();
-		}
-		if (keyCode == KeyEvent.VK_DOWN && control.getCurrentRowSelection() < 6) {
-			control.incrementRowSelection();
-		}
-		if (keyCode == KeyEvent.VK_X) {
-			control.setScreen(MenuScene.instance);
-		}
-		if (keyCode == KeyEvent.VK_Z) {
-			if (control.getCurrentRowSelection() == 5) {
-				control.toggleSound();
-			}
-		}
 	}
 
 	/**
-	 * @return the ID of this scene
+	 * down arrow press
 	 */
-	@Override
-	public Integer getId() {
-		return this.ID;
+	public void doDown(GameController control) {
+		if (control.getCurrentRowSelection() < 6)
+			control.incrementRowSelection();
 	}
 
+	/**
+	 * "z" button press
+	 */
+	public void doBack(GameController control) {
+		control.setScene(MenuScene.instance);
+	}
+
+	/**
+	 * "z" button press
+	 */
+	public void doAction(GameController control) {
+		if (control.getCurrentRowSelection() == 5) {
+			control.toggleSound();
+		}
+	}
 }

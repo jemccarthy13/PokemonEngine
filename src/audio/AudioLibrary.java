@@ -118,7 +118,7 @@ public class AudioLibrary {
 			DebugUtility.printMessage("Dynamically loaded " + songTitle);
 		}
 
-		// switch to the next track and play, if the track is valid
+		// change to the next track and play, if the track is valid
 		currentTrack = musicTracks.get(songTitle);
 		if (currentTrack != null) {
 			currentTrack.start();

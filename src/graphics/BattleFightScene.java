@@ -1,38 +1,23 @@
 package graphics;
 
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
 
+import model.Coordinate;
 import party.Battler;
 import utilities.BattleEngine;
 import utilities.BattleEngine.TURN;
-import audio.AudioLibrary.SOUND_EFFECT;
 import controller.GameController;
-import controller.GameKeyListener;
 
 /**
  * A representation of the battle fight scene
  */
-public class BattleFightScene implements Scene {
+public class BattleFightScene extends BaseScene {
 
 	private static final long serialVersionUID = 1420590933250593485L;
 	/**
 	 * Singleton instance
 	 */
 	public static BattleFightScene instance = new BattleFightScene();
-
-	/**
-	 * When it is created, register itself for Painting and KeyPress
-	 */
-	private BattleFightScene() {
-		Painter.getInstance().register(this);
-		GameKeyListener.getInstance().register(this);
-	};
-
-	/**
-	 * The maps will use this ID to reference the Scene objects
-	 */
-	public int ID = 5;
 
 	/**
 	 * Render the battle fight scene.
@@ -57,8 +42,8 @@ public class BattleFightScene implements Scene {
 		int[] arrowX = { 184, 329 };
 		int[] arrowY = { 240, 270 };
 
-		int selX = BattleEngine.getInstance().currentSelectionFightX;
-		int selY = BattleEngine.getInstance().currentSelectionFightY;
+		int selX = gameControl.getCurrentColSelection();
+		int selY = gameControl.getCurrentRowSelection();
 
 		// draw the arrow based on current selection
 		g.drawImage(SpriteLibrary.getImage("Arrow"), arrowX[selX], arrowY[selY], null);
@@ -66,56 +51,61 @@ public class BattleFightScene implements Scene {
 		Painter.paintBattlerInfo(g);
 	}
 
-	/**
-	 * Handle a key press at the battle fight scene
-	 */
-	@Override
-	public void keyPress(int keyCode, GameController gameControl) {
-		// at move selection menu
-		int selX = BattleEngine.getInstance().currentSelectionFightX;
-		int selY = BattleEngine.getInstance().currentSelectionFightY;
-
-		switch (keyCode) {
-		case KeyEvent.VK_UP:
-			selY = 0;
-			break;
-		case KeyEvent.VK_DOWN:
-			selY = 1;
-			break;
-		case KeyEvent.VK_LEFT:
-			selX = 0;
-			break;
-		case KeyEvent.VK_RIGHT:
-			selX = 1;
-			break;
-		case KeyEvent.VK_X:
-			gameControl.setScreen(BattleScene.instance);
-			break;
-		case KeyEvent.VK_Z:
-			int move = 2 * BattleEngine.getInstance().currentSelectionFightY
-					+ BattleEngine.getInstance().currentSelectionFightX;
-			BattleEngine.getInstance().takeTurn(TURN.PLAYER, move);
-			BattleEngine.getInstance().enemyTurn();
-			break;
-		}
-
+	private void checkMove(int row, int col, GameController gameControl) {
 		// make sure the move exists before we move the arrow there
-		if (2 * selX + selY <= BattleEngine.getInstance().playerCurrentPokemon.getNumMoves() - 1) {
-			BattleEngine.getInstance().currentSelectionFightX = selX;
-			BattleEngine.getInstance().currentSelectionFightY = selY;
+		int choice = 2 * row + col;
+		int numMoves = BattleEngine.getInstance().playerCurrentPokemon.getNumMoves() - 1;
+
+		System.out.println(choice + ", " + numMoves);
+
+		if (choice <= numMoves && row >= 0 && col >= 0 && row <= 1 && col <= 1) {
+			gameControl.setCurrentSelection(new Coordinate(row, col));
+			gameControl.setCurrentSelection(new Coordinate(row, col));
 		}
-
-		// play sound when any button is pressed
-		gameControl.playClip(SOUND_EFFECT.SELECT);
-
 	}
 
 	/**
-	 * @return the ID of this scene
+	 * Up arrow button press
 	 */
-	@Override
-	public Integer getId() {
-		return this.ID;
+	public void doUp(GameController gameControl) {
+		checkMove(gameControl.getCurrentRowSelection() - 1, gameControl.getCurrentColSelection(), gameControl);
 	}
 
+	/**
+	 * Down arrow button press
+	 */
+	public void doDown(GameController gameControl) {
+		checkMove(gameControl.getCurrentRowSelection() + 1, gameControl.getCurrentColSelection(), gameControl);
+	}
+
+	/**
+	 * Left arrow button press
+	 */
+	public void doLeft(GameController gameControl) {
+		checkMove(gameControl.getCurrentRowSelection(), gameControl.getCurrentColSelection() - 1, gameControl);
+	}
+
+	/**
+	 * Right arrow button press
+	 */
+	public void doRight(GameController gameControl) {
+		checkMove(gameControl.getCurrentRowSelection(), gameControl.getCurrentColSelection() + 1, gameControl);
+	}
+
+	/**
+	 * "x" button press
+	 */
+	public void doBack(GameController gameControl) {
+		gameControl.setScene(BattleScene.instance);
+	}
+
+	/**
+	 * "z" button press
+	 */
+	public void doAction(GameController gameControl) {
+		int move = 2 * gameControl.getCurrentRowSelection() + gameControl.getCurrentColSelection();
+		BattleEngine.getInstance().takeTurn(TURN.PLAYER, move);
+		BattleEngine.getInstance().enemyTurn();
+		gameControl.setCurrentSelection(new Coordinate(0, 0));
+	}
 }

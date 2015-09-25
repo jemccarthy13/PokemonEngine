@@ -1,39 +1,24 @@
 package graphics;
 
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
 
 import party.Battler;
 import party.Battler.STAT;
 import party.Battler.STATUS;
 import utilities.BattleEngine;
-import audio.AudioLibrary.SOUND_EFFECT;
 import controller.GameController;
-import controller.GameKeyListener;
 
 /**
- * A representation of a title scene
+ * A representation of main battle scene
  */
-public class BattleScene implements Scene {
+public class BattleScene extends BaseScene {
 
 	private static final long serialVersionUID = 2665700331714781084L;
+
 	/**
 	 * Singleton instance
 	 */
 	public static BattleScene instance = new BattleScene();
-
-	/**
-	 * When it is created, register itself for Painting and KeyPress
-	 */
-	private BattleScene() {
-		Painter.getInstance().register(this);
-		GameKeyListener.getInstance().register(this);
-	};
-
-	/**
-	 * The maps will use this ID to reference the Scene objects
-	 */
-	public int ID = 4;
 
 	/**
 	 * Render the battle scene.
@@ -89,65 +74,60 @@ public class BattleScene implements Scene {
 	}
 
 	/**
-	 * Change this scene's selectors based on key input
-	 * 
-	 * @param keyCode
-	 *            - the key that was pressed
+	 * Right arrow button press
 	 */
-	private void changeSelection(int keyCode) {
-		if (keyCode == KeyEvent.VK_UP) {
-			BattleEngine.getInstance().currentSelectionMainY = 0;
-		} else if (keyCode == KeyEvent.VK_DOWN) {
-			BattleEngine.getInstance().currentSelectionMainY = 1;
-		} else if (keyCode == KeyEvent.VK_LEFT) {
-			BattleEngine.getInstance().currentSelectionMainX = 0;
-		} else if (keyCode == KeyEvent.VK_RIGHT) {
-			BattleEngine.getInstance().currentSelectionMainX = 1;
-		}
+	public void doRight(GameController gameControl) {
+		BattleEngine.getInstance().currentSelectionMainX = 1;
 	}
 
 	/**
-	 * Handle a key press at the battle scene
+	 * Left arrow button press
 	 */
-	@Override
-	public void keyPress(int keyCode, GameController gameControl) {
-		if (keyCode == KeyEvent.VK_Z) {
-			// do logic based on current selection
-			switch (2 * BattleEngine.getInstance().currentSelectionMainY
-					+ BattleEngine.getInstance().currentSelectionMainX) {
-			case 0:
-				gameControl.setScreen(BattleFightScene.instance);
-				break;
-			case 1:
-				gameControl.setScreen(BattlePartyScene.instance);
-				break;
-			case 2:
-				gameControl.setScreen(BattleItemScene.instance);
-				break;
-			case 3:
-				// try to run away if wild
-				if (BattleEngine.getInstance().enemyName == null) {
-					// TODO probability of running away...
-					gameControl.setCurrentMessage("Got away safely!");
-					gameControl.setScreen(WorldScene.instance);
-				} else {
-					// but if it's an opponent, player is stuck
-					gameControl.setCurrentMessage("Can't run away from a opponent!");
-				}
-				break;
+	public void doLeft(GameController gameControl) {
+		BattleEngine.getInstance().currentSelectionMainX = 0;
+	}
+
+	/**
+	 * Up arrow button press
+	 */
+	public void doDown(GameController gameControl) {
+		BattleEngine.getInstance().currentSelectionMainY = 1;
+	}
+
+	/**
+	 * Up arrow button press
+	 */
+	public void doUp(GameController gameControl) {
+		BattleEngine.getInstance().currentSelectionMainY = 0;
+	}
+
+	/**
+	 * "z" button press
+	 */
+	public void doAction(GameController gameControl) {
+		// do logic based on current selection
+		switch (2 * BattleEngine.getInstance().currentSelectionMainY + BattleEngine.getInstance().currentSelectionMainX) {
+		case 0:
+			gameControl.setScene(BattleFightScene.instance);
+			break;
+		case 1:
+			gameControl.setScene(BattlePartyScene.instance);
+			break;
+		case 2:
+			gameControl.setScene(BattleItemScene.instance);
+			break;
+		case 3:
+			// try to run away if wild
+			if (BattleEngine.getInstance().enemyName == null) {
+				// TODO probability of running away...
+				gameControl.addMessage("Got away safely!");
+				gameControl.setScene(WorldScene.instance);
+			} else {
+				// but if it's an opponent, player is stuck
+				gameControl.addMessage("Can't run away from a opponent!");
 			}
-		} else {
-			changeSelection(keyCode);
+			break;
 		}
-		gameControl.playClip(SOUND_EFFECT.SELECT);
-	}
-
-	/**
-	 * @return the ID of this scene
-	 */
-	@Override
-	public Integer getId() {
-		return this.ID;
 	}
 
 }

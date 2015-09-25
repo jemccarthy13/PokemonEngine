@@ -1,9 +1,8 @@
 package controller;
 
+import graphics.BaseScene;
 import graphics.IntroScene;
-import graphics.MessageScene;
 import graphics.NPCThread;
-import graphics.Scene;
 import graphics.SpriteLibrary;
 import graphics.WorldScene;
 
@@ -19,6 +18,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -120,88 +120,10 @@ public class GameController implements Serializable {
 	}
 
 	/**
-	 * Decrement the row selection of the name editing screen
-	 */
-	public void decrNameRowSelection() {
-		int row = nameBuilder.getRowSelection();
-		if (row > 0) {
-			nameBuilder.setRowSelection(row - 1);
-		}
-	}
-
-	/**
-	 * Increment the row selection of the name editing screen
-	 */
-	public void incrNameRowSelection() {
-		int row = nameBuilder.getRowSelection();
-		if (row < nameBuilder.maxRows()) {
-			nameBuilder.setRowSelection(row + 1);
-		}
-	}
-
-	/**
-	 * Increment the col selection of the name editing screen
-	 */
-	public void incrNameColSelection() {
-		int col = nameBuilder.getColSelection();
-		if (col < nameBuilder.maxCols()) {
-			nameBuilder.setColSelection(col + 1);
-		}
-	}
-
-	/**
-	 * Decrement the col selection of the name editing screen
-	 */
-	public void decrNameColSelection() {
-		int col = nameBuilder.getColSelection();
-		if (col > 0) {
-			nameBuilder.setColSelection(col - 1);
-		}
-	}
-
-	/**
-	 * Set the col selection for the name editing screen
-	 * 
-	 * @param i
-	 *            - new column selection
-	 */
-	public void setNameColSelection(int i) {
-		nameBuilder.setColSelection(i);
-	}
-
-	/**
-	 * Set the row selection for the name editing screen
-	 * 
-	 * @param i
-	 *            - new column selection
-	 */
-	public void setNameRowSelection(int i) {
-		nameBuilder.setRowSelection(i);
-	}
-
-	/**
-	 * Get the row selection for the name editing screen
-	 * 
-	 * @return row number
-	 */
-	public int getNameRowSelection() {
-		return nameBuilder.getRowSelection();
-	}
-
-	/**
-	 * Get the col selection for the name editing screen
-	 * 
-	 * @return col number
-	 */
-	public int getNameColSelection() {
-		return nameBuilder.getColSelection();
-	}
-
-	/**
 	 * Add the selected character to the name builder
 	 */
 	public void addSelectedChar() {
-		nameBuilder.addSelectedChar();
+		nameBuilder.addSelectedChar(getCurrentSelection());
 	}
 
 	/**
@@ -685,7 +607,7 @@ public class GameController implements Serializable {
 				DebugUtility.error("Unable to continue game from save file. Corrupt data:\n" + player.tData.toString());
 			}
 			// get out of continue menu
-			gData.screen = WorldScene.instance;
+			gData.scene = WorldScene.instance;
 		} else {
 			String name = "GOLD";
 			player = new Player(4, 2, name);
@@ -700,10 +622,10 @@ public class GameController implements Serializable {
 			gData.start_coorY = (Tile.TILESIZE * (6 - player.getCurrentY()));
 			gData.introStage = 1;
 			if (Configuration.SHOWINTRO) {
-				gData.screen = IntroScene.instance;
+				gData.scene = IntroScene.instance;
 				addAllMessages(NPCLibrary.getInstance().get("Professor Oak").getConversationText().toArray());
 			} else {
-				gData.screen = WorldScene.instance;
+				gData.scene = WorldScene.instance;
 			}
 			DebugUtility.printMessage("Started new game.");
 		}
@@ -942,7 +864,7 @@ public class GameController implements Serializable {
 			if (RandomNumUtils.isWildEncounter()) {
 				currentEnemyParty.clear();
 				currentEnemyParty.add(BattlerFactory.getInstance().randomPokemon(getPlayer().getCurLoc()));
-				setCurrentMessage("Wild " + currentEnemyParty.get(0).getName() + " appeared");
+				addMessage("Wild " + currentEnemyParty.get(0).getName() + " appeared");
 				doEncounter(currentEnemyParty, null);
 			}
 		}
@@ -1015,8 +937,7 @@ public class GameController implements Serializable {
 		if (c1.equals(c)) {
 			curNpc.setDirectionOpposite(playerDir);
 			curNpc.setStationary(true);
-			setCurrentMessage(curNpc.getConversationText().get(0));
-			setScreen(MessageScene.instance);
+			addMessage(curNpc.getConversationText().get(0));
 		}
 	}
 
@@ -1042,10 +963,24 @@ public class GameController implements Serializable {
 	}
 
 	/**
-	 * Increment the selection at the current screen
+	 * Increment the row selection at the current screen
 	 */
 	public void incrementRowSelection() {
 		setCurrentSelection(getCurrentSelection().move(DIR.EAST));
+	}
+
+	/**
+	 * Decrement the column selection at the current screen
+	 */
+	public void decrementColSelection() {
+		setCurrentSelection(getCurrentSelection().move(DIR.NORTH));
+	}
+
+	/**
+	 * Increment the column selection at the current screen
+	 */
+	public void incrementColSelection() {
+		setCurrentSelection(getCurrentSelection().move(DIR.SOUTH));
 	}
 
 	/**
@@ -1062,8 +997,8 @@ public class GameController implements Serializable {
 	 * 
 	 * @return current screen to be painted
 	 */
-	public Scene getScene() {
-		return gData.screen;
+	public BaseScene getScene() {
+		return gData.scene;
 	}
 
 	/**
@@ -1072,17 +1007,28 @@ public class GameController implements Serializable {
 	 * @param curScreen
 	 *            - the new current screen
 	 */
-	public void setScreen(Scene curScreen) {
-		gData.screen = curScreen;
+	public void setScene(BaseScene curScreen) {
+		gData.scene = curScreen;
 	}
 
 	/**
-	 * TODO replace with message queue
+	 * Add a message to the message queue
 	 * 
 	 * @param string
+	 *            - the message to add
 	 */
-	public void setCurrentMessage(String string) {
+	public void addMessage(String string) {
 		messages.add(string);
+	}
+
+	/**
+	 * Add a series of messages to the message queue
+	 * 
+	 * @param string
+	 *            - the message to add
+	 */
+	public void addMessages(Collection<String> string) {
+		messages.addAll(string);
 	}
 
 	/**

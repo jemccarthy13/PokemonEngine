@@ -46,8 +46,8 @@ public class Painter {
 	 * @param scene
 	 *            - the scene that can be rendered
 	 */
-	public void register(Scene scene) {
-		instance.scenePainters.put(scene.getId(), scene);
+	public void register(BaseScene scene) {
+		instance.scenePainters.put(scene.getClass().hashCode(), scene);
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class Painter {
 		GameController control = panel.gameController;
 
 		// based on the current scene, render the appropriate images
-		Integer sceneToRender = control.getScene().getId();
+		int sceneToRender = control.getScene().getClass().hashCode();
 		instance.scenePainters.get(sceneToRender).render(g, control);
 
 		// At any scene other than the name screen, message boxes

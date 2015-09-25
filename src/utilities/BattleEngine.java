@@ -48,14 +48,6 @@ public class BattleEngine {
 	 */
 	public int currentSelectionMainY = 0;
 	/**
-	 * The current selection (x) on the fight battle menu
-	 */
-	public int currentSelectionFightX = 0;
-	/**
-	 * The current selection (y) on the fight battle menu
-	 */
-	public int currentSelectionFightY = 0;
-	/**
 	 * Player's current fighting party member
 	 */
 	public Battler playerCurrentPokemon = null;
@@ -127,9 +119,7 @@ public class BattleEngine {
 		if (Configuration.DOBATTLES) {
 			game = g;
 			m_instance.currentSelectionMainX = 0;
-			m_instance.currentSelectionFightX = 0;
 			m_instance.currentSelectionMainY = 0;
-			m_instance.currentSelectionFightY = 0;
 
 			int idx = -1;
 			for (int x = 0; x < game.getPlayer().getParty().size(); x++) {
@@ -147,19 +137,19 @@ public class BattleEngine {
 			m_instance.enemyName = opponentName;
 
 			game.setMovable(false);
-			game.setScreen(BattleScene.instance);
+			game.setScene(BattleScene.instance);
 		}
 	}
 
 	/**
-	 * Depending on the current TURN, handle switching party members
+	 * Depending on the current TURN, handle changing party members
 	 * 
 	 * @TODO method-ize check for white out conditions
 	 * 
 	 * @param turn
 	 *            the current turn
 	 */
-	public void switchPokemon(TURN turn) {
+	public void changePokemon(TURN turn) {
 		switch (turn) {
 		case PLAYER:
 			boolean loss = true;
@@ -227,8 +217,8 @@ public class BattleEngine {
 		// reset logic
 		game.setMovable(false);
 
-		game.setCurrentMessage("Player won!");
-		game.setScreen(BattleMessageScene.instance);
+		game.addMessage("Player won!");
+		game.setScene(BattleMessageScene.instance);
 
 		game.getPlayer().beatenTrainers.add(enemyName);
 
@@ -255,7 +245,7 @@ public class BattleEngine {
 		for (Battler member : playerParty) {
 			member.fullHeal();
 		}
-		game.setScreen(WorldScene.instance);
+		game.setScene(WorldScene.instance);
 	}
 
 	/**
@@ -280,6 +270,8 @@ public class BattleEngine {
 
 		// try to thaw / wake the attacker if they are affected
 		attacker.tryToThaw();
+
+		DebugUtility.printMessage("Using: " + chosen.name);
 
 		STATUS status = attacker.getStatusEffect();
 		switch (status) {
@@ -314,7 +306,7 @@ public class BattleEngine {
 		}
 
 		if (defender.getStat(STAT.HP) <= 0) {
-			switchPokemon(turn.opposite());
+			changePokemon(turn.opposite());
 		}
 		DebugUtility.printHeader("End turn");
 	}
