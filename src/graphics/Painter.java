@@ -91,7 +91,7 @@ public class Painter {
 	 */
 	static void paintSmallString(Graphics g, String string, int startX, int startY) {
 		string = string.toUpperCase();
-		int offset = ((int) (Tile.TILESIZE / 2.7));
+		int offset = ((int) (Tile.TILESIZE / 2.7)) - 2;
 		for (int x = 0; x < string.toCharArray().length; x++) {
 			switch (string.toCharArray()[x]) {
 			case '?':

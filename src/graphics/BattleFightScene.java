@@ -56,8 +56,6 @@ public class BattleFightScene extends BaseScene {
 		int choice = 2 * row + col;
 		int numMoves = BattleEngine.getInstance().playerCurrentPokemon.getNumMoves() - 1;
 
-		System.out.println(choice + ", " + numMoves);
-
 		if (choice <= numMoves && row >= 0 && col >= 0 && row <= 1 && col <= 1) {
 			gameControl.setCurrentSelection(new Coordinate(row, col));
 			gameControl.setCurrentSelection(new Coordinate(row, col));

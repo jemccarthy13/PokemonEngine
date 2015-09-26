@@ -997,6 +997,9 @@ public class GameController implements Serializable {
 	 * @return the current selection
 	 */
 	public Coordinate getCurrentSelection() {
+		if (!gData.currentSelection.containsKey(getScene())) {
+			setCurrentSelection(new Coordinate(0, 0));
+		}
 		return gData.currentSelection.get(getScene());
 	}
 
