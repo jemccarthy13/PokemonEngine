@@ -39,8 +39,6 @@ public class Player extends Actor implements Serializable {
 	public Location curLoc;
 	/**
 	 * Item and Party Member storage
-	 * 
-	 * TODO - abstract from Pokemon game (rename)
 	 */
 	public Storage storage = new Storage();
 

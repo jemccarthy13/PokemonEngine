@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import model.Coordinate;
-import utilities.DebugUtility;
 import controller.GameController;
 
 /**
@@ -72,18 +71,7 @@ public class HelpScene extends BaseScene {
 	 * "z" button press at Pokegear scene
 	 */
 	public void doAction(GameController control) {
-		if (control.getCurrentRowSelection() == 0) {
-			// TODO - add Map painting
-			DebugUtility.printMessage("Map");
-		} else if (control.getCurrentRowSelection() == 1) {
-			// TODO - add Radio painting
-			DebugUtility.printMessage("Radio");
-		} else if (control.getCurrentRowSelection() == 2) {
-			// TODO - add Phone painting
-			DebugUtility.printMessage("Phone");
-		} else if (control.getCurrentRowSelection() == 3) {
-			control.setScene(MenuScene.instance);
-		}
 		control.setCurrentSelection(new Coordinate(0, 0));
+		// TODO map "Z" button press
 	}
 }

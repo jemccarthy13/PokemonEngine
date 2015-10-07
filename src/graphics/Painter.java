@@ -4,9 +4,11 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.HashMap;
 
+import model.Coordinate;
 import party.Battler;
 import party.Battler.STAT;
 import tiles.Tile;
+import trainers.Actor.DIR;
 import utilities.BattleEngine;
 import controller.GameController;
 
@@ -203,5 +205,30 @@ public class Painter {
 	 */
 	private static void paintMessageBox(Graphics g, String[] lines) {
 		paintMessageBox(g, lines[0], lines[1]);
+	}
+
+	/**
+	 * Draw an exclamation box above the NPCs head
+	 * 
+	 * @param g
+	 *            - the graphics to paint on
+	 * @param game
+	 *            - the controller
+	 * @param npcPosition
+	 *            - the position of the NPC that saw the player
+	 */
+	public static void paintTrainerSighted(Graphics g, GameController game, Coordinate npcPosition) {
+
+		int offsetX = game.getOffsetX();
+		int offsetY = game.getOffsetY();
+
+		Coordinate sightedBoxLocation = npcPosition.move(DIR.NORTH);
+		g.translate(offsetX - Tile.TILESIZE, offsetY - 2 * Tile.TILESIZE);
+
+		g.drawImage(SpriteLibrary.getImage("trainer-sighted"),
+				Tile.TILESIZE * sightedBoxLocation.getX() + game.getStartX(), sightedBoxLocation.getY() * Tile.TILESIZE
+						+ game.getStartY() - 10, null);
+		g.translate(-offsetX, -offsetY);
+
 	}
 }
