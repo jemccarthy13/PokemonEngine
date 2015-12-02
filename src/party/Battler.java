@@ -177,11 +177,10 @@ public class Battler implements Serializable {
 	 *            - the amount of experience to add
 	 */
 	public void gainExp(GameController game, int expGain) {
-		expGain = 120000;
 		this.curExp += expGain;
-		// TODO - change to message boxes
 		DebugUtility.printMessage("Gained " + expGain + " exp");
 
+		game.addMessage(getName() + " gained " + expGain + " exp!");
 		while (this.curExp >= (this.level + 1) * (this.level + 1) * (this.level + 1)) {
 			levelUp(game);
 		}

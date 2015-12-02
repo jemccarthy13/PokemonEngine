@@ -47,6 +47,7 @@ import utilities.DebugUtility;
 import utilities.RandomNumUtils;
 import audio.AudioLibrary;
 import audio.AudioLibrary.SOUND_EFFECT;
+import client.GameClient;
 
 /**
  * Controls game logic flow by providing an interface between view and data
@@ -82,6 +83,9 @@ public class GameController implements Serializable {
 
 	// NPC random movement controller
 	private NPCThread npcs = new NPCThread();
+
+	// multiplayer client
+	private GameClient gameClient;
 
 	/**
 	 * Create a new controller to wrap around the game data
@@ -586,11 +590,63 @@ public class GameController implements Serializable {
 
 	/***************************************************************************
 	 * 
+	 * MULTIPLAYER LOGIC
+	 * 
+	 * Connection to the game server, handling updates and such.
+	 * 
+	 **************************************************************************/
+	/**
+	 * Start a multiplayer session for this client.
+	 */
+	public void establishMultiplayerSession() {
+		DebugUtility.printMessage("Connecting to game server...");
+		gameClient = new GameClient(player.getID());
+		new Thread(gameClient).start();
+		DebugUtility.printMessage("Connected to game server.");
+	}
+
+	/**
+	 * Close the multiplayer session for this client.
+	 */
+	public void endMultiplayerSession() {
+		gameClient.sendMessage("end");
+		DebugUtility.printMessage("Disconnected from game server.");
+	}
+
+	/***************************************************************************
+	 * 
 	 * TIME CONTROL LOGIC
 	 * 
 	 * Helps control time and gameplay speed
 	 * 
 	 **************************************************************************/
+
+	/**
+	 * New game
+	 */
+	private void newGame() {
+		String name = "GOLD";
+		player = new Player(4, 2, name);
+		Battler charmander = BattlerFactory.createPokemon("Charmander", 7);
+		Battler sentret = BattlerFactory.createPokemon("Sentret", 3);
+		Battler charizard = BattlerFactory.createPokemon("Charmander", 99);
+		Battler pidgey = BattlerFactory.createPokemon("Pidgey", 20);
+		Battler mewtwo = BattlerFactory.createPokemon("Mewtwo", 50);
+		Battler squirtle = BattlerFactory.createPokemon("Squirtle", 50);
+		player.caughtWild(charmander);
+		player.caughtWild(sentret);
+		player.caughtWild(charizard);
+		player.caughtWild(pidgey);
+		player.caughtWild(mewtwo);
+		player.caughtWild(squirtle);
+		player.setMoney(1000000);
+		player.setCurLocation(LocationLibrary.getLocation("Route 27"));
+		playBackgroundMusic();
+		gData.start_coorX = (Tile.TILESIZE * (8 - player.getCurrentX()));
+		gData.start_coorY = (Tile.TILESIZE * (6 - player.getCurrentY()));
+		gData.introStage = 1;
+	}
+
 	/**
 	 * Start the game, based off a save file or as a new game
 	 * 
@@ -603,32 +659,15 @@ public class GameController implements Serializable {
 		DebugUtility.printHeader("Starting game:");
 		if (continued) {
 			loadGame();
+
 			if (!player.tData.isValidData()) {
 				DebugUtility.error("Unable to continue game from save file. Corrupt data:\n" + player.tData.toString());
 			}
 			// get out of continue menu
 			gData.scene = WorldScene.instance;
 		} else {
-			String name = "GOLD";
-			player = new Player(4, 2, name);
-			Battler charmander = BattlerFactory.createPokemon("Charmander", 7);
-			Battler sentret = BattlerFactory.createPokemon("Sentret", 3);
-			Battler charizard = BattlerFactory.createPokemon("Charmander", 99);
-			Battler pidgey = BattlerFactory.createPokemon("Pidgey", 20);
-			Battler mewtwo = BattlerFactory.createPokemon("Mewtwo", 50);
-			Battler squirtle = BattlerFactory.createPokemon("Squirtle", 50);
-			player.caughtWild(charmander);
-			player.caughtWild(sentret);
-			player.caughtWild(charizard);
-			player.caughtWild(pidgey);
-			player.caughtWild(mewtwo);
-			player.caughtWild(squirtle);
-			player.setMoney(1000000);
-			player.setCurLocation(LocationLibrary.getLocation("Route 27"));
-			playBackgroundMusic();
-			gData.start_coorX = (Tile.TILESIZE * (8 - player.getCurrentX()));
-			gData.start_coorY = (Tile.TILESIZE * (6 - player.getCurrentY()));
-			gData.introStage = 1;
+			newGame();
+
 			if (Configuration.SHOWINTRO) {
 				gData.scene = IntroScene.instance;
 				addAllMessages(NPCLibrary.getInstance().get("Professor Oak").getConversationText().toArray());
@@ -637,6 +676,9 @@ public class GameController implements Serializable {
 			}
 			DebugUtility.printMessage("Started new game.");
 		}
+
+		// TODO connect to the game server
+		establishMultiplayerSession();
 
 		// initialize the player sprite
 		player.tData.sprite_name = "PLAYER";
