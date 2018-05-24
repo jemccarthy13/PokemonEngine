@@ -1,11 +1,5 @@
 package controller;
 
-import graphics.BaseScene;
-import graphics.IntroScene;
-import graphics.NPCThread;
-import graphics.SpriteLibrary;
-import graphics.WorldScene;
-
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,6 +18,14 @@ import java.util.StringTokenizer;
 
 import javax.swing.Timer;
 
+import audio.AudioLibrary;
+import audio.AudioLibrary.SOUND_EFFECT;
+import client.GameClient;
+import graphics.BaseScene;
+import graphics.IntroScene;
+import graphics.NPCThread;
+import graphics.SpriteLibrary;
+import graphics.WorldScene;
 import location.LocationLibrary;
 import model.Configuration;
 import model.Coordinate;
@@ -45,9 +47,6 @@ import trainers.Player;
 import utilities.BattleEngine;
 import utilities.DebugUtility;
 import utilities.RandomNumUtils;
-import audio.AudioLibrary;
-import audio.AudioLibrary.SOUND_EFFECT;
-import client.GameClient;
 
 /**
  * Controls game logic flow by providing an interface between view and data
@@ -60,7 +59,7 @@ public class GameController implements Serializable {
 	private static final long serialVersionUID = 968834933407220662L;
 
 	// handles any audio
-	private AudioLibrary audio = new AudioLibrary();
+	private AudioLibrary audio = AudioLibrary.getInstance();
 
 	// controls the speed game events are handled and the current game time
 	private GameTime gameTimeStruct = new GameTime(0, 0, 0);
@@ -104,8 +103,8 @@ public class GameController implements Serializable {
 	 **************************************************************************/
 
 	/**
-	 * Sets the toBeNamed object. Used for graphics painting to get the sprite
-	 * of the thing to be named.
+	 * Sets the toBeNamed object. Used for graphics painting to get the sprite of
+	 * the thing to be named.
 	 * 
 	 * @param tbn
 	 *            - new to be named object
@@ -331,7 +330,8 @@ public class GameController implements Serializable {
 							data.setMapTileAt(c, TileSet.BATTLE);
 						}
 					} else {
-						if ((layer == 1 || (layer == 2 && Integer.parseInt(code) > 0)) && data.getMapTileAt(c) == null) {
+						if ((layer == 1 || (layer == 2 && Integer.parseInt(code) > 0))
+								&& data.getMapTileAt(c) == null) {
 							data.setMapTileAt(c, TileSet.NORMAL);
 						}
 					}
@@ -343,8 +343,8 @@ public class GameController implements Serializable {
 		DebugUtility.printHeader("Loading Map");
 
 		// intialize file reader
-		BufferedReader bReader = new BufferedReader(new InputStreamReader(
-				GameController.class.getResourceAsStream(Configuration.MAP_TO_LOAD)));
+		BufferedReader bReader = new BufferedReader(
+				new InputStreamReader(GameController.class.getResourceAsStream(Configuration.MAP_TO_LOAD)));
 		SynchronizedReader reader = new SynchronizedReader(bReader);
 		String line = reader.readLine();
 		StringTokenizer tokens = new StringTokenizer(line);
@@ -531,8 +531,8 @@ public class GameController implements Serializable {
 	}
 
 	/**
-	 * Makes a temporary coordinate, and checks to see if the actor can move in
-	 * the specified direction
+	 * Makes a temporary coordinate, and checks to see if the actor can move in the
+	 * specified direction
 	 * 
 	 * @param dir
 	 *            - the direction to check
@@ -859,9 +859,9 @@ public class GameController implements Serializable {
 	}
 
 	/**
-	 * Are we at the world screen, does the NPC see the player, is the player
-	 * not walking, is the master control for battles turned on, and the player
-	 * is not beaten?
+	 * Are we at the world screen, does the NPC see the player, is the player not
+	 * walking, is the master control for battles turned on, and the player is not
+	 * beaten?
 	 * 
 	 * @param npc
 	 *            - npc to check
@@ -899,10 +899,13 @@ public class GameController implements Serializable {
 		DIR NPC_DIR = curNPC.getDirection();
 
 		return (((playerCurX == curNPC.getCurrentX()) && (((playerCurY < NPC_Y)
-				&& (NPC_Y - playerCurY <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.NORTH)) || ((playerCurY > NPC_Y)
-				&& (playerCurY - NPC_Y <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.SOUTH)))) || ((playerCurY == NPC_Y) && (((playerCurX < NPC_X)
-				&& (NPC_X - playerCurX <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.WEST)) || ((playerCurX > NPC_X)
-				&& (playerCurX - NPC_X <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.EAST)))));
+				&& (NPC_Y - playerCurY <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.NORTH))
+				|| ((playerCurY > NPC_Y) && (playerCurY - NPC_Y <= Configuration.NPC_SIGHT_DISTANCE)
+						&& (NPC_DIR == DIR.SOUTH))))
+				|| ((playerCurY == NPC_Y) && (((playerCurX < NPC_X)
+						&& (NPC_X - playerCurX <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.WEST))
+						|| ((playerCurX > NPC_X) && (playerCurX - NPC_X <= Configuration.NPC_SIGHT_DISTANCE)
+								&& (NPC_DIR == DIR.EAST)))));
 	}
 
 	/**

@@ -31,15 +31,32 @@ public class GameClient extends Thread {
 	 * @param args
 	 */
 	public void run() {
+		boolean success = false;
+
 		int portNum = 8085;
 		try {
 			socket = new Socket("localhost", portNum);
 			printWriter = new PrintWriter(socket.getOutputStream(), true);
 			printWriter.println("set ID " + sessionID);
+			success = true;
 		} catch (ConnectException e) {
-			DebugUtility.error("Connection refused: port (" + portNum + ") likely in use.");
+			DebugUtility.printError("Connection refused: port (" + portNum + ") likely in use.");
 		} catch (IOException e1) {
 			DebugUtility.error("Unknown error: " + e1.getMessage());
+		}
+
+		if (!success) {
+			portNum = 1023;
+			try {
+				socket = new Socket("localhost", portNum);
+				printWriter = new PrintWriter(socket.getOutputStream(), true);
+				printWriter.println("set ID " + sessionID);
+				success = true;
+			} catch (ConnectException e) {
+				DebugUtility.printError("Connection refused: port (" + portNum + ") likely in use.");
+			} catch (IOException e1) {
+				DebugUtility.error("Unknown error: " + e1.getMessage());
+			}
 		}
 	}
 
