@@ -1,5 +1,31 @@
 {
      "pokemon":[
+	 		{
+			"pName":"Mewtwo",
+			"pokedex_num": "150",
+			"evolution_stages": [
+				{ 
+					"name":"Mewtwo",
+					"level":0
+				}
+			],
+			"type":"PSYCHIC",
+			"base_exp": 115,
+			"moves": [
+				{
+					"name":"SCRATCH",
+					"level":0
+				},
+				{
+					"name":"TACKLE",
+					"level":0
+				},
+				{
+					"name":"LEER",
+					"level":0
+				}
+			]
+		},
 		{
 			"pName":"Bulbasaur",
 			"pokedex_num": "001",
@@ -112,7 +138,7 @@
 		},		
 		{
 			"pName":"Pidgey",
-			"pokedex_num": "004",
+			"pokedex_num": "016",
 			"evolution_stages": [
 				{ 
 					"name":"Pidgey",

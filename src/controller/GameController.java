@@ -1,5 +1,11 @@
 package controller;
 
+import graphics.BaseScene;
+import graphics.IntroScene;
+import graphics.NPCThread;
+import graphics.SpriteLibrary;
+import graphics.WorldScene;
+
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,13 +24,6 @@ import java.util.StringTokenizer;
 
 import javax.swing.Timer;
 
-import audio.AudioLibrary;
-import audio.AudioLibrary.SOUND_EFFECT;
-import graphics.BaseScene;
-import graphics.IntroScene;
-import graphics.NPCThread;
-import graphics.SpriteLibrary;
-import graphics.WorldScene;
 import location.LocationLibrary;
 import model.Configuration;
 import model.Coordinate;
@@ -46,6 +45,9 @@ import trainers.Player;
 import utilities.BattleEngine;
 import utilities.DebugUtility;
 import utilities.RandomNumUtils;
+import audio.AudioLibrary;
+import audio.AudioLibrary.SOUND_EFFECT;
+import client.GameClient;
 
 /**
  * Controls game logic flow by providing an interface between view and data
@@ -58,7 +60,7 @@ public class GameController implements Serializable {
 	private static final long serialVersionUID = 968834933407220662L;
 
 	// handles any audio
-	private AudioLibrary audio = AudioLibrary.getInstance();
+	private AudioLibrary audio = new AudioLibrary();
 
 	// controls the speed game events are handled and the current game time
 	private GameTime gameTimeStruct = new GameTime(0, 0, 0);
@@ -81,6 +83,9 @@ public class GameController implements Serializable {
 
 	// NPC random movement controller
 	private NPCThread npcs = new NPCThread();
+
+	// multiplayer client
+	private GameClient gameClient;
 
 	/**
 	 * Create a new controller to wrap around the game data
@@ -326,8 +331,7 @@ public class GameController implements Serializable {
 							data.setMapTileAt(c, TileSet.BATTLE);
 						}
 					} else {
-						if ((layer == 1 || (layer == 2 && Integer.parseInt(code) > 0))
-								&& data.getMapTileAt(c) == null) {
+						if ((layer == 1 || (layer == 2 && Integer.parseInt(code) > 0)) && data.getMapTileAt(c) == null) {
 							data.setMapTileAt(c, TileSet.NORMAL);
 						}
 					}
@@ -339,8 +343,8 @@ public class GameController implements Serializable {
 		DebugUtility.printHeader("Loading Map");
 
 		// intialize file reader
-		BufferedReader bReader = new BufferedReader(
-				new InputStreamReader(GameController.class.getResourceAsStream(Configuration.MAP_TO_LOAD)));
+		BufferedReader bReader = new BufferedReader(new InputStreamReader(
+				GameController.class.getResourceAsStream(Configuration.MAP_TO_LOAD)));
 		SynchronizedReader reader = new SynchronizedReader(bReader);
 		String line = reader.readLine();
 		StringTokenizer tokens = new StringTokenizer(line);
@@ -360,28 +364,25 @@ public class GameController implements Serializable {
 
 		DebugUtility.printMessage("Initializing map tiles to null...");
 		// initialize the Tile map
-		// for (int r = 0; r < mapheight; r++) {
+		for (int r = 0; r < mapheight; r++) {
 
-		// Tile[] numbers = new Tile[mapwidth];
-		// Arrays.fill(numbers, null);
-		// List<Tile> row = Arrays.asList(numbers);
-		// gData.tileMap.add(row);
-		// }
+			Tile[] numbers = new Tile[mapwidth];
+			Arrays.fill(numbers, null);
+			List<Tile> row = Arrays.asList(numbers);
+			gData.tileMap.add(row);
+		}
 
 		// initialize the Image map and add obstacles to the Tile map
 		ArrayList<Thread> threads = new ArrayList<Thread>();
-		for (int layer = 0; layer < 3; layer++) {
-			Thread t = new ProcessLayerThread(reader, this, layer);
+		for (int layers = 0; layers < 3; layers++) {
+			Thread t = new ProcessLayerThread(reader, this, layers);
 			t.start();
 			threads.add(t);
-			DebugUtility.printMessage("Started processing layer: " + layer);
 		}
 
 		for (Thread t : threads) {
-			DebugUtility.printMessage("Waiting for threads to finish.");
 			t.join();
 		}
-
 		DebugUtility.printMessage("Loaded map.");
 	}
 
@@ -589,11 +590,63 @@ public class GameController implements Serializable {
 
 	/***************************************************************************
 	 * 
+	 * MULTIPLAYER LOGIC
+	 * 
+	 * Connection to the game server, handling updates and such.
+	 * 
+	 **************************************************************************/
+	/**
+	 * Start a multiplayer session for this client.
+	 */
+	public void establishMultiplayerSession() {
+		DebugUtility.printMessage("Connecting to game server...");
+		gameClient = new GameClient(player.getID());
+		new Thread(gameClient).start();
+		DebugUtility.printMessage("Connected to game server.");
+	}
+
+	/**
+	 * Close the multiplayer session for this client.
+	 */
+	public void endMultiplayerSession() {
+		gameClient.sendMessage("end");
+		DebugUtility.printMessage("Disconnected from game server.");
+	}
+
+	/***************************************************************************
+	 * 
 	 * TIME CONTROL LOGIC
 	 * 
 	 * Helps control time and gameplay speed
 	 * 
 	 **************************************************************************/
+
+	/**
+	 * New game
+	 */
+	private void newGame() {
+		String name = "GOLD";
+		player = new Player(4, 2, name);
+		Battler charmander = BattlerFactory.createPokemon("Charmander", 7);
+		Battler sentret = BattlerFactory.createPokemon("Sentret", 3);
+		Battler charizard = BattlerFactory.createPokemon("Charmander", 99);
+		Battler pidgey = BattlerFactory.createPokemon("Pidgey", 20);
+		Battler mewtwo = BattlerFactory.createPokemon("Mewtwo", 50);
+		Battler squirtle = BattlerFactory.createPokemon("Squirtle", 50);
+		player.caughtWild(charmander);
+		player.caughtWild(sentret);
+		player.caughtWild(charizard);
+		player.caughtWild(pidgey);
+		player.caughtWild(mewtwo);
+		player.caughtWild(squirtle);
+		player.setMoney(1000000);
+		player.setCurLocation(LocationLibrary.getLocation("Route 27"));
+		playBackgroundMusic();
+		gData.start_coorX = (Tile.TILESIZE * (8 - player.getCurrentX()));
+		gData.start_coorY = (Tile.TILESIZE * (6 - player.getCurrentY()));
+		gData.introStage = 1;
+	}
+
 	/**
 	 * Start the game, based off a save file or as a new game
 	 * 
@@ -606,24 +659,15 @@ public class GameController implements Serializable {
 		DebugUtility.printHeader("Starting game:");
 		if (continued) {
 			loadGame();
+
 			if (!player.tData.isValidData()) {
 				DebugUtility.error("Unable to continue game from save file. Corrupt data:\n" + player.tData.toString());
 			}
 			// get out of continue menu
 			gData.scene = WorldScene.instance;
 		} else {
-			String name = "GOLD";
-			player = new Player(4, 2, name);
-			Battler charmander = BattlerFactory.createPokemon("Charmander", 7);
-			Battler sentret = BattlerFactory.createPokemon("Sentret", 3);
-			player.caughtWild(charmander);
-			player.caughtWild(sentret);
-			player.setMoney(1000000);
-			player.setCurLocation(LocationLibrary.getLocation("Route 27"));
-			playBackgroundMusic();
-			gData.start_coorX = (Tile.TILESIZE * (8 - player.getCurrentX()));
-			gData.start_coorY = (Tile.TILESIZE * (6 - player.getCurrentY()));
-			gData.introStage = 1;
+			newGame();
+
 			if (Configuration.SHOWINTRO) {
 				gData.scene = IntroScene.instance;
 				addAllMessages(NPCLibrary.getInstance().get("Professor Oak").getConversationText().toArray());
@@ -632,6 +676,9 @@ public class GameController implements Serializable {
 			}
 			DebugUtility.printMessage("Started new game.");
 		}
+
+		// TODO connect to the game server
+		establishMultiplayerSession();
 
 		// initialize the player sprite
 		player.tData.sprite_name = "PLAYER";
@@ -852,13 +899,10 @@ public class GameController implements Serializable {
 		DIR NPC_DIR = curNPC.getDirection();
 
 		return (((playerCurX == curNPC.getCurrentX()) && (((playerCurY < NPC_Y)
-				&& (NPC_Y - playerCurY <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.NORTH))
-				|| ((playerCurY > NPC_Y) && (playerCurY - NPC_Y <= Configuration.NPC_SIGHT_DISTANCE)
-						&& (NPC_DIR == DIR.SOUTH))))
-				|| ((playerCurY == NPC_Y) && (((playerCurX < NPC_X)
-						&& (NPC_X - playerCurX <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.WEST))
-						|| ((playerCurX > NPC_X) && (playerCurX - NPC_X <= Configuration.NPC_SIGHT_DISTANCE)
-								&& (NPC_DIR == DIR.EAST)))));
+				&& (NPC_Y - playerCurY <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.NORTH)) || ((playerCurY > NPC_Y)
+				&& (playerCurY - NPC_Y <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.SOUTH)))) || ((playerCurY == NPC_Y) && (((playerCurX < NPC_X)
+				&& (NPC_X - playerCurX <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.WEST)) || ((playerCurX > NPC_X)
+				&& (playerCurX - NPC_X <= Configuration.NPC_SIGHT_DISTANCE) && (NPC_DIR == DIR.EAST)))));
 	}
 
 	/**
@@ -995,6 +1039,9 @@ public class GameController implements Serializable {
 	 * @return the current selection
 	 */
 	public Coordinate getCurrentSelection() {
+		if (!gData.currentSelection.containsKey(getScene())) {
+			setCurrentSelection(new Coordinate(0, 0));
+		}
 		return gData.currentSelection.get(getScene());
 	}
 

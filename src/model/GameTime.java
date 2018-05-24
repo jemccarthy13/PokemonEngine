@@ -115,6 +115,6 @@ public class GameTime implements Serializable {
 			minutes = 60 - (minutes / 60);
 		}
 		DecimalFormat df = new DecimalFormat("00");
-		return df.format(hours) + ": " + df.format(minutes) + ": " + df.format(seconds);
+		return df.format(hours) + ":" + df.format(minutes) + ":" + df.format(seconds);
 	}
 }

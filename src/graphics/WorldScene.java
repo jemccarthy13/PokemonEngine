@@ -51,7 +51,7 @@ public class WorldScene extends BaseScene {
 		int startX = control.getStartX();
 		int startY = control.getStartY();
 
-		g.translate(offsetX - 32, offsetY - 64);
+		g.translate(offsetX - Tile.TILESIZE, offsetY - 2 * Tile.TILESIZE);
 
 		for (int layer = 1; layer < 3; layer++) {
 			int x_coor = startX;
@@ -74,8 +74,8 @@ public class WorldScene extends BaseScene {
 		}
 
 		for (Actor curNPC : NPCLibrary.getInstance().values()) {
-			g.drawImage(curNPC.tData.sprite.getImage(), curNPC.getCurrentX() * 32 + startX, curNPC.getCurrentY() * 32
-					+ startY - 10, null);
+			g.drawImage(curNPC.tData.sprite.getImage(), curNPC.getCurrentX() * Tile.TILESIZE + startX,
+					curNPC.getCurrentY() * Tile.TILESIZE + startY - 10, null);
 			control.setMapTileAt(curNPC.getPosition(), TileSet.OBSTACLE);
 		}
 

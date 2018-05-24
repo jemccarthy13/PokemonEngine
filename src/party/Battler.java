@@ -11,6 +11,7 @@ import javax.swing.ImageIcon;
 import party.MoveData.MOVECATEGORY;
 import utilities.DebugUtility;
 import utilities.RandomNumUtils;
+import controller.GameController;
 
 /**
  * Generated from Battler data, calculates stats based on a level and holds
@@ -138,6 +139,13 @@ public class Battler implements Serializable {
 			}
 		}
 
+		updateSprites();
+	}
+
+	/**
+	 * Get the right sprites for an updated pokedex number
+	 */
+	public void updateSprites() {
 		String number = formatPokedexNumber();
 		this.party_icon = SpriteLibrary.createImage(SpriteLibrary.getLibPath() + "Icons/icon" + number + ".png");
 		this.back_sprite = SpriteLibrary.createImage(SpriteLibrary.getLibPath() + "Battlers/" + number + "b.png");
@@ -163,16 +171,18 @@ public class Battler implements Serializable {
 	 * Give the pokemon the calculated exp if it's over the next level amount,
 	 * level up
 	 * 
+	 * @param game
+	 * 
 	 * @param expGain
 	 *            - the amount of experience to add
 	 */
-	public void gainExp(int expGain) {
+	public void gainExp(GameController game, int expGain) {
 		this.curExp += expGain;
-		// TODO - change to message boxes
 		DebugUtility.printMessage("Gained " + expGain + " exp");
 
-		if (this.curExp >= (this.level + 1) * (this.level + 1) * (this.level + 1)) {
-			levelUp();
+		game.addMessage(getName() + " gained " + expGain + " exp!");
+		while (this.curExp >= (this.level + 1) * (this.level + 1) * (this.level + 1)) {
+			levelUp(game);
 		}
 	}
 
@@ -203,11 +213,14 @@ public class Battler implements Serializable {
 
 	/**
 	 * Level up, increase stats, check for evolution, check for moves learned
+	 * 
+	 * @param game
 	 */
-	public void levelUp() {
+	public void levelUp(GameController game) {
 		if (this.level < 100) {
 			this.level += 1;
 			// TODO - convert to use message box
+			game.addMessage(getName() + " grew to level " + level + "!");
 			DebugUtility.printMessage(getName() + " grew to level " + level + "!");
 		}
 		for (STAT key : stats.keySet()) {
@@ -239,6 +252,7 @@ public class Battler implements Serializable {
 			// TODO Convert to use message box
 			DebugUtility.printMessage("Congratulations!  Your " + pData.evolution_stages.get(evolution_stage - 1)
 					+ " has evolved into a " + pData.evolution_stages.get(evolution_stage) + "!");
+			updateSprites();
 		}
 		for (int x = 0; x < pData.movesLearned.size(); x++) {
 			if (level == pData.levelsLearned.get(x)) {

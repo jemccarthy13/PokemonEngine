@@ -22,9 +22,10 @@ public class OptionScene extends BaseScene {
 	 */
 	@Override
 	public void render(Graphics g, GameController gameControl) {
-		String imageName = gameControl.isSoundOn() ? "OptionBG_SoundOn" : "OptionBG_SoundOff";
-		g.drawImage(SpriteLibrary.getImage(imageName), 0, 0, null);
+		String sound = gameControl.isSoundOn() ? "On" : "Off";
+		g.drawImage(SpriteLibrary.getImage("OptionBG"), 0, 0, null);
 		g.drawImage(SpriteLibrary.getImage("Arrow"), 22, 85 + 32 * gameControl.getCurrentRowSelection(), null);
+		Painter.paintSmallString(g, sound, 225, 250);
 	}
 
 	/**

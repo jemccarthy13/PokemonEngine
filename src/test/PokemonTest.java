@@ -8,6 +8,7 @@ import party.Battler.STAT;
 import party.BattlerFactory;
 import utilities.DebugUtility;
 import utilities.DebugUtility.DEBUG_LEVEL;
+import controller.GameController;
 
 /**
  * Unit testing for Party member constructors and information
@@ -43,25 +44,27 @@ public class PokemonTest {
 
 		DebugUtility.printMessage(member1.toString());
 
+		GameController game = new GameController();
+
 		Assert.assertTrue(member1.getLevel() == 5);
 		for (int m = 0; m < 10; m++) {
-			member1.levelUp();
+			member1.levelUp(game);
 		}
 		Assert.assertTrue(member1.getLevel() == 15);
 		Assert.assertTrue(member1.getName().equals("Bulbasaur"));
-		member1.levelUp();
+		member1.levelUp(game);
 		Assert.assertTrue(member1.getLevel() == 16);
 		Assert.assertTrue(member1.getName().equals("Ivysaur"));
 		for (int k = 0; k < 15; k++) {
-			member1.levelUp();
+			member1.levelUp(game);
 		}
 		Assert.assertTrue(member1.getLevel() == 31);
 		Assert.assertTrue(member1.getName().equals("Ivysaur"));
-		member1.levelUp();
+		member1.levelUp(game);
 		Assert.assertTrue(member1.getLevel() == 32);
 		Assert.assertTrue(member1.getName().equals("Venusaur"));
 		for (int z = 0; z < 30; z++) {
-			member1.levelUp();
+			member1.levelUp(game);
 		}
 
 		Assert.assertTrue(member2.getName().equals("Bulbasaur"));

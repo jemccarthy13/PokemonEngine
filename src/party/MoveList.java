@@ -38,7 +38,7 @@ public class MoveList extends ArrayList<MoveData> {
 	 */
 	public boolean add(MoveData move, boolean askForOverwrite) {
 		boolean success = false;
-		if (capacity < 4 || capacity == -1) {
+		if (size() < capacity || size() == 0) {
 			this.add(move);
 			success = true;
 		} else {

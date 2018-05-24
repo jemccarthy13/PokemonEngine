@@ -64,7 +64,7 @@ public class GamePanel extends JPanel implements ActionListener {
 		DebugUtility.printMessage("Registered for events.");
 
 		setBackground(Color.BLACK);
-		setPreferredSize(new Dimension(480, 320));
+		setPreferredSize(new Dimension(480, 318));
 
 		DebugUtility.printMessage("Playing title music...");
 		gameController.playBackgroundMusic("Title");
@@ -143,9 +143,11 @@ public class GamePanel extends JPanel implements ActionListener {
 	private void enemyTrainerAnimation(Actor curNPC) {
 
 		gameController.playTrainerMusic();
+		// TODO - verify trainer music plays
 
 		try {
-			// TODO - ! needs to be pained here
+			// ! painting on initial eyesight
+			Painter.paintTrainerSighted(getGraphics(), gameController, curNPC.getPosition());
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {}
 
@@ -171,7 +173,10 @@ public class GamePanel extends JPanel implements ActionListener {
 		// until NPC reaches player, place a normal tile, move NPC, repaint
 		for (int x = 0; x < distToTravel; x++) {
 			gameController.setMapTileAt(curNPC.tData.position, TileSet.NORMAL);
+			// TODO better animation somewhere in this loop - make it look like
+			// player walking animation
 			curNPC.move(NPC_DIR);
+
 			paintComponent(getGraphics());
 			try {
 				Thread.sleep(500);

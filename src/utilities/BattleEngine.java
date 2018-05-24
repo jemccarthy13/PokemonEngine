@@ -205,7 +205,7 @@ public class BattleEngine {
 				s++;
 			}
 		}
-		this.playerCurrentPokemon.gainExp(this.enemyCurrentPokemon.getExpGain(false, s));
+		this.playerCurrentPokemon.gainExp(game, this.enemyCurrentPokemon.getExpGain(false, s));
 	}
 
 	/**
@@ -236,10 +236,15 @@ public class BattleEngine {
 	public void Lose() {
 		this.enemyCurrentPokemon.setStatusEffect(STATUS.NORMAL);
 		// TODO - change to message boxes
-		DebugUtility.printMessage("Player Pokemon has fainted");
-		DebugUtility.printMessage(game.getPlayer().getName() + " is all out of usable Pokemon!");
-		DebugUtility.printMessage(game.getPlayer().getName() + " whited out.");
 
+		String[] lossMessages = { "Player Pokemon has fainted",
+				game.getPlayer().getName() + " is all out of usable Pokemon!",
+				game.getPlayer().getName() + " whited out." };
+
+		for (String message : lossMessages) {
+			DebugUtility.printMessage(message);
+			game.addMessage(message);
+		}
 		game.setPlayerDirection(DIR.SOUTH);
 		Party playerParty = game.getPlayer().getParty();
 		for (Battler member : playerParty) {
@@ -264,63 +269,53 @@ public class BattleEngine {
 		// get the attacker and defender based on this TURN
 		Battler attacker = (turn == TURN.PLAYER) ? playerCurrentPokemon : enemyCurrentPokemon;
 		Battler defender = (turn == TURN.PLAYER) ? enemyCurrentPokemon : playerCurrentPokemon;
+		if (attacker.getStat(STAT.HP) > 0) {
+			// get the chosen move
+			MoveData chosen = attacker.getMove(move);
 
-		// get the chosen move
-		MoveData chosen = attacker.getMove(move);
+			// try to thaw / wake the attacker if they are affected
+			attacker.tryToThaw();
 
-		// try to thaw / wake the attacker if they are affected
-		attacker.tryToThaw();
+			DebugUtility.printMessage("Using: " + chosen.name);
 
-		DebugUtility.printMessage("Using: " + chosen.name);
+			game.addMessage(attacker.getName() + " used " + chosen.name + "!");
 
-		STATUS status = attacker.getStatusEffect();
-		switch (status) {
-		case FRZ:
-		case SLP:
-			// do nothing if still frozen or asleep
-			break;
-		case PAR:
-			// do paralyzed logic
-			Random r = new Random();
-			if (r.nextInt(2) <= 0) {
-				// do damage to the defender based on the chosen move
+			STATUS status = attacker.getStatusEffect();
+			switch (status) {
+			case FRZ:
+			case SLP:
+				// do nothing if still frozen or asleep
+				break;
+			case PAR:
+				// do paralyzed logic
+				Random r = new Random();
+				if (r.nextInt(2) <= 0) {
+					// do damage to the defender based on the chosen move
+					defender.doDamage(chosen);
+					game.playClip(SOUND_EFFECT.DAMAGE);
+
+					// decrement move counter, print result
+					// TODO convert to message
+					DebugUtility.printMessage(turn + "'s turn is over");
+					chosen.movePP--;
+				} else {
+					DebugUtility.printMessage(attacker.getName() + " is paralyzed. It can't move.");
+				}
+				break;
+			case BRN: // fall through, BRN and PZN are the same
+			case PZN:
+				// TODO - deal % damage for burn / psn
+				game.playClip(SOUND_EFFECT.DAMAGE);
+				DebugUtility.printMessage(attacker.getName() + " has been hurt by it's " + status);
+			default:
 				defender.doDamage(chosen);
 				game.playClip(SOUND_EFFECT.DAMAGE);
-
-				// decrement move counter, print result
-				// TODO convert to message
-				DebugUtility.printMessage(turn + "'s turn is over");
-				chosen.movePP--;
-			} else {
-				DebugUtility.printMessage(attacker.getName() + " is paralyzed. It can't move.");
 			}
-			break;
-		case BRN: // fall through, BRN and PZN are the same
-		case PZN:
-			// TODO - deal % damage for burn / psn
-			game.playClip(SOUND_EFFECT.DAMAGE);
-			DebugUtility.printMessage(attacker.getName() + " has been hurt by it's " + status);
-		default:
-			defender.doDamage(chosen);
-			game.playClip(SOUND_EFFECT.DAMAGE);
-		}
 
-		if (defender.getStat(STAT.HP) <= 0) {
-			changePokemon(turn.opposite());
+			if (defender.getStat(STAT.HP) <= 0) {
+				changePokemon(turn.opposite());
+			}
+			DebugUtility.printHeader("End turn");
 		}
-		DebugUtility.printHeader("End turn");
-	}
-
-	/**
-	 * enemy chooses move and deals damage to player
-	 * 
-	 * @TODO remove from BattleEngine?
-	 */
-	public void enemyTurn() {
-		// if (!this.playerWon) {
-		if (this.enemyCurrentPokemon.getStat(STAT.HP) > 0) {
-			takeTurn(TURN.OPPONENT, RandomNumUtils.generateRandom(0, this.enemyCurrentPokemon.getNumMoves() - 1));
-		}
-		// }
 	}
 }

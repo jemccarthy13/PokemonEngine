@@ -6,6 +6,7 @@ import model.Coordinate;
 import party.Battler;
 import utilities.BattleEngine;
 import utilities.BattleEngine.TURN;
+import utilities.RandomNumUtils;
 import controller.GameController;
 
 /**
@@ -56,8 +57,6 @@ public class BattleFightScene extends BaseScene {
 		int choice = 2 * row + col;
 		int numMoves = BattleEngine.getInstance().playerCurrentPokemon.getNumMoves() - 1;
 
-		System.out.println(choice + ", " + numMoves);
-
 		if (choice <= numMoves && row >= 0 && col >= 0 && row <= 1 && col <= 1) {
 			gameControl.setCurrentSelection(new Coordinate(row, col));
 			gameControl.setCurrentSelection(new Coordinate(row, col));
@@ -105,7 +104,8 @@ public class BattleFightScene extends BaseScene {
 	public void doAction(GameController gameControl) {
 		int move = 2 * gameControl.getCurrentRowSelection() + gameControl.getCurrentColSelection();
 		BattleEngine.getInstance().takeTurn(TURN.PLAYER, move);
-		BattleEngine.getInstance().enemyTurn();
+		BattleEngine.getInstance().takeTurn(TURN.OPPONENT,
+				RandomNumUtils.generateRandom(0, BattleEngine.getInstance().enemyCurrentPokemon.getNumMoves() - 1));
 		gameControl.setCurrentSelection(new Coordinate(0, 0));
 	}
 }

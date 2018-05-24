@@ -4,9 +4,11 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.HashMap;
 
+import model.Coordinate;
 import party.Battler;
 import party.Battler.STAT;
 import tiles.Tile;
+import trainers.Actor.DIR;
 import utilities.BattleEngine;
 import controller.GameController;
 
@@ -89,7 +91,44 @@ public class Painter {
 	 * @param startY
 	 *            - the starting y location
 	 */
+	static void paintSmallString(Graphics g, String string, int startX, int startY) {
+		string = string.toUpperCase();
+		int offset = ((int) (Tile.TILESIZE / 2.7)) - 2;
+		for (int x = 0; x < string.toCharArray().length; x++) {
+			switch (string.toCharArray()[x]) {
+			case '?':
+				g.drawImage(SpriteLibrary.getImage("QUESTION"), startX + offset * x, startY, null);
+				break;
+			case '.':
+				g.drawImage(SpriteLibrary.getImage("PERIOD"), startX + offset * x, startY, null);
+				break;
+			case ' ':
+				g.drawImage(SpriteLibrary.getImage("SPACE_small"), startX + offset * x, startY, null);
+				break;
+			case ':':
+				g.drawImage(SpriteLibrary.getImage("COLON_small"), startX + offset * x, startY, null);
+				break;
+			default:
+				g.drawImage(SpriteLibrary.getInstance().getSmallFontChar(string.toCharArray()[x]).getImage(), startX
+						+ offset * x, startY, null);
+			}
+		}
+	}
+
+	/**
+	 * Paint a given string to a given location of the screen
+	 * 
+	 * @param g
+	 *            - the graphics to paint with
+	 * @param string
+	 *            - the string to paint
+	 * @param startX
+	 *            - the starting x location
+	 * @param startY
+	 *            - the starting y location
+	 */
 	static void paintString(Graphics g, String string, int startX, int startY) {
+		string = string.toUpperCase();
 		for (int x = 0; x < string.toCharArray().length; x++) {
 			switch (string.toCharArray()[x]) {
 			case '?':
@@ -100,6 +139,9 @@ public class Painter {
 				break;
 			case ' ':
 				g.drawImage(SpriteLibrary.getImage("SPACE"), startX + Tile.TILESIZE * x, startY, null);
+				break;
+			case ':':
+				g.drawImage(SpriteLibrary.getImage("COLON"), startX + Tile.TILESIZE * x, startY, null);
 				break;
 			default:
 				g.drawImage(SpriteLibrary.getInstance().getFontChar(string.toCharArray()[x]).getImage(), startX
@@ -163,5 +205,30 @@ public class Painter {
 	 */
 	private static void paintMessageBox(Graphics g, String[] lines) {
 		paintMessageBox(g, lines[0], lines[1]);
+	}
+
+	/**
+	 * Draw an exclamation box above the NPCs head
+	 * 
+	 * @param g
+	 *            - the graphics to paint on
+	 * @param game
+	 *            - the controller
+	 * @param npcPosition
+	 *            - the position of the NPC that saw the player
+	 */
+	public static void paintTrainerSighted(Graphics g, GameController game, Coordinate npcPosition) {
+
+		int offsetX = game.getOffsetX();
+		int offsetY = game.getOffsetY();
+
+		Coordinate sightedBoxLocation = npcPosition.move(DIR.NORTH);
+		g.translate(offsetX - Tile.TILESIZE, offsetY - 2 * Tile.TILESIZE);
+
+		g.drawImage(SpriteLibrary.getImage("trainer-sighted"),
+				Tile.TILESIZE * sightedBoxLocation.getX() + game.getStartX(), sightedBoxLocation.getY() * Tile.TILESIZE
+						+ game.getStartY() - 10, null);
+		g.translate(-offsetX, -offsetY);
+
 	}
 }

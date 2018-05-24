@@ -1,5 +1,8 @@
 package graphics;
 
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+
 import javax.swing.JFrame;
 
 import utilities.DebugUtility;
@@ -14,6 +17,54 @@ public class GameFrame extends JFrame {
 
 	private static final long serialVersionUID = 8002391898226135401L;
 	static GamePanel pokemonGame;
+
+	static WindowListener frameListener = new WindowListener() {
+		/**
+		 * WindowListener required
+		 */
+		@Override
+		public void windowActivated(WindowEvent arg0) {}
+
+		/**
+         * 
+         */
+		@Override
+		public void windowClosed(WindowEvent arg0) {
+			pokemonGame.gameController.endMultiplayerSession();
+			DebugUtility.printMessage("Game session ended.");
+			System.exit(0);
+		}
+
+		/**
+		 * WindowListener required
+		 */
+		@Override
+		public void windowClosing(WindowEvent arg0) {}
+
+		/**
+		 * WindowListener required
+		 */
+		@Override
+		public void windowDeactivated(WindowEvent arg0) {}
+
+		/**
+		 * WindowListener required
+		 */
+		@Override
+		public void windowDeiconified(WindowEvent arg0) {}
+
+		/**
+		 * WindowListener required
+		 */
+		@Override
+		public void windowIconified(WindowEvent arg0) {}
+
+		/**
+		 * WindowListener required
+		 */
+		@Override
+		public void windowOpened(WindowEvent arg0) {}
+	};
 
 	/**
 	 * Default constructor for a GameFrame
@@ -53,10 +104,11 @@ public class GameFrame extends JFrame {
 	public static void main(String[] args) {
 		GameFrame pf = new GameFrame();
 		pf.setVisible(true);
-		pf.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		pf.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		pf.setResizable(false);
 		pf.pack();
 		pf.setLocationRelativeTo(null);
+		pf.addWindowListener(frameListener);
 
 		DebugUtility.printHeader("Startup completed");
 	}
