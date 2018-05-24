@@ -1,17 +1,15 @@
 package controller;
 
-import graphics.BaseScene;
-import graphics.BattleMessageScene;
-import graphics.IntroScene;
-import graphics.NameScene;
-import graphics.WorldScene;
-
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.Serializable;
 import java.util.HashMap;
 
-import audio.AudioLibrary.SOUND_EFFECT;
+import graphics.BaseScene;
+import graphics.BattleMessageScene;
+import graphics.IntroScene;
+import graphics.NameScene;
+import graphics.WorldScene;
 
 /**
  * Listens for key presses in the game
@@ -101,7 +99,7 @@ public class GameKeyListener implements KeyListener, Serializable {
 		}
 
 		// play key press sound effect
-		gameControl.playClip(SOUND_EFFECT.SELECT);
+		// gameControl.playClip(SOUND_EFFECT.SELECT);
 	}
 
 	/**

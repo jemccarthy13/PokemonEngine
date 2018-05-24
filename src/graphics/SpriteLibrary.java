@@ -33,7 +33,7 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 	private static SpriteLibrary m_instance = new SpriteLibrary();
 
 	/**
-	 * Default private constructor - singleton flyweight pattern
+	 * Default private constructor - singleton fly weight pattern
 	 */
 	private SpriteLibrary() {
 		DebugUtility.printHeader("Graphics");
@@ -122,6 +122,11 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 	 * @return an Image if it can be retrieved
 	 */
 	public static Image getImage(String name) {
+		ImageIcon icon = getInstance().getImageIcon(name);
+		if (icon == null) {
+			// DebugUtility.printMessage(name + " has no image in library.");
+			return null;
+		}
 		return getInstance().getImageIcon(name).getImage();
 	}
 
@@ -150,7 +155,8 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 			if (containsKey(name)) {
 				return get(name).get(0);
 			} else {
-				DebugUtility.printError(name + " not found in graphics library.");
+				// DebugUtility.printError(name + " not found in graphics
+				// library.");
 				return null;
 			}
 		}
@@ -166,15 +172,23 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 	 * @return whether or not the path had the image
 	 */
 	public boolean tryPath(String path, String name) {
+		if (name == null) {
+			DebugUtility.printMessage("Unable to load: " + name + " " + path);
+			return false;
+		}
 		File folder = new File(libPath + path + "/");
 		File[] listOfFiles = folder.listFiles();
-		for (File file : listOfFiles) {
-			if (file.isFile() && name.equals(file.getName())) {
-				ArrayList<ImageIcon> spriteGroup = new ArrayList<ImageIcon>();
-				spriteGroup.add(createImage(file.getPath().replace("\\", "/")));
-				put(name, spriteGroup);
-				return true;
+		if (listOfFiles != null) {
+			for (File file : listOfFiles) {
+				if (file.isFile() && name.equals(file.getName())) {
+					ArrayList<ImageIcon> spriteGroup = new ArrayList<ImageIcon>();
+					spriteGroup.add(createImage(file.getPath().replace("\\", "/")));
+					put(name, spriteGroup);
+					return true;
+				}
 			}
+		} else {
+			// DebugUtility.printMessage("No files!");
 		}
 
 		return false;

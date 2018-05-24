@@ -13,9 +13,9 @@ import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import audio.AudioLibrary.SOUND_EFFECT;
 import model.Configuration;
 import utilities.DebugUtility;
-import audio.AudioLibrary.SOUND_EFFECT;
 
 /**
  * Handles playing clips
@@ -62,7 +62,10 @@ public class JukeBox {
 
 		// null-safe play it
 		if (clip != null) {
+			DebugUtility.printMessage("Playing clip...");
 			clip.play();
+		} else {
+			DebugUtility.printMessage("Error playing clip: clip is null");
 		}
 	}
 

@@ -79,25 +79,48 @@ public class AudioLibrary {
 		}
 	}
 
-	/**
-	 * Constructor to initialize the audio library
-	 */
-	public AudioLibrary() {
+	private static AudioLibrary instance = new AudioLibrary();
+
+	private AudioLibrary() {
 		DebugUtility.printHeader("Audio");
 		DebugUtility.printMessage("Initializing audio library...");
+		DebugUtility.printMessage("- Path: " + Configuration.MUSIC_PATH);
 
-		// create a list of encounter tracks
-		for (File file : new File(Configuration.MUSIC_PATH).listFiles()) {
-			if (file.isFile()) {
-				String name_of_file = file.getName();
-				Pattern p = Pattern.compile("^Encounter.*");
-				if (p.matcher(name_of_file).matches()) {
-					encounterTrackNames.add(name_of_file.replace(".mid", ""));
+		File f = new File(Configuration.MUSIC_PATH);
+
+		if (f != null) {
+			// prefix of the status message representing success or failure
+			String success = (f.exists()) ? "Found" : "Did not find";
+
+			// print the success|failure message
+			DebugUtility.printMessage("- " + success + " music directory.");
+
+			// create a list of encounter tracks
+			File[] files = f.listFiles();
+			if (files == null) {
+				DebugUtility.printMessage("No audio files!");
+			} else {
+				for (File file : files) {
+					if (file.isFile()) {
+						String name_of_file = file.getName();
+						Pattern p = Pattern.compile("^Encounter.*");
+						if (p.matcher(name_of_file).matches()) {
+							encounterTrackNames.add(name_of_file.replace(".mid", ""));
+							DebugUtility.printMessage("-- " + name_of_file + " added to encounter tracks.");
+						}
+					}
 				}
 			}
 		}
 
 		DebugUtility.printMessage("Enounter Tracks loaded.");
+	}
+
+	/**
+	 * Constructor to initialize the audio library
+	 */
+	public synchronized static AudioLibrary getInstance() {
+		return instance;
 	}
 
 	/**
