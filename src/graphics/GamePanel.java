@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.RepaintManager;
 
 import audio.AudioLibrary;
+import controller.BattleEngine;
 import controller.GameController;
 import controller.GameKeyListener;
 import model.Coordinate;
@@ -21,7 +22,6 @@ import trainers.Actor;
 import trainers.Actor.DIR;
 import trainers.NPCLibrary;
 import trainers.Player;
-import utilities.BattleEngine;
 import utilities.DebugUtility;
 
 /**

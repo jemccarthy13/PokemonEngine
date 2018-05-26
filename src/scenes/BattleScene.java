@@ -2,6 +2,7 @@ package scenes;
 
 import java.awt.Graphics;
 
+import controller.BattleEngine;
 import controller.GameController;
 import graphics.GameGraphicsData;
 import graphics.Painter;
@@ -10,7 +11,6 @@ import model.MessageQueue;
 import party.Battler;
 import party.Battler.STAT;
 import party.Battler.STATUS;
-import utilities.BattleEngine;
 
 /**
  * A representation of main battle scene

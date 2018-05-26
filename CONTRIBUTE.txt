@@ -7,33 +7,31 @@ as follows:
 COMPONENT:  |  DEALS WITH:
 ===============================================================================
 audio       |  everything music - sounds / background music
-driver      |  drives game logic by handling keystrokes and threads
-graphics    |  image library files
+client      |  multiplayer client
+controller  |  game controls, key listener, and teleports
+editors		|  map editor
+graphics    |  handles the graphics library and drawing, as well as map load
 location    |  information storage for locations
-mapmaker    |  makes tile-based maps for the game
-pokedex     |  data storage for moves, pokemon / pokemon creation
-test        |  unit & functional tests for the software
-tiles       |  map tils (obstacles, walkable, battle encounter)
+model		|  data structures and storage, configuration
+party		|  a players battling party
+scenes		|  handles 'rendering' of scenes, keypress on scenes
+server		|  mutiplayer server
+test		|  tests
+tiles		|  types of tiles: battle, normal, obstacle, or other (water, special)
 trainers    |  NPCs and Player - people to interact with in-game
-utilities   |  deals with random number generation, data storage, data processing
+utilities   |  deals with random number generation, debugging
 ===============================================================================
 
-Changes that can be made are as follows:
+Changes that may be made are as follows:
 ===============================================================================
 CHANGE:     |  DEALS WITH:
 ===============================================================================
 cleanup     |  reorganization / reformatting
-enhance     |  efficiency, standards compliance, bug fixes
+enhance     |  efficiency, bug fixes
 create      |  adding features or missing parts
 remove      |  deleting old code or files
 ===============================================================================
 
-Branches will have the naming convention "component_change", where component
-is of the main components listed above and change is of the changes 
-listed above.  
-
-I ask that any contributors kindly stick to this naming scheme to the best of
-your ability so I understand the changes made.  
-
-Any pull request made without this scheme has a low probability of being
-adopted.  Please rebase logically.
+Branches should have the naming convention "component_change", where component
+is of the main components listed above (or self explanatory portion) and change
+is of the changes listed.

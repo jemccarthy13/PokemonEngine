@@ -33,7 +33,6 @@ import trainers.Actor;
 import trainers.Actor.DIR;
 import trainers.NPCLibrary;
 import trainers.Player;
-import utilities.BattleEngine;
 import utilities.DebugUtility;
 import utilities.RandomNumUtils;
 
@@ -288,7 +287,6 @@ public class GameController implements Serializable {
 	 * Perform these sets of checks after player movement
 	 */
 	public void postMovementChecks() {
-		DebugUtility.printMessage("Checking for encounter.");
 		// check for wild encounter
 		if (GameMap.getInstance().isBattleAt(player.getPosition())) {
 			if (RandomNumUtils.isWildEncounter()) {

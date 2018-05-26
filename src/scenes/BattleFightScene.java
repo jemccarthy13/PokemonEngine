@@ -2,13 +2,13 @@ package scenes;
 
 import java.awt.Graphics;
 
+import controller.BattleEngine;
 import controller.GameController;
+import controller.BattleEngine.TURN;
 import graphics.GameGraphicsData;
 import graphics.Painter;
 import graphics.SpriteLibrary;
 import party.Battler;
-import utilities.BattleEngine;
-import utilities.BattleEngine.TURN;
 import utilities.RandomNumUtils;
 
 /**

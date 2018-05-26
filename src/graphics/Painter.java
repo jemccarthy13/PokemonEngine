@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.HashMap;
 
+import controller.BattleEngine;
 import controller.GameController;
 import model.Coordinate;
 import model.MessageQueue;
@@ -14,7 +15,6 @@ import scenes.NameScene;
 import scenes.Scene;
 import tiles.Tile;
 import trainers.Actor.DIR;
-import utilities.BattleEngine;
 
 /**
  * One central location where all painting objects can register to be

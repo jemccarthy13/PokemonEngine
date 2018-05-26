@@ -1,11 +1,10 @@
-package utilities;
+package controller;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 import audio.AudioLibrary;
 import audio.AudioLibrary.SOUND_EFFECT;
-import controller.GameController;
 import graphics.GameGraphicsData;
 import model.Configuration;
 import model.MessageQueue;
@@ -18,6 +17,8 @@ import scenes.BattleMessageScene;
 import scenes.BattleScene;
 import scenes.WorldScene;
 import trainers.Actor.DIR;
+import utilities.DebugUtility;
+import utilities.RandomNumUtils;
 
 /**
  * Holds all logic for a Pokemon battle, either a wild encounter or trainer
