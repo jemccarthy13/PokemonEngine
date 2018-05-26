@@ -13,12 +13,14 @@ import audio.AudioLibrary;
 import controller.GameController;
 import controller.GameKeyListener;
 import model.Coordinate;
+import model.GameData;
 import model.GameTime;
 import tiles.TileSet;
 import trainers.Actor;
 import trainers.Actor.DIR;
 import trainers.NPCLibrary;
 import trainers.Player;
+import utilities.BattleEngine;
 import utilities.DebugUtility;
 
 /**
@@ -85,12 +87,12 @@ public class GamePanel extends JPanel implements ActionListener {
 			Coordinate playerPos = player.getPosition();
 
 			// check for teleport at location
-			if (gameController.isTeleportTile(playerPos)) {
+			if (GameData.getInstance().isTeleportAt(playerPos)) {
 				gameController.doTeleport(playerPos);
 			} else {
 				// Party playerPokemon = player.getParty();
 
-				if (gameController.isPlayerWalking()) { // take care of walking
+				if (gameController.getPlayer().isWalking) { // take care of walking
 					// animation
 					// as the gameTimer increments,
 					animationStep += 1;
@@ -104,9 +106,9 @@ public class GamePanel extends JPanel implements ActionListener {
 				// when walking animation is done, handle poison damage
 				if (animationStep >= 16) {
 					animationStep = 0; // reset animation counter
-					gameController.setPlayerWalking(false);
+					gameController.getPlayer().isWalking = false;
 					isRightFoot = !isRightFoot;
-					if (gameController.canMoveInDir(playerDir)) {
+					if (gameController.getPlayer().canMoveInDir(playerDir)) {
 						player.move(playerDir);
 					}
 
@@ -129,9 +131,11 @@ public class GamePanel extends JPanel implements ActionListener {
 				NPCThread.getInstance().stopMoving();
 				enemyTrainerAnimation(curNPC);
 				AudioLibrary.playBackgroundMusic("TrainerBattle");
-				gameController.doEncounter(curNPC.getParty(), curNPC.getName());
+				BattleEngine.getInstance().fight(curNPC.getParty(), gameController, curNPC.getName());
 			} else {
-				gameController.setMovable(true);
+				if (gameController.getPlayer() != null) {
+					gameController.getPlayer().canMove = true;
+				}
 			}
 		}
 	}
@@ -173,7 +177,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
 		// until NPC reaches player, place a normal tile, move NPC, repaint
 		for (int x = 0; x < distToTravel; x++) {
-			gameController.setMapTileAt(curNPC.tData.position, TileSet.NORMAL);
+			GameData.getInstance().setMapTileAt(curNPC.tData.position, TileSet.NORMAL);
 			// TODO better animation somewhere in this loop - make it look like
 			// player walking animation
 			curNPC.move(NPC_DIR);

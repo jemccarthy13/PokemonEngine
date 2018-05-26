@@ -155,9 +155,9 @@ public class WorldScene extends BaseScene {
 		if (toTravel != null) {
 			// one of the movement buttons was pressed, so try to move in that
 			// direction
-			control.setPlayerDirection(toTravel);
-			if (control.canMoveInDir(toTravel)) {
-				control.setPlayerWalking(true);
+			control.getPlayer().setDirection(toTravel);
+			if (control.getPlayer().canMoveInDir(toTravel)) {
+				control.getPlayer().isWalking = true;
 			} else {
 				AudioLibrary.playClip(SOUND_EFFECT.COLLISION);
 			}

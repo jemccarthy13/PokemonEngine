@@ -4,6 +4,7 @@ import java.awt.Graphics;
 
 import controller.GameController;
 import model.Coordinate;
+import model.GameData;
 import party.Battler;
 import utilities.BattleEngine;
 import utilities.BattleEngine.TURN;
@@ -12,13 +13,18 @@ import utilities.RandomNumUtils;
 /**
  * A representation of the battle fight scene
  */
-public class BattleFightScene extends BaseScene {
+public class BattleFightScene extends SelectionScene {
 
 	private static final long serialVersionUID = 1420590933250593485L;
 	/**
 	 * Singleton instance
 	 */
 	public static BattleFightScene instance = new BattleFightScene();
+
+	private BattleFightScene() {
+		super.maxColSelection = 1;
+		super.maxRowSelection = 1;
+	}
 
 	/**
 	 * Render the battle fight scene.
@@ -43,8 +49,8 @@ public class BattleFightScene extends BaseScene {
 		int[] arrowX = { 184, 329 };
 		int[] arrowY = { 240, 270 };
 
-		int selX = gameControl.getCurrentColSelection();
-		int selY = gameControl.getCurrentRowSelection();
+		int selX = GameData.getInstance().getCurrentColSelection(gameControl.getScene());
+		int selY = GameData.getInstance().getCurrentRowSelection(gameControl.getScene());
 
 		// draw the arrow based on current selection
 		g.drawImage(SpriteLibrary.getImage("Arrow"), arrowX[selX], arrowY[selY], null);
@@ -52,19 +58,20 @@ public class BattleFightScene extends BaseScene {
 		Painter.paintBattlerInfo(g);
 	}
 
-	private void checkMove(int row, int col, GameController gameControl) {
+	private void checkMove(int rowDir, int colDir, GameController gameControl) {
+		int row = GameData.getInstance().getCurrentRowSelection(gameControl.getScene()) + rowDir;
+		int col = GameData.getInstance().getCurrentColSelection(gameControl.getScene()) + colDir;
+
 		// make sure the move exists before we move the arrow there
 		int choice = 2 * row + col;
 		int numMoves = BattleEngine.getInstance().playerCurrentPokemon.getNumMoves() - 1;
 
 		if (choice <= numMoves && row >= 0 && col >= 0 && row <= 1 && col <= 1) {
-			gameControl.setCurrentSelection(new Coordinate(row, col));
-			gameControl.setCurrentSelection(new Coordinate(row, col));
+			GameData.getInstance().setCurrentSelection(gameControl.getScene(), new Coordinate(row, col));
 		} else {
 			// Don't get stuck if one pokemon has 4 moves and next has 2
 			// default to the first
-			gameControl.setCurrentSelection(new Coordinate(1, 1));
-			gameControl.setCurrentSelection(new Coordinate(1, 1));
+			GameData.getInstance().setCurrentSelection(gameControl.getScene(), new Coordinate(0, 0));
 		}
 	}
 
@@ -72,28 +79,28 @@ public class BattleFightScene extends BaseScene {
 	 * Up arrow button press
 	 */
 	public void doUp(GameController gameControl) {
-		checkMove(gameControl.getCurrentRowSelection() - 1, gameControl.getCurrentColSelection(), gameControl);
+		checkMove(-1, 0, gameControl);
 	}
 
 	/**
 	 * Down arrow button press
 	 */
 	public void doDown(GameController gameControl) {
-		checkMove(gameControl.getCurrentRowSelection() + 1, gameControl.getCurrentColSelection(), gameControl);
+		checkMove(1, 0, gameControl);
 	}
 
 	/**
 	 * Left arrow button press
 	 */
 	public void doLeft(GameController gameControl) {
-		checkMove(gameControl.getCurrentRowSelection(), gameControl.getCurrentColSelection() - 1, gameControl);
+		checkMove(0, -1, gameControl);
 	}
 
 	/**
 	 * Right arrow button press
 	 */
 	public void doRight(GameController gameControl) {
-		checkMove(gameControl.getCurrentRowSelection(), gameControl.getCurrentColSelection() + 1, gameControl);
+		checkMove(0, 1, gameControl);
 	}
 
 	/**
@@ -107,10 +114,11 @@ public class BattleFightScene extends BaseScene {
 	 * "z" button press
 	 */
 	public void doAction(GameController gameControl) {
-		int move = 2 * gameControl.getCurrentRowSelection() + gameControl.getCurrentColSelection();
+		int move = 2 * GameData.getInstance().getCurrentRowSelection(gameControl.getScene())
+				+ GameData.getInstance().getCurrentColSelection(gameControl.getScene());
 		BattleEngine.getInstance().takeTurn(TURN.PLAYER, move);
 		BattleEngine.getInstance().takeTurn(TURN.OPPONENT,
 				RandomNumUtils.generateRandom(0, BattleEngine.getInstance().enemyCurrentPokemon.getNumMoves() - 1));
-		gameControl.setCurrentSelection(new Coordinate(0, 0));
+		GameData.getInstance().setCurrentSelection(gameControl.getScene(), new Coordinate(0, 0));
 	}
 }

@@ -3,20 +3,25 @@ package graphics;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import model.Coordinate;
-import party.Party;
 import controller.GameController;
+import model.GameData;
+import party.Party;
 
 /**
  * A representation of the party scene
  */
-public class PartyScene extends BaseScene {
+public class PartyScene extends SelectionScene {
 
 	private static final long serialVersionUID = 4269262897256769883L;
 	/**
 	 * Singleton instance
 	 */
 	public static PartyScene instance = new PartyScene();
+
+	private PartyScene() {
+		this.maxColSelection = 0;
+		this.maxRowSelection = 6;
+	}
 
 	private static String partyFirstMember = "PartyFirst";
 	private static String partyMember = "PartyBar";
@@ -32,7 +37,7 @@ public class PartyScene extends BaseScene {
 		g.setColor(Color.BLACK);
 		g.drawImage(SpriteLibrary.getImage(partyBackground), 0, 0, null);
 		int party_index = 0;
-		int selection = gameControl.getCurrentRowSelection();
+		int selection = GameData.getInstance().getCurrentRowSelection(gameControl.getScene());
 
 		// selection logic for first party member
 		if (selection == party_index) {
@@ -46,7 +51,7 @@ public class PartyScene extends BaseScene {
 		int paintY = 20;
 
 		for (party_index = 1; party_index < 6; party_index++) {
-			if (party_index == selection) {
+			if (party_index == selection && party_index < gameControl.getPlayer().getParty().size()) {
 				g.drawImage(SpriteLibrary.getImage(partyMember + "_Selected"), paintX, paintY, null);
 			} else {
 				g.drawImage(SpriteLibrary.getImage(partyMember + "_NotSelected"), paintX, paintY, null);
@@ -71,9 +76,9 @@ public class PartyScene extends BaseScene {
 		}
 
 		// cancel button render
-		paintX += 170;
-		paintY -= 5;
-		if (selection > 6) {
+		paintX = 370;
+		paintY = 270;
+		if (selection >= playerPokemon.size()) {
 			g.drawImage(SpriteLibrary.getImage(partyCancel + "_Selected"), paintX, paintY, null);
 		} else {
 			g.drawImage(SpriteLibrary.getImage(partyCancel + "_NotSelected"), paintX, paintY, null);
@@ -85,7 +90,8 @@ public class PartyScene extends BaseScene {
 	 * "z" button press at party scene
 	 */
 	public void doAction(GameController control) {
-		if (control.getCurrentRowSelection() > 6) {
+		if (GameData.getInstance().getCurrentRowSelection(control.getScene()) >= control.getPlayer().getParty()
+				.size()) {
 			doBack(control);
 		} else {
 			// TODO selected party member display
@@ -102,27 +108,8 @@ public class PartyScene extends BaseScene {
 	/**
 	 * up arrow button press at Party scene
 	 */
-	public void doUp(GameController control) {
-		int row = control.getCurrentRowSelection();
-		int col = control.getCurrentColSelection();
-		int numPokemon = control.getPlayer().getParty().size();
-		if (row > numPokemon - 1) {
-			control.setCurrentSelection(new Coordinate(numPokemon - 1, col));
-		} else if (control.getCurrentRowSelection() > 0)
-			control.decrementRowSelection();
-	}
-
-	/**
-	 * up arrow button press at Party scene
-	 */
 	public void doDown(GameController control) {
-		int row = control.getCurrentRowSelection();
-		int col = control.getCurrentColSelection();
-		int numPokemon = control.getPlayer().getParty().size();
-		if (row < numPokemon - 1)
-			control.incrementRowSelection();
-		else if (row == numPokemon - 1) {
-			control.setCurrentSelection(new Coordinate(7, col));
-		}
+		this.maxRowSelection = control.getPlayer().getParty().size();
+		super.doDown(control);
 	}
 }

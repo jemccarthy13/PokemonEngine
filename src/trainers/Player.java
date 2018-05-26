@@ -3,8 +3,12 @@ package trainers;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import graphics.SpriteLibrary;
 import location.Location;
 import location.LocationLibrary;
+import model.Configuration;
+import model.Coordinate;
+import model.GameData;
 import party.Storage;
 import utilities.RandomNumUtils;
 
@@ -33,6 +37,8 @@ public class Player extends Actor implements Serializable {
 	 * Player (Trainer) id - also used as game session ID
 	 */
 	public int id;
+	public boolean isWalking = false;
+	public boolean canMove = false;
 	/**
 	 * The current town / section of map where the player is
 	 */
@@ -131,5 +137,39 @@ public class Player extends Actor implements Serializable {
 	 */
 	public int getID() {
 		return this.id;
+	}
+
+	/**
+	 * Check whether or not a player can move in a given direction
+	 * 
+	 * @param dir
+	 *            - the direction to move
+	 * @return - true iff the next tile is available
+	 */
+	public boolean canMoveInDir(DIR dir) {
+		boolean can = false;
+
+		if (Configuration.getInstance().isNoClip()) {
+			// if noclip is turned on, player can always move
+			can = true;
+		} else {
+			// temporarily store the location the player would move to
+			Coordinate loc = getPosition().move(dir);
+
+			// if the potential location is in bounds, can only move if tile is
+			// not obstacle
+			if (GameData.getInstance().isInBounds(loc)) {
+				can = !GameData.getInstance().isObstacleAt(loc);
+			}
+		}
+		return can;
+	}
+
+	/**
+	 * Set the players direction
+	 */
+	public void setDirection(DIR dir) {
+		tData.sprite = SpriteLibrary.getSpriteForDir("PLAYER", dir);
+		super.setDirection(dir);
 	}
 }

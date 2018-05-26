@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import controller.GameController;
 import model.Configuration;
 import model.Coordinate;
+import model.GameData;
 import model.NameBuilder;
 import tiles.Tile;
 import trainers.Actor.DIR;
@@ -12,13 +13,18 @@ import trainers.Actor.DIR;
 /**
  * A representation of the rename scene
  */
-public class NameScene extends BaseScene {
+public class NameScene extends SelectionScene {
 
 	private static final long serialVersionUID = 840972645178452462L;
 	/**
 	 * Singleton instance
 	 */
 	public static NameScene instance = new NameScene();
+
+	private NameScene() {
+		super.maxRowSelection = 5;
+		super.maxColSelection = 5;
+	}
 
 	/**
 	 * Render the Name scene.
@@ -27,15 +33,16 @@ public class NameScene extends BaseScene {
 	public void render(Graphics g, GameController gameControl) {
 		g.drawImage(SpriteLibrary.getImage("Namescreen"), 0, 0, null);
 
-		if (gameControl.getCurrentRowSelection() < 5) {
-			g.drawImage(SpriteLibrary.getImage("Arrow"),
-					(int) (40 + Tile.TILESIZE * 2 * gameControl.getCurrentColSelection()),
-					100 + Tile.TILESIZE * gameControl.getCurrentRowSelection(), null);
+		int curRowSelection = GameData.getInstance().getCurrentRowSelection(gameControl.getScene());
+		int curColSelection = GameData.getInstance().getCurrentColSelection(gameControl.getScene());
+
+		if (curRowSelection < 5) {
+			g.drawImage(SpriteLibrary.getImage("Arrow"), (int) (40 + Tile.TILESIZE * 2 * curColSelection),
+					100 + Tile.TILESIZE * curRowSelection, null);
 		}
-		if (gameControl.getCurrentRowSelection() == 5) {
-			g.drawImage(SpriteLibrary.getImage("Arrow"),
-					(int) (100 + Tile.TILESIZE * 6 * gameControl.getCurrentColSelection()),
-					100 + Tile.TILESIZE * gameControl.getCurrentRowSelection(), null);
+		if (curRowSelection == 5) {
+			g.drawImage(SpriteLibrary.getImage("Arrow"), (int) (100 + Tile.TILESIZE * 6 * curColSelection),
+					100 + Tile.TILESIZE * curRowSelection, null);
 		}
 
 		String name = NameBuilder.getInstance().toString();
@@ -55,14 +62,15 @@ public class NameScene extends BaseScene {
 
 	private void doEndDel(GameController gameControl) {
 		String name = NameBuilder.getInstance().toString();
+		int curColSelection = GameData.getInstance().getCurrentColSelection(gameControl.getScene());
 		// end the name screen logic
-		if (gameControl.getCurrentColSelection() == 1 && name.length() > 0) {
+		if (curColSelection == 1 && name.length() > 0) {
 			gameControl.getPlayer().setName(name);
 			NameBuilder.getInstance().reset();
 			gameControl.setScene(IntroScene.instance);
 		}
 		// del to backspace one character
-		else if (gameControl.getCurrentColSelection() == 0)
+		else if (curColSelection == 0)
 			NameBuilder.getInstance().removeChar();
 	}
 
@@ -73,10 +81,11 @@ public class NameScene extends BaseScene {
 	 *            - the controller to perform game functions
 	 */
 	public void doAction(GameController gameControl) {
-		if (gameControl.getCurrentRowSelection() == 5) {
+		Scene curScene = gameControl.getScene();
+		if (GameData.getInstance().getCurrentRowSelection(curScene) == 5) {
 			doEndDel(gameControl);
 		} else {
-			NameBuilder.getInstance().addSelectedChar(gameControl.getCurrentSelection());
+			NameBuilder.getInstance().addSelectedChar(GameData.getInstance().getCurrentSelection(curScene));
 		}
 	}
 
@@ -91,53 +100,19 @@ public class NameScene extends BaseScene {
 	}
 
 	/**
-	 * up arrow button press
-	 * 
-	 * @param gameControl
-	 *            - the controller to perform game functions
-	 */
-	public void doUp(GameController gameControl) {
-		if (gameControl.getCurrentRowSelection() > 0) {
-			gameControl.decrementRowSelection();
-		}
-	}
-
-	/**
-	 * left arrow button press
-	 * 
-	 * @param gameControl
-	 *            - the controller to perform game functions
-	 */
-	public void doLeft(GameController gameControl) {
-		if (gameControl.getCurrentColSelection() > 0) {
-			gameControl.decrementColSelection();
-		}
-	}
-
-	/**
 	 * right arrow button press
 	 * 
 	 * @param gameControl
 	 *            - the controller to perform game functions
 	 */
 	public void doRight(GameController gameControl) {
-		if (gameControl.getCurrentRowSelection() == 5) {
-			// last row, right key press moves to "END"
-			gameControl.setCurrentSelection(new Coordinate(5, 1));
-		} else {
-			gameControl.incrementColSelection();
-		}
-	}
+		Scene curScene = gameControl.getScene();
 
-	/**
-	 * down arrow button press
-	 * 
-	 * @param gameControl
-	 *            - the controller to perform game functions
-	 */
-	public void doDown(GameController gameControl) {
-		if (gameControl.getCurrentRowSelection() < 5) {
-			gameControl.incrementRowSelection();
+		if (GameData.getInstance().getCurrentRowSelection(curScene) == 5) {
+			// last row, right key press moves to "END"
+			GameData.getInstance().setCurrentSelection(curScene, new Coordinate(5, 1));
+		} else {
+			super.doRight(gameControl);
 		}
 	}
 
@@ -149,8 +124,10 @@ public class NameScene extends BaseScene {
 
 		super.keyPress(keyCode, gameControl);
 
-		if (gameControl.getCurrentRowSelection() == 5)
-			gameControl.setCurrentSelection(new Coordinate(5, 0));
+		Scene curScene = gameControl.getScene();
+
+		if (GameData.getInstance().getCurrentRowSelection(curScene) == 5)
+			GameData.getInstance().setCurrentSelection(curScene, new Coordinate(5, 0));
 	}
 
 }

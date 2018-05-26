@@ -27,7 +27,6 @@ import party.Battler;
 import party.Battler.STATUS;
 import party.BattlerFactory;
 import party.Party;
-import tiles.NormalTile;
 import tiles.Tile;
 import trainers.Actor;
 import trainers.Actor.DIR;
@@ -63,47 +62,7 @@ public class GameController implements Serializable {
 	 * 
 	 * MOVEMENT CONTROL LOGIC
 	 * 
-	 * Helps control movement on screen
-	 * 
 	 **************************************************************************/
-
-	/**
-	 * Can the player move?
-	 * 
-	 * @return whether or not the player can move
-	 */
-	public boolean isMovable() {
-		return gData.playerCanMove;
-	}
-
-	/**
-	 * Set whether the player can move
-	 * 
-	 * @param b
-	 *            - new value for can the player move
-	 */
-	public void setMovable(boolean b) {
-		gData.playerCanMove = b;
-	}
-
-	/**
-	 * Is the player currently walking?
-	 * 
-	 * @return whether or not player is in walking animation
-	 */
-	public boolean isPlayerWalking() {
-		return gData.isPlayerWalking;
-	}
-
-	/**
-	 * Set whether or not the player is walking
-	 * 
-	 * @param isPlayerWalking
-	 *            - new value for player in walking animation
-	 */
-	public void setPlayerWalking(boolean isPlayerWalking) {
-		gData.isPlayerWalking = isPlayerWalking;
-	}
 
 	/**
 	 * Start the game timer to fire game events
@@ -116,39 +75,6 @@ public class GameController implements Serializable {
 		gameSpeed.start();
 	}
 
-	/***************************************************************************
-	 * 
-	 * MOVEMENT LOGIC
-	 * 
-	 **************************************************************************/
-
-	/**
-	 * Makes a temporary coordinate, and checks to see if the actor can move in the
-	 * specified direction
-	 * 
-	 * @param dir
-	 *            - the direction to check
-	 * @return - whether or not the player can move there
-	 */
-	public boolean canMoveInDir(DIR dir) {
-		boolean canMove = false;
-
-		if (Configuration.getInstance().isNoClip()) {
-			// if noclip is turned on, player can always move
-			canMove = true;
-		} else {
-			// temporarily store the location the player would move to
-			Coordinate loc = getPlayer().getPosition().move(dir);
-
-			// if the potential location is in bounds, can only move if tile is
-			// not obstacle
-			if (GameData.getInstance().isInBounds(loc)) {
-				canMove = !GameData.getInstance().isObstacleAt(loc);
-			}
-		}
-		return canMove;
-	}
-
 	/**
 	 * Retrieve the current player instance
 	 * 
@@ -158,32 +84,9 @@ public class GameController implements Serializable {
 		return player;
 	}
 
-	/**
-	 * Retrieve the current session (player) ID
-	 * 
-	 * @return a new ID
-	 */
-	public int getId() {
-		return gData.gameSessionID;
-	}
-
-	/**
-	 * Set the player sprite in a specified direction
-	 * 
-	 * @param dir
-	 *            - player's new direction
-	 */
-	public void setPlayerDirection(DIR dir) {
-
-		getPlayer().tData.sprite = SpriteLibrary.getSpriteForDir("PLAYER", dir);
-		getPlayer().setDirection(dir);
-	}
-
 	/***************************************************************************
 	 * 
-	 * TIME CONTROL LOGIC
-	 * 
-	 * Helps control time and gameplay speed
+	 * GAME CONTROL LOGIC
 	 * 
 	 **************************************************************************/
 
@@ -267,17 +170,9 @@ public class GameController implements Serializable {
 
 	/***************************************************************************
 	 * 
-	 * SOUND CONTROL LOGIC
-	 * 
-	 * Helps control playing of sounds.
+	 * GRAPHICS CONTROL LOGIC
 	 * 
 	 **************************************************************************/
-	/**
-	 * Toggle the master volume control
-	 */
-	public void toggleSound() {
-		Configuration.getInstance().toggleSound();
-	}
 
 	/**
 	 * Add to the offset (y direction) given a direction the player is moving
@@ -286,7 +181,7 @@ public class GameController implements Serializable {
 	 *            - Direction player is facing
 	 */
 	public void setOffsetY(DIR playerDir) {
-		if (canMoveInDir(playerDir)) {
+		if (player.canMoveInDir(playerDir)) {
 			switch (playerDir) {
 			case NORTH:
 				GameData.getInstance().addOffsetY(2);
@@ -307,23 +202,18 @@ public class GameController implements Serializable {
 	 *            - Direction player is facing
 	 */
 	public void setOffsetX(DIR playerDir) {
-		if (canMoveInDir(playerDir)) {
+		if (player.canMoveInDir(playerDir)) {
 			switch (playerDir) {
 			case EAST:
 				GameData.getInstance().addOffsetX(-2);
 				break;
 			case WEST:
-				GameData.getInstance().addOffsetY(2);
+				GameData.getInstance().addOffsetX(2);
 				break;
 			default:
 				break;
 			}
 		}
-	}
-
-	/** Check for teleport tile at a given position **/
-	public boolean isTeleportTile(Coordinate playerPos) {
-		return gData.isTeleportAt(playerPos);
 	}
 
 	/**
@@ -349,7 +239,7 @@ public class GameController implements Serializable {
 
 	/**
 	 * Are we at the world screen, does the NPC see the player, is the player not
-	 * walking, is the master control for battles turned on, and the player is not
+	 * walking, is the master control for battles turned on, and the trainer is not
 	 * beaten?
 	 * 
 	 * @param npc
@@ -359,7 +249,7 @@ public class GameController implements Serializable {
 	public boolean validEncounterConditions(Actor npc) {
 		boolean isValid = false;
 		if (getScene() == WorldScene.instance) {
-			isValid = npc.isTrainer() && !isPlayerWalking() && Configuration.DOBATTLES
+			isValid = npc.isTrainer() && !player.isWalking && Configuration.DOBATTLES
 					&& !getPlayer().beatenTrainers.contains(npc.getName()) && npcSeesPlayer(npc);
 		}
 		return isValid;
@@ -397,10 +287,6 @@ public class GameController implements Serializable {
 								&& (NPC_DIR == DIR.EAST)))));
 	}
 
-	public void setMapTileAt(Coordinate position, NormalTile normal) {
-		gData.setMapTileAt(position, normal);
-	}
-
 	/**
 	 * Perform these sets of checks after player movement
 	 */
@@ -411,7 +297,7 @@ public class GameController implements Serializable {
 				currentEnemyParty.clear();
 				currentEnemyParty.add(BattlerFactory.getInstance().randomPokemon(getPlayer().getCurLoc()));
 				MessageQueue.getInstance().add("Wild " + currentEnemyParty.get(0).getName() + " appeared");
-				doEncounter(currentEnemyParty, null);
+				BattleEngine.getInstance().fight(currentEnemyParty, this, null);
 			}
 		}
 		for (Battler p : getPlayer().getParty()) {
@@ -419,42 +305,6 @@ public class GameController implements Serializable {
 			if (partyStatus == STATUS.BRN || partyStatus == STATUS.PZN)
 				p.takeDamage(1);
 		}
-	}
-
-	/**
-	 * Start an encounter with the given party and opponent name
-	 * 
-	 * @param pokemon
-	 *            - the party to use
-	 * @param name
-	 *            - opponent's name
-	 */
-	public void doEncounter(Party pokemon, String name) {
-		BattleEngine.getInstance().fight(pokemon, this, name);
-	}
-
-	/**
-	 * Get the current row selection for the current screen
-	 * 
-	 * @return int current selection for this screen
-	 */
-	public int getCurrentRowSelection() {
-		if (!gData.currentSelection.containsKey(getScene())) {
-			setCurrentSelection(new Coordinate(0, 0));
-		}
-		return gData.currentSelection.get(getScene()).getX();
-	}
-
-	/**
-	 * Get the selection for the current screen
-	 * 
-	 * @return int current selection for this screen
-	 */
-	public int getCurrentColSelection() {
-		if (!gData.currentSelection.containsKey(getScene())) {
-			setCurrentSelection(new Coordinate(0, 0));
-		}
-		return gData.currentSelection.get(getScene()).getY();
 	}
 
 	/**
@@ -476,60 +326,6 @@ public class GameController implements Serializable {
 			curNpc.setStationary(true);
 			MessageQueue.getInstance().add(curNpc.getConversationText().get(0));
 		}
-	}
-
-	/**
-	 * Set the selection for the current screen
-	 * 
-	 * @param i
-	 *            - the new selection index
-	 */
-	public void setCurrentSelection(Coordinate i) {
-		if (gData.currentSelection.containsKey(getScene())) {
-			gData.currentSelection.replace(getScene(), i);
-		} else {
-			gData.currentSelection.put(getScene(), new Coordinate(0, 0));
-		}
-	}
-
-	/**
-	 * Decrement the row selection at the current screen
-	 */
-	public void decrementRowSelection() {
-		setCurrentSelection(getCurrentSelection().move(DIR.WEST));
-	}
-
-	/**
-	 * Increment the row selection at the current screen
-	 */
-	public void incrementRowSelection() {
-		setCurrentSelection(getCurrentSelection().move(DIR.EAST));
-	}
-
-	/**
-	 * Decrement the column selection at the current screen
-	 */
-	public void decrementColSelection() {
-		setCurrentSelection(getCurrentSelection().move(DIR.NORTH));
-	}
-
-	/**
-	 * Increment the column selection at the current screen
-	 */
-	public void incrementColSelection() {
-		setCurrentSelection(getCurrentSelection().move(DIR.SOUTH));
-	}
-
-	/**
-	 * Retrieve the current selection
-	 * 
-	 * @return the current selection
-	 */
-	public Coordinate getCurrentSelection() {
-		if (!gData.currentSelection.containsKey(getScene())) {
-			setCurrentSelection(new Coordinate(0, 0));
-		}
-		return gData.currentSelection.get(getScene());
 	}
 
 	/**

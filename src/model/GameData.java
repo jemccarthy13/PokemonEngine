@@ -14,6 +14,7 @@ import model.Configuration.PLAYER_SPEED;
 import tiles.BattleTile;
 import tiles.Tile;
 import tiles.TileSet;
+import trainers.Actor.DIR;
 import utilities.RandomNumUtils;
 
 /**
@@ -38,14 +39,6 @@ public class GameData implements Serializable {
 	//
 	// ==================== Game Logic Control ==============================//
 
-	/**
-	 * Player animation value - is the player walking?
-	 */
-	public boolean isPlayerWalking = false;
-	/**
-	 * Can the player move
-	 */
-	public boolean playerCanMove = false;
 	/**
 	 * Current message of the game
 	 */
@@ -316,5 +309,80 @@ public class GameData implements Serializable {
 		// loc is > 0 but less than the bounds of the map
 		return loc.getY() > 0 && loc.getY() <= this.getMapHeight() && loc.getX() > 0
 				&& loc.getX() <= this.getMapWidth();
+	}
+
+	public int getCurrentRowSelection(Scene curScene) {
+		if (!currentSelection.containsKey(curScene)) {
+			setCurrentSelection(curScene, new Coordinate(0, 0));
+		}
+		return currentSelection.get(curScene).getX();
+	}
+
+	public void setCurrentSelection(Scene curScene) {
+
+	}
+
+	public int getCurrentColSelection(Scene curScene) {
+		if (!currentSelection.containsKey(curScene)) {
+			setCurrentSelection(curScene, new Coordinate(0, 0));
+		}
+		return currentSelection.get(curScene).getY();
+	}
+
+	/**
+	 * Set the selection for the current screen
+	 * 
+	 * @param i
+	 *            - the new selection index
+	 */
+	public void setCurrentSelection(Scene curScene, Coordinate i) {
+		if (currentSelection.containsKey(curScene)) {
+			currentSelection.replace(curScene, i);
+		} else {
+			currentSelection.put(curScene, new Coordinate(0, 0));
+		}
+	}
+
+	public Coordinate getCurrentSelection(Scene curScene) {
+		if (!currentSelection.containsKey(curScene)) {
+			setCurrentSelection(curScene, new Coordinate(0, 0));
+		}
+		return currentSelection.get(curScene);
+	}
+
+	/**
+	 * Decrement the row selection at the current screen
+	 */
+	public void decrementRowSelection(Scene curScene) {
+		if (getCurrentSelection(curScene).getX() > 0) {
+			setCurrentSelection(curScene, getCurrentSelection(curScene).move(DIR.WEST));
+		}
+	}
+
+	/**
+	 * Increment the row selection at the current screen
+	 */
+	public void incrementRowSelection(Scene curScene, int max) {
+		if (getCurrentSelection(curScene).getX() < max) {
+			setCurrentSelection(curScene, getCurrentSelection(curScene).move(DIR.EAST));
+		}
+	}
+
+	/**
+	 * Decrement the column selection at the current screen
+	 */
+	public void decrementColSelection(Scene curScene) {
+		if (getCurrentSelection(curScene).getY() > 0) {
+			setCurrentSelection(curScene, getCurrentSelection(curScene).move(DIR.NORTH));
+		}
+	}
+
+	/**
+	 * Increment the column selection at the current screen
+	 */
+	public void incrementColSelection(Scene curScene, int max) {
+		if (getCurrentSelection(curScene).getY() < max) {
+			setCurrentSelection(curScene, getCurrentSelection(curScene).move(DIR.SOUTH));
+		}
 	}
 }

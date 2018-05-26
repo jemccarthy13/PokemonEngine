@@ -138,7 +138,7 @@ public class BattleEngine {
 			m_instance.playerTurn = true;
 			m_instance.enemyName = opponentName;
 
-			game.setMovable(false);
+			game.getPlayer().canMove = false;
 			game.setScene(BattleScene.instance);
 		}
 	}
@@ -217,7 +217,7 @@ public class BattleEngine {
 		giveEXP();
 		DebugUtility.printMessage("Player won!");
 		// reset logic
-		game.setMovable(false);
+		game.getPlayer().canMove = false;
 
 		MessageQueue.getInstance().add("Player won!");
 		game.setScene(BattleMessageScene.instance);
@@ -247,7 +247,7 @@ public class BattleEngine {
 			DebugUtility.printMessage(message);
 			MessageQueue.getInstance().add(message);
 		}
-		game.setPlayerDirection(DIR.SOUTH);
+		game.getPlayer().setDirection(DIR.SOUTH);
 		Party playerParty = game.getPlayer().getParty();
 		for (Battler member : playerParty) {
 			member.fullHeal();

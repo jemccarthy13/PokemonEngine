@@ -10,13 +10,18 @@ import trainers.Player;
 /**
  * A representation of player information
  */
-public class PlayerInfoScene extends BaseScene {
+public class PlayerInfoScene extends SelectionScene {
 
 	private static final long serialVersionUID = 3015914725120653475L;
 	/**
 	 * Singleton instance
 	 */
 	public static PlayerInfoScene instance = new PlayerInfoScene();
+
+	private PlayerInfoScene() {
+		this.maxColSelection = 0;
+		this.maxRowSelection = 1;
+	}
 
 	/**
 	 * Pad a given string with appropriate spacing
@@ -57,19 +62,5 @@ public class PlayerInfoScene extends BaseScene {
 	 */
 	public void doBack(GameController control) {
 		control.setScene(MenuScene.instance);
-	}
-
-	/**
-	 * up arrow button press at Trainer Card scene
-	 */
-	public void doUp(GameController control) {
-		control.decrementRowSelection();
-	}
-
-	/**
-	 * up arrow button press at Trainer Card scene
-	 */
-	public void doDown(GameController control) {
-		control.incrementRowSelection();
 	}
 }

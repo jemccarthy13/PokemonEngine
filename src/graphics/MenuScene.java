@@ -4,11 +4,12 @@ import java.awt.Graphics;
 import java.util.HashMap;
 
 import controller.GameController;
+import model.GameData;
 
 /**
  * A representation of the pause menu scene
  */
-public class MenuScene extends BaseScene {
+public class MenuScene extends SelectionScene {
 
 	private static final long serialVersionUID = 6499638524909742225L;
 
@@ -36,6 +37,9 @@ public class MenuScene extends BaseScene {
 		menuSelections.put(5, SaveScene.instance);
 		menuSelections.put(6, OptionScene.instance);
 		menuSelections.put(7, WorldScene.instance);
+
+		super.maxColSelection = 0;
+		super.maxRowSelection = 7;
 	};
 
 	/**
@@ -45,30 +49,15 @@ public class MenuScene extends BaseScene {
 	public void render(Graphics g, GameController gameControl) {
 		WorldScene.instance.render(g, gameControl);
 		g.drawImage(SpriteLibrary.getImage("Menu"), 0, 0, null);
-		g.drawImage(SpriteLibrary.getImage("Arrow"), 335, 20 + 32 * gameControl.getCurrentRowSelection(), null);
+		g.drawImage(SpriteLibrary.getImage("Arrow"), 335,
+				20 + 32 * GameData.getInstance().getCurrentRowSelection(gameControl.getScene()), null);
 	}
 
 	/**
 	 * "Z" button pressed
 	 */
 	public void doAction(GameController control) {
-		control.setScene(menuSelections.get(control.getCurrentRowSelection()));
-	}
-
-	/**
-	 * up button pressed
-	 */
-	public void doUp(GameController control) {
-		if (control.getCurrentRowSelection() > 0)
-			control.decrementRowSelection();
-	}
-
-	/**
-	 * down button pressed
-	 */
-	public void doDown(GameController control) {
-		if (control.getCurrentRowSelection() < 7)
-			control.incrementRowSelection();
+		control.setScene(menuSelections.get(GameData.getInstance().getCurrentRowSelection(control.getScene())));
 	}
 
 	/**
