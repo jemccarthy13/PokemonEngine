@@ -126,7 +126,7 @@ public class GamePanel extends JPanel implements ActionListener {
 		// check for trainer encounter with any NPC
 		for (Actor curNPC : NPCLibrary.getInstance().values()) {
 			if (gameController.validEncounterConditions(curNPC)) {
-				gameController.pauseNPCMovement();
+				NPCThread.getInstance().stopMoving();
 				enemyTrainerAnimation(curNPC);
 				AudioLibrary.playBackgroundMusic("TrainerBattle");
 				gameController.doEncounter(curNPC.getParty(), curNPC.getName());
@@ -145,7 +145,6 @@ public class GamePanel extends JPanel implements ActionListener {
 	private void enemyTrainerAnimation(Actor curNPC) {
 
 		AudioLibrary.getInstance().pickTrainerMusic();
-		// TODO - verify trainer music plays
 
 		try {
 			// ! painting on initial eyesight

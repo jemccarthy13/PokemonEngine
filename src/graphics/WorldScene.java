@@ -12,6 +12,7 @@ import audio.AudioLibrary;
 import audio.AudioLibrary.SOUND_EFFECT;
 import controller.GameController;
 import model.Coordinate;
+import model.GameData;
 import tiles.Tile;
 import tiles.TileSet;
 import trainers.Actor;
@@ -43,14 +44,14 @@ public class WorldScene extends BaseScene {
 		g.setColor(Color.BLACK);
 		g.setClip(new Rectangle(-16, -42, 704, 438));
 
-		int offsetX = control.getOffsetX();
-		int offsetY = control.getOffsetY();
+		int offsetX = GameData.getInstance().getOffsetX();
+		int offsetY = GameData.getInstance().getOffsetY();
 		Player player = control.getPlayer();
-		int map_height = control.getMapHeight();
-		int map_width = control.getMapWidth();
+		int map_height = GameData.getInstance().getMapHeight();
+		int map_width = GameData.getInstance().getMapWidth();
 
-		int startX = control.getStartX();
-		int startY = control.getStartY();
+		int startX = GameData.getInstance().getStartCoordX();
+		int startY = GameData.getInstance().getStartCoordY();
 
 		g.translate(offsetX - Tile.TILESIZE, offsetY - 2 * Tile.TILESIZE);
 

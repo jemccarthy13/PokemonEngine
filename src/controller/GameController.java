@@ -51,116 +51,13 @@ public class GameController implements Serializable {
 	private Timer gameSpeed;
 
 	// main game logic
-	public GameData gData;
+	public GameData gData = GameData.getInstance();
 
 	// the player Actor
 	private Player player;
 
 	// the current battle enemy party
 	private Party currentEnemyParty = new Party();
-
-	// NPC random movement controller
-	private NPCThread npcs = new NPCThread();
-
-	// multiplayer client
-	private GameClient gameClient;
-
-	/**
-	 * Create a new controller to wrap around the game data
-	 */
-	public GameController() {
-		gData = new GameData();
-
-	}
-
-	/***************************************************************************
-	 * 
-	 * GRAPHICS CONTROL LOGIC
-	 * 
-	 * Helps control graphical display elements.
-	 * 
-	 **************************************************************************/
-
-	/**
-	 * Get the current graphical offset (x direction)
-	 * 
-	 * @return int x offset
-	 */
-	public int getOffsetX() {
-		return gData.offsetX;
-	}
-
-	/**
-	 * Get the current graphical offset (y direction)
-	 * 
-	 * @return int y offset
-	 */
-	public int getOffsetY() {
-		return gData.offsetY;
-	}
-
-	/**
-	 * Pause all NPC movement
-	 */
-	public void pauseNPCMovement() {
-		npcs.stop = true;
-	}
-
-	/**
-	 * Get the height of the map
-	 * 
-	 * @return int height of map
-	 */
-	public int getMapHeight() {
-		return gData.map_height;
-	}
-
-	/**
-	 * Get the width of the map
-	 * 
-	 * @return int width of map
-	 */
-	public int getMapWidth() {
-		return gData.map_width;
-	}
-
-	/**
-	 * Set the height of the map
-	 * 
-	 * @param hgt
-	 *            - the new height of the map
-	 */
-	public void setMapHeight(int hgt) {
-		gData.map_height = hgt;
-	}
-
-	/**
-	 * Set the width of the map
-	 * 
-	 * @param wdt
-	 *            - the new width of the map
-	 */
-	public void setMapWidth(int wdt) {
-		gData.map_width = wdt;
-	}
-
-	/**
-	 * Get the original start X (before offsets where added)
-	 * 
-	 * @return x start coordinate
-	 */
-	public int getStartX() {
-		return gData.start_coorX;
-	}
-
-	/**
-	 * Get the original start Y (before offsets where added)
-	 * 
-	 * @return y start coordinate
-	 */
-	public int getStartY() {
-		return gData.start_coorY;
-	}
 
 	/***************************************************************************
 	 * 
@@ -245,8 +142,8 @@ public class GameController implements Serializable {
 
 			// if the potential location is in bounds, can only move if tile is
 			// not obstacle
-			if (loc.getY() > 0 && loc.getY() <= getMapHeight() && loc.getX() > 0 && loc.getX() <= getMapWidth()) {
-				canMove = !gData.isObstacleAt(loc);
+			if (GameData.getInstance().isInBounds(loc)) {
+				canMove = !GameData.getInstance().isObstacleAt(loc);
 			}
 		}
 		return canMove;
@@ -284,31 +181,6 @@ public class GameController implements Serializable {
 
 	/***************************************************************************
 	 * 
-	 * MULTIPLAYER LOGIC
-	 * 
-	 * Connection to the game server, handling updates and such.
-	 * 
-	 **************************************************************************/
-	/**
-	 * Start a multiplayer session for this client.
-	 */
-	public void establishMultiplayerSession() {
-		DebugUtility.printMessage("Connecting to game server...");
-		gameClient = new GameClient(player.getID());
-		new Thread(gameClient).start();
-		DebugUtility.printMessage("Connected to game server.");
-	}
-
-	/**
-	 * Close the multiplayer session for this client.
-	 */
-	public void endMultiplayerSession() {
-		gameClient.sendMessage("end");
-		DebugUtility.printMessage("Disconnected from game server.");
-	}
-
-	/***************************************************************************
-	 * 
 	 * TIME CONTROL LOGIC
 	 * 
 	 * Helps control time and gameplay speed
@@ -336,8 +208,11 @@ public class GameController implements Serializable {
 		player.setMoney(1000000);
 		player.setCurLocation(LocationLibrary.getLocation("Route 27"));
 		AudioLibrary.playBackgroundMusic(getPlayer().getCurLoc().getName());
-		gData.start_coorX = (Tile.TILESIZE * (8 - player.getCurrentX()));
-		gData.start_coorY = (Tile.TILESIZE * (6 - player.getCurrentY()));
+
+		int i = (Tile.TILESIZE * (8 - player.getCurrentX()));
+		GameData.getInstance().setStartCoordX(i);
+		i = (Tile.TILESIZE * (6 - player.getCurrentY()));
+		GameData.getInstance().setStartCoordY(i);
 		gData.introStage = 1;
 	}
 
@@ -373,13 +248,14 @@ public class GameController implements Serializable {
 		}
 
 		// Connect to the server
-		establishMultiplayerSession();
+		GameClient.getInstance().establishMultiplayerSession(player.getID());
 
 		// initialize the player sprite
 		player.tData.sprite_name = "PLAYER";
 		player.tData.sprite = SpriteLibrary.getSprites("PLAYER").get(player.getDirection().ordinal() * 3);
 
-		npcs.start();
+		// Start NPC movement
+		NPCThread.getInstance().start();
 
 		// start clock for current session
 		GameTime.getInstance().start();
@@ -413,10 +289,10 @@ public class GameController implements Serializable {
 		if (canMoveInDir(playerDir)) {
 			switch (playerDir) {
 			case NORTH:
-				gData.offsetY += 2;
+				GameData.getInstance().addOffsetY(2);
 				break;
 			case SOUTH:
-				gData.offsetY -= 2;
+				GameData.getInstance().addOffsetY(-2);
 				break;
 			default:
 				break;
@@ -434,35 +310,15 @@ public class GameController implements Serializable {
 		if (canMoveInDir(playerDir)) {
 			switch (playerDir) {
 			case EAST:
-				gData.offsetX -= 2;
+				GameData.getInstance().addOffsetX(-2);
 				break;
 			case WEST:
-				gData.offsetX += 2;
+				GameData.getInstance().addOffsetY(2);
 				break;
 			default:
 				break;
 			}
 		}
-	}
-
-	/**
-	 * Set the start X coordinate for a teleport
-	 * 
-	 * @param i
-	 *            - start X coordinate
-	 */
-	public void setStartCoordX(int i) {
-		gData.start_coorX = i;
-	}
-
-	/**
-	 * Set the start Y coordinate for a teleport
-	 * 
-	 * @param i
-	 *            - start y coordinate
-	 */
-	public void setStartCoordY(int i) {
-		gData.start_coorY = i;
 	}
 
 	/** Check for teleport tile at a given position **/
@@ -481,8 +337,10 @@ public class GameController implements Serializable {
 
 		player.setLoc(TeleportLibrary.getList().get(playerPos));
 
-		setStartCoordX((player.getCurrentX() - playerPos.getX()) * -1 * Tile.TILESIZE);
-		setStartCoordY((player.getCurrentY() - playerPos.getY()) * -1 * Tile.TILESIZE);
+		int i = (player.getCurrentX() - playerPos.getX()) * -1 * Tile.TILESIZE;
+		GameData.getInstance().setStartCoordX(i);
+		i = (player.getCurrentY() - playerPos.getY()) * -1 * Tile.TILESIZE;
+		GameData.getInstance().setStartCoordY(i);
 
 		// face the opposite direction of the way the player entered the
 		// teleport square

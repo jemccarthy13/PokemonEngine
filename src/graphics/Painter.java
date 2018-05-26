@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import controller.GameController;
 import model.Coordinate;
+import model.GameData;
 import model.MessageQueue;
 import party.Battler;
 import party.Battler.STAT;
@@ -220,15 +221,15 @@ public class Painter {
 	 */
 	public static void paintTrainerSighted(Graphics g, GameController game, Coordinate npcPosition) {
 
-		int offsetX = game.getOffsetX();
-		int offsetY = game.getOffsetY();
+		int offsetX = GameData.getInstance().getOffsetX();
+		int offsetY = GameData.getInstance().getOffsetY();
 
 		Coordinate sightedBoxLocation = npcPosition.move(DIR.NORTH);
 		g.translate(offsetX - Tile.TILESIZE, offsetY - 2 * Tile.TILESIZE);
 
 		g.drawImage(SpriteLibrary.getImage("trainer-sighted"),
-				Tile.TILESIZE * sightedBoxLocation.getX() + game.getStartX(),
-				sightedBoxLocation.getY() * Tile.TILESIZE + game.getStartY() - 10, null);
+				Tile.TILESIZE * sightedBoxLocation.getX() + GameData.getInstance().getStartCoordX(),
+				sightedBoxLocation.getY() * Tile.TILESIZE + GameData.getInstance().getStartCoordY() - 10, null);
 		g.translate(-offsetX, -offsetY);
 
 	}

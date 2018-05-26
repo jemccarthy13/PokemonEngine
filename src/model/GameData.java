@@ -25,6 +25,14 @@ public class GameData implements Serializable {
 
 	private static final long serialVersionUID = 4753670767642154788L;
 
+	private static GameData instance = new GameData();
+
+	private GameData() {}
+
+	public static GameData getInstance() {
+		return instance;
+	}
+
 	//
 	// Converting to use game controller to convert to MVC design pattern
 	//
@@ -68,30 +76,78 @@ public class GameData implements Serializable {
 	/**
 	 * The width of the map
 	 */
-	public int map_width;
+	private int map_width;
 	/**
 	 * The height of the map
 	 */
-	public int map_height;
+	private int map_height;
+
+	public void setMapWidth(int width) {
+		this.map_width = width;
+	}
+
+	public void setMapHeight(int height) {
+		this.map_height = height;
+	}
+
+	public int getMapWidth() {
+		return this.map_width;
+	}
+
+	public int getMapHeight() {
+		return this.map_height;
+	}
 
 	// ====================== Graphics control variables ===================//
 	/**
 	 * Painting variable, map offset in the x direction
 	 */
-	public int offsetX = 0;
+	private int offsetX = 0;
 	/**
 	 * Painting variable, map offset in the y direction
 	 */
-	public int offsetY = 0;
+	private int offsetY = 0;
+
+	public int getOffsetX() {
+		return this.offsetX;
+	}
+
+	public int getOffsetY() {
+		return this.offsetY;
+	}
+
+	public void addOffsetY(int toAdd) {
+		this.offsetY = this.offsetY + toAdd;
+	}
+
+	public void addOffsetX(int toAdd) {
+		this.offsetX = this.offsetX + toAdd;
+	}
 
 	/**
 	 * Teleportation graphics x variable
 	 */
-	public int start_coorX;
+	private int start_coorX;
 	/**
 	 * Teleportation graphics y variable
 	 */
-	public int start_coorY; // teleportation graphics variables
+	private int start_coorY;
+
+	public void setStartCoordX(int i) {
+		this.start_coorX = i;
+	}
+
+	public void setStartCoordY(int i) {
+		this.start_coorY = i;
+	}
+
+	public int getStartCoordX() {
+		return this.start_coorX;
+	}
+
+	public int getStartCoordY() {
+		return this.start_coorY;
+	}
 
 	/**
 	 * Stored as a map so each SCREEN can store it's own current selection
@@ -225,15 +281,10 @@ public class GameData implements Serializable {
 
 	/**
 	 * Set the tileMap to contain null tiles
-	 * 
-	 * @param mapwidth
-	 *            - the width of the map
-	 * @param mapheight
-	 *            - the height of the map
 	 */
-	public void initializeTileMapToNull(int mapwidth, int mapheight) {
-		for (int r = 0; r < mapheight; r++) {
-			Tile[] numbers = new Tile[mapwidth];
+	public void initializeTileMapToNull() {
+		for (int r = 0; r < this.map_height; r++) {
+			Tile[] numbers = new Tile[this.map_width];
 			Arrays.fill(numbers, null);
 			List<Tile> row = Arrays.asList(numbers);
 			tileMap.add(row);
@@ -252,5 +303,18 @@ public class GameData implements Serializable {
 
 	public boolean isTeleportAt(Coordinate loc) {
 		return TeleportLibrary.getList().containsKey(loc);
+	}
+
+	/**
+	 * Check whether or not a coordinate is within the height and width of the map
+	 * 
+	 * @param loc
+	 *            - the coordinate to check
+	 * @return - true iff coordinate X and Y is > 0 and < height/width
+	 */
+	public boolean isInBounds(Coordinate loc) {
+		// loc is > 0 but less than the bounds of the map
+		return loc.getY() > 0 && loc.getY() <= this.getMapHeight() && loc.getX() > 0
+				&& loc.getX() <= this.getMapWidth();
 	}
 }

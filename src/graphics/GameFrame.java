@@ -5,6 +5,7 @@ import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 
+import client.GameClient;
 import controller.GameController;
 import utilities.DebugUtility;
 
@@ -30,7 +31,7 @@ public class GameFrame extends JFrame {
 		 */
 		@Override
 		public void windowClosed(WindowEvent arg0) {
-			pokemonGame.gameController.endMultiplayerSession();
+			GameClient.getInstance().endMuliplayerSession();
 			DebugUtility.printMessage("Game session ended.");
 			System.exit(0);
 		}
