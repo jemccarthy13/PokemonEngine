@@ -37,9 +37,9 @@ public class GameClient extends Thread {
 			printWriter = new PrintWriter(socket.getOutputStream(), true);
 			printWriter.println("set ID " + sessionID);
 		} catch (ConnectException e) {
-			DebugUtility.error("Connection refused: port (" + portNum + ") likely in use.");
+			DebugUtility.printError("Connection refused: port (" + portNum + ") in use or no response.");
 		} catch (IOException e1) {
-			DebugUtility.error("Unknown error: " + e1.getMessage());
+			DebugUtility.printError("Unknown error: " + e1.getMessage());
 		}
 	}
 
@@ -50,6 +50,11 @@ public class GameClient extends Thread {
 	 *            - the message to send
 	 */
 	public void sendMessage(String string) {
-		printWriter.println(string);
+		try {
+			printWriter.println(string);
+		} catch (NullPointerException e) {
+			DebugUtility.printError("Server/client connection wasn't established.");
+			DebugUtility.printError("Exiting anyway.");
+		}
 	}
 }

@@ -2,12 +2,12 @@ package graphics;
 
 import java.awt.Graphics;
 
+import controller.GameController;
 import model.Coordinate;
 import party.Battler;
 import utilities.BattleEngine;
 import utilities.BattleEngine.TURN;
 import utilities.RandomNumUtils;
-import controller.GameController;
 
 /**
  * A representation of the battle fight scene
@@ -60,6 +60,11 @@ public class BattleFightScene extends BaseScene {
 		if (choice <= numMoves && row >= 0 && col >= 0 && row <= 1 && col <= 1) {
 			gameControl.setCurrentSelection(new Coordinate(row, col));
 			gameControl.setCurrentSelection(new Coordinate(row, col));
+		} else {
+			// Don't get stuck if one pokemon has 4 moves and next has 2
+			// default to the first
+			gameControl.setCurrentSelection(new Coordinate(1, 1));
+			gameControl.setCurrentSelection(new Coordinate(1, 1));
 		}
 	}
 

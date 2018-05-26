@@ -1,12 +1,13 @@
 package utilities;
 
-import graphics.BattleMessageScene;
-import graphics.BattleScene;
-import graphics.WorldScene;
-
 import java.util.ArrayList;
 import java.util.Random;
 
+import audio.AudioLibrary.SOUND_EFFECT;
+import controller.GameController;
+import graphics.BattleMessageScene;
+import graphics.BattleScene;
+import graphics.WorldScene;
 import model.Configuration;
 import party.Battler;
 import party.Battler.STAT;
@@ -14,8 +15,6 @@ import party.Battler.STATUS;
 import party.MoveData;
 import party.Party;
 import trainers.Actor.DIR;
-import audio.AudioLibrary.SOUND_EFFECT;
-import controller.GameController;
 
 /**
  * Holds all logic for a Pokemon battle, either a wild encounter or trainer
@@ -273,10 +272,12 @@ public class BattleEngine {
 			// get the chosen move
 			MoveData chosen = attacker.getMove(move);
 
+			DebugUtility.printMessage(attacker.getName() + " is attacking " + defender.getName());
+
 			// try to thaw / wake the attacker if they are affected
 			attacker.tryToThaw();
 
-			DebugUtility.printMessage("Using: " + chosen.name);
+			DebugUtility.printMessage("Using: " + chosen.toString());
 
 			game.addMessage(attacker.getName() + " used " + chosen.name + "!");
 
@@ -308,7 +309,7 @@ public class BattleEngine {
 				game.playClip(SOUND_EFFECT.DAMAGE);
 				DebugUtility.printMessage(attacker.getName() + " has been hurt by it's " + status);
 			default:
-				defender.doDamage(chosen);
+				defender.takeDamage(attacker.doDamage(chosen));
 				game.playClip(SOUND_EFFECT.DAMAGE);
 			}
 
