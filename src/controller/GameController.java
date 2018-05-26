@@ -13,6 +13,7 @@ import javax.swing.Timer;
 import audio.AudioLibrary;
 import client.GameClient;
 import graphics.BaseScene;
+import graphics.GameMap;
 import graphics.IntroScene;
 import graphics.NPCThread;
 import graphics.SpriteLibrary;
@@ -289,7 +290,7 @@ public class GameController implements Serializable {
 	 */
 	public void postMovementChecks() {
 		// check for wild encounter
-		if (gData.isBattleAt(player.getPosition())) {
+		if (GameMap.getInstance().isBattleAt(player.getPosition())) {
 			if (RandomNumUtils.isWildEncounter()) {
 				currentEnemyParty.clear();
 				currentEnemyParty.add(BattlerFactory.getInstance().randomPokemon(getPlayer().getCurLoc()));

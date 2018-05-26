@@ -3,12 +3,12 @@ package trainers;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import graphics.GameMap;
 import graphics.SpriteLibrary;
 import location.Location;
 import location.LocationLibrary;
 import model.Configuration;
 import model.Coordinate;
-import model.GameData;
 import party.Storage;
 import utilities.RandomNumUtils;
 
@@ -158,8 +158,8 @@ public class Player extends Actor implements Serializable {
 
 			// if the potential location is in bounds, can only move if tile is
 			// not obstacle
-			if (GameData.getInstance().isInBounds(loc)) {
-				can = !GameData.getInstance().isObstacleAt(loc);
+			if (GameMap.getInstance().isInBounds(loc)) {
+				can = !GameMap.getInstance().isObstacleAt(loc);
 			}
 		}
 		return can;

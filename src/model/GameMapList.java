@@ -10,7 +10,7 @@ import java.util.List;
  *            what this game map holds - typically Integer to represent images
  *            from a tile set, or Tile to represent the obstacles on the map
  */
-public class GameMap<Type> extends ArrayList<List<Type>> {
+public class GameMapList<Type> extends ArrayList<List<Type>> {
 
 	private static final long serialVersionUID = 5325017932787074716L;
 

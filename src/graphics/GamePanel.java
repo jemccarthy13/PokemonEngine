@@ -13,7 +13,6 @@ import audio.AudioLibrary;
 import controller.GameController;
 import controller.GameKeyListener;
 import model.Coordinate;
-import model.GameData;
 import model.GameTime;
 import tiles.TileSet;
 import trainers.Actor;
@@ -55,7 +54,7 @@ public class GamePanel extends JPanel implements ActionListener {
 	public GamePanel() {
 
 		try {
-			MapLoader.getInstance().loadMap(gameController);
+			GameMap.getInstance().loadMap(gameController);
 		} catch (IOException | InterruptedException e) {
 			DebugUtility.printError("Unable to load map!");
 		}
@@ -87,7 +86,7 @@ public class GamePanel extends JPanel implements ActionListener {
 			Coordinate playerPos = player.getPosition();
 
 			// check for teleport at location
-			if (GameData.getInstance().isTeleportAt(playerPos)) {
+			if (GameMap.getInstance().isTeleportAt(playerPos)) {
 				gameController.doTeleport(playerPos);
 			} else {
 				// Party playerPokemon = player.getParty();
@@ -177,7 +176,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
 		// until NPC reaches player, place a normal tile, move NPC, repaint
 		for (int x = 0; x < distToTravel; x++) {
-			GameData.getInstance().setMapTileAt(curNPC.tData.position, TileSet.NORMAL);
+			GameMap.getInstance().setMapTileAt(curNPC.tData.position, TileSet.NORMAL);
 			// TODO better animation somewhere in this loop - make it look like
 			// player walking animation
 			curNPC.move(NPC_DIR);

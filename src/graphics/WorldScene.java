@@ -47,8 +47,8 @@ public class WorldScene extends BaseScene {
 		int offsetX = GameData.getInstance().getOffsetX();
 		int offsetY = GameData.getInstance().getOffsetY();
 		Player player = control.getPlayer();
-		int map_height = GameData.getInstance().getMapHeight();
-		int map_width = GameData.getInstance().getMapWidth();
+		int map_height = GameMap.getInstance().getHeight();
+		int map_width = GameMap.getInstance().getWidth();
 
 		int startX = GameData.getInstance().getStartCoordX();
 		int startY = GameData.getInstance().getStartCoordY();
@@ -62,7 +62,7 @@ public class WorldScene extends BaseScene {
 			int tile_number = 0;
 			for (int y = 1; y <= map_height; y++) {
 				for (int x = 1; x <= map_width; x++) {
-					int tilePic = control.gData.getMapImageAt(layer, tile_number);
+					int tilePic = GameMap.getInstance().getMapImageAt(layer, tile_number);
 
 					if (!(layer == 2 && tilePic == 0)) {
 						g.drawImage((Image) TileSet.getInstance().get(tilePic), x_coor, y_coor, null);
@@ -78,7 +78,7 @@ public class WorldScene extends BaseScene {
 		for (Actor curNPC : NPCLibrary.getInstance().values()) {
 			g.drawImage(curNPC.tData.sprite.getImage(), curNPC.getCurrentX() * Tile.TILESIZE + startX,
 					curNPC.getCurrentY() * Tile.TILESIZE + startY - 10, null);
-			control.gData.setMapTileAt(curNPC.getPosition(), TileSet.OBSTACLE);
+			GameMap.getInstance().setMapTileAt(curNPC.getPosition(), TileSet.OBSTACLE);
 		}
 
 		// TODO - remove this line and the 2 setTranform lines to start
