@@ -1,4 +1,4 @@
-package graphics;
+package scenes;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -11,8 +11,9 @@ import java.awt.geom.AffineTransform;
 import audio.AudioLibrary;
 import audio.AudioLibrary.SOUND_EFFECT;
 import controller.GameController;
+import graphics.GameMap;
+import graphics.GraphicsOrigin;
 import model.Coordinate;
-import model.GameData;
 import tiles.Tile;
 import tiles.TileSet;
 import trainers.Actor;
@@ -44,14 +45,14 @@ public class WorldScene extends BaseScene {
 		g.setColor(Color.BLACK);
 		g.setClip(new Rectangle(-16, -42, 704, 438));
 
-		int offsetX = GameData.getInstance().getOffsetX();
-		int offsetY = GameData.getInstance().getOffsetY();
+		int offsetX = GraphicsOrigin.getInstance().getOffsetX();
+		int offsetY = GraphicsOrigin.getInstance().getOffsetY();
 		Player player = control.getPlayer();
 		int map_height = GameMap.getInstance().getHeight();
 		int map_width = GameMap.getInstance().getWidth();
 
-		int startX = GameData.getInstance().getStartCoordX();
-		int startY = GameData.getInstance().getStartCoordY();
+		int startX = GraphicsOrigin.getInstance().getStartCoordX();
+		int startY = GraphicsOrigin.getInstance().getStartCoordY();
 
 		g.translate(offsetX - Tile.TILESIZE, offsetY - 2 * Tile.TILESIZE);
 

@@ -1,10 +1,11 @@
-package graphics;
+package scenes;
 
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 
 import audio.AudioLibrary;
 import controller.GameController;
+import graphics.SpriteLibrary;
 
 /**
  * A representation of a title scene

@@ -7,13 +7,13 @@ import java.util.HashMap;
 
 import audio.AudioLibrary;
 import audio.AudioLibrary.SOUND_EFFECT;
-import graphics.BaseScene;
-import graphics.BattleMessageScene;
-import graphics.IntroScene;
-import graphics.NameScene;
-import graphics.WorldScene;
 import model.MessageQueue;
 import model.NameBuilder;
+import scenes.BaseScene;
+import scenes.BattleMessageScene;
+import scenes.IntroScene;
+import scenes.NameScene;
+import scenes.WorldScene;
 
 /**
  * Listens for key presses in the game

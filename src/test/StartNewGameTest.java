@@ -1,10 +1,9 @@
 package test;
 
-import graphics.WorldScene;
-
 import java.awt.event.KeyEvent;
 
 import model.Configuration;
+import scenes.WorldScene;
 
 import org.junit.Assert;
 import org.junit.Test;

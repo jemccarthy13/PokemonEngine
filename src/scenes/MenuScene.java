@@ -1,9 +1,10 @@
-package graphics;
+package scenes;
 
 import java.awt.Graphics;
 import java.util.HashMap;
 
 import controller.GameController;
+import graphics.SpriteLibrary;
 
 /**
  * A representation of the pause menu scene

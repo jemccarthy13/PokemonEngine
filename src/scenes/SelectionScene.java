@@ -1,4 +1,4 @@
-package graphics;
+package scenes;
 
 import controller.GameController;
 

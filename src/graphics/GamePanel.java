@@ -14,6 +14,7 @@ import controller.GameController;
 import controller.GameKeyListener;
 import model.Coordinate;
 import model.GameTime;
+import scenes.WorldScene;
 import tiles.TileSet;
 import trainers.Actor;
 import trainers.Actor.DIR;

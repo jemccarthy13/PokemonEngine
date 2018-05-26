@@ -1,8 +1,10 @@
-package graphics;
+package scenes;
 
 import java.awt.Graphics;
 
 import controller.GameController;
+import graphics.Painter;
+import graphics.SpriteLibrary;
 import model.Configuration;
 
 /**

@@ -1,9 +1,10 @@
-package graphics;
+package scenes;
 
 import java.awt.Graphics;
 
 import audio.AudioLibrary;
 import controller.GameController;
+import graphics.SpriteLibrary;
 import model.MessageQueue;
 import trainers.Actor.DIR;
 

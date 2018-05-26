@@ -1,9 +1,10 @@
-package graphics;
+package scenes;
 
 import java.awt.Color;
 import java.awt.Graphics;
 
 import controller.GameController;
+import graphics.SpriteLibrary;
 import model.GameTime;
 import model.MessageQueue;
 import trainers.Player;

@@ -1,9 +1,11 @@
-package graphics;
+package scenes;
 
 import java.awt.Color;
 import java.awt.Graphics;
 
 import controller.GameController;
+import graphics.Painter;
+import graphics.SpriteLibrary;
 import party.Party;
 
 /**

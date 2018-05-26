@@ -12,12 +12,10 @@ import javax.swing.Timer;
 
 import audio.AudioLibrary;
 import client.GameClient;
-import graphics.BaseScene;
 import graphics.GameMap;
-import graphics.IntroScene;
+import graphics.GraphicsOrigin;
 import graphics.NPCThread;
 import graphics.SpriteLibrary;
-import graphics.WorldScene;
 import location.LocationLibrary;
 import model.Configuration;
 import model.Coordinate;
@@ -26,6 +24,10 @@ import model.GameTime;
 import model.MessageQueue;
 import party.Battler;
 import party.Battler.STATUS;
+import scenes.BaseScene;
+import scenes.IntroScene;
+import scenes.Scene;
+import scenes.WorldScene;
 import party.BattlerFactory;
 import party.Party;
 import tiles.Tile;
@@ -55,6 +57,8 @@ public class GameController implements Serializable {
 
 	// the current battle enemy party
 	private Party currentEnemyParty = new Party();
+
+	private Scene currentScene;
 
 	/***************************************************************************
 	 * 
@@ -111,9 +115,9 @@ public class GameController implements Serializable {
 		AudioLibrary.playBackgroundMusic(getPlayer().getCurLoc().getName());
 
 		int i = (Tile.TILESIZE * (8 - player.getCurrentX()));
-		GameData.getInstance().setStartCoordX(i);
+		GraphicsOrigin.getInstance().setStartCoordX(i);
 		i = (Tile.TILESIZE * (6 - player.getCurrentY()));
-		GameData.getInstance().setStartCoordY(i);
+		GraphicsOrigin.getInstance().setStartCoordY(i);
 		gData.introStage = 1;
 	}
 
@@ -134,16 +138,16 @@ public class GameController implements Serializable {
 				DebugUtility.error("Unable to continue game from save file. Corrupt data:\n" + player.tData.toString());
 			}
 			// get out of continue menu
-			gData.scene = WorldScene.instance;
+			currentScene = WorldScene.instance;
 		} else {
 			newGame();
 
 			if (Configuration.SHOWINTRO) {
-				gData.scene = IntroScene.instance;
+				currentScene = IntroScene.instance;
 				MessageQueue.getInstance()
 						.addAllMessages(NPCLibrary.getInstance().get("Professor Oak").getConversationText().toArray());
 			} else {
-				gData.scene = WorldScene.instance;
+				currentScene = WorldScene.instance;
 			}
 			DebugUtility.printMessage("Started new game.");
 		}
@@ -182,10 +186,10 @@ public class GameController implements Serializable {
 		if (player.canMoveInDir(playerDir)) {
 			switch (playerDir) {
 			case NORTH:
-				GameData.getInstance().addOffsetY(2);
+				GraphicsOrigin.getInstance().addOffsetY(2);
 				break;
 			case SOUTH:
-				GameData.getInstance().addOffsetY(-2);
+				GraphicsOrigin.getInstance().addOffsetY(-2);
 				break;
 			default:
 				break;
@@ -203,10 +207,10 @@ public class GameController implements Serializable {
 		if (player.canMoveInDir(playerDir)) {
 			switch (playerDir) {
 			case EAST:
-				GameData.getInstance().addOffsetX(-2);
+				GraphicsOrigin.getInstance().addOffsetX(-2);
 				break;
 			case WEST:
-				GameData.getInstance().addOffsetX(2);
+				GraphicsOrigin.getInstance().addOffsetX(2);
 				break;
 			default:
 				break;
@@ -226,9 +230,9 @@ public class GameController implements Serializable {
 		player.setLoc(TeleportLibrary.getList().get(playerPos));
 
 		int i = (player.getCurrentX() - playerPos.getX()) * -1 * Tile.TILESIZE;
-		GameData.getInstance().setStartCoordX(i);
+		GraphicsOrigin.getInstance().setStartCoordX(i);
 		i = (player.getCurrentY() - playerPos.getY()) * -1 * Tile.TILESIZE;
-		GameData.getInstance().setStartCoordY(i);
+		GraphicsOrigin.getInstance().setStartCoordY(i);
 
 		// face the opposite direction of the way the player entered the
 		// teleport square
@@ -331,8 +335,8 @@ public class GameController implements Serializable {
 	 * 
 	 * @return current screen to be painted
 	 */
-	public BaseScene getScene() {
-		return gData.scene;
+	public Scene getScene() {
+		return currentScene;
 	}
 
 	/**
@@ -342,7 +346,7 @@ public class GameController implements Serializable {
 	 *            - the new current screen
 	 */
 	public void setScene(BaseScene curScreen) {
-		gData.scene = curScreen;
+		currentScene = curScreen;
 	}
 
 	/**

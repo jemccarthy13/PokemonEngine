@@ -1,8 +1,9 @@
-package graphics;
+package scenes;
 
 import java.awt.Graphics;
 
 import controller.GameController;
+import graphics.SpriteLibrary;
 
 /**
  * A representation of the continue scene

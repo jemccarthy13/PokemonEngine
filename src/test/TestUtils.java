@@ -1,7 +1,7 @@
 package test;
 
-import graphics.ContinueScene;
-import graphics.TitleScene;
+import scenes.ContinueScene;
+import scenes.TitleScene;
 
 import java.awt.Robot;
 import java.awt.event.KeyEvent;

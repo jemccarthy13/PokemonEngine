@@ -6,10 +6,12 @@ import java.util.HashMap;
 
 import controller.GameController;
 import model.Coordinate;
-import model.GameData;
 import model.MessageQueue;
 import party.Battler;
 import party.Battler.STAT;
+import scenes.BaseScene;
+import scenes.NameScene;
+import scenes.Scene;
 import tiles.Tile;
 import trainers.Actor.DIR;
 import utilities.BattleEngine;
@@ -93,7 +95,7 @@ public class Painter {
 	 * @param startY
 	 *            - the starting y location
 	 */
-	static void paintSmallString(Graphics g, String string, int startX, int startY) {
+	public static void paintSmallString(Graphics g, String string, int startX, int startY) {
 		string = string.toUpperCase();
 		int offset = ((int) (Tile.TILESIZE / 2.7)) - 2;
 		for (int x = 0; x < string.toCharArray().length; x++) {
@@ -129,7 +131,7 @@ public class Painter {
 	 * @param startY
 	 *            - the starting y location
 	 */
-	static void paintString(Graphics g, String string, int startX, int startY) {
+	public static void paintString(Graphics g, String string, int startX, int startY) {
 		string = string.toUpperCase();
 		for (int x = 0; x < string.toCharArray().length; x++) {
 			switch (string.toCharArray()[x]) {
@@ -221,15 +223,15 @@ public class Painter {
 	 */
 	public static void paintTrainerSighted(Graphics g, GameController game, Coordinate npcPosition) {
 
-		int offsetX = GameData.getInstance().getOffsetX();
-		int offsetY = GameData.getInstance().getOffsetY();
+		int offsetX = GraphicsOrigin.getInstance().getOffsetX();
+		int offsetY = GraphicsOrigin.getInstance().getOffsetY();
 
 		Coordinate sightedBoxLocation = npcPosition.move(DIR.NORTH);
 		g.translate(offsetX - Tile.TILESIZE, offsetY - 2 * Tile.TILESIZE);
 
 		g.drawImage(SpriteLibrary.getImage("trainer-sighted"),
-				Tile.TILESIZE * sightedBoxLocation.getX() + GameData.getInstance().getStartCoordX(),
-				sightedBoxLocation.getY() * Tile.TILESIZE + GameData.getInstance().getStartCoordY() - 10, null);
+				Tile.TILESIZE * sightedBoxLocation.getX() + GraphicsOrigin.getInstance().getStartCoordX(),
+				sightedBoxLocation.getY() * Tile.TILESIZE + GraphicsOrigin.getInstance().getStartCoordY() - 10, null);
 		g.translate(-offsetX, -offsetY);
 
 	}
