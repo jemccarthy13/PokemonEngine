@@ -22,8 +22,8 @@ public class BattleFightScene extends SelectionScene {
 	public static BattleFightScene instance = new BattleFightScene();
 
 	private BattleFightScene() {
-		super.maxColSelection = 1;
-		super.maxRowSelection = 1;
+		this.maxColSelection = 1;
+		this.maxRowSelection = 1;
 	}
 
 	/**
@@ -64,37 +64,39 @@ public class BattleFightScene extends SelectionScene {
 		int numMoves = BattleEngine.getInstance().playerCurrentPokemon.getNumMoves() - 1;
 
 		if (!(choice <= numMoves && row >= 0 && col >= 0 && row <= 1 && col <= 1)) {
-			this.rowSelection = 0;
-			this.colSelection = 0;
+			row = 0;
+			col = 0;
 		}
+		this.rowSelection = row;
+		this.colSelection = col;
 	}
 
 	/**
 	 * Up arrow button press
 	 */
 	public void doUp(GameController gameControl) {
-		checkMove(-1, 0, gameControl);
+		checkMove(0, -1, gameControl);
 	}
 
 	/**
 	 * Down arrow button press
 	 */
 	public void doDown(GameController gameControl) {
-		checkMove(1, 0, gameControl);
+		checkMove(0, 1, gameControl);
 	}
 
 	/**
 	 * Left arrow button press
 	 */
 	public void doLeft(GameController gameControl) {
-		checkMove(0, -1, gameControl);
+		checkMove(-1, 0, gameControl);
 	}
 
 	/**
 	 * Right arrow button press
 	 */
 	public void doRight(GameController gameControl) {
-		checkMove(0, 1, gameControl);
+		checkMove(1, 0, gameControl);
 	}
 
 	/**

@@ -24,12 +24,13 @@ import model.GameTime;
 import model.MessageQueue;
 import party.Battler;
 import party.Battler.STATUS;
+import party.BattlerFactory;
+import party.Party;
 import scenes.BaseScene;
 import scenes.IntroScene;
 import scenes.Scene;
+import scenes.TitleScene;
 import scenes.WorldScene;
-import party.BattlerFactory;
-import party.Party;
 import tiles.Tile;
 import trainers.Actor;
 import trainers.Actor.DIR;
@@ -58,7 +59,7 @@ public class GameController implements Serializable {
 	// the current battle enemy party
 	private Party currentEnemyParty = new Party();
 
-	private Scene currentScene;
+	private Scene currentScene = TitleScene.instance;
 
 	/***************************************************************************
 	 * 
