@@ -4,13 +4,14 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.HashMap;
 
+import controller.GameController;
 import model.Coordinate;
+import model.MessageQueue;
 import party.Battler;
 import party.Battler.STAT;
 import tiles.Tile;
 import trainers.Actor.DIR;
 import utilities.BattleEngine;
-import controller.GameController;
 
 /**
  * One central location where all painting objects can register to be
@@ -23,8 +24,8 @@ import controller.GameController;
 public class Painter {
 
 	/**
-	 * The data structure that stores all the Scenes that know how to render
-	 * game graphics
+	 * The data structure that stores all the Scenes that know how to render game
+	 * graphics
 	 */
 	HashMap<Integer, Scene> scenePainters = new HashMap<Integer, Scene>();
 
@@ -72,7 +73,7 @@ public class Painter {
 		// will interrupt any underlying functionality and take priority until
 		// they are dismissed
 		if (control.getScene() != NameScene.instance) {
-			String[] message = control.getCurrentMessage();
+			String[] message = MessageQueue.getInstance().getMessages();
 			if (message != null) {
 				paintMessageBox(g, message);
 			}
@@ -109,8 +110,8 @@ public class Painter {
 				g.drawImage(SpriteLibrary.getImage("COLON_small"), startX + offset * x, startY, null);
 				break;
 			default:
-				g.drawImage(SpriteLibrary.getInstance().getSmallFontChar(string.toCharArray()[x]).getImage(), startX
-						+ offset * x, startY, null);
+				g.drawImage(SpriteLibrary.getInstance().getSmallFontChar(string.toCharArray()[x]).getImage(),
+						startX + offset * x, startY, null);
 			}
 		}
 	}
@@ -144,8 +145,8 @@ public class Painter {
 				g.drawImage(SpriteLibrary.getImage("COLON"), startX + Tile.TILESIZE * x, startY, null);
 				break;
 			default:
-				g.drawImage(SpriteLibrary.getInstance().getFontChar(string.toCharArray()[x]).getImage(), startX
-						+ Tile.TILESIZE * x, startY, null);
+				g.drawImage(SpriteLibrary.getInstance().getFontChar(string.toCharArray()[x]).getImage(),
+						startX + Tile.TILESIZE * x, startY, null);
 			}
 		}
 	}
@@ -226,8 +227,8 @@ public class Painter {
 		g.translate(offsetX - Tile.TILESIZE, offsetY - 2 * Tile.TILESIZE);
 
 		g.drawImage(SpriteLibrary.getImage("trainer-sighted"),
-				Tile.TILESIZE * sightedBoxLocation.getX() + game.getStartX(), sightedBoxLocation.getY() * Tile.TILESIZE
-						+ game.getStartY() - 10, null);
+				Tile.TILESIZE * sightedBoxLocation.getX() + game.getStartX(),
+				sightedBoxLocation.getY() * Tile.TILESIZE + game.getStartY() - 10, null);
 		g.translate(-offsetX, -offsetY);
 
 	}

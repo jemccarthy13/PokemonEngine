@@ -3,6 +3,7 @@ package graphics;
 import java.awt.Graphics;
 
 import controller.GameController;
+import model.Configuration;
 
 /**
  * A representation of a option scene
@@ -22,7 +23,7 @@ public class OptionScene extends BaseScene {
 	 */
 	@Override
 	public void render(Graphics g, GameController gameControl) {
-		String sound = gameControl.isSoundOn() ? "On" : "Off";
+		String sound = Configuration.getInstance().isSoundOn() ? "On" : "Off";
 		g.drawImage(SpriteLibrary.getImage("OptionBG"), 0, 0, null);
 		g.drawImage(SpriteLibrary.getImage("Arrow"), 22, 85 + 32 * gameControl.getCurrentRowSelection(), null);
 		Painter.paintSmallString(g, sound, 225, 250);

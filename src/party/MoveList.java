@@ -24,11 +24,8 @@ public class MoveList extends ArrayList<MoveData> {
 	}
 
 	/**
-	 * Try to add a move to the move list. If the party member knows 'capacity'
-	 * moves, check if overwrite or not. If not overwrite, remove the first move
-	 * and add the newest.
-	 * 
-	 * If the capacity is -1, always add the move.
+	 * Add a move to the move list. If Battler knows 'capacity' number of moves, ask
+	 * if the Player wants to replace a move.
 	 * 
 	 * @param move
 	 *            - the move to add
@@ -42,6 +39,7 @@ public class MoveList extends ArrayList<MoveData> {
 			this.add(move);
 			success = true;
 		} else {
+			/** @TODO replace this with a ReplaceMoveScene **/
 			if (askForOverwrite) {
 				DebugUtility.printMessage(name + " already knows 4 moves.  Make room for another?");
 				Scanner s = new Scanner(System.in);
@@ -49,7 +47,7 @@ public class MoveList extends ArrayList<MoveData> {
 				if (str.contains("y")) {
 					DebugUtility.printMessage("Which move to delete?");
 					Integer delete = Integer.parseInt(s.nextLine());
-					this.remove(delete);
+					this.remove(this.get(delete));
 					add(move);
 					success = true;
 				}

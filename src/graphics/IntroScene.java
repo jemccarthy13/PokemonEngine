@@ -2,8 +2,10 @@ package graphics;
 
 import java.awt.Graphics;
 
-import trainers.Actor.DIR;
+import audio.AudioLibrary;
 import controller.GameController;
+import model.MessageQueue;
+import trainers.Actor.DIR;
 
 /**
  * A representation of intro scene
@@ -29,10 +31,10 @@ public class IntroScene extends BaseScene {
 	 * Perform "Z" button click
 	 */
 	public void doAction(GameController control) {
-		if (control.hasNextMessage()) {
-			control.nextMessage();
+		if (MessageQueue.getInstance().hasNextMessage()) {
+			MessageQueue.getInstance().nextMessage();
 		} else {
-			control.playBackgroundMusic("NewBarkTown");
+			AudioLibrary.playBackgroundMusic("NewBarkTown");
 			control.setScene(WorldScene.instance);
 		}
 	}

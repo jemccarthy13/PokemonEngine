@@ -3,8 +3,9 @@ package graphics;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import trainers.Player;
 import controller.GameController;
+import model.GameTime;
+import trainers.Player;
 
 /**
  * A representation of player information
@@ -48,7 +49,7 @@ public class PlayerInfoScene extends BaseScene {
 		Painter.paintSmallString(g, "Name:" + getPadding("Name:") + player.getName(), 65, 80);
 		Painter.paintSmallString(g, "Money:" + getPadding("Money:") + "$" + player.getMoney(), 65, 140);
 		Painter.paintSmallString(g, "Pokedex:" + getPadding("Pokedex:") + player.getNumPokemonOwned(), 65, 170);
-		Painter.paintSmallString(g, "Time:" + getPadding("Time:") + gameControl.formatTime(), 65, 200);
+		Painter.paintSmallString(g, "Time:" + getPadding("Time:") + GameTime.getInstance().formatTime(), 65, 200);
 	}
 
 	/**

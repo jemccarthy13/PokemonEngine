@@ -1,17 +1,19 @@
 package controller;
 
-import graphics.BaseScene;
-import graphics.BattleMessageScene;
-import graphics.IntroScene;
-import graphics.NameScene;
-import graphics.WorldScene;
-
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.Serializable;
 import java.util.HashMap;
 
+import audio.AudioLibrary;
 import audio.AudioLibrary.SOUND_EFFECT;
+import graphics.BaseScene;
+import graphics.BattleMessageScene;
+import graphics.IntroScene;
+import graphics.NameScene;
+import graphics.WorldScene;
+import model.MessageQueue;
+import model.NameBuilder;
 
 /**
  * Listens for key presses in the game
@@ -82,26 +84,26 @@ public class GameKeyListener implements KeyListener, Serializable {
 	public void keyPressed(KeyEvent e) {
 		int keyCode = e.getKeyCode();
 
-		if ((keyCode == KeyEvent.VK_X || keyCode == KeyEvent.VK_Z) && gameControl.getCurrentMessage() != null
+		if ((keyCode == KeyEvent.VK_X || keyCode == KeyEvent.VK_Z) && MessageQueue.getInstance().getMessages() != null
 				&& gameControl.getScene() != NameScene.instance) {
-			gameControl.nextMessage();
+			MessageQueue.getInstance().nextMessage();
 
 			if (gameControl.getScene() == IntroScene.instance) {
 				gameControl.incrIntroStage();
 				if (gameControl.getIntroStage() == 15) {
 					gameControl.setScene(NameScene.instance);
-					gameControl.setToBeNamed("PLAYER");
+					NameBuilder.getInstance().setToBeNamed("PLAYER");
 				}
 			} else if (gameControl.getScene() == BattleMessageScene.instance) {
 				gameControl.setScene(WorldScene.instance);
 			}
-		} else if (gameControl.getCurrentMessage() == null) {
+		} else if (MessageQueue.getInstance().getMessages() == null) {
 			Integer actionToPerform = gameControl.getScene().getClass().hashCode();
 			actionPerformers.get(actionToPerform).keyPress(keyCode, gameControl);
 		}
 
 		// play key press sound effect
-		gameControl.playClip(SOUND_EFFECT.SELECT);
+		AudioLibrary.playClip(SOUND_EFFECT.SELECT);
 	}
 
 	/**

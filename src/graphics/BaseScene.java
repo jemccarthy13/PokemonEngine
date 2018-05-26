@@ -2,10 +2,10 @@ package graphics;
 
 import java.awt.Graphics;
 
-import audio.AudioLibrary.SOUND_EFFECT;
-
 import com.sun.glass.events.KeyEvent;
 
+import audio.AudioLibrary;
+import audio.AudioLibrary.SOUND_EFFECT;
 import controller.GameController;
 import controller.GameKeyListener;
 
@@ -73,7 +73,7 @@ public class BaseScene implements Scene {
 		}
 
 		// play sound when any button is pressed
-		gameControl.playClip(SOUND_EFFECT.SELECT);
+		AudioLibrary.playClip(SOUND_EFFECT.SELECT);
 	}
 
 	/**

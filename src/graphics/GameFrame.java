@@ -5,8 +5,8 @@ import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 
-import utilities.DebugUtility;
 import controller.GameController;
+import utilities.DebugUtility;
 
 /**
  * The main UI frame for the Game Engine. Creates and packs a game panel which
@@ -26,8 +26,8 @@ public class GameFrame extends JFrame {
 		public void windowActivated(WindowEvent arg0) {}
 
 		/**
-         * 
-         */
+		 * 
+		 */
 		@Override
 		public void windowClosed(WindowEvent arg0) {
 			pokemonGame.gameController.endMultiplayerSession();

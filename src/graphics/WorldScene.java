@@ -8,6 +8,9 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 
+import audio.AudioLibrary;
+import audio.AudioLibrary.SOUND_EFFECT;
+import controller.GameController;
 import model.Coordinate;
 import tiles.Tile;
 import tiles.TileSet;
@@ -15,8 +18,6 @@ import trainers.Actor;
 import trainers.Actor.DIR;
 import trainers.NPCLibrary;
 import trainers.Player;
-import audio.AudioLibrary.SOUND_EFFECT;
-import controller.GameController;
 
 /**
  * A representation of the world scene
@@ -60,7 +61,7 @@ public class WorldScene extends BaseScene {
 			int tile_number = 0;
 			for (int y = 1; y <= map_height; y++) {
 				for (int x = 1; x <= map_width; x++) {
-					int tilePic = control.getMapImageAt(layer, tile_number);
+					int tilePic = control.gData.getMapImageAt(layer, tile_number);
 
 					if (!(layer == 2 && tilePic == 0)) {
 						g.drawImage((Image) TileSet.getInstance().get(tilePic), x_coor, y_coor, null);
@@ -76,7 +77,7 @@ public class WorldScene extends BaseScene {
 		for (Actor curNPC : NPCLibrary.getInstance().values()) {
 			g.drawImage(curNPC.tData.sprite.getImage(), curNPC.getCurrentX() * Tile.TILESIZE + startX,
 					curNPC.getCurrentY() * Tile.TILESIZE + startY - 10, null);
-			control.setMapTileAt(curNPC.getPosition(), TileSet.OBSTACLE);
+			control.gData.setMapTileAt(curNPC.getPosition(), TileSet.OBSTACLE);
 		}
 
 		// TODO - remove this line and the 2 setTranform lines to start
@@ -90,8 +91,8 @@ public class WorldScene extends BaseScene {
 	}
 
 	/**
-	 * Take a given key input and convert to a DIRection if it is a directional
-	 * key press
+	 * Take a given key input and convert to a DIRection if it is a directional key
+	 * press
 	 * 
 	 * @param keyCode
 	 *            - the key pressed
@@ -120,7 +121,7 @@ public class WorldScene extends BaseScene {
 	 * Perform "z" button click at the world scene
 	 */
 	public void doAction(GameController control) {
-		control.playClip(SOUND_EFFECT.SELECT);
+		AudioLibrary.playClip(SOUND_EFFECT.SELECT);
 		// overhead cost for following logic
 		Player player = control.getPlayer();
 		DIR playerDir = player.getDirection();
@@ -143,7 +144,7 @@ public class WorldScene extends BaseScene {
 	@Override
 	public void keyPress(int keyCode, GameController control) {
 		if (keyCode == KeyEvent.VK_ENTER) {
-			control.playClip(SOUND_EFFECT.MENU);
+			AudioLibrary.playClip(SOUND_EFFECT.MENU);
 			control.setScene(MenuScene.instance);
 		}
 		// match the key to a direction, is null if the button was not
@@ -157,7 +158,7 @@ public class WorldScene extends BaseScene {
 			if (control.canMoveInDir(toTravel)) {
 				control.setPlayerWalking(true);
 			} else {
-				control.playClip(SOUND_EFFECT.COLLISION);
+				AudioLibrary.playClip(SOUND_EFFECT.COLLISION);
 			}
 		} else {
 			super.keyPress(keyCode, control);

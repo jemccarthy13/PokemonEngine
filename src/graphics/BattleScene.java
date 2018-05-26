@@ -2,11 +2,12 @@ package graphics;
 
 import java.awt.Graphics;
 
+import controller.GameController;
+import model.MessageQueue;
 import party.Battler;
 import party.Battler.STAT;
 import party.Battler.STATUS;
 import utilities.BattleEngine;
-import controller.GameController;
 
 /**
  * A representation of main battle scene
@@ -32,16 +33,16 @@ public class BattleScene extends BaseScene {
 
 		if (playerPokemon.getStat(STAT.HP) > 0) {
 			g.drawImage(playerPokemon.getBackSprite().getImage(),
-			// the getHeight(null) used to be getHeight(gamePanel)
-					120 - (playerPokemon.getBackSprite().getImage().getHeight(null)) / 2, 228 - playerPokemon
-							.getBackSprite().getImage().getHeight(null), null);
+					// the getHeight(null) used to be getHeight(gamePanel)
+					120 - (playerPokemon.getBackSprite().getImage().getHeight(null)) / 2,
+					228 - playerPokemon.getBackSprite().getImage().getHeight(null), null);
 		}
 		if (enemyPokemon.getStat(STAT.HP) > 0) {
 			g.drawImage(enemyPokemon.getFrontSprite().getImage(), 310, 25, null);
 		}
 
 		g.drawImage(SpriteLibrary.getImage("Battle"), 0, 0, null);
-		String[] battleMessage = gameControl.getCurrentMessage();
+		String[] battleMessage = MessageQueue.getInstance().getMessages();
 		if (battleMessage != null) {
 			g.drawString(battleMessage[0], 30, 260);
 			g.drawString(battleMessage[1], 30, 290);
@@ -106,7 +107,8 @@ public class BattleScene extends BaseScene {
 	 */
 	public void doAction(GameController gameControl) {
 		// do logic based on current selection
-		switch (2 * BattleEngine.getInstance().currentSelectionMainY + BattleEngine.getInstance().currentSelectionMainX) {
+		switch (2 * BattleEngine.getInstance().currentSelectionMainY
+				+ BattleEngine.getInstance().currentSelectionMainX) {
 		case 0:
 			gameControl.setScene(BattleFightScene.instance);
 			break;
@@ -120,11 +122,11 @@ public class BattleScene extends BaseScene {
 			// try to run away if wild
 			if (BattleEngine.getInstance().enemyName == null) {
 				// TODO probability of running away...
-				gameControl.addMessage("Got away safely!");
+				MessageQueue.getInstance().add("Got away safely!");
 				gameControl.setScene(WorldScene.instance);
 			} else {
 				// but if it's an opponent, player is stuck
-				gameControl.addMessage("Can't run away from a opponent!");
+				MessageQueue.getInstance().add("Can't run away from a opponent!");
 			}
 			break;
 		}

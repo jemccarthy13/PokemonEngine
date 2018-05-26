@@ -15,6 +15,7 @@ import utilities.RandomNumUtils;
  */
 public class AudioLibrary {
 
+	private static AudioLibrary instance = new AudioLibrary();
 	/**
 	 * The current track queued to be played
 	 */
@@ -27,11 +28,15 @@ public class AudioLibrary {
 	/**
 	 * An ArrayList of available encounter track names
 	 */
-	private static ArrayList<String> encounterTrackNames = new ArrayList<String>();
+	private ArrayList<String> encounterTrackNames;
 	/**
 	 * An ArrayList of the tracks that have been loaded already
 	 */
 	private static HashMap<String, AudioTrack> musicTracks = new HashMap<String, AudioTrack>();
+
+	public static AudioLibrary getInstance() {
+		return instance;
+	}
 
 	/**
 	 * An enumeration for sound effects
@@ -82,10 +87,10 @@ public class AudioLibrary {
 	/**
 	 * Constructor to initialize the audio library
 	 */
-	public AudioLibrary() {
+	private AudioLibrary() {
 		DebugUtility.printHeader("Audio");
 		DebugUtility.printMessage("Initializing audio library...");
-
+		encounterTrackNames = new ArrayList<String>();
 		// create a list of encounter tracks
 		for (File file : new File(Configuration.MUSIC_PATH).listFiles()) {
 			if (file.isFile()) {
@@ -105,23 +110,26 @@ public class AudioLibrary {
 	 * 
 	 * @param songTitle
 	 *            - the song to play
+	 * @param option_sound
 	 */
-	public void playBackgroundMusic(String songTitle) {
-		// stop the current track, if playing
-		if (currentTrack != null) {
-			currentTrack.stop();
-		}
+	public static void playBackgroundMusic(String songTitle) {
+		if (Configuration.getInstance().isSoundOn()) {
+			// stop the current track, if playing
+			if (currentTrack != null) {
+				currentTrack.stop();
+			}
 
-		// if the track isn't loaded yet, load it from the disk
-		if (!musicTracks.containsKey(songTitle)) {
-			musicTracks.put(songTitle, new AudioTrack(songTitle));
-			DebugUtility.printMessage("Dynamically loaded " + songTitle);
-		}
+			// if the track isn't loaded yet, load it from the disk
+			if (!musicTracks.containsKey(songTitle)) {
+				musicTracks.put(songTitle, new AudioTrack(songTitle));
+				DebugUtility.printMessage("Dynamically loaded " + songTitle);
+			}
 
-		// change to the next track and play, if the track is valid
-		currentTrack = musicTracks.get(songTitle);
-		if (currentTrack != null) {
-			currentTrack.start();
+			// change to the next track and play, if the track is valid
+			currentTrack = musicTracks.get(songTitle);
+			if (currentTrack != null) {
+				currentTrack.start();
+			}
 		}
 	}
 
@@ -131,7 +139,7 @@ public class AudioLibrary {
 	public void pickTrainerMusic() {
 		if (encounterTrackNames.size() > 0) {
 			int choice = RandomNumUtils.generateRandom(encounterTrackNames.size(), 0);
-			playBackgroundMusic(encounterTrackNames.get(choice));
+			AudioLibrary.playBackgroundMusic(encounterTrackNames.get(choice));
 		}
 	}
 
@@ -151,6 +159,8 @@ public class AudioLibrary {
 	 *            - the sound effect to play
 	 */
 	public static void playClip(SOUND_EFFECT effect) {
-		jukeBox.playClip(effect);
+		if (Configuration.getInstance().isSoundOn()) {
+			jukeBox.playClip(effect);
+		}
 	}
 }

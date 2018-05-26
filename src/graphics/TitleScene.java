@@ -3,6 +3,7 @@ package graphics;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 
+import audio.AudioLibrary;
 import controller.GameController;
 
 /**
@@ -31,7 +32,7 @@ public class TitleScene extends BaseScene {
 	@Override
 	public void keyPress(int keyCode, GameController gameControl) {
 		if (keyCode == KeyEvent.VK_ENTER) {
-			gameControl.playBackgroundMusic("Continue");
+			AudioLibrary.playBackgroundMusic("Continue");
 			gameControl.setScene(ContinueScene.instance);
 		}
 	}

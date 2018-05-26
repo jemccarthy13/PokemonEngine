@@ -9,15 +9,17 @@ import java.io.IOException;
 
 import javax.swing.JPanel;
 
+import audio.AudioLibrary;
+import controller.GameController;
+import controller.GameKeyListener;
 import model.Coordinate;
+import model.GameTime;
 import tiles.TileSet;
 import trainers.Actor;
 import trainers.Actor.DIR;
 import trainers.NPCLibrary;
 import trainers.Player;
 import utilities.DebugUtility;
-import controller.GameController;
-import controller.GameKeyListener;
 
 /**
  * Holds the actionlistener. This is where the graphics are pained
@@ -36,22 +38,22 @@ public class GamePanel extends JPanel implements ActionListener {
 
 	// ===================== Game logic controller ==========================//
 	/**
-	 * Single point of access for control of the game - abstraction between the
-	 * view and the data (model)
+	 * Single point of access for control of the game - abstraction between the view
+	 * and the data (model)
 	 */
 	public GameController gameController = new GameController();
 
 	/**
-	 * Default constructor for Main panel. This is the panel that all aspects of
-	 * the game are painted to.
+	 * Default constructor for Main panel. This is the panel that all aspects of the
+	 * game are painted to.
 	 * 
-	 * Constructor loads the map, registeres to listen for key events, and
-	 * starts the title music (sets up the start of gameplay)
+	 * Constructor loads the map, registeres to listen for key events, and starts
+	 * the title music (sets up the start of gameplay)
 	 */
 	public GamePanel() {
 
 		try {
-			gameController.loadMap();
+			MapLoader.getInstance().loadMap(gameController);
 		} catch (IOException | InterruptedException e) {
 			DebugUtility.printError("Unable to load map!");
 		}
@@ -67,15 +69,15 @@ public class GamePanel extends JPanel implements ActionListener {
 		setPreferredSize(new Dimension(480, 318));
 
 		DebugUtility.printMessage("Playing title music...");
-		gameController.playBackgroundMusic("Title");
+		AudioLibrary.playBackgroundMusic("Title");
 	}
 
 	/**
-	 * Any time an action is performed in the frame, this method updates the
-	 * time and handles world actions.
+	 * Any time an action is performed in the frame, this method updates the time
+	 * and handles world actions.
 	 */
 	public void actionPerformed(ActionEvent e) {
-		gameController.updateTime();
+		GameTime.getInstance().updateTime();
 		if (gameController.getScene() == WorldScene.instance) {
 			// get all comparison variables up front
 			Player player = gameController.getPlayer();
@@ -117,8 +119,8 @@ public class GamePanel extends JPanel implements ActionListener {
 	}
 
 	/**
-	 * Checks if the player is in sight range of any NPC and the NPC is looking
-	 * at the player and the player's walking animation is finished
+	 * Checks if the player is in sight range of any NPC and the NPC is looking at
+	 * the player and the player's walking animation is finished
 	 */
 	private void checkForNPCEncounter() {
 		// check for trainer encounter with any NPC
@@ -126,7 +128,7 @@ public class GamePanel extends JPanel implements ActionListener {
 			if (gameController.validEncounterConditions(curNPC)) {
 				gameController.pauseNPCMovement();
 				enemyTrainerAnimation(curNPC);
-				gameController.playBackgroundMusic("TrainerBattle");
+				AudioLibrary.playBackgroundMusic("TrainerBattle");
 				gameController.doEncounter(curNPC.getParty(), curNPC.getName());
 			} else {
 				gameController.setMovable(true);
@@ -142,7 +144,7 @@ public class GamePanel extends JPanel implements ActionListener {
 	 */
 	private void enemyTrainerAnimation(Actor curNPC) {
 
-		gameController.playTrainerMusic();
+		AudioLibrary.getInstance().pickTrainerMusic();
 		// TODO - verify trainer music plays
 
 		try {

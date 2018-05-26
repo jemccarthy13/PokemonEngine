@@ -15,10 +15,14 @@ public class Configuration implements Serializable {
 	private static final long serialVersionUID = 3800907360431668204L;
 
 	// ==========Configuration information and game settings=================//
+	private static Configuration instance = new Configuration();
+
+	private boolean isSoundOn = true;
+
 	/**
 	 * Walk anywhere
 	 */
-	public static boolean NOCLIP = false;
+	private boolean NOCLIP = false;
 
 	/**
 	 * Do wild / opponent battles
@@ -92,15 +96,35 @@ public class Configuration implements Serializable {
 	/**
 	 * Default constructor initializes the number of selections at each screen
 	 */
-	public Configuration() {}
+	private Configuration() {}
+
+	public static Configuration getInstance() {
+		return instance;
+	}
+
+	public boolean isSoundOn() {
+		return isSoundOn;
+	}
+
+	public void toggleSound() {
+		isSoundOn = !isSoundOn;
+	}
+
+	public boolean isNoClip() {
+		return NOCLIP;
+	}
+
+	public void setNoClip(boolean isClip) {
+		NOCLIP = isClip;
+	}
 
 	/**
 	 * Convert game information to a string
 	 * 
 	 * @return String representing game configuration
 	 */
-	public static String getConfig() {
-		String retStr = "* No clip: " + NOCLIP + "\n";
+	public String getConfig() {
+		String retStr = "* No clip: " + getInstance().isNoClip() + "\n";
 		retStr += "* Do battles: " + DOBATTLES + "\n";
 		retStr += "* Show intro: " + SHOWINTRO + "\n"; // false = skip Oak intro
 

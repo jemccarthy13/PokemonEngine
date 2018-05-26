@@ -8,6 +8,7 @@ import javax.swing.ImageIcon;
 
 import controller.GameController;
 import graphics.SpriteLibrary;
+import model.MessageQueue;
 import party.MoveData.MOVECATEGORY;
 import utilities.DebugUtility;
 import utilities.RandomNumUtils;
@@ -179,7 +180,7 @@ public class Battler implements Serializable {
 		this.curExp += expGain;
 		DebugUtility.printMessage("Gained " + expGain + " exp");
 
-		game.addMessage(getName() + " gained " + expGain + " exp!");
+		MessageQueue.getInstance().add(getName() + " gained " + expGain + " exp!");
 		while (this.curExp >= (this.level + 1) * (this.level + 1) * (this.level + 1)) {
 			levelUp(game);
 		}
@@ -219,7 +220,7 @@ public class Battler implements Serializable {
 		if (this.level < 100) {
 			this.level += 1;
 			// TODO - convert to use message box
-			game.addMessage(getName() + " grew to level " + level + "!");
+			MessageQueue.getInstance().add(getName() + " grew to level " + level + "!");
 			DebugUtility.printMessage(getName() + " grew to level " + level + "!");
 		}
 		for (STAT key : stats.keySet()) {

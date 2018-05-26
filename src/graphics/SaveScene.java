@@ -3,9 +3,11 @@ package graphics;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import model.Coordinate;
-import trainers.Player;
 import controller.GameController;
+import model.Coordinate;
+import model.GameTime;
+import model.MessageQueue;
+import trainers.Player;
 
 /**
  * A representation of a save scene
@@ -34,7 +36,7 @@ public class SaveScene extends BaseScene {
 		g.drawString(player.getName(), 100, 68);
 		g.drawString(((Integer) player.getBadges()).toString(), 100, 101);
 		g.drawString("1", 110, 134);
-		g.drawString(gameControl.formatTime(), 76, 166);
+		g.drawString(GameTime.getInstance().formatTime(), 76, 166);
 		if (gameControl.getCurrentRowSelection() == 0) {
 			g.drawImage(SpriteLibrary.getImage("Arrow"), 394, 148, null);
 		} else if (gameControl.getCurrentRowSelection() == 1) {
@@ -69,7 +71,7 @@ public class SaveScene extends BaseScene {
 	public void doAction(GameController control) {
 		if (control.getCurrentRowSelection() == 0) {
 			control.saveGame();
-			control.addMessage("Game saved successfully!");
+			MessageQueue.getInstance().add("Game saved successfully!");
 		}
 		control.setScene(MenuScene.instance);
 	}

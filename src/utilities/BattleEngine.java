@@ -3,12 +3,14 @@ package utilities;
 import java.util.ArrayList;
 import java.util.Random;
 
+import audio.AudioLibrary;
 import audio.AudioLibrary.SOUND_EFFECT;
 import controller.GameController;
 import graphics.BattleMessageScene;
 import graphics.BattleScene;
 import graphics.WorldScene;
 import model.Configuration;
+import model.MessageQueue;
 import party.Battler;
 import party.Battler.STAT;
 import party.Battler.STATUS;
@@ -30,6 +32,7 @@ public class BattleEngine {
 	 * The GameController to perform game events
 	 */
 	private GameController game = null;
+
 	/**
 	 * Is it the player's turn?
 	 */
@@ -216,7 +219,7 @@ public class BattleEngine {
 		// reset logic
 		game.setMovable(false);
 
-		game.addMessage("Player won!");
+		MessageQueue.getInstance().add("Player won!");
 		game.setScene(BattleMessageScene.instance);
 
 		game.getPlayer().beatenTrainers.add(enemyName);
@@ -226,7 +229,7 @@ public class BattleEngine {
 		// reset the music
 		// TODO - verify playBackgroundMusic doesn't automatically pause/stop
 		// when switching music
-		game.playBackgroundMusic();
+		AudioLibrary.playBackgroundMusic(game.getPlayer().getCurLoc().getName());
 	}
 
 	/**
@@ -242,7 +245,7 @@ public class BattleEngine {
 
 		for (String message : lossMessages) {
 			DebugUtility.printMessage(message);
-			game.addMessage(message);
+			MessageQueue.getInstance().add(message);
 		}
 		game.setPlayerDirection(DIR.SOUTH);
 		Party playerParty = game.getPlayer().getParty();
@@ -279,7 +282,7 @@ public class BattleEngine {
 
 			DebugUtility.printMessage("Using: " + chosen.toString());
 
-			game.addMessage(attacker.getName() + " used " + chosen.name + "!");
+			MessageQueue.getInstance().add(attacker.getName() + " used " + chosen.name + "!");
 
 			STATUS status = attacker.getStatusEffect();
 			switch (status) {
@@ -293,7 +296,7 @@ public class BattleEngine {
 				if (r.nextInt(2) <= 0) {
 					// do damage to the defender based on the chosen move
 					defender.doDamage(chosen);
-					game.playClip(SOUND_EFFECT.DAMAGE);
+					AudioLibrary.playClip(SOUND_EFFECT.DAMAGE);
 
 					// decrement move counter, print result
 					// TODO convert to message
@@ -306,11 +309,11 @@ public class BattleEngine {
 			case BRN: // fall through, BRN and PZN are the same
 			case PZN:
 				// TODO - deal % damage for burn / psn
-				game.playClip(SOUND_EFFECT.DAMAGE);
+				AudioLibrary.playClip(SOUND_EFFECT.DAMAGE);
 				DebugUtility.printMessage(attacker.getName() + " has been hurt by it's " + status);
 			default:
 				defender.takeDamage(attacker.doDamage(chosen));
-				game.playClip(SOUND_EFFECT.DAMAGE);
+				AudioLibrary.playClip(SOUND_EFFECT.DAMAGE);
 			}
 
 			if (defender.getStat(STAT.HP) <= 0) {
