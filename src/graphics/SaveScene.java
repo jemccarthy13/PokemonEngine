@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import controller.GameController;
-import model.GameData;
 import model.GameTime;
 import model.MessageQueue;
 import trainers.Player;
@@ -37,16 +36,14 @@ public class SaveScene extends SelectionScene {
 
 		Player player = gameControl.getPlayer();
 
-		int curRowSelection = GameData.getInstance().getCurrentRowSelection(gameControl.getScene());
-
 		g.drawImage(SpriteLibrary.getImage("Save"), 0, 0, null);
 		g.drawString(player.getName(), 100, 68);
 		g.drawString(((Integer) player.getBadges()).toString(), 100, 101);
 		g.drawString("1", 110, 134);
 		g.drawString(GameTime.getInstance().formatTime(), 76, 166);
-		if (curRowSelection == 0) {
+		if (this.rowSelection == 0) {
 			g.drawImage(SpriteLibrary.getImage("Arrow"), 394, 148, null);
-		} else if (curRowSelection == 1) {
+		} else if (this.rowSelection == 1) {
 			g.drawImage(SpriteLibrary.getImage("Arrow"), 394, 180, null);
 		}
 	}
@@ -62,7 +59,7 @@ public class SaveScene extends SelectionScene {
 	 * action button pressed at Save scene
 	 */
 	public void doAction(GameController control) {
-		if (GameData.getInstance().getCurrentRowSelection(control.getScene()) == 0) {
+		if (this.rowSelection == 0) {
 			control.saveGame();
 			MessageQueue.getInstance().add("Game saved successfully!");
 		}

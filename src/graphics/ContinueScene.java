@@ -3,7 +3,6 @@ package graphics;
 import java.awt.Graphics;
 
 import controller.GameController;
-import model.GameData;
 
 /**
  * A representation of the continue scene
@@ -27,17 +26,16 @@ public class ContinueScene extends SelectionScene {
 	@Override
 	public void render(Graphics g, GameController gameControl) {
 		g.drawImage(SpriteLibrary.getImage("Continue"), 0, 0, null);
-		g.drawImage(SpriteLibrary.getImage("Arrow"), 13,
-				20 + 32 * GameData.getInstance().getCurrentRowSelection(gameControl.getScene()), null);
+		g.drawImage(SpriteLibrary.getImage("Arrow"), 13, 20 + 32 * this.rowSelection, null);
 	}
 
 	/**
 	 * "z" button press
 	 */
 	public void doAction(GameController gameControl) {
-		if (GameData.getInstance().getCurrentRowSelection(gameControl.getScene()) == 0) {
+		if (this.rowSelection == 0) {
 			gameControl.startGame(true);
-		} else if (GameData.getInstance().getCurrentRowSelection(gameControl.getScene()) == 1) {
+		} else if (this.rowSelection == 1) {
 			gameControl.startGame(false);
 		}
 	}

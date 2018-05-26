@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import controller.GameController;
 import model.Configuration;
 import model.Coordinate;
-import model.GameData;
 import model.NameBuilder;
 import tiles.Tile;
 import trainers.Actor.DIR;
@@ -33,16 +32,13 @@ public class NameScene extends SelectionScene {
 	public void render(Graphics g, GameController gameControl) {
 		g.drawImage(SpriteLibrary.getImage("Namescreen"), 0, 0, null);
 
-		int curRowSelection = GameData.getInstance().getCurrentRowSelection(gameControl.getScene());
-		int curColSelection = GameData.getInstance().getCurrentColSelection(gameControl.getScene());
-
-		if (curRowSelection < 5) {
-			g.drawImage(SpriteLibrary.getImage("Arrow"), (int) (40 + Tile.TILESIZE * 2 * curColSelection),
-					100 + Tile.TILESIZE * curRowSelection, null);
+		if (this.rowSelection < 5) {
+			g.drawImage(SpriteLibrary.getImage("Arrow"), (int) (40 + Tile.TILESIZE * 2 * this.colSelection),
+					100 + Tile.TILESIZE * this.rowSelection, null);
 		}
-		if (curRowSelection == 5) {
-			g.drawImage(SpriteLibrary.getImage("Arrow"), (int) (100 + Tile.TILESIZE * 6 * curColSelection),
-					100 + Tile.TILESIZE * curRowSelection, null);
+		if (this.rowSelection == 5) {
+			g.drawImage(SpriteLibrary.getImage("Arrow"), (int) (100 + Tile.TILESIZE * 6 * this.colSelection),
+					100 + Tile.TILESIZE * this.rowSelection, null);
 		}
 
 		String name = NameBuilder.getInstance().toString();
@@ -62,15 +58,14 @@ public class NameScene extends SelectionScene {
 
 	private void doEndDel(GameController gameControl) {
 		String name = NameBuilder.getInstance().toString();
-		int curColSelection = GameData.getInstance().getCurrentColSelection(gameControl.getScene());
 		// end the name screen logic
-		if (curColSelection == 1 && name.length() > 0) {
+		if (this.colSelection == 1 && name.length() > 0) {
 			gameControl.getPlayer().setName(name);
 			NameBuilder.getInstance().reset();
 			gameControl.setScene(IntroScene.instance);
 		}
 		// del to backspace one character
-		else if (curColSelection == 0)
+		else if (this.colSelection == 0)
 			NameBuilder.getInstance().removeChar();
 	}
 
@@ -81,11 +76,10 @@ public class NameScene extends SelectionScene {
 	 *            - the controller to perform game functions
 	 */
 	public void doAction(GameController gameControl) {
-		Scene curScene = gameControl.getScene();
-		if (GameData.getInstance().getCurrentRowSelection(curScene) == 5) {
+		if (this.rowSelection == 5) {
 			doEndDel(gameControl);
 		} else {
-			NameBuilder.getInstance().addSelectedChar(GameData.getInstance().getCurrentSelection(curScene));
+			NameBuilder.getInstance().addSelectedChar(new Coordinate(this.rowSelection, this.colSelection));
 		}
 	}
 
@@ -106,11 +100,10 @@ public class NameScene extends SelectionScene {
 	 *            - the controller to perform game functions
 	 */
 	public void doRight(GameController gameControl) {
-		Scene curScene = gameControl.getScene();
-
-		if (GameData.getInstance().getCurrentRowSelection(curScene) == 5) {
+		if (this.rowSelection == 5) {
 			// last row, right key press moves to "END"
-			GameData.getInstance().setCurrentSelection(curScene, new Coordinate(5, 1));
+			this.rowSelection = 5;
+			this.colSelection = 1;
 		} else {
 			super.doRight(gameControl);
 		}
@@ -124,10 +117,10 @@ public class NameScene extends SelectionScene {
 
 		super.keyPress(keyCode, gameControl);
 
-		Scene curScene = gameControl.getScene();
-
-		if (GameData.getInstance().getCurrentRowSelection(curScene) == 5)
-			GameData.getInstance().setCurrentSelection(curScene, new Coordinate(5, 0));
+		if (this.rowSelection == 5) {
+			this.rowSelection = 5;
+			this.colSelection = 0;
+		}
 	}
 
 }

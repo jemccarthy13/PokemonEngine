@@ -4,7 +4,6 @@ import java.awt.Graphics;
 
 import controller.GameController;
 import model.Configuration;
-import model.GameData;
 
 /**
  * A representation of a option scene
@@ -25,14 +24,13 @@ public class OptionScene extends SelectionScene {
 	/**
 	 * Render the option scene.
 	 * 
-	 * TODO more choice in options
+	 * TODO implement other options
 	 */
 	@Override
 	public void render(Graphics g, GameController gameControl) {
 		String sound = Configuration.getInstance().isSoundOn() ? "On" : "Off";
 		g.drawImage(SpriteLibrary.getImage("OptionBG"), 0, 0, null);
-		g.drawImage(SpriteLibrary.getImage("Arrow"), 22,
-				85 + 32 * GameData.getInstance().getCurrentRowSelection(gameControl.getScene()), null);
+		g.drawImage(SpriteLibrary.getImage("Arrow"), 22, 85 + 32 * this.rowSelection, null);
 		Painter.paintSmallString(g, sound, 225, 250);
 	}
 
@@ -47,7 +45,7 @@ public class OptionScene extends SelectionScene {
 	 * "z" button press
 	 */
 	public void doAction(GameController control) {
-		if (GameData.getInstance().getCurrentRowSelection(control.getScene()) == 5) {
+		if (this.rowSelection == 5) {
 			Configuration.getInstance().toggleSound();
 		}
 	}

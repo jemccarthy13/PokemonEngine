@@ -1,7 +1,6 @@
 package graphics;
 
 import controller.GameController;
-import model.GameData;
 
 public class SelectionScene extends BaseScene {
 
@@ -9,12 +8,17 @@ public class SelectionScene extends BaseScene {
 	int maxColSelection = 0;
 	int maxRowSelection = 0;
 
+	int colSelection = 0;
+	int rowSelection = 0;
+
 	/**
 	 * Handle left arrow press at scene
 	 */
 	@Override
 	public void doLeft(GameController gameControl) {
-		GameData.getInstance().decrementColSelection(gameControl.getScene());
+		if (this.colSelection > 0) {
+			this.colSelection--;
+		}
 	}
 
 	/**
@@ -22,7 +26,9 @@ public class SelectionScene extends BaseScene {
 	 */
 	@Override
 	public void doRight(GameController gameControl) {
-		GameData.getInstance().incrementColSelection(gameControl.getScene(), this.maxColSelection);
+		if (this.colSelection < this.maxColSelection) {
+			this.colSelection++;
+		}
 	}
 
 	/**
@@ -30,7 +36,9 @@ public class SelectionScene extends BaseScene {
 	 */
 	@Override
 	public void doUp(GameController gameControl) {
-		GameData.getInstance().decrementRowSelection(gameControl.getScene());
+		if (this.rowSelection > 0) {
+			this.rowSelection--;
+		}
 	}
 
 	/**
@@ -38,6 +46,8 @@ public class SelectionScene extends BaseScene {
 	 */
 	@Override
 	public void doDown(GameController gameControl) {
-		GameData.getInstance().incrementRowSelection(gameControl.getScene(), this.maxRowSelection);
+		if (this.rowSelection < this.maxRowSelection) {
+			this.rowSelection++;
+		}
 	}
 }

@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import controller.GameController;
-import model.GameData;
 import party.Party;
 
 /**
@@ -37,10 +36,9 @@ public class PartyScene extends SelectionScene {
 		g.setColor(Color.BLACK);
 		g.drawImage(SpriteLibrary.getImage(partyBackground), 0, 0, null);
 		int party_index = 0;
-		int selection = GameData.getInstance().getCurrentRowSelection(gameControl.getScene());
 
 		// selection logic for first party member
-		if (selection == party_index) {
+		if (this.rowSelection == party_index) {
 			g.drawImage(SpriteLibrary.getImage(partyFirstMember + "_Selected"), 40, 20, null);
 		} else {
 			g.drawImage(SpriteLibrary.getImage(partyFirstMember + "_NotSelected"), 40, 20, null);
@@ -51,7 +49,7 @@ public class PartyScene extends SelectionScene {
 		int paintY = 20;
 
 		for (party_index = 1; party_index < 6; party_index++) {
-			if (party_index == selection && party_index < gameControl.getPlayer().getParty().size()) {
+			if (party_index == this.rowSelection && party_index < gameControl.getPlayer().getParty().size()) {
 				g.drawImage(SpriteLibrary.getImage(partyMember + "_Selected"), paintX, paintY, null);
 			} else {
 				g.drawImage(SpriteLibrary.getImage(partyMember + "_NotSelected"), paintX, paintY, null);
@@ -78,7 +76,7 @@ public class PartyScene extends SelectionScene {
 		// cancel button render
 		paintX = 370;
 		paintY = 270;
-		if (selection >= playerPokemon.size()) {
+		if (this.rowSelection >= playerPokemon.size()) {
 			g.drawImage(SpriteLibrary.getImage(partyCancel + "_Selected"), paintX, paintY, null);
 		} else {
 			g.drawImage(SpriteLibrary.getImage(partyCancel + "_NotSelected"), paintX, paintY, null);
@@ -90,8 +88,7 @@ public class PartyScene extends SelectionScene {
 	 * "z" button press at party scene
 	 */
 	public void doAction(GameController control) {
-		if (GameData.getInstance().getCurrentRowSelection(control.getScene()) >= control.getPlayer().getParty()
-				.size()) {
+		if (this.rowSelection >= control.getPlayer().getParty().size()) {
 			doBack(control);
 		} else {
 			// TODO selected party member display

@@ -37,10 +37,7 @@ import utilities.DebugUtility;
 import utilities.RandomNumUtils;
 
 /**
- * Controls game logic flow by providing an interface between view and data
- * 
- * TODO add column to Configuration selections so name screen and battle scenes
- * can use the same selection map
+ * Controls game logic flow by providing an interface between view and data *
  */
 public class GameController implements Serializable {
 

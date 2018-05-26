@@ -4,7 +4,6 @@ import java.awt.Graphics;
 import java.util.HashMap;
 
 import controller.GameController;
-import model.GameData;
 
 /**
  * A representation of the pause menu scene
@@ -49,15 +48,14 @@ public class MenuScene extends SelectionScene {
 	public void render(Graphics g, GameController gameControl) {
 		WorldScene.instance.render(g, gameControl);
 		g.drawImage(SpriteLibrary.getImage("Menu"), 0, 0, null);
-		g.drawImage(SpriteLibrary.getImage("Arrow"), 335,
-				20 + 32 * GameData.getInstance().getCurrentRowSelection(gameControl.getScene()), null);
+		g.drawImage(SpriteLibrary.getImage("Arrow"), 335, 20 + 32 * this.rowSelection, null);
 	}
 
 	/**
 	 * "Z" button pressed
 	 */
 	public void doAction(GameController control) {
-		control.setScene(menuSelections.get(GameData.getInstance().getCurrentRowSelection(control.getScene())));
+		control.setScene(menuSelections.get(this.rowSelection));
 	}
 
 	/**
