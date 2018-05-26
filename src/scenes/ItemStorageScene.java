@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import controller.GameController;
+import graphics.GameGraphicsData;
 import graphics.SpriteLibrary;
 
 /**
@@ -30,6 +31,6 @@ public class ItemStorageScene extends BaseScene {
 	 * Perform back button press at BagScene
 	 */
 	public void doBack(GameController control) {
-		control.setScene(MenuScene.instance);
+		GameGraphicsData.getInstance().setScene(MenuScene.instance);
 	}
 }

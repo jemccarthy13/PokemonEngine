@@ -3,6 +3,7 @@ package scenes;
 import java.awt.Graphics;
 
 import controller.GameController;
+import graphics.GameGraphicsData;
 import graphics.SpriteLibrary;
 
 /**
@@ -33,6 +34,6 @@ public class EncycopediaScene extends SelectionScene {
 	 * "x" button press at Pokedex scene
 	 */
 	public void doBack(GameController control) {
-		control.setScene(MenuScene.instance);
+		GameGraphicsData.getInstance().setScene(MenuScene.instance);
 	}
 }

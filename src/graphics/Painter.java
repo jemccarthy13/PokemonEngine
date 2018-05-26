@@ -69,13 +69,13 @@ public class Painter {
 		GameController control = panel.gameController;
 
 		// based on the current scene, render the appropriate images
-		int sceneToRender = control.getScene().getClass().hashCode();
+		int sceneToRender = GameGraphicsData.getInstance().getScene().getClass().hashCode();
 		instance.scenePainters.get(sceneToRender).render(g, control);
 
 		// At any scene other than the name screen, message boxes
 		// will interrupt any underlying functionality and take priority until
 		// they are dismissed
-		if (control.getScene() != NameScene.instance) {
+		if (GameGraphicsData.getInstance().getScene() != NameScene.instance) {
 			String[] message = MessageQueue.getInstance().getMessages();
 			if (message != null) {
 				paintMessageBox(g, message);
@@ -223,15 +223,15 @@ public class Painter {
 	 */
 	public static void paintTrainerSighted(Graphics g, GameController game, Coordinate npcPosition) {
 
-		int offsetX = GraphicsOrigin.getInstance().getOffsetX();
-		int offsetY = GraphicsOrigin.getInstance().getOffsetY();
+		int offsetX = GameGraphicsData.getInstance().getOffsetX();
+		int offsetY = GameGraphicsData.getInstance().getOffsetY();
 
 		Coordinate sightedBoxLocation = npcPosition.move(DIR.NORTH);
 		g.translate(offsetX - Tile.TILESIZE, offsetY - 2 * Tile.TILESIZE);
 
 		g.drawImage(SpriteLibrary.getImage("trainer-sighted"),
-				Tile.TILESIZE * sightedBoxLocation.getX() + GraphicsOrigin.getInstance().getStartCoordX(),
-				sightedBoxLocation.getY() * Tile.TILESIZE + GraphicsOrigin.getInstance().getStartCoordY() - 10, null);
+				Tile.TILESIZE * sightedBoxLocation.getX() + GameGraphicsData.getInstance().getStartCoordX(),
+				sightedBoxLocation.getY() * Tile.TILESIZE + GameGraphicsData.getInstance().getStartCoordY() - 10, null);
 		g.translate(-offsetX, -offsetY);
 
 	}

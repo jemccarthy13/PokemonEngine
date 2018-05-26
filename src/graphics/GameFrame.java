@@ -4,6 +4,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
+import javax.swing.RepaintManager;
 
 import client.GameClient;
 import controller.GameController;
@@ -77,10 +78,12 @@ public class GameFrame extends JFrame {
 		setIconImage(SpriteLibrary.getImage("Icon"));
 
 		// Add the main game panel to the game
-		pokemonGame = new GamePanel();
+		pokemonGame = GamePanel.getInstance();
 		pokemonGame.setFocusable(true);
 		pokemonGame.requestFocus();
 		pokemonGame.gameController.startGameTimer(pokemonGame);
+
+		RepaintManager.currentManager(this).setDoubleBufferingEnabled(true);
 
 		pokemonGame.gameController.printData();
 		add(pokemonGame);

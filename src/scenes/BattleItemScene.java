@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import controller.GameController;
+import graphics.GameGraphicsData;
 import graphics.SpriteLibrary;
 
 /**
@@ -32,13 +33,13 @@ public class BattleItemScene extends BaseScene {
 	 * Perform "z" button click
 	 */
 	public void doAction(GameController control) {
-		control.setScene(BattleScene.instance);
+		GameGraphicsData.getInstance().setScene(BattleScene.instance);
 	}
 
 	/**
 	 * Perform "x" button click
 	 */
 	public void doBack(GameController control) {
-		control.setScene(BattleScene.instance);
+		GameGraphicsData.getInstance().setScene(BattleScene.instance);
 	}
 }

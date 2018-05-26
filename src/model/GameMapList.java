@@ -1,7 +1,6 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 /**
  * Equivalent to ArrayList<List<Type>> with some custom functions
@@ -10,7 +9,7 @@ import java.util.List;
  *            what this game map holds - typically Integer to represent images
  *            from a tile set, or Tile to represent the obstacles on the map
  */
-public class GameMapList<Type> extends ArrayList<List<Type>> {
+public class GameMapList<Type> extends HashMap<String, Type> {
 
 	private static final long serialVersionUID = 5325017932787074716L;
 
@@ -23,17 +22,6 @@ public class GameMapList<Type> extends ArrayList<List<Type>> {
 	 *            the value to place at that coordinate
 	 */
 	public void set(Coordinate c, Type value) {
-		this.get(c.getY()).set(c.getX(), value);
-	}
-
-	/**
-	 * Retrieve the value at a specified coordinate
-	 * 
-	 * @param c
-	 *            - the coordinate to retrieve
-	 * @return a value of Type at the given coordinate
-	 */
-	public Type get(Coordinate c) {
-		return this.get(c.getY()).get(c.getX());
+		this.put(c.toString(), value);
 	}
 }

@@ -28,11 +28,6 @@ public class GameData implements Serializable {
 	// ==================== Game Logic Control ==============================//
 
 	/**
-	 * Current message stage
-	 */
-	public int messageStage;
-
-	/**
 	 * The stage of the introduction
 	 */
 	public int introStage = 1;

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import controller.GameController;
+import graphics.GameGraphicsData;
 import graphics.SpriteLibrary;
 
 /**
@@ -49,7 +50,7 @@ public class HelpScene extends SelectionScene {
 	 * "x" button press at Pokegear scene
 	 */
 	public void doBack(GameController control) {
-		control.setScene(MenuScene.instance);
+		GameGraphicsData.getInstance().setScene(MenuScene.instance);
 	}
 
 	/**

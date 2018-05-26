@@ -7,13 +7,12 @@ import java.util.HashMap;
 
 import audio.AudioLibrary;
 import audio.AudioLibrary.SOUND_EFFECT;
+import graphics.GameGraphicsData;
 import model.MessageQueue;
-import model.NameBuilder;
 import scenes.BaseScene;
 import scenes.BattleMessageScene;
 import scenes.IntroScene;
 import scenes.NameScene;
-import scenes.WorldScene;
 
 /**
  * Listens for key presses in the game
@@ -84,21 +83,17 @@ public class GameKeyListener implements KeyListener, Serializable {
 	public void keyPressed(KeyEvent e) {
 		int keyCode = e.getKeyCode();
 
-		if ((keyCode == KeyEvent.VK_X || keyCode == KeyEvent.VK_Z) && MessageQueue.getInstance().getMessages() != null
-				&& gameControl.getScene() != NameScene.instance) {
+		boolean processed = false;
+		if ((keyCode == KeyEvent.VK_X || keyCode == KeyEvent.VK_Z) && MessageQueue.getInstance().hasNextMessage()
+				&& GameGraphicsData.getInstance().getScene() != NameScene.instance) {
 			MessageQueue.getInstance().nextMessage();
-
-			if (gameControl.getScene() == IntroScene.instance) {
-				gameControl.incrIntroStage();
-				if (gameControl.getIntroStage() == 15) {
-					gameControl.setScene(NameScene.instance);
-					NameBuilder.getInstance().setToBeNamed("PLAYER");
-				}
-			} else if (gameControl.getScene() == BattleMessageScene.instance) {
-				gameControl.setScene(WorldScene.instance);
-			}
-		} else if (MessageQueue.getInstance().getMessages() == null) {
-			Integer actionToPerform = gameControl.getScene().getClass().hashCode();
+			processed = true;
+		}
+		if ((!processed && MessageQueue.getInstance().hasNextMessage() == false)
+				|| GameGraphicsData.getInstance().getScene() == BattleMessageScene.instance
+				|| GameGraphicsData.getInstance().getScene() == IntroScene.instance
+				|| GameGraphicsData.getInstance().getScene() == NameScene.instance) {
+			Integer actionToPerform = GameGraphicsData.getInstance().getScene().getClass().hashCode();
 			actionPerformers.get(actionToPerform).keyPress(keyCode, gameControl);
 		}
 

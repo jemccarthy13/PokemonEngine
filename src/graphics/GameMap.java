@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.StringTokenizer;
+import java.util.concurrent.CountDownLatch;
 
 import controller.GameController;
 import controller.TeleportLibrary;
@@ -22,6 +22,7 @@ import utilities.DebugUtility;
  * A singleton class that loads the map layers into the game
  */
 public class GameMap {
+	CountDownLatch latch;
 
 	private static GameMap instance = new GameMap();
 
@@ -124,6 +125,7 @@ public class GameMap {
 				addMapImageAt(layer, y, Integer.parseInt(code));
 			}
 		}
+
 	}
 
 	/**
@@ -156,8 +158,7 @@ public class GameMap {
 			line = reader.readLine();
 		}
 
-		DebugUtility.printMessage("Initializing map tiles to null...");
-		initializeTileMapToNull();
+		DebugUtility.printMessage("Loading map...");
 
 		// initialize the Image map and add obstacles to the Tile map
 		ArrayList<Thread> threads = new ArrayList<Thread>();
@@ -170,7 +171,10 @@ public class GameMap {
 		for (Thread t : threads) {
 			t.join();
 		}
+
 		DebugUtility.printMessage("Loaded map.");
+		DebugUtility.printMessage(tileMap.get(new Coordinate(4, 2).toString()).toString());
+		DebugUtility.printMessage("" + imageMap.size());
 	}
 
 	/**
@@ -182,12 +186,12 @@ public class GameMap {
 	 *            - the index of the image
 	 * @return int representing which tile of the tileset should be painted
 	 */
-	public int getMapImageAt(int layer, int y) {
-		Integer i = imageMap.get(new Coordinate(y, layer));
+	public synchronized int getMapImageAt(int layer, int y) {
+		Integer i = imageMap.get(new Coordinate(layer, y).toString());
 		if (i == null) {
 			return 0;
 		} else {
-			return imageMap.get(new Coordinate(y, layer));
+			return imageMap.get(new Coordinate(layer, y).toString());
 		}
 	}
 
@@ -201,8 +205,8 @@ public class GameMap {
 	 * @param value
 	 *            - the new image number value
 	 */
-	public void setMapImageAt(int layer, int y, int value) {
-		imageMap.set(new Coordinate(y, layer), value);
+	public synchronized void setMapImageAt(int layer, int y, int value) {
+		imageMap.set(new Coordinate(layer, y), value);
 	}
 
 	/**
@@ -215,22 +219,8 @@ public class GameMap {
 	 * @param value
 	 *            - the value to add
 	 */
-	public void addMapImageAt(int x, int y, int value) {
-		List<Integer> layer = null;
-		// set up a new layer if it doesn't exist
-		try {
-			layer = imageMap.get(x);
-		} catch (IndexOutOfBoundsException e) {
-			imageMap.add(new ArrayList<Integer>());
-		}
-		if (layer != null) {
-			if (layer.size() <= y) {
-				for (int i = 0; i < y + 1; i++) {
-					layer.add(0);
-				}
-			}
-			layer.set(y, value);
-		}
+	public synchronized void addMapImageAt(int x, int y, int value) {
+		imageMap.put(new Coordinate(x, y).toString(), value);
 	}
 
 	/**
@@ -240,8 +230,8 @@ public class GameMap {
 	 *            - the coordinate to look at
 	 * @return a Tile of the map
 	 */
-	public Tile getMapTileAt(Coordinate c) {
-		return tileMap.get(c);
+	public synchronized Tile getMapTileAt(Coordinate c) {
+		return tileMap.get(c.toString());
 	}
 
 	/**
@@ -252,20 +242,8 @@ public class GameMap {
 	 * @param tile
 	 *            - the tile to set that index to
 	 */
-	public void setMapTileAt(Coordinate position, Tile tile) {
+	public synchronized void setMapTileAt(Coordinate position, Tile tile) {
 		tileMap.set(position, tile);
-	}
-
-	/**
-	 * Set the tileMap to contain null tiles
-	 */
-	public void initializeTileMapToNull() {
-		for (int r = 0; r < GameMap.getInstance().getHeight(); r++) {
-			Tile[] numbers = new Tile[GameMap.getInstance().getWidth()];
-			Arrays.fill(numbers, null);
-			List<Tile> row = Arrays.asList(numbers);
-			tileMap.add(row);
-		}
 	}
 
 	public boolean isObstacleAt(Coordinate loc) {

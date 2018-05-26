@@ -3,6 +3,7 @@ package scenes;
 import java.awt.Graphics;
 
 import controller.GameController;
+import graphics.GameGraphicsData;
 import graphics.Painter;
 import graphics.SpriteLibrary;
 import model.Configuration;
@@ -64,7 +65,7 @@ public class NameScene extends SelectionScene {
 		if (this.colSelection == 1 && name.length() > 0) {
 			gameControl.getPlayer().setName(name);
 			NameBuilder.getInstance().reset();
-			gameControl.setScene(IntroScene.instance);
+			GameGraphicsData.getInstance().setScene(IntroScene.instance);
 		}
 		// del to backspace one character
 		else if (this.colSelection == 0)
@@ -102,27 +103,24 @@ public class NameScene extends SelectionScene {
 	 *            - the controller to perform game functions
 	 */
 	public void doRight(GameController gameControl) {
-		if (this.rowSelection == 5) {
-			// last row, right key press moves to "END"
-			this.rowSelection = 5;
+		super.doRight(gameControl);
+		if (this.rowSelection == 5 && this.colSelection > 1) {
 			this.colSelection = 1;
-		} else {
-			super.doRight(gameControl);
 		}
 	}
 
 	/**
-	 * Key was pressed
+	 * Down arrow button press
+	 * 
+	 * @param gameControl
+	 *            - a controller to perform game functions
 	 */
-	@Override
-	public void keyPress(int keyCode, GameController gameControl) {
-
-		super.keyPress(keyCode, gameControl);
-
-		if (this.rowSelection == 5) {
+	public void doDown(GameController gameControl) {
+		if (this.rowSelection == 4) {
+			this.colSelection = 1;
 			this.rowSelection = 5;
-			this.colSelection = 0;
+		} else {
+			super.doDown(gameControl);
 		}
 	}
-
 }

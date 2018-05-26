@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.util.HashMap;
 
 import controller.GameController;
+import graphics.GameGraphicsData;
 import graphics.SpriteLibrary;
 
 /**
@@ -56,20 +57,20 @@ public class MenuScene extends SelectionScene {
 	 * "Z" button pressed
 	 */
 	public void doAction(GameController control) {
-		control.setScene(menuSelections.get(this.rowSelection));
+		GameGraphicsData.getInstance().setScene(menuSelections.get(this.rowSelection));
 	}
 
 	/**
 	 * "x" button pressed
 	 */
 	public void doBack(GameController control) {
-		control.setScene(WorldScene.instance);
+		GameGraphicsData.getInstance().setScene(WorldScene.instance);
 	}
 
 	/**
 	 * Enter button pressed
 	 */
 	public void doEnter(GameController control) {
-		control.setScene(WorldScene.instance);
+		GameGraphicsData.getInstance().setScene(WorldScene.instance);
 	}
 }

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import controller.GameController;
+import graphics.GameGraphicsData;
 import graphics.SpriteLibrary;
 import model.GameTime;
 import model.MessageQueue;
@@ -53,7 +54,7 @@ public class SaveScene extends SelectionScene {
 	 * "x" button pressed at Save scene
 	 */
 	public void doBack(GameController control) {
-		control.setScene(MenuScene.instance);
+		GameGraphicsData.getInstance().setScene(MenuScene.instance);
 	}
 
 	/**
@@ -64,7 +65,7 @@ public class SaveScene extends SelectionScene {
 			control.saveGame();
 			MessageQueue.getInstance().add("Game saved successfully!");
 		}
-		control.setScene(MenuScene.instance);
+		GameGraphicsData.getInstance().setScene(MenuScene.instance);
 	}
 
 }

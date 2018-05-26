@@ -6,16 +6,17 @@ import java.util.Random;
 import audio.AudioLibrary;
 import audio.AudioLibrary.SOUND_EFFECT;
 import controller.GameController;
+import graphics.GameGraphicsData;
 import model.Configuration;
 import model.MessageQueue;
 import party.Battler;
 import party.Battler.STAT;
 import party.Battler.STATUS;
+import party.MoveData;
+import party.Party;
 import scenes.BattleMessageScene;
 import scenes.BattleScene;
 import scenes.WorldScene;
-import party.MoveData;
-import party.Party;
 import trainers.Actor.DIR;
 
 /**
@@ -139,7 +140,7 @@ public class BattleEngine {
 			m_instance.enemyName = opponentName;
 
 			game.getPlayer().canMove = false;
-			game.setScene(BattleScene.instance);
+			GameGraphicsData.getInstance().setScene(BattleScene.instance);
 		}
 	}
 
@@ -220,7 +221,7 @@ public class BattleEngine {
 		game.getPlayer().canMove = false;
 
 		MessageQueue.getInstance().add("Player won!");
-		game.setScene(BattleMessageScene.instance);
+		GameGraphicsData.getInstance().setScene(BattleMessageScene.instance);
 
 		game.getPlayer().beatenTrainers.add(enemyName);
 
@@ -252,7 +253,7 @@ public class BattleEngine {
 		for (Battler member : playerParty) {
 			member.fullHeal();
 		}
-		game.setScene(WorldScene.instance);
+		GameGraphicsData.getInstance().setScene(WorldScene.instance);
 	}
 
 	/**

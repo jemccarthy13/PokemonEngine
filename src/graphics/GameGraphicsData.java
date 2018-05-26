@@ -1,13 +1,26 @@
 package graphics;
 
-public class GraphicsOrigin {
+import scenes.Scene;
+import scenes.TitleScene;
 
-	private static GraphicsOrigin instance = new GraphicsOrigin();
+public class GameGraphicsData {
 
-	private GraphicsOrigin() {}
+	private static GameGraphicsData instance = new GameGraphicsData();
 
-	public static GraphicsOrigin getInstance() {
+	private GameGraphicsData() {}
+
+	public static GameGraphicsData getInstance() {
 		return instance;
+	}
+
+	Scene currentScene = TitleScene.instance;
+
+	public void setScene(Scene toScene) {
+		currentScene = toScene;
+	}
+
+	public Scene getScene() {
+		return currentScene;
 	}
 
 	// ====================== Graphics control variables ===================//

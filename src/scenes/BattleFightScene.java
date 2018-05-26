@@ -3,6 +3,7 @@ package scenes;
 import java.awt.Graphics;
 
 import controller.GameController;
+import graphics.GameGraphicsData;
 import graphics.Painter;
 import graphics.SpriteLibrary;
 import party.Battler;
@@ -55,7 +56,7 @@ public class BattleFightScene extends SelectionScene {
 		Painter.paintBattlerInfo(g);
 	}
 
-	private void checkMove(int rowDir, int colDir, GameController gameControl) {
+	private void checkMove(int rowDir, int colDir) {
 		int row = this.rowSelection + rowDir;
 		int col = this.colSelection + colDir;
 
@@ -75,35 +76,35 @@ public class BattleFightScene extends SelectionScene {
 	 * Up arrow button press
 	 */
 	public void doUp(GameController gameControl) {
-		checkMove(0, -1, gameControl);
+		checkMove(0, -1);
 	}
 
 	/**
 	 * Down arrow button press
 	 */
 	public void doDown(GameController gameControl) {
-		checkMove(0, 1, gameControl);
+		checkMove(0, 1);
 	}
 
 	/**
 	 * Left arrow button press
 	 */
 	public void doLeft(GameController gameControl) {
-		checkMove(-1, 0, gameControl);
+		checkMove(-1, 0);
 	}
 
 	/**
 	 * Right arrow button press
 	 */
 	public void doRight(GameController gameControl) {
-		checkMove(1, 0, gameControl);
+		checkMove(1, 0);
 	}
 
 	/**
 	 * "x" button press
 	 */
 	public void doBack(GameController gameControl) {
-		gameControl.setScene(BattleScene.instance);
+		GameGraphicsData.getInstance().setScene(BattleScene.instance);
 	}
 
 	/**

@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 
 import audio.AudioLibrary;
 import controller.GameController;
+import graphics.GameGraphicsData;
 import graphics.SpriteLibrary;
 
 /**
@@ -34,7 +35,7 @@ public class TitleScene extends BaseScene {
 	public void keyPress(int keyCode, GameController gameControl) {
 		if (keyCode == KeyEvent.VK_ENTER) {
 			AudioLibrary.playBackgroundMusic("Continue");
-			gameControl.setScene(ContinueScene.instance);
+			GameGraphicsData.getInstance().setScene(ContinueScene.instance);
 		}
 	}
 

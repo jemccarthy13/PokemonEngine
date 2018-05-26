@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import controller.GameController;
+import graphics.GameGraphicsData;
 import graphics.Painter;
 import graphics.SpriteLibrary;
 import model.GameTime;
@@ -63,6 +64,6 @@ public class PlayerInfoScene extends SelectionScene {
 	 * "x" button press at Trainer Card scene
 	 */
 	public void doBack(GameController control) {
-		control.setScene(MenuScene.instance);
+		GameGraphicsData.getInstance().setScene(MenuScene.instance);
 	}
 }

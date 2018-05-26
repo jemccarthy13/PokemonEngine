@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import javax.swing.JPanel;
+import javax.swing.RepaintManager;
 
 import audio.AudioLibrary;
 import controller.GameController;
@@ -30,9 +31,14 @@ public class GamePanel extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 5951510422984321057L;
 
+	private static GamePanel instance = new GamePanel();
+
+	public static GamePanel getInstance() {
+		RepaintManager.currentManager(instance).setDoubleBufferingEnabled(true);
+		return instance;
+	}
+
 	// ================== Display control variables =========================//
-	private int animationStep = 0; // movement (animation) counter
-	private boolean isRightFoot = false; // animation flag
 	/**
 	 * The current message for display
 	 */
@@ -52,7 +58,7 @@ public class GamePanel extends JPanel implements ActionListener {
 	 * Constructor loads the map, registeres to listen for key events, and starts
 	 * the title music (sets up the start of gameplay)
 	 */
-	public GamePanel() {
+	private GamePanel() {
 
 		try {
 			GameMap.getInstance().loadMap(gameController);
@@ -80,10 +86,9 @@ public class GamePanel extends JPanel implements ActionListener {
 	 */
 	public void actionPerformed(ActionEvent e) {
 		GameTime.getInstance().updateTime();
-		if (gameController.getScene() == WorldScene.instance) {
+		if (GameGraphicsData.getInstance().getScene() == WorldScene.instance) {
 			// get all comparison variables up front
 			Player player = gameController.getPlayer();
-			DIR playerDir = player.getDirection();
 			Coordinate playerPos = player.getPosition();
 
 			// check for teleport at location
@@ -91,28 +96,8 @@ public class GamePanel extends JPanel implements ActionListener {
 				gameController.doTeleport(playerPos);
 			} else {
 				// Party playerPokemon = player.getParty();
-
-				if (gameController.getPlayer().isWalking) { // take care of walking
-					// animation
-					// as the gameTimer increments,
-					animationStep += 1;
-					gameController.setOffsetY(playerDir);
-					gameController.setOffsetX(playerDir);
-
-					player.changeSprite(animationStep, isRightFoot);
-				}
-
-				// check for animation completion
-				// when walking animation is done, handle poison damage
-				if (animationStep >= 16) {
-					animationStep = 0; // reset animation counter
-					gameController.getPlayer().isWalking = false;
-					isRightFoot = !isRightFoot;
-					if (gameController.getPlayer().canMoveInDir(playerDir)) {
-						player.move(playerDir);
-					}
-
-					// after the player has moved, do the necessary checks
+				player.doAnimation(gameController);
+				if (player.hasMoved()) {
 					gameController.postMovementChecks();
 				}
 			}
@@ -153,7 +138,7 @@ public class GamePanel extends JPanel implements ActionListener {
 		try {
 			// ! painting on initial eyesight
 			Painter.paintTrainerSighted(getGraphics(), gameController, curNPC.getPosition());
-			Thread.sleep(2000);
+			Thread.sleep(1500);
 		} catch (InterruptedException e) {}
 
 		DIR NPC_DIR = curNPC.getDirection();
@@ -178,14 +163,9 @@ public class GamePanel extends JPanel implements ActionListener {
 		// until NPC reaches player, place a normal tile, move NPC, repaint
 		for (int x = 0; x < distToTravel; x++) {
 			GameMap.getInstance().setMapTileAt(curNPC.tData.position, TileSet.NORMAL);
-			// TODO better animation somewhere in this loop - make it look like
-			// player walking animation
-			curNPC.move(NPC_DIR);
 
-			paintComponent(getGraphics());
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException localInterruptedException) {}
+			curNPC.setDirection(NPC_DIR);
+			curNPC.moveDir(NPC_DIR);
 		}
 	}
 

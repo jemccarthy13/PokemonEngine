@@ -3,6 +3,7 @@ package scenes;
 import java.awt.Graphics;
 
 import controller.GameController;
+import graphics.GameGraphicsData;
 import graphics.Painter;
 import graphics.SpriteLibrary;
 import model.Configuration;
@@ -40,7 +41,7 @@ public class OptionScene extends SelectionScene {
 	 * "z" button press
 	 */
 	public void doBack(GameController control) {
-		control.setScene(MenuScene.instance);
+		GameGraphicsData.getInstance().setScene(MenuScene.instance);
 	}
 
 	/**

@@ -3,6 +3,7 @@ package scenes;
 import java.awt.Graphics;
 
 import controller.GameController;
+import graphics.GameGraphicsData;
 import graphics.Painter;
 import graphics.SpriteLibrary;
 import model.MessageQueue;
@@ -112,20 +113,20 @@ public class BattleScene extends BaseScene {
 		switch (2 * BattleEngine.getInstance().currentSelectionMainY
 				+ BattleEngine.getInstance().currentSelectionMainX) {
 		case 0:
-			gameControl.setScene(BattleFightScene.instance);
+			GameGraphicsData.getInstance().setScene(BattleFightScene.instance);
 			break;
 		case 1:
-			gameControl.setScene(BattlePartyScene.instance);
+			GameGraphicsData.getInstance().setScene(BattlePartyScene.instance);
 			break;
 		case 2:
-			gameControl.setScene(BattleItemScene.instance);
+			GameGraphicsData.getInstance().setScene(BattleItemScene.instance);
 			break;
 		case 3:
 			// try to run away if wild
 			if (BattleEngine.getInstance().enemyName == null) {
 				// TODO probability of running away...
 				MessageQueue.getInstance().add("Got away safely!");
-				gameControl.setScene(WorldScene.instance);
+				GameGraphicsData.getInstance().setScene(WorldScene.instance);
 			} else {
 				// but if it's an opponent, player is stuck
 				MessageQueue.getInstance().add("Can't run away from a opponent!");

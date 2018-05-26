@@ -4,8 +4,10 @@ import java.awt.Graphics;
 
 import audio.AudioLibrary;
 import controller.GameController;
+import graphics.GameGraphicsData;
 import graphics.SpriteLibrary;
 import model.MessageQueue;
+import model.NameBuilder;
 import trainers.Actor.DIR;
 
 /**
@@ -32,11 +34,16 @@ public class IntroScene extends BaseScene {
 	 * Perform "Z" button click
 	 */
 	public void doAction(GameController control) {
-		if (MessageQueue.getInstance().hasNextMessage()) {
-			MessageQueue.getInstance().nextMessage();
-		} else {
-			AudioLibrary.playBackgroundMusic("NewBarkTown");
-			control.setScene(WorldScene.instance);
+		control.incrIntroStage();
+		if (control.getIntroStage() == 15) {
+			GameGraphicsData.getInstance().setScene(NameScene.instance);
+			NameBuilder.getInstance().setToBeNamed("PLAYER");
 		}
+
+		if (!MessageQueue.getInstance().hasNextMessage()) {
+			AudioLibrary.playBackgroundMusic("NewBarkTown");
+			GameGraphicsData.getInstance().setScene(WorldScene.instance);
+		}
+
 	}
 }

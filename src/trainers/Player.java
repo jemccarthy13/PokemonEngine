@@ -3,8 +3,8 @@ package trainers;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import controller.GameController;
 import graphics.GameMap;
-import graphics.SpriteLibrary;
 import location.Location;
 import location.LocationLibrary;
 import model.Configuration;
@@ -37,7 +37,6 @@ public class Player extends Actor implements Serializable {
 	 * Player (Trainer) id - also used as game session ID
 	 */
 	public int id;
-	public boolean isWalking = false;
 	public boolean canMove = false;
 	/**
 	 * The current town / section of map where the player is
@@ -47,6 +46,8 @@ public class Player extends Actor implements Serializable {
 	 * Item and Party Member storage
 	 */
 	public Storage storage = new Storage();
+
+	private static String spriteName = "PLAYER";
 
 	/**
 	 * Player constructor given location and a name
@@ -59,7 +60,7 @@ public class Player extends Actor implements Serializable {
 	 *            - name of player
 	 */
 	public Player(int x, int y, String n) {
-		super(x, y, n, "PLAYER");
+		super(x, y, n, spriteName);
 		curLoc = new Location(LocationLibrary.getInstance().get("New Bark Town"));
 		id = RandomNumUtils.createTrainerID();
 	}
@@ -71,6 +72,14 @@ public class Player extends Actor implements Serializable {
 	 */
 	public Location getCurLoc() {
 		return curLoc;
+	}
+
+	public void doAnimation(GameController gameController) {
+		if (isWalking()) {
+			gameController.setOffsetY(getDirection());
+			gameController.setOffsetX(getDirection());
+		}
+		super.doAnimation(gameController);
 	}
 
 	/**
@@ -163,13 +172,5 @@ public class Player extends Actor implements Serializable {
 			}
 		}
 		return can;
-	}
-
-	/**
-	 * Set the players direction
-	 */
-	public void setDirection(DIR dir) {
-		tData.sprite = SpriteLibrary.getSpriteForDir("PLAYER", dir);
-		super.setDirection(dir);
 	}
 }

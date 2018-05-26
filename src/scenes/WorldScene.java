@@ -11,8 +11,8 @@ import java.awt.geom.AffineTransform;
 import audio.AudioLibrary;
 import audio.AudioLibrary.SOUND_EFFECT;
 import controller.GameController;
+import graphics.GameGraphicsData;
 import graphics.GameMap;
-import graphics.GraphicsOrigin;
 import model.Coordinate;
 import tiles.Tile;
 import tiles.TileSet;
@@ -45,14 +45,14 @@ public class WorldScene extends BaseScene {
 		g.setColor(Color.BLACK);
 		g.setClip(new Rectangle(-16, -42, 704, 438));
 
-		int offsetX = GraphicsOrigin.getInstance().getOffsetX();
-		int offsetY = GraphicsOrigin.getInstance().getOffsetY();
+		int offsetX = GameGraphicsData.getInstance().getOffsetX();
+		int offsetY = GameGraphicsData.getInstance().getOffsetY();
 		Player player = control.getPlayer();
 		int map_height = GameMap.getInstance().getHeight();
 		int map_width = GameMap.getInstance().getWidth();
 
-		int startX = GraphicsOrigin.getInstance().getStartCoordX();
-		int startY = GraphicsOrigin.getInstance().getStartCoordY();
+		int startX = GameGraphicsData.getInstance().getStartCoordX();
+		int startY = GameGraphicsData.getInstance().getStartCoordY();
 
 		g.translate(offsetX - Tile.TILESIZE, offsetY - 2 * Tile.TILESIZE);
 
@@ -77,8 +77,9 @@ public class WorldScene extends BaseScene {
 		}
 
 		for (Actor curNPC : NPCLibrary.getInstance().values()) {
-			g.drawImage(curNPC.tData.sprite.getImage(), curNPC.getCurrentX() * Tile.TILESIZE + startX,
-					curNPC.getCurrentY() * Tile.TILESIZE + startY - 10, null);
+			g.drawImage(curNPC.tData.sprite.getImage(),
+					curNPC.getCurrentX() * Tile.TILESIZE + startX + curNPC.animationOffsetX,
+					curNPC.getCurrentY() * Tile.TILESIZE + startY - 10 + curNPC.animationOffsetY, null);
 			GameMap.getInstance().setMapTileAt(curNPC.getPosition(), TileSet.OBSTACLE);
 		}
 
@@ -147,7 +148,7 @@ public class WorldScene extends BaseScene {
 	public void keyPress(int keyCode, GameController control) {
 		if (keyCode == KeyEvent.VK_ENTER) {
 			AudioLibrary.playClip(SOUND_EFFECT.MENU);
-			control.setScene(MenuScene.instance);
+			GameGraphicsData.getInstance().setScene(MenuScene.instance);
 		}
 		// match the key to a direction, is null if the button was not
 		// UP, LEFT, DOWN, or RIGHT
@@ -158,7 +159,7 @@ public class WorldScene extends BaseScene {
 			// direction
 			control.getPlayer().setDirection(toTravel);
 			if (control.getPlayer().canMoveInDir(toTravel)) {
-				control.getPlayer().isWalking = true;
+				control.getPlayer().setWalking(true);
 			} else {
 				AudioLibrary.playClip(SOUND_EFFECT.COLLISION);
 			}

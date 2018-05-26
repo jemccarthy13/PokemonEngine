@@ -2,12 +2,12 @@ package test;
 
 import java.awt.event.KeyEvent;
 
-import model.Configuration;
-import scenes.WorldScene;
-
 import org.junit.Assert;
 import org.junit.Test;
 
+import graphics.GameGraphicsData;
+import model.Configuration;
+import scenes.WorldScene;
 import utilities.DebugUtility;
 
 /**
@@ -32,7 +32,7 @@ public class StartNewGameTest extends BaseTestCase {
 		}
 
 		// finally the game is started and we're at the world
-		Assert.assertEquals(WorldScene.instance, game.getScene());
+		Assert.assertEquals(WorldScene.instance, GameGraphicsData.getInstance().getScene());
 		Thread.sleep(250);
 
 		DebugUtility.printMessage(game.getPlayer().getPosition().toString());
