@@ -74,7 +74,7 @@ public class GamePanel extends JPanel implements ActionListener {
 		DebugUtility.printMessage("Registered for events.");
 
 		setBackground(Color.BLACK);
-		setPreferredSize(new Dimension(480, 318));
+		setPreferredSize(new Dimension(465, 305));
 
 		DebugUtility.printMessage("Playing title music...");
 		AudioLibrary.playBackgroundMusic("Title");

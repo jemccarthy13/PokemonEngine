@@ -3,12 +3,13 @@ package scenes;
 import java.awt.Graphics;
 
 import controller.BattleEngine;
-import controller.GameController;
 import controller.BattleEngine.TURN;
+import controller.GameController;
 import graphics.GameGraphicsData;
 import graphics.Painter;
 import graphics.SpriteLibrary;
 import party.Battler;
+import utilities.DebugUtility;
 import utilities.RandomNumUtils;
 
 /**
@@ -61,7 +62,7 @@ public class BattleFightScene extends SelectionScene {
 		int col = this.colSelection + colDir;
 
 		// make sure the move exists before we move the arrow there
-		int choice = 2 * row + col;
+		int choice = (2 * col) + row;
 		int numMoves = BattleEngine.getInstance().playerCurrentPokemon.getNumMoves() - 1;
 
 		if (!(choice <= numMoves && row >= 0 && col >= 0 && row <= 1 && col <= 1)) {
@@ -70,6 +71,8 @@ public class BattleFightScene extends SelectionScene {
 		}
 		this.rowSelection = row;
 		this.colSelection = col;
+
+		DebugUtility.printMessage("Selected: " + row + " " + col + " " + ((2 * col) + row));
 	}
 
 	/**
@@ -111,7 +114,9 @@ public class BattleFightScene extends SelectionScene {
 	 * "z" button press
 	 */
 	public void doAction(GameController gameControl) {
-		int move = 2 * this.rowSelection + this.colSelection;
+		int move = (2 * this.colSelection) + this.rowSelection;
+		DebugUtility.printMessage("Selected: " + move);
+		DebugUtility.printMessage(BattleEngine.getInstance().playerCurrentPokemon.getMove(move).toString());
 		BattleEngine.getInstance().takeTurn(TURN.PLAYER, move);
 		BattleEngine.getInstance().takeTurn(TURN.OPPONENT,
 				RandomNumUtils.generateRandom(0, BattleEngine.getInstance().enemyCurrentPokemon.getNumMoves() - 1));

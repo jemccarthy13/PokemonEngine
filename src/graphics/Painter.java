@@ -112,6 +112,9 @@ public class Painter {
 			case ':':
 				g.drawImage(SpriteLibrary.getImage("COLON_small"), startX + offset * x, startY, null);
 				break;
+			case '/':
+				g.drawImage(SpriteLibrary.getImage("SLASH_small"), startX + offset * x, startY, null);
+				break;
 			default:
 				g.drawImage(SpriteLibrary.getInstance().getSmallFontChar(string.toCharArray()[x]).getImage(),
 						startX + offset * x, startY, null);
@@ -146,6 +149,9 @@ public class Painter {
 				break;
 			case ':':
 				g.drawImage(SpriteLibrary.getImage("COLON"), startX + Tile.TILESIZE * x, startY, null);
+				break;
+			case '/':
+				g.drawImage(SpriteLibrary.getImage("SLASH"), startX + Tile.TILESIZE * x, startY, null);
 				break;
 			default:
 				g.drawImage(SpriteLibrary.getInstance().getFontChar(string.toCharArray()[x]).getImage(),
