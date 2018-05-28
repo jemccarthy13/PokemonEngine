@@ -3,8 +3,12 @@ package trainers;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import controller.GameController;
+import graphics.GameMap;
 import location.Location;
 import location.LocationLibrary;
+import model.Configuration;
+import model.Coordinate;
 import party.Storage;
 import utilities.RandomNumUtils;
 
@@ -33,6 +37,7 @@ public class Player extends Actor implements Serializable {
 	 * Player (Trainer) id - also used as game session ID
 	 */
 	public int id;
+	public boolean canMove = false;
 	/**
 	 * The current town / section of map where the player is
 	 */
@@ -41,6 +46,8 @@ public class Player extends Actor implements Serializable {
 	 * Item and Party Member storage
 	 */
 	public Storage storage = new Storage();
+
+	private static String spriteName = "PLAYER";
 
 	/**
 	 * Player constructor given location and a name
@@ -53,7 +60,7 @@ public class Player extends Actor implements Serializable {
 	 *            - name of player
 	 */
 	public Player(int x, int y, String n) {
-		super(x, y, n, "PLAYER");
+		super(x, y, n, spriteName);
 		curLoc = new Location(LocationLibrary.getInstance().get("New Bark Town"));
 		id = RandomNumUtils.createTrainerID();
 	}
@@ -65,6 +72,14 @@ public class Player extends Actor implements Serializable {
 	 */
 	public Location getCurLoc() {
 		return curLoc;
+	}
+
+	public void doAnimation(GameController gameController) {
+		if (isWalking()) {
+			gameController.setOffsetY(getDirection());
+			gameController.setOffsetX(getDirection());
+		}
+		super.doAnimation(gameController);
 	}
 
 	/**
@@ -131,5 +146,31 @@ public class Player extends Actor implements Serializable {
 	 */
 	public int getID() {
 		return this.id;
+	}
+
+	/**
+	 * Check whether or not a player can move in a given direction
+	 * 
+	 * @param dir
+	 *            - the direction to move
+	 * @return - true iff the next tile is available
+	 */
+	public boolean canMoveInDir(DIR dir) {
+		boolean can = false;
+
+		if (Configuration.getInstance().isNoClip()) {
+			// if noclip is turned on, player can always move
+			can = true;
+		} else {
+			// temporarily store the location the player would move to
+			Coordinate loc = getPosition().move(dir);
+
+			// if the potential location is in bounds, can only move if tile is
+			// not obstacle
+			if (GameMap.getInstance().isInBounds(loc)) {
+				can = !GameMap.getInstance().isObstacleAt(loc);
+			}
+		}
+		return can;
 	}
 }

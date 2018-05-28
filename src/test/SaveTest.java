@@ -1,8 +1,8 @@
 package test;
 
-import graphics.GamePanel;
-
 import org.junit.Test;
+
+import graphics.GamePanel;
 
 /**
  * Test saving and loading the game.
@@ -14,7 +14,7 @@ public class SaveTest {
 	 */
 	@Test
 	public static void testSave() {
-		GamePanel g = new GamePanel();
+		GamePanel g = GamePanel.getInstance();
 		g.gameController.saveGame();
 	}
 }

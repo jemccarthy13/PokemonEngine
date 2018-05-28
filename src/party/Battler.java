@@ -1,17 +1,17 @@
 package party;
 
-import graphics.SpriteLibrary;
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
 
+import controller.GameController;
+import graphics.SpriteLibrary;
+import model.MessageQueue;
 import party.MoveData.MOVECATEGORY;
 import utilities.DebugUtility;
 import utilities.RandomNumUtils;
-import controller.GameController;
 
 /**
  * Generated from Battler data, calculates stats based on a level and holds
@@ -100,8 +100,8 @@ public class Battler implements Serializable {
 	private HashMap<STAT, Integer> maxStats = new HashMap<STAT, Integer>();
 
 	/**
-	 * Given PartyMemberData and a level, fill in the blanks // (stats,
-	 * evolution stage, moves, sprites)
+	 * Given PartyMemberData and a level, fill in the blanks // (stats, evolution
+	 * stage, moves, sprites)
 	 * 
 	 * @param pData
 	 *            - party member data object
@@ -168,8 +168,8 @@ public class Battler implements Serializable {
 	}
 
 	/**
-	 * Give the pokemon the calculated exp if it's over the next level amount,
-	 * level up
+	 * Give the pokemon the calculated exp if it's over the next level amount, level
+	 * up
 	 * 
 	 * @param game
 	 * 
@@ -180,7 +180,7 @@ public class Battler implements Serializable {
 		this.curExp += expGain;
 		DebugUtility.printMessage("Gained " + expGain + " exp");
 
-		game.addMessage(getName() + " gained " + expGain + " exp!");
+		MessageQueue.getInstance().add(getName() + " gained " + expGain + " exp!");
 		while (this.curExp >= (this.level + 1) * (this.level + 1) * (this.level + 1)) {
 			levelUp(game);
 		}
@@ -220,7 +220,7 @@ public class Battler implements Serializable {
 		if (this.level < 100) {
 			this.level += 1;
 			// TODO - convert to use message box
-			game.addMessage(getName() + " grew to level " + level + "!");
+			MessageQueue.getInstance().add(getName() + " grew to level " + level + "!");
 			DebugUtility.printMessage(getName() + " grew to level " + level + "!");
 		}
 		for (STAT key : stats.keySet()) {
@@ -269,7 +269,7 @@ public class Battler implements Serializable {
 	 * @param damage
 	 *            - the amount of damage to deal
 	 */
-	public void doDamage(int damage) {
+	public void takeDamage(int damage) {
 		setStat(STAT.HP, getStat(STAT.HP) - damage);
 		if (getStat(STAT.HP) < 0) {
 			setStat(STAT.HP, 0);
@@ -284,7 +284,7 @@ public class Battler implements Serializable {
 	 * @param move
 	 *            - the move data of the opponent's move
 	 */
-	public void doDamage(MoveData move) {
+	public int doDamage(MoveData move) {
 		int attackStat = 0;
 		int defStat = 0;
 		if (move.category == MOVECATEGORY.PHYSICAL) {
@@ -302,8 +302,8 @@ public class Battler implements Serializable {
 		}
 		move.movePP--;
 
-		DebugUtility.printMessage("Dealing " + damage + " damage to " + getName());
-		doDamage(damage);
+		DebugUtility.printMessage("Dealing " + damage + " damage to opponent");
+		return damage;
 	}
 
 	/**
@@ -462,8 +462,8 @@ public class Battler implements Serializable {
 	}
 
 	/**
-	 * takes the base number, adds the current evolution stage, and then formats
-	 * it to 3 digits
+	 * takes the base number, adds the current evolution stage, and then formats it
+	 * to 3 digits
 	 * 
 	 * @param evolutionStage
 	 *            - the current evolution stage

@@ -11,6 +11,43 @@ public class MessageQueue extends AbstractQueue<String> {
 
 	private ArrayList<String> container = new ArrayList<String>();
 
+	private static MessageQueue instance = new MessageQueue();
+
+	private MessageQueue() {}
+
+	public static MessageQueue getInstance() {
+		return instance;
+	}
+
+	/**
+	 * Increment two messages, because the screen displays two lines of text
+	 */
+	public void nextMessage() {
+		this.poll();
+		this.poll();
+	}
+
+	/**
+	 * Add an array of messages to the queue
+	 * 
+	 * @param messages
+	 *            - messages to add
+	 */
+	public void addAllMessages(Object[] messages) {
+		for (Object message : messages) {
+			this.add(message.toString());
+		}
+	}
+
+	/**
+	 * Check to see if there's a next message
+	 * 
+	 * @return - true if there's more messages
+	 */
+	public boolean hasNextMessage() {
+		return this.peek() != null;
+	}
+
 	/**
 	 * Add an element to the queue
 	 * 
@@ -38,8 +75,7 @@ public class MessageQueue extends AbstractQueue<String> {
 	}
 
 	/**
-	 * Get the head of the queue (first in first out) and remove it from the
-	 * queue
+	 * Get the head of the queue (first in first out) and remove it from the queue
 	 * 
 	 * @return popped head of the queue
 	 */

@@ -1,21 +1,24 @@
-package utilities;
-
-import graphics.BattleMessageScene;
-import graphics.BattleScene;
-import graphics.WorldScene;
+package controller;
 
 import java.util.ArrayList;
 import java.util.Random;
 
+import audio.AudioLibrary;
+import audio.AudioLibrary.SOUND_EFFECT;
+import graphics.GameGraphicsData;
 import model.Configuration;
+import model.MessageQueue;
 import party.Battler;
 import party.Battler.STAT;
 import party.Battler.STATUS;
 import party.MoveData;
 import party.Party;
+import scenes.BattleMessageScene;
+import scenes.BattleScene;
+import scenes.WorldScene;
 import trainers.Actor.DIR;
-import audio.AudioLibrary.SOUND_EFFECT;
-import controller.GameController;
+import utilities.DebugUtility;
+import utilities.RandomNumUtils;
 
 /**
  * Holds all logic for a Pokemon battle, either a wild encounter or trainer
@@ -31,6 +34,7 @@ public class BattleEngine {
 	 * The GameController to perform game events
 	 */
 	private GameController game = null;
+
 	/**
 	 * Is it the player's turn?
 	 */
@@ -136,8 +140,8 @@ public class BattleEngine {
 			m_instance.playerTurn = true;
 			m_instance.enemyName = opponentName;
 
-			game.setMovable(false);
-			game.setScene(BattleScene.instance);
+			game.getPlayer().canMove = false;
+			GameGraphicsData.getInstance().setScene(BattleScene.instance);
 		}
 	}
 
@@ -215,10 +219,10 @@ public class BattleEngine {
 		giveEXP();
 		DebugUtility.printMessage("Player won!");
 		// reset logic
-		game.setMovable(false);
+		game.getPlayer().canMove = false;
 
-		game.addMessage("Player won!");
-		game.setScene(BattleMessageScene.instance);
+		MessageQueue.getInstance().add("Player won!");
+		GameGraphicsData.getInstance().setScene(BattleMessageScene.instance);
 
 		game.getPlayer().beatenTrainers.add(enemyName);
 
@@ -227,7 +231,7 @@ public class BattleEngine {
 		// reset the music
 		// TODO - verify playBackgroundMusic doesn't automatically pause/stop
 		// when switching music
-		game.playBackgroundMusic();
+		AudioLibrary.playBackgroundMusic(game.getPlayer().getCurLoc().getName());
 	}
 
 	/**
@@ -243,14 +247,14 @@ public class BattleEngine {
 
 		for (String message : lossMessages) {
 			DebugUtility.printMessage(message);
-			game.addMessage(message);
+			MessageQueue.getInstance().add(message);
 		}
-		game.setPlayerDirection(DIR.SOUTH);
+		game.getPlayer().setDirection(DIR.SOUTH);
 		Party playerParty = game.getPlayer().getParty();
 		for (Battler member : playerParty) {
 			member.fullHeal();
 		}
-		game.setScene(WorldScene.instance);
+		GameGraphicsData.getInstance().setScene(WorldScene.instance);
 	}
 
 	/**
@@ -273,12 +277,14 @@ public class BattleEngine {
 			// get the chosen move
 			MoveData chosen = attacker.getMove(move);
 
+			DebugUtility.printMessage(attacker.getName() + " is attacking " + defender.getName());
+
 			// try to thaw / wake the attacker if they are affected
 			attacker.tryToThaw();
 
-			DebugUtility.printMessage("Using: " + chosen.name);
+			DebugUtility.printMessage("Using: " + chosen.toString());
 
-			game.addMessage(attacker.getName() + " used " + chosen.name + "!");
+			MessageQueue.getInstance().add(attacker.getName() + " used " + chosen.name + "!");
 
 			STATUS status = attacker.getStatusEffect();
 			switch (status) {
@@ -292,7 +298,7 @@ public class BattleEngine {
 				if (r.nextInt(2) <= 0) {
 					// do damage to the defender based on the chosen move
 					defender.doDamage(chosen);
-					game.playClip(SOUND_EFFECT.DAMAGE);
+					AudioLibrary.playClip(SOUND_EFFECT.DAMAGE);
 
 					// decrement move counter, print result
 					// TODO convert to message
@@ -305,11 +311,11 @@ public class BattleEngine {
 			case BRN: // fall through, BRN and PZN are the same
 			case PZN:
 				// TODO - deal % damage for burn / psn
-				game.playClip(SOUND_EFFECT.DAMAGE);
+				AudioLibrary.playClip(SOUND_EFFECT.DAMAGE);
 				DebugUtility.printMessage(attacker.getName() + " has been hurt by it's " + status);
 			default:
-				defender.doDamage(chosen);
-				game.playClip(SOUND_EFFECT.DAMAGE);
+				defender.takeDamage(attacker.doDamage(chosen));
+				AudioLibrary.playClip(SOUND_EFFECT.DAMAGE);
 			}
 
 			if (defender.getStat(STAT.HP) <= 0) {

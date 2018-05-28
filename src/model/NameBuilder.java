@@ -4,6 +4,9 @@ package model;
  * Underlying data storage that helps to build a name
  */
 public class NameBuilder {
+
+	private static NameBuilder instance = new NameBuilder();
+
 	// name that grows and shrinks dynamically according to user's choices
 	private StringBuilder buildName = new StringBuilder();
 
@@ -13,6 +16,10 @@ public class NameBuilder {
 
 	// the name of the object to be named
 	private String toBeNamed;
+
+	public static NameBuilder getInstance() {
+		return instance;
+	}
 
 	/**
 	 * @return the object currently being named

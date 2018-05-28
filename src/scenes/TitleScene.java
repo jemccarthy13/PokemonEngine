@@ -1,9 +1,12 @@
-package graphics;
+package scenes;
 
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 
+import audio.AudioLibrary;
 import controller.GameController;
+import graphics.GameGraphicsData;
+import graphics.SpriteLibrary;
 
 /**
  * A representation of a title scene
@@ -31,8 +34,8 @@ public class TitleScene extends BaseScene {
 	@Override
 	public void keyPress(int keyCode, GameController gameControl) {
 		if (keyCode == KeyEvent.VK_ENTER) {
-			gameControl.playBackgroundMusic("Continue");
-			gameControl.setScene(ContinueScene.instance);
+			AudioLibrary.playBackgroundMusic("Continue");
+			GameGraphicsData.getInstance().setScene(ContinueScene.instance);
 		}
 	}
 

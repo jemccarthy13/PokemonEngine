@@ -1,13 +1,14 @@
-package graphics;
+package scenes;
 
 import java.awt.Graphics;
 
-import audio.AudioLibrary.SOUND_EFFECT;
-
 import com.sun.glass.events.KeyEvent;
 
+import audio.AudioLibrary;
+import audio.AudioLibrary.SOUND_EFFECT;
 import controller.GameController;
 import controller.GameKeyListener;
+import graphics.Painter;
 
 /**
  * A base scene - has keyPress to determine which action to call on the child
@@ -73,7 +74,7 @@ public class BaseScene implements Scene {
 		}
 
 		// play sound when any button is pressed
-		gameControl.playClip(SOUND_EFFECT.SELECT);
+		AudioLibrary.playClip(SOUND_EFFECT.SELECT);
 	}
 
 	/**

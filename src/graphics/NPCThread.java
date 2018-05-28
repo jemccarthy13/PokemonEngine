@@ -15,11 +15,17 @@ public class NPCThread extends Thread implements Serializable {
 	/**
 	 * Thread stop signal
 	 */
-	public boolean stop = false;
+	private boolean stop = false;
+
+	private static NPCThread instance = new NPCThread();
+
+	public static NPCThread getInstance() {
+		return instance;
+	}
 
 	/**
-	 * Extension of Thread, must implement "run" - this performs the random
-	 * movement of the NPCs
+	 * Extension of Thread, must implement "run" - this performs the random movement
+	 * of the NPCs
 	 */
 	public void run() {
 		while (true) {
@@ -39,5 +45,9 @@ public class NPCThread extends Thread implements Serializable {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public void stopMoving() {
+		this.stop = true;
 	}
 }

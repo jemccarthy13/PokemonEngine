@@ -1,9 +1,14 @@
-package graphics;
+package scenes;
 
 import java.awt.Graphics;
 
-import trainers.Actor.DIR;
+import audio.AudioLibrary;
 import controller.GameController;
+import graphics.GameGraphicsData;
+import graphics.SpriteLibrary;
+import model.MessageQueue;
+import model.NameBuilder;
+import trainers.Actor.DIR;
 
 /**
  * A representation of intro scene
@@ -29,11 +34,16 @@ public class IntroScene extends BaseScene {
 	 * Perform "Z" button click
 	 */
 	public void doAction(GameController control) {
-		if (control.hasNextMessage()) {
-			control.nextMessage();
-		} else {
-			control.playBackgroundMusic("NewBarkTown");
-			control.setScene(WorldScene.instance);
+		control.incrIntroStage();
+		if (control.getIntroStage() == 15) {
+			GameGraphicsData.getInstance().setScene(NameScene.instance);
+			NameBuilder.getInstance().setToBeNamed("PLAYER");
 		}
+
+		if (!MessageQueue.getInstance().hasNextMessage()) {
+			AudioLibrary.playBackgroundMusic("NewBarkTown");
+			GameGraphicsData.getInstance().setScene(WorldScene.instance);
+		}
+
 	}
 }

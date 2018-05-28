@@ -1,4 +1,4 @@
-package graphics;
+package scenes;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -8,6 +8,11 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 
+import audio.AudioLibrary;
+import audio.AudioLibrary.SOUND_EFFECT;
+import controller.GameController;
+import graphics.GameGraphicsData;
+import graphics.GameMap;
 import model.Coordinate;
 import tiles.Tile;
 import tiles.TileSet;
@@ -15,8 +20,6 @@ import trainers.Actor;
 import trainers.Actor.DIR;
 import trainers.NPCLibrary;
 import trainers.Player;
-import audio.AudioLibrary.SOUND_EFFECT;
-import controller.GameController;
 
 /**
  * A representation of the world scene
@@ -42,14 +45,14 @@ public class WorldScene extends BaseScene {
 		g.setColor(Color.BLACK);
 		g.setClip(new Rectangle(-16, -42, 704, 438));
 
-		int offsetX = control.getOffsetX();
-		int offsetY = control.getOffsetY();
+		int offsetX = GameGraphicsData.getInstance().getOffsetX();
+		int offsetY = GameGraphicsData.getInstance().getOffsetY();
 		Player player = control.getPlayer();
-		int map_height = control.getMapHeight();
-		int map_width = control.getMapWidth();
+		int map_height = GameMap.getInstance().getHeight();
+		int map_width = GameMap.getInstance().getWidth();
 
-		int startX = control.getStartX();
-		int startY = control.getStartY();
+		int startX = GameGraphicsData.getInstance().getStartCoordX();
+		int startY = GameGraphicsData.getInstance().getStartCoordY();
 
 		g.translate(offsetX - Tile.TILESIZE, offsetY - 2 * Tile.TILESIZE);
 
@@ -60,7 +63,7 @@ public class WorldScene extends BaseScene {
 			int tile_number = 0;
 			for (int y = 1; y <= map_height; y++) {
 				for (int x = 1; x <= map_width; x++) {
-					int tilePic = control.getMapImageAt(layer, tile_number);
+					int tilePic = GameMap.getInstance().getMapImageAt(layer, tile_number);
 
 					if (!(layer == 2 && tilePic == 0)) {
 						g.drawImage((Image) TileSet.getInstance().get(tilePic), x_coor, y_coor, null);
@@ -74,9 +77,10 @@ public class WorldScene extends BaseScene {
 		}
 
 		for (Actor curNPC : NPCLibrary.getInstance().values()) {
-			g.drawImage(curNPC.tData.sprite.getImage(), curNPC.getCurrentX() * Tile.TILESIZE + startX,
-					curNPC.getCurrentY() * Tile.TILESIZE + startY - 10, null);
-			control.setMapTileAt(curNPC.getPosition(), TileSet.OBSTACLE);
+			g.drawImage(curNPC.tData.sprite.getImage(),
+					curNPC.getCurrentX() * Tile.TILESIZE + startX + curNPC.animationOffsetX,
+					curNPC.getCurrentY() * Tile.TILESIZE + startY - 10 + curNPC.animationOffsetY, null);
+			GameMap.getInstance().setMapTileAt(curNPC.getPosition(), TileSet.OBSTACLE);
 		}
 
 		// TODO - remove this line and the 2 setTranform lines to start
@@ -90,8 +94,8 @@ public class WorldScene extends BaseScene {
 	}
 
 	/**
-	 * Take a given key input and convert to a DIRection if it is a directional
-	 * key press
+	 * Take a given key input and convert to a DIRection if it is a directional key
+	 * press
 	 * 
 	 * @param keyCode
 	 *            - the key pressed
@@ -120,7 +124,7 @@ public class WorldScene extends BaseScene {
 	 * Perform "z" button click at the world scene
 	 */
 	public void doAction(GameController control) {
-		control.playClip(SOUND_EFFECT.SELECT);
+		AudioLibrary.playClip(SOUND_EFFECT.SELECT);
 		// overhead cost for following logic
 		Player player = control.getPlayer();
 		DIR playerDir = player.getDirection();
@@ -143,8 +147,8 @@ public class WorldScene extends BaseScene {
 	@Override
 	public void keyPress(int keyCode, GameController control) {
 		if (keyCode == KeyEvent.VK_ENTER) {
-			control.playClip(SOUND_EFFECT.MENU);
-			control.setScene(MenuScene.instance);
+			AudioLibrary.playClip(SOUND_EFFECT.MENU);
+			GameGraphicsData.getInstance().setScene(MenuScene.instance);
 		}
 		// match the key to a direction, is null if the button was not
 		// UP, LEFT, DOWN, or RIGHT
@@ -153,11 +157,11 @@ public class WorldScene extends BaseScene {
 		if (toTravel != null) {
 			// one of the movement buttons was pressed, so try to move in that
 			// direction
-			control.setPlayerDirection(toTravel);
-			if (control.canMoveInDir(toTravel)) {
-				control.setPlayerWalking(true);
+			control.getPlayer().setDirection(toTravel);
+			if (control.getPlayer().canMoveInDir(toTravel)) {
+				control.getPlayer().setWalking(true);
 			} else {
-				control.playClip(SOUND_EFFECT.COLLISION);
+				AudioLibrary.playClip(SOUND_EFFECT.COLLISION);
 			}
 		} else {
 			super.keyPress(keyCode, control);

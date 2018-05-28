@@ -1,16 +1,16 @@
 package test;
 
-import graphics.ContinueScene;
-import graphics.TitleScene;
-
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
 
 import org.junit.Assert;
 
+import controller.GameController;
+import graphics.GameGraphicsData;
+import scenes.ContinueScene;
+import scenes.TitleScene;
 import utilities.DebugUtility;
 import utilities.DebugUtility.DEBUG_LEVEL;
-import controller.GameController;
 
 /**
  * Utilities to perform common actions.
@@ -35,7 +35,7 @@ public class TestUtils {
 		Thread.sleep(2000);
 
 		// assert we are at the tile screen
-		Assert.assertEquals(TitleScene.instance, game.getScene());
+		Assert.assertEquals(TitleScene.instance, GameGraphicsData.getInstance().getScene());
 
 		// assert the game controller has been loaded
 		Assert.assertNotNull(game);
@@ -49,7 +49,7 @@ public class TestUtils {
 		Thread.sleep(500);
 
 		// assert the continue screen was loaded
-		Assert.assertEquals(ContinueScene.instance, game.getScene());
+		Assert.assertEquals(ContinueScene.instance, GameGraphicsData.getInstance().getScene());
 
 		robot.keyPress(KeyEvent.VK_DOWN);
 		Thread.sleep(250);

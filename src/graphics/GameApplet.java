@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import javax.swing.JApplet;
 
+import audio.AudioLibrary;
 import controller.GameKeyListener;
 import utilities.DebugUtility;
 
@@ -27,7 +28,7 @@ public class GameApplet extends JApplet {
 
 		pokemonGame.gameController.printData();
 		try {
-			pokemonGame.gameController.loadMap();
+			GameMap.getInstance().loadMap(pokemonGame.gameController);
 		} catch (IOException | InterruptedException e) {
 			DebugUtility.printError("Unable to load map!");
 		}
@@ -40,7 +41,7 @@ public class GameApplet extends JApplet {
 		DebugUtility.printMessage("Registered for events.");
 
 		DebugUtility.printMessage("Playing title music...");
-		pokemonGame.gameController.playBackgroundMusic("Title");
+		AudioLibrary.playBackgroundMusic("Title");
 		add(pokemonGame);
 	}
 

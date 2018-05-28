@@ -1,8 +1,9 @@
-package graphics;
+package scenes;
 
 import java.awt.Graphics;
 
 import controller.GameController;
+import graphics.GameGraphicsData;
 
 /**
  * A representation of a battle message scene
@@ -27,7 +28,13 @@ public class BattleMessageScene extends BaseScene {
 	 * Perform "z" button click
 	 */
 	public void doAction(GameController gameControl) {
-		gameControl.setScene(WorldScene.instance);
+		GameGraphicsData.getInstance().setScene(WorldScene.instance);
 	}
 
+	/**
+	 * Perform "x" button click
+	 */
+	public void doBack(GameController gameControl) {
+		GameGraphicsData.getInstance().setScene(WorldScene.instance);
+	}
 }

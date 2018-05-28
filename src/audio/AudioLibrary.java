@@ -15,6 +15,7 @@ import utilities.RandomNumUtils;
  */
 public class AudioLibrary {
 
+	private static AudioLibrary instance = new AudioLibrary();
 	/**
 	 * The current track queued to be played
 	 */
@@ -27,11 +28,15 @@ public class AudioLibrary {
 	/**
 	 * An ArrayList of available encounter track names
 	 */
-	private static ArrayList<String> encounterTrackNames = new ArrayList<String>();
+	private ArrayList<String> encounterTrackNames;
 	/**
 	 * An ArrayList of the tracks that have been loaded already
 	 */
 	private static HashMap<String, AudioTrack> musicTracks = new HashMap<String, AudioTrack>();
+
+	public static AudioLibrary getInstance() {
+		return instance;
+	}
 
 	/**
 	 * An enumeration for sound effects
@@ -79,36 +84,20 @@ public class AudioLibrary {
 		}
 	}
 
-	private static AudioLibrary instance = new AudioLibrary();
-
+	/**
+	 * Constructor to initialize the audio library
+	 */
 	private AudioLibrary() {
 		DebugUtility.printHeader("Audio");
 		DebugUtility.printMessage("Initializing audio library...");
-		DebugUtility.printMessage("- Path: " + Configuration.MUSIC_PATH);
-
-		File f = new File(Configuration.MUSIC_PATH);
-
-		if (f != null) {
-			// prefix of the status message representing success or failure
-			String success = (f.exists()) ? "Found" : "Did not find";
-
-			// print the success|failure message
-			DebugUtility.printMessage("- " + success + " music directory.");
-
-			// create a list of encounter tracks
-			File[] files = f.listFiles();
-			if (files == null) {
-				DebugUtility.printMessage("No audio files!");
-			} else {
-				for (File file : files) {
-					if (file.isFile()) {
-						String name_of_file = file.getName();
-						Pattern p = Pattern.compile("^Encounter.*");
-						if (p.matcher(name_of_file).matches()) {
-							encounterTrackNames.add(name_of_file.replace(".mid", ""));
-							DebugUtility.printMessage("-- " + name_of_file + " added to encounter tracks.");
-						}
-					}
+		encounterTrackNames = new ArrayList<String>();
+		// create a list of encounter tracks
+		for (File file : new File(Configuration.MUSIC_PATH).listFiles()) {
+			if (file.isFile()) {
+				String name_of_file = file.getName();
+				Pattern p = Pattern.compile("^Encounter.*");
+				if (p.matcher(name_of_file).matches()) {
+					encounterTrackNames.add(name_of_file.replace(".mid", ""));
 				}
 			}
 		}
@@ -117,19 +106,12 @@ public class AudioLibrary {
 	}
 
 	/**
-	 * Constructor to initialize the audio library
-	 */
-	public synchronized static AudioLibrary getInstance() {
-		return instance;
-	}
-
-	/**
 	 * Play a given music track
 	 * 
 	 * @param songTitle
 	 *            - the song to play
 	 */
-	public void playBackgroundMusic(String songTitle) {
+	public static void playBackgroundMusic(String songTitle) {
 		// stop the current track, if playing
 		if (currentTrack != null) {
 			currentTrack.stop();

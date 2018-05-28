@@ -3,9 +3,12 @@ package trainers;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import controller.GameController;
+import graphics.GamePanel;
 import model.Coordinate;
-import party.Party;
 import party.Battler;
+import party.Party;
+import scenes.WorldScene;
 
 /**
  * The base class for any movable or interactable character or sprite
@@ -21,6 +24,13 @@ public class Actor implements Serializable {
 	 * Trainer data for this Actor
 	 */
 	public ActorData tData = new ActorData();
+
+	private boolean isWalking = false;
+	private boolean isRightFoot = false;
+	private boolean moved = false;
+	protected int animationStep = 1;
+	public int animationOffsetX;
+	public int animationOffsetY;
 
 	/**
 	 * A representation of facing the top, left, right, or bottom of the screen
@@ -105,8 +115,70 @@ public class Actor implements Serializable {
 	 * @param dir
 	 *            - the direction to move
 	 */
+	public void moveDir(DIR dir) {
+		for (int x = 1; x <= 16; x++) {
+			changeSprite(x, isRightFoot);
+			if (x == 16) {
+				isRightFoot = !isRightFoot;
+			}
+			this.animationStep = x;
+			switch (dir) {
+			case SOUTH:
+				this.animationOffsetY = this.animationStep * 2;
+				break;
+			case WEST:
+				this.animationOffsetX = this.animationStep * -2;
+				break;
+			case EAST:
+				this.animationOffsetX = this.animationStep * 2;
+				break;
+			case NORTH:
+				this.animationOffsetY = this.animationStep * -2;
+				break;
+			}
+
+			WorldScene.instance.render(GamePanel.getInstance().getGraphics(), GamePanel.getInstance().gameController);
+			try {
+				Thread.sleep(35);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		this.animationOffsetX = 0;
+		this.animationOffsetY = 0;
+		this.tData.position = this.tData.position.move(dir);
+	}
+
+	/**
+	 * Move the character in the given direction
+	 * 
+	 * @param dir
+	 *            - the direction to move
+	 */
 	public void move(DIR dir) {
 		this.tData.position = this.tData.position.move(dir);
+	}
+
+	public boolean hasMoved() {
+		return this.moved;
+	}
+
+	public void doAnimation(GameController gameController) {
+		moved = false;
+		if (isWalking()) {
+			animationStep += 1;
+			changeSprite(animationStep, isRightFoot);
+		}
+
+		// check for animation completion
+		// when walking animation is done, handle poison damage
+		if (animationStep >= 16) {
+			animationStep = 0; // reset animation counter
+			gameController.getPlayer().setWalking(false);
+			isRightFoot = !isRightFoot;
+			move(getDirection());
+			moved = true;
+		}
 	}
 
 	/**
@@ -274,8 +346,8 @@ public class Actor implements Serializable {
 	/**
 	 * Gets the number of party members owned
 	 * 
-	 * @return a string of the number of PartyMembers owned (used to print
-	 *         trainer data)
+	 * @return a string of the number of PartyMembers owned (used to print trainer
+	 *         data)
 	 * 
 	 * @TODO replace with a number
 	 */
@@ -359,5 +431,13 @@ public class Actor implements Serializable {
 	 */
 	public Coordinate getPosition() {
 		return this.tData.position;
+	}
+
+	public boolean isWalking() {
+		return isWalking;
+	}
+
+	public void setWalking(boolean isWalking) {
+		this.isWalking = isWalking;
 	}
 }

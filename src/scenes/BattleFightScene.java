@@ -1,24 +1,32 @@
-package graphics;
+package scenes;
 
 import java.awt.Graphics;
 
-import model.Coordinate;
-import party.Battler;
-import utilities.BattleEngine;
-import utilities.BattleEngine.TURN;
-import utilities.RandomNumUtils;
+import controller.BattleEngine;
+import controller.BattleEngine.TURN;
 import controller.GameController;
+import graphics.GameGraphicsData;
+import graphics.Painter;
+import graphics.SpriteLibrary;
+import party.Battler;
+import utilities.DebugUtility;
+import utilities.RandomNumUtils;
 
 /**
  * A representation of the battle fight scene
  */
-public class BattleFightScene extends BaseScene {
+public class BattleFightScene extends SelectionScene {
 
 	private static final long serialVersionUID = 1420590933250593485L;
 	/**
 	 * Singleton instance
 	 */
 	public static BattleFightScene instance = new BattleFightScene();
+
+	private BattleFightScene() {
+		this.maxColSelection = 1;
+		this.maxRowSelection = 1;
+	}
 
 	/**
 	 * Render the battle fight scene.
@@ -43,69 +51,76 @@ public class BattleFightScene extends BaseScene {
 		int[] arrowX = { 184, 329 };
 		int[] arrowY = { 240, 270 };
 
-		int selX = gameControl.getCurrentColSelection();
-		int selY = gameControl.getCurrentRowSelection();
-
 		// draw the arrow based on current selection
-		g.drawImage(SpriteLibrary.getImage("Arrow"), arrowX[selX], arrowY[selY], null);
+		g.drawImage(SpriteLibrary.getImage("Arrow"), arrowX[this.rowSelection], arrowY[this.colSelection], null);
 
 		Painter.paintBattlerInfo(g);
 	}
 
-	private void checkMove(int row, int col, GameController gameControl) {
+	private void checkMove(int rowDir, int colDir) {
+		int row = this.rowSelection + rowDir;
+		int col = this.colSelection + colDir;
+
 		// make sure the move exists before we move the arrow there
-		int choice = 2 * row + col;
+		int choice = (2 * col) + row;
 		int numMoves = BattleEngine.getInstance().playerCurrentPokemon.getNumMoves() - 1;
 
-		if (choice <= numMoves && row >= 0 && col >= 0 && row <= 1 && col <= 1) {
-			gameControl.setCurrentSelection(new Coordinate(row, col));
-			gameControl.setCurrentSelection(new Coordinate(row, col));
+		if (!(choice <= numMoves && row >= 0 && col >= 0 && row <= 1 && col <= 1)) {
+			row = 0;
+			col = 0;
 		}
+		this.rowSelection = row;
+		this.colSelection = col;
+
+		DebugUtility.printMessage("Selected: " + row + " " + col + " " + ((2 * col) + row));
 	}
 
 	/**
 	 * Up arrow button press
 	 */
 	public void doUp(GameController gameControl) {
-		checkMove(gameControl.getCurrentRowSelection() - 1, gameControl.getCurrentColSelection(), gameControl);
+		checkMove(0, -1);
 	}
 
 	/**
 	 * Down arrow button press
 	 */
 	public void doDown(GameController gameControl) {
-		checkMove(gameControl.getCurrentRowSelection() + 1, gameControl.getCurrentColSelection(), gameControl);
+		checkMove(0, 1);
 	}
 
 	/**
 	 * Left arrow button press
 	 */
 	public void doLeft(GameController gameControl) {
-		checkMove(gameControl.getCurrentRowSelection(), gameControl.getCurrentColSelection() - 1, gameControl);
+		checkMove(-1, 0);
 	}
 
 	/**
 	 * Right arrow button press
 	 */
 	public void doRight(GameController gameControl) {
-		checkMove(gameControl.getCurrentRowSelection(), gameControl.getCurrentColSelection() + 1, gameControl);
+		checkMove(1, 0);
 	}
 
 	/**
 	 * "x" button press
 	 */
 	public void doBack(GameController gameControl) {
-		gameControl.setScene(BattleScene.instance);
+		GameGraphicsData.getInstance().setScene(BattleScene.instance);
 	}
 
 	/**
 	 * "z" button press
 	 */
 	public void doAction(GameController gameControl) {
-		int move = 2 * gameControl.getCurrentRowSelection() + gameControl.getCurrentColSelection();
+		int move = (2 * this.colSelection) + this.rowSelection;
+		DebugUtility.printMessage("Selected: " + move);
+		DebugUtility.printMessage(BattleEngine.getInstance().playerCurrentPokemon.getMove(move).toString());
 		BattleEngine.getInstance().takeTurn(TURN.PLAYER, move);
 		BattleEngine.getInstance().takeTurn(TURN.OPPONENT,
 				RandomNumUtils.generateRandom(0, BattleEngine.getInstance().enemyCurrentPokemon.getNumMoves() - 1));
-		gameControl.setCurrentSelection(new Coordinate(0, 0));
+		this.rowSelection = 0;
+		this.colSelection = 0;
 	}
 }

@@ -4,9 +4,11 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
+import javax.swing.RepaintManager;
 
-import utilities.DebugUtility;
+import client.GameClient;
 import controller.GameController;
+import utilities.DebugUtility;
 
 /**
  * The main UI frame for the Game Engine. Creates and packs a game panel which
@@ -26,11 +28,11 @@ public class GameFrame extends JFrame {
 		public void windowActivated(WindowEvent arg0) {}
 
 		/**
-         * 
-         */
+		 * 
+		 */
 		@Override
 		public void windowClosed(WindowEvent arg0) {
-			pokemonGame.gameController.endMultiplayerSession();
+			GameClient.getInstance().endMuliplayerSession();
 			DebugUtility.printMessage("Game session ended.");
 			System.exit(0);
 		}
@@ -76,10 +78,12 @@ public class GameFrame extends JFrame {
 		setIconImage(SpriteLibrary.getImage("Icon"));
 
 		// Add the main game panel to the game
-		pokemonGame = new GamePanel();
+		pokemonGame = GamePanel.getInstance();
 		pokemonGame.setFocusable(true);
 		pokemonGame.requestFocus();
 		pokemonGame.gameController.startGameTimer(pokemonGame);
+
+		RepaintManager.currentManager(this).setDoubleBufferingEnabled(true);
 
 		pokemonGame.gameController.printData();
 		add(pokemonGame);

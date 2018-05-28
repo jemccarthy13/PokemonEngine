@@ -3,12 +3,12 @@ package test;
 import org.junit.Assert;
 import org.junit.Test;
 
+import controller.GameController;
 import party.Battler;
 import party.Battler.STAT;
 import party.BattlerFactory;
 import utilities.DebugUtility;
 import utilities.DebugUtility.DEBUG_LEVEL;
-import controller.GameController;
 
 /**
  * Unit testing for Party member constructors and information
@@ -22,14 +22,14 @@ public class PokemonTest {
 	public void testPartyMemberHealth() {
 		Battler member1 = BattlerFactory.createPokemon("Bulbasaur", 5);
 		int health = member1.getMaxStat(STAT.HP);
-		member1.doDamage(health / 2);
+		member1.takeDamage(health / 2);
 
 		Assert.assertEquals(member1.getStat(STAT.HP), health / 2);
 
 		member1.fullHeal();
 		Assert.assertEquals(member1.getStat(STAT.HP), health);
 
-		member1.doDamage(health - 1);
+		member1.takeDamage(health - 1);
 		Assert.assertEquals(member1.getStat(STAT.HP), 1);
 	}
 

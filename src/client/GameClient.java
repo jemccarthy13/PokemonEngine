@@ -11,18 +11,20 @@ import utilities.DebugUtility;
  * A client for the game server.
  */
 public class GameClient extends Thread {
-	private static Socket socket;
-	private static PrintWriter printWriter;
-	private static int sessionID = -1;
+	private Socket socket;
+	private PrintWriter printWriter;
+	private int sessionID = -1;
 
-	/**
-	 * Constructor given a session ID
-	 * 
-	 * @param ID
-	 *            - the Player ID
-	 */
-	public GameClient(int ID) {
-		sessionID = ID;
+	private static GameClient instance = new GameClient();
+
+	public static GameClient getInstance() {
+		return instance;
+	}
+
+	private GameClient() {}
+
+	public void setPlayerID(int playerID) {
+		this.sessionID = playerID;
 	}
 
 	/**
@@ -31,32 +33,16 @@ public class GameClient extends Thread {
 	 * @param args
 	 */
 	public void run() {
-		boolean success = false;
-
 		int portNum = 8085;
 		try {
 			socket = new Socket("localhost", portNum);
 			printWriter = new PrintWriter(socket.getOutputStream(), true);
 			printWriter.println("set ID " + sessionID);
-			success = true;
+			DebugUtility.printMessage("Connection established: port (" + portNum + ")");
 		} catch (ConnectException e) {
-			DebugUtility.printError("Connection refused: port (" + portNum + ") likely in use.");
+			DebugUtility.printError("Connection refused: port (" + portNum + ") in use or no response.");
 		} catch (IOException e1) {
-			DebugUtility.error("Unknown error: " + e1.getMessage());
-		}
-
-		if (!success) {
-			portNum = 1023;
-			try {
-				socket = new Socket("localhost", portNum);
-				printWriter = new PrintWriter(socket.getOutputStream(), true);
-				printWriter.println("set ID " + sessionID);
-				success = true;
-			} catch (ConnectException e) {
-				DebugUtility.printError("Connection refused: port (" + portNum + ") likely in use.");
-			} catch (IOException e1) {
-				DebugUtility.error("Unknown error: " + e1.getMessage());
-			}
+			DebugUtility.printError("Unknown error: " + e1.getMessage());
 		}
 	}
 
@@ -67,6 +53,28 @@ public class GameClient extends Thread {
 	 *            - the message to send
 	 */
 	public void sendMessage(String string) {
-		printWriter.println(string);
+		try {
+			printWriter.println(string);
+		} catch (NullPointerException e) {
+			DebugUtility.printError("Server/client connection wasn't established.");
+			DebugUtility.printError("Exiting anyway.");
+		}
+	}
+
+	/**
+	 * Setup and start the multiplayer session
+	 */
+	public void establishMultiplayerSession(int id) {
+		DebugUtility.printMessage("Connecting to game server...");
+		this.setPlayerID(id);
+		this.start();
+	}
+
+	/**
+	 * Disconnect from the multiplayer session
+	 */
+	public void endMuliplayerSession() {
+		this.sendMessage("end");
+		DebugUtility.printMessage("Disconnected from game server.");
 	}
 }

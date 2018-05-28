@@ -8,16 +8,21 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import javax.swing.JPanel;
+import javax.swing.RepaintManager;
 
+import audio.AudioLibrary;
+import controller.BattleEngine;
+import controller.GameController;
+import controller.GameKeyListener;
 import model.Coordinate;
+import model.GameTime;
+import scenes.WorldScene;
 import tiles.TileSet;
 import trainers.Actor;
 import trainers.Actor.DIR;
 import trainers.NPCLibrary;
 import trainers.Player;
 import utilities.DebugUtility;
-import controller.GameController;
-import controller.GameKeyListener;
 
 /**
  * Holds the actionlistener. This is where the graphics are pained
@@ -26,9 +31,14 @@ public class GamePanel extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 5951510422984321057L;
 
+	private static GamePanel instance = new GamePanel();
+
+	public static GamePanel getInstance() {
+		RepaintManager.currentManager(instance).setDoubleBufferingEnabled(true);
+		return instance;
+	}
+
 	// ================== Display control variables =========================//
-	private int animationStep = 0; // movement (animation) counter
-	private boolean isRightFoot = false; // animation flag
 	/**
 	 * The current message for display
 	 */
@@ -36,22 +46,22 @@ public class GamePanel extends JPanel implements ActionListener {
 
 	// ===================== Game logic controller ==========================//
 	/**
-	 * Single point of access for control of the game - abstraction between the
-	 * view and the data (model)
+	 * Single point of access for control of the game - abstraction between the view
+	 * and the data (model)
 	 */
 	public GameController gameController = new GameController();
 
 	/**
-	 * Default constructor for Main panel. This is the panel that all aspects of
-	 * the game are painted to.
+	 * Default constructor for Main panel. This is the panel that all aspects of the
+	 * game are painted to.
 	 * 
-	 * Constructor loads the map, registeres to listen for key events, and
-	 * starts the title music (sets up the start of gameplay)
+	 * Constructor loads the map, registeres to listen for key events, and starts
+	 * the title music (sets up the start of gameplay)
 	 */
 	public GamePanel() {
 
 		try {
-			gameController.loadMap();
+			GameMap.getInstance().loadMap(gameController);
 		} catch (IOException | InterruptedException e) {
 			DebugUtility.printError("Unable to load map!");
 		}
@@ -64,51 +74,30 @@ public class GamePanel extends JPanel implements ActionListener {
 		DebugUtility.printMessage("Registered for events.");
 
 		setBackground(Color.BLACK);
-		setPreferredSize(new Dimension(480, 318));
+		setPreferredSize(new Dimension(465, 305));
 
 		DebugUtility.printMessage("Playing title music...");
-		gameController.playBackgroundMusic("Title");
+		AudioLibrary.playBackgroundMusic("Title");
 	}
 
 	/**
-	 * Any time an action is performed in the frame, this method updates the
-	 * time and handles world actions.
+	 * Any time an action is performed in the frame, this method updates the time
+	 * and handles world actions.
 	 */
 	public void actionPerformed(ActionEvent e) {
-		gameController.updateTime();
-		if (gameController.getScene() == WorldScene.instance) {
+		GameTime.getInstance().updateTime();
+		if (GameGraphicsData.getInstance().getScene() == WorldScene.instance) {
 			// get all comparison variables up front
 			Player player = gameController.getPlayer();
-			DIR playerDir = player.getDirection();
 			Coordinate playerPos = player.getPosition();
 
 			// check for teleport at location
-			if (gameController.isTeleportTile(playerPos)) {
+			if (GameMap.getInstance().isTeleportAt(playerPos)) {
 				gameController.doTeleport(playerPos);
 			} else {
 				// Party playerPokemon = player.getParty();
-
-				if (gameController.isPlayerWalking()) { // take care of walking
-					// animation
-					// as the gameTimer increments,
-					animationStep += 1;
-					gameController.setOffsetY(playerDir);
-					gameController.setOffsetX(playerDir);
-
-					player.changeSprite(animationStep, isRightFoot);
-				}
-
-				// check for animation completion
-				// when walking animation is done, handle poison damage
-				if (animationStep >= 16) {
-					animationStep = 0; // reset animation counter
-					gameController.setPlayerWalking(false);
-					isRightFoot = !isRightFoot;
-					if (gameController.canMoveInDir(playerDir)) {
-						player.move(playerDir);
-					}
-
-					// after the player has moved, do the necessary checks
+				player.doAnimation(gameController);
+				if (player.hasMoved()) {
 					gameController.postMovementChecks();
 				}
 			}
@@ -117,19 +106,21 @@ public class GamePanel extends JPanel implements ActionListener {
 	}
 
 	/**
-	 * Checks if the player is in sight range of any NPC and the NPC is looking
-	 * at the player and the player's walking animation is finished
+	 * Checks if the player is in sight range of any NPC and the NPC is looking at
+	 * the player and the player's walking animation is finished
 	 */
 	private void checkForNPCEncounter() {
 		// check for trainer encounter with any NPC
 		for (Actor curNPC : NPCLibrary.getInstance().values()) {
 			if (gameController.validEncounterConditions(curNPC)) {
-				gameController.pauseNPCMovement();
+				NPCThread.getInstance().stopMoving();
 				enemyTrainerAnimation(curNPC);
-				gameController.playBackgroundMusic("TrainerBattle");
-				gameController.doEncounter(curNPC.getParty(), curNPC.getName());
+				AudioLibrary.playBackgroundMusic("TrainerBattle");
+				BattleEngine.getInstance().fight(curNPC.getParty(), gameController, curNPC.getName());
 			} else {
-				gameController.setMovable(true);
+				if (gameController.getPlayer() != null) {
+					gameController.getPlayer().canMove = true;
+				}
 			}
 		}
 	}
@@ -142,13 +133,12 @@ public class GamePanel extends JPanel implements ActionListener {
 	 */
 	private void enemyTrainerAnimation(Actor curNPC) {
 
-		gameController.playTrainerMusic();
-		// TODO - verify trainer music plays
+		AudioLibrary.getInstance().pickTrainerMusic();
 
 		try {
 			// ! painting on initial eyesight
 			Painter.paintTrainerSighted(getGraphics(), gameController, curNPC.getPosition());
-			Thread.sleep(2000);
+			Thread.sleep(1500);
 		} catch (InterruptedException e) {}
 
 		DIR NPC_DIR = curNPC.getDirection();
@@ -172,15 +162,10 @@ public class GamePanel extends JPanel implements ActionListener {
 
 		// until NPC reaches player, place a normal tile, move NPC, repaint
 		for (int x = 0; x < distToTravel; x++) {
-			gameController.setMapTileAt(curNPC.tData.position, TileSet.NORMAL);
-			// TODO better animation somewhere in this loop - make it look like
-			// player walking animation
-			curNPC.move(NPC_DIR);
+			GameMap.getInstance().setMapTileAt(curNPC.tData.position, TileSet.NORMAL);
 
-			paintComponent(getGraphics());
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException localInterruptedException) {}
+			curNPC.setDirection(NPC_DIR);
+			curNPC.moveDir(NPC_DIR);
 		}
 	}
 

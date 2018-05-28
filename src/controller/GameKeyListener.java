@@ -5,11 +5,14 @@ import java.awt.event.KeyListener;
 import java.io.Serializable;
 import java.util.HashMap;
 
-import graphics.BaseScene;
-import graphics.BattleMessageScene;
-import graphics.IntroScene;
-import graphics.NameScene;
-import graphics.WorldScene;
+import audio.AudioLibrary;
+import audio.AudioLibrary.SOUND_EFFECT;
+import graphics.GameGraphicsData;
+import model.MessageQueue;
+import scenes.BaseScene;
+import scenes.BattleMessageScene;
+import scenes.IntroScene;
+import scenes.NameScene;
 
 /**
  * Listens for key presses in the game
@@ -80,26 +83,22 @@ public class GameKeyListener implements KeyListener, Serializable {
 	public void keyPressed(KeyEvent e) {
 		int keyCode = e.getKeyCode();
 
-		if ((keyCode == KeyEvent.VK_X || keyCode == KeyEvent.VK_Z) && gameControl.getCurrentMessage() != null
-				&& gameControl.getScene() != NameScene.instance) {
-			gameControl.nextMessage();
-
-			if (gameControl.getScene() == IntroScene.instance) {
-				gameControl.incrIntroStage();
-				if (gameControl.getIntroStage() == 15) {
-					gameControl.setScene(NameScene.instance);
-					gameControl.setToBeNamed("PLAYER");
-				}
-			} else if (gameControl.getScene() == BattleMessageScene.instance) {
-				gameControl.setScene(WorldScene.instance);
-			}
-		} else if (gameControl.getCurrentMessage() == null) {
-			Integer actionToPerform = gameControl.getScene().getClass().hashCode();
+		boolean processed = false;
+		if ((keyCode == KeyEvent.VK_X || keyCode == KeyEvent.VK_Z) && MessageQueue.getInstance().hasNextMessage()
+				&& GameGraphicsData.getInstance().getScene() != NameScene.instance) {
+			MessageQueue.getInstance().nextMessage();
+			processed = true;
+		}
+		if ((!processed && MessageQueue.getInstance().hasNextMessage() == false)
+				|| GameGraphicsData.getInstance().getScene() == BattleMessageScene.instance
+				|| GameGraphicsData.getInstance().getScene() == IntroScene.instance
+				|| GameGraphicsData.getInstance().getScene() == NameScene.instance) {
+			Integer actionToPerform = GameGraphicsData.getInstance().getScene().getClass().hashCode();
 			actionPerformers.get(actionToPerform).keyPress(keyCode, gameControl);
 		}
 
 		// play key press sound effect
-		// gameControl.playClip(SOUND_EFFECT.SELECT);
+		AudioLibrary.playClip(SOUND_EFFECT.SELECT);
 	}
 
 	/**

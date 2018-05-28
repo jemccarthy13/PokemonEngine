@@ -1,4 +1,4 @@
-Copyright (c) 2000-2006, John E. McCarthy
+Copyright (c) 2000-2018, John E. McCarthy
 All rights reserved.
 
 This software, images, music, sounds, media, and anything related to this

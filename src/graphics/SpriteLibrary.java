@@ -73,13 +73,12 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 	 * @return an ImageIcon for a text character
 	 */
 	public ImageIcon getSmallFontChar(Character c) {
-		String name = c.toString() + "_small.png";
-		if (containsKey(name)) {
-			return get(name).get(0);
-		} else {
-			getImageIcon(c.toString() + "_small");
-			return get(name).get(0);
+		String name = c.toString() + "_small";
+		ImageIcon result = getImageIcon(name);
+		if (result == null) {
+			result = getImageIcon("SPACE_small");
 		}
+		return result;
 	}
 
 	/**
@@ -148,9 +147,9 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 	}
 
 	/**
-	 * Returns an image from the instance of the library if the image exists. If
-	 * the image does not exist, try some of the graphics library paths in order
-	 * to load the graphic flyweight
+	 * Returns an image from the instance of the library if the image exists. If the
+	 * image does not exist, try some of the graphics library paths in order to load
+	 * the graphic flyweight
 	 * 
 	 * @param name
 	 *            - the image to look for

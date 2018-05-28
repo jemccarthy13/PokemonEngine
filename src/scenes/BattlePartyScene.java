@@ -1,9 +1,10 @@
-package graphics;
+package scenes;
 
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 
 import controller.GameController;
+import graphics.GameGraphicsData;
 
 /**
  * A representation of a battle switch battler scene
@@ -34,7 +35,7 @@ public class BattlePartyScene extends BaseScene {
 	@Override
 	public void keyPress(int keyCode, GameController control) {
 		if (keyCode == KeyEvent.VK_X || keyCode == KeyEvent.VK_Z) {
-			control.setScene(BattleScene.instance);
+			GameGraphicsData.getInstance().setScene(BattleScene.instance);
 		}
 	}
 }

@@ -1,21 +1,30 @@
-package graphics;
+package scenes;
 
 import java.awt.Color;
 import java.awt.Graphics;
 
-import trainers.Player;
 import controller.GameController;
+import graphics.GameGraphicsData;
+import graphics.Painter;
+import graphics.SpriteLibrary;
+import model.GameTime;
+import trainers.Player;
 
 /**
  * A representation of player information
  */
-public class PlayerInfoScene extends BaseScene {
+public class PlayerInfoScene extends SelectionScene {
 
 	private static final long serialVersionUID = 3015914725120653475L;
 	/**
 	 * Singleton instance
 	 */
 	public static PlayerInfoScene instance = new PlayerInfoScene();
+
+	private PlayerInfoScene() {
+		this.maxColSelection = 0;
+		this.maxRowSelection = 1;
+	}
 
 	/**
 	 * Pad a given string with appropriate spacing
@@ -48,27 +57,13 @@ public class PlayerInfoScene extends BaseScene {
 		Painter.paintSmallString(g, "Name:" + getPadding("Name:") + player.getName(), 65, 80);
 		Painter.paintSmallString(g, "Money:" + getPadding("Money:") + "$" + player.getMoney(), 65, 140);
 		Painter.paintSmallString(g, "Pokedex:" + getPadding("Pokedex:") + player.getNumPokemonOwned(), 65, 170);
-		Painter.paintSmallString(g, "Time:" + getPadding("Time:") + gameControl.formatTime(), 65, 200);
+		Painter.paintSmallString(g, "Time:" + getPadding("Time:") + GameTime.getInstance().formatTime(), 65, 200);
 	}
 
 	/**
 	 * "x" button press at Trainer Card scene
 	 */
 	public void doBack(GameController control) {
-		control.setScene(MenuScene.instance);
-	}
-
-	/**
-	 * up arrow button press at Trainer Card scene
-	 */
-	public void doUp(GameController control) {
-		control.decrementRowSelection();
-	}
-
-	/**
-	 * up arrow button press at Trainer Card scene
-	 */
-	public void doDown(GameController control) {
-		control.incrementRowSelection();
+		GameGraphicsData.getInstance().setScene(MenuScene.instance);
 	}
 }
