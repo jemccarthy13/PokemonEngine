@@ -68,4 +68,8 @@ public class GameData implements Serializable {
 		retStr += "* Current speed: " + currentSpeed + "\n";
 		return retStr;
 	}
+
+	public static void setInstance(GameData readObject) {
+		instance = readObject;
+	}
 }

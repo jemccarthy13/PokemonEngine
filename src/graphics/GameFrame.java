@@ -8,6 +8,7 @@ import javax.swing.RepaintManager;
 
 import client.GameClient;
 import controller.GameController;
+import model.GameData;
 import utilities.DebugUtility;
 
 /**
@@ -85,7 +86,7 @@ public class GameFrame extends JFrame {
 
 		RepaintManager.currentManager(this).setDoubleBufferingEnabled(true);
 
-		pokemonGame.gameController.printData();
+		DebugUtility.printMessage("Game Data: \n" + GameData.getInstance().toString());
 		add(pokemonGame);
 	}
 

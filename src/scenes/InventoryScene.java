@@ -22,7 +22,7 @@ public class InventoryScene extends SelectionScene {
 	 */
 	public static InventoryScene instance = new InventoryScene();
 
-	private InventoryScene() {
+	protected InventoryScene() {
 		maxRowSelection = 5;
 		maxColSelection = 4;
 	}
@@ -47,9 +47,8 @@ public class InventoryScene extends SelectionScene {
 			n++;
 		}
 
-		if (items.size() != 0)
+		if (items.size() != 0 && !(this instanceof ItemConfirmScene))
 			g.drawImage(SpriteLibrary.getImage("Arrow"), 180, 20 + 32 * this.rowSelection, null);
-
 	}
 
 	/**
@@ -57,6 +56,15 @@ public class InventoryScene extends SelectionScene {
 	 */
 	public void doBack(GameController control) {
 		GameGraphicsData.getInstance().setScene(MenuScene.instance);
+	}
+
+	/**
+	 * Perform select ("action")
+	 * 
+	 * @param control
+	 */
+	public void doAction(GameController control) {
+		GameGraphicsData.getInstance().setScene(ItemConfirmScene.instance);
 	}
 
 	public void setMaxRow(GameController control) {

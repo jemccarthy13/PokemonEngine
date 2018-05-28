@@ -7,6 +7,7 @@ import javax.swing.JApplet;
 
 import audio.AudioLibrary;
 import controller.GameKeyListener;
+import model.GameData;
 import utilities.DebugUtility;
 
 /**
@@ -26,7 +27,7 @@ public class GameApplet extends JApplet {
 		pokemonGame.requestFocus();
 		pokemonGame.gameController.startGameTimer(pokemonGame);
 
-		pokemonGame.gameController.printData();
+		DebugUtility.printMessage("Game Data: \n" + GameData.getInstance().toString());
 		try {
 			GameMap.getInstance().loadMap(pokemonGame.gameController);
 		} catch (IOException | InterruptedException e) {

@@ -48,9 +48,6 @@ public class GameController implements Serializable {
 	// controls the speed game events are handled and the current game time
 	private Timer gameSpeed;
 
-	// main game logic
-	public GameData gData = GameData.getInstance();
-
 	// the player Actor
 	private Player player;
 
@@ -70,7 +67,7 @@ public class GameController implements Serializable {
 	 *            - the ActionListner to base this timer on
 	 */
 	public void startGameTimer(ActionListener theGame) {
-		gameSpeed = new Timer(100 - gData.currentSpeed.getValue(), theGame);
+		gameSpeed = new Timer(100 - GameData.getInstance().currentSpeed.getValue(), theGame);
 		gameSpeed.start();
 	}
 
@@ -119,7 +116,7 @@ public class GameController implements Serializable {
 		GameGraphicsData.getInstance().setStartCoordX(i);
 		i = (Tile.TILESIZE * (6 - player.getCurrentY()));
 		GameGraphicsData.getInstance().setStartCoordY(i);
-		gData.introStage = 1;
+		GameData.getInstance().introStage = 1;
 	}
 
 	/**
@@ -129,19 +126,23 @@ public class GameController implements Serializable {
 	 *            - whether or not to continue the default save game
 	 * @return a new GameData instance representing the game state
 	 */
-	public GameData startGame(boolean continued) {
+	public void startGame(boolean continued) {
 
 		DebugUtility.printHeader("Starting game:");
-
 		Scene nextScene = WorldScene.instance;
+		boolean continueFound = false;
 
 		if (continued) {
 			loadGame();
-
-			if (!player.tData.isValidData()) {
-				DebugUtility.error("Unable to continue game from save file. Corrupt data:\n" + player.tData.toString());
+			if (player == null || player.tData == null || !player.tData.isValidData()) {
+				DebugUtility.printError("Unable to continue game from save file.");
+			} else {
+				continueFound = true;
 			}
-		} else {
+		}
+
+		if (!continueFound) {
+			DebugUtility.printMessage("Starting new game.");
 			newGame();
 
 			if (Configuration.SHOWINTRO) {
@@ -166,8 +167,7 @@ public class GameController implements Serializable {
 		GameTime.getInstance().start();
 
 		DebugUtility.printMessage("- " + player.tData.toString());
-		DebugUtility.printMessage("Rendered session id: " + gData.gameSessionID);
-		return gData;
+		DebugUtility.printMessage("Rendered session id: " + GameData.getInstance().gameSessionID);
 	}
 
 	/***************************************************************************
@@ -331,21 +331,10 @@ public class GameController implements Serializable {
 	}
 
 	/**
-	 * Get the current stage of the intro scene
-	 * 
-	 * TODO consolidate all these message control functions into a message queue
-	 * 
-	 * @return int intro scene stage
-	 */
-	public int getIntroStage() {
-		return gData.introStage;
-	}
-
-	/**
 	 * Increment to get the next 2 messages for the intro scene
 	 */
 	public void incrIntroStage() {
-		gData.introStage += 2;
+		GameData.getInstance().introStage += 2;
 	}
 
 	/**
@@ -362,7 +351,7 @@ public class GameController implements Serializable {
 			DebugUtility.printMessage(getPlayer().tData.toString());
 			fout = new FileOutputStream("resources/data/PokemonOrange.sav");
 			oos = new ObjectOutputStream(fout);
-			oos.writeObject(gData);
+			oos.writeObject(GameData.getInstance());
 			oos.close();
 			fout.close();
 		} catch (Exception e1) {
@@ -377,28 +366,17 @@ public class GameController implements Serializable {
 	 * loads game object from a default .SAV file
 	 */
 	public void loadGame() {
-		GameData data = null;
 		FileInputStream fout = null;
 		ObjectInputStream oos = null;
 		try {
 			fout = new FileInputStream("resources/data/PokemonOrange.sav");
 			oos = new ObjectInputStream(fout);
-			data = (GameData) oos.readObject();
+			GameData.setInstance((GameData) oos.readObject());
 			oos.close();
 			fout.close();
 			DebugUtility.printMessage("** Loaded game from save.");
 		} catch (Exception e1) {
-			e1.printStackTrace();
 			DebugUtility.printMessage("Unable to load game...");
 		}
-		gData = data;
-	}
-
-	/**
-	 * Print the current game state
-	 */
-	public void printData() {
-		DebugUtility.printHeader("Game Data");
-		DebugUtility.printMessage(gData.toString());
 	}
 }

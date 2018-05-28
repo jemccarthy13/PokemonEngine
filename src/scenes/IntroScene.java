@@ -6,6 +6,7 @@ import audio.AudioLibrary;
 import controller.GameController;
 import graphics.GameGraphicsData;
 import graphics.SpriteLibrary;
+import model.GameData;
 import model.MessageQueue;
 import model.NameBuilder;
 import trainers.Actor.DIR;
@@ -35,7 +36,7 @@ public class IntroScene extends BaseScene {
 	 */
 	public void doAction(GameController control) {
 		control.incrIntroStage();
-		if (control.getIntroStage() == 15) {
+		if (GameData.getInstance().introStage == 15) {
 			GameGraphicsData.getInstance().setScene(NameScene.instance);
 			NameBuilder.getInstance().setToBeNamed("PLAYER");
 		}
