@@ -13,6 +13,7 @@ import scenes.BaseScene;
 import scenes.BattleMessageScene;
 import scenes.IntroScene;
 import scenes.NameScene;
+import scenes.SelectionScene;
 
 /**
  * Listens for key presses in the game
@@ -97,8 +98,10 @@ public class GameKeyListener implements KeyListener, Serializable {
 			actionPerformers.get(actionToPerform).keyPress(keyCode, gameControl);
 		}
 
-		// play key press sound effect
-		AudioLibrary.playClip(SOUND_EFFECT.SELECT);
+		if (GameGraphicsData.getInstance().getScene() instanceof SelectionScene) {
+			// play key press sound effect
+			AudioLibrary.playClip(SOUND_EFFECT.SELECT);
+		}
 	}
 
 	/**

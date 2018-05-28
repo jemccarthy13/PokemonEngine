@@ -62,7 +62,6 @@ public class JukeBox {
 
 		// null-safe play it
 		if (clip != null) {
-			DebugUtility.printMessage("Playing clip...");
 			clip.play();
 		} else {
 			DebugUtility.printMessage("Error playing clip: clip is null");
