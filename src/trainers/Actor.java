@@ -9,6 +9,9 @@ import model.Coordinate;
 import party.Battler;
 import party.Party;
 import scenes.WorldScene;
+import storage.Bag;
+import storage.Bag.POCKETS;
+import storage.Item;
 
 /**
  * The base class for any movable or interactable character or sprite
@@ -31,6 +34,8 @@ public class Actor implements Serializable {
 	protected int animationStep = 1;
 	public int animationOffsetX;
 	public int animationOffsetY;
+
+	protected Bag inventory = new Bag();
 
 	/**
 	 * A representation of facing the top, left, right, or bottom of the screen
@@ -251,6 +256,25 @@ public class Actor implements Serializable {
 	 */
 	public int getMoney() {
 		return this.tData.money;
+	}
+
+	/**
+	 * @return the current list of items
+	 */
+	public Bag getInventory() {
+		return this.inventory;
+	}
+
+	/**
+	 * Add an item to the inventory
+	 * 
+	 * @param pocket
+	 *            - the pocket to add to
+	 * @param it
+	 *            - the item to add
+	 */
+	public void addItemToInventory(POCKETS pocket, Item it) {
+		this.inventory.addToPocket(pocket, it);
 	}
 
 	/**

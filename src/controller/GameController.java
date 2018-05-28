@@ -28,6 +28,8 @@ import party.Party;
 import scenes.IntroScene;
 import scenes.Scene;
 import scenes.WorldScene;
+import storage.Bag.POCKETS;
+import storage.ItemLibrary;
 import tiles.Tile;
 import trainers.Actor;
 import trainers.Actor.DIR;
@@ -108,6 +110,10 @@ public class GameController implements Serializable {
 		player.setMoney(1000000);
 		player.setCurLocation(LocationLibrary.getLocation("Route 27"));
 		AudioLibrary.playBackgroundMusic(getPlayer().getCurLoc().getName());
+
+		player.getBag().addToPocket(POCKETS.ITEMS, ItemLibrary.getInstance().get("POTION"));
+		player.getBag().addToPocket(POCKETS.ITEMS, ItemLibrary.getInstance().get("POTION"));
+		player.getBag().addToPocket(POCKETS.ITEMS, ItemLibrary.getInstance().get("HYPER POTION"));
 
 		int i = (Tile.TILESIZE * (8 - player.getCurrentX()));
 		GameGraphicsData.getInstance().setStartCoordX(i);

@@ -1,10 +1,14 @@
-package party;
+package storage;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import party.Battler;
+
 /**
  * Storage for unused party and stored items
+ * 
+ * "Bill's PC"
  */
 public class Storage implements Serializable {
 	private static final long serialVersionUID = 8519420241334625610L;
@@ -18,8 +22,8 @@ public class Storage implements Serializable {
 	// flexible enough to grow or shrink as necessary
 	private ArrayList<ArrayList<Battler>> boxes = new ArrayList<ArrayList<Battler>>();
 
-	// TODO - Implement items & item storage
-	// public ArrayList<ItemList> items = new ArrayList<ItemList>();
+	// behind the scenes, the PC stores items exactly how the Bag does
+	public Bag items = new Bag();
 
 	/**
 	 * Default constructor

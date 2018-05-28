@@ -9,7 +9,8 @@ import location.Location;
 import location.LocationLibrary;
 import model.Configuration;
 import model.Coordinate;
-import party.Storage;
+import storage.Bag;
+import storage.Storage;
 import utilities.RandomNumUtils;
 
 /**
@@ -172,5 +173,12 @@ public class Player extends Actor implements Serializable {
 			}
 		}
 		return can;
+	}
+
+	/**
+	 * @return - the players item bag (inventory)
+	 */
+	public Bag getBag() {
+		return this.inventory;
 	}
 }

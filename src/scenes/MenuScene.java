@@ -32,7 +32,7 @@ public class MenuScene extends SelectionScene {
 
 		menuSelections.put(0, EncycopediaScene.instance);
 		menuSelections.put(1, PartyScene.instance);
-		menuSelections.put(2, ItemStorageScene.instance);
+		menuSelections.put(2, InventoryScene.instance);
 		menuSelections.put(3, HelpScene.instance);
 		menuSelections.put(4, PlayerInfoScene.instance);
 		menuSelections.put(5, SaveScene.instance);
@@ -57,6 +57,9 @@ public class MenuScene extends SelectionScene {
 	 * "Z" button pressed
 	 */
 	public void doAction(GameController control) {
+		if (menuSelections.get(this.rowSelection) == InventoryScene.instance) {
+			InventoryScene.instance.setMaxRow(control);
+		}
 		GameGraphicsData.getInstance().setScene(menuSelections.get(this.rowSelection));
 	}
 

@@ -7,19 +7,22 @@ import controller.GameController;
 import graphics.GameGraphicsData;
 import graphics.Painter;
 import graphics.SpriteLibrary;
+import storage.Bag;
+import storage.Item;
+import storage.ItemList;
 
 /**
  * A representation of a bag scene
  */
-public class ItemStorageScene extends SelectionScene {
+public class InventoryScene extends SelectionScene {
 
 	private static final long serialVersionUID = 6315775737915830498L;
 	/**
 	 * Singleton instance
 	 */
-	public static ItemStorageScene instance = new ItemStorageScene();
+	public static InventoryScene instance = new InventoryScene();
 
-	private ItemStorageScene() {
+	private InventoryScene() {
 		maxRowSelection = 5;
 		maxColSelection = 4;
 	}
@@ -33,22 +36,20 @@ public class ItemStorageScene extends SelectionScene {
 		g.drawImage(SpriteLibrary.getImage("BagScreen"), 0, 0, null);
 		g.drawImage(SpriteLibrary.getImage("Bag"), 20, 65, null);
 
-		g.drawImage(SpriteLibrary.getImage("Arrow"), 200, 20 + 32 * this.rowSelection, null);
+		Painter.paintSmallString(g, Bag.getPocket(this.colSelection).toString(), 20, 20);
 
-		switch (this.colSelection) {
-		case 1:
-			Painter.paintSmallString(g, "KEY ITEMS", 20, 20);
-			break;
-		case 2:
-			Painter.paintSmallString(g, "BALLS", 20, 20);
-			break;
-		case 3:
-			Painter.paintSmallString(g, "TM/HM", 20, 20);
-			break;
-		default:
-			Painter.paintSmallString(g, "ITEMS", 20, 20);
-			break;
+		ItemList items = gameControl.getPlayer().getInventory().getCurrentItemList();
+
+		int n = 0;
+		for (Item it : items) {
+			Painter.paintSmallString(g, it.getName(), 200, 25 + 32 * n);
+			Painter.paintSmallString(g, String.valueOf(items.get(it)), 400, 25 + 32 * n);
+			n++;
 		}
+
+		if (items.size() != 0)
+			g.drawImage(SpriteLibrary.getImage("Arrow"), 180, 20 + 32 * this.rowSelection, null);
+
 	}
 
 	/**
@@ -56,6 +57,13 @@ public class ItemStorageScene extends SelectionScene {
 	 */
 	public void doBack(GameController control) {
 		GameGraphicsData.getInstance().setScene(MenuScene.instance);
+	}
+
+	public void setMaxRow(GameController control) {
+		int numItems = control.getPlayer().getBag().getCurrentItemList().size() - 1;
+		if (numItems > 5)
+			numItems = 5;
+		this.maxRowSelection = numItems;
 	}
 
 	/**
@@ -66,6 +74,9 @@ public class ItemStorageScene extends SelectionScene {
 		if (this.colSelection >= this.maxColSelection) {
 			this.colSelection = 0;
 		}
+		control.getPlayer().getBag().setCurrentPocket(Bag.getPocket(this.colSelection));
+		setMaxRow(control);
+
 		this.rowSelection = 0;
 	}
 
@@ -75,8 +86,10 @@ public class ItemStorageScene extends SelectionScene {
 	public void doLeft(GameController control) {
 		this.colSelection--;
 		if (this.colSelection < 0) {
-			this.colSelection = this.maxColSelection;
+			this.colSelection = this.maxColSelection - 1;
 		}
+		control.getPlayer().getBag().setCurrentPocket(Bag.getPocket(this.colSelection));
+		setMaxRow(control);
 		this.rowSelection = 0;
 	}
 }
