@@ -40,7 +40,7 @@ public class Actor implements Serializable {
 	/**
 	 * A representation of facing the top, left, right, or bottom of the screen
 	 */
-	public static enum DIR implements Serializable {
+	public static enum DIR {
 		/**
 		 * The character is facing 'down' (South)
 		 */
@@ -122,9 +122,9 @@ public class Actor implements Serializable {
 	 */
 	public void moveDir(DIR dir) {
 		for (int x = 1; x <= 16; x++) {
-			changeSprite(x, isRightFoot);
+			changeSprite(x, this.isRightFoot);
 			if (x == 16) {
-				isRightFoot = !isRightFoot;
+				this.isRightFoot = !this.isRightFoot;
 			}
 			this.animationStep = x;
 			switch (dir) {
@@ -139,6 +139,8 @@ public class Actor implements Serializable {
 				break;
 			case NORTH:
 				this.animationOffsetY = this.animationStep * -2;
+				break;
+			default:
 				break;
 			}
 
@@ -169,20 +171,20 @@ public class Actor implements Serializable {
 	}
 
 	public void doAnimation(GameController gameController) {
-		moved = false;
+		this.moved = false;
 		if (isWalking()) {
-			animationStep += 1;
-			changeSprite(animationStep, isRightFoot);
+			this.animationStep += 1;
+			changeSprite(this.animationStep, this.isRightFoot);
 		}
 
 		// check for animation completion
 		// when walking animation is done, handle poison damage
-		if (animationStep >= 16) {
-			animationStep = 0; // reset animation counter
+		if (this.animationStep >= 16) {
+			this.animationStep = 0; // reset animation counter
 			gameController.getPlayer().setWalking(false);
-			isRightFoot = !isRightFoot;
+			this.isRightFoot = !this.isRightFoot;
 			move(getDirection());
-			moved = true;
+			this.moved = true;
 		}
 	}
 
@@ -200,9 +202,9 @@ public class Actor implements Serializable {
 
 		if (animationStage > 8 && animationStage < 15) {
 			int offset = (rightFoot) ? 2 : 1;
-			tData.sprite = (tData.getSprites().get(direction + offset));
+			this.tData.sprite = (this.tData.getSprites().get(direction + offset));
 		} else {
-			tData.sprite = (tData.getSprites().get(direction));
+			this.tData.sprite = (this.tData.getSprites().get(direction));
 		}
 	}
 
@@ -458,7 +460,7 @@ public class Actor implements Serializable {
 	}
 
 	public boolean isWalking() {
-		return isWalking;
+		return this.isWalking;
 	}
 
 	public void setWalking(boolean isWalking) {

@@ -61,11 +61,12 @@ public class GameData implements Serializable {
 	 * 
 	 * @return string representing game state
 	 */
+	@Override
 	public String toString() {
 		String retStr = "Sound on: " + Configuration.getInstance().isSoundOn() + "\n";
-		retStr += "* Game ID: " + gameSessionID + "\n";
-		retStr += Configuration.getInstance().getConfig() + "\n";
-		retStr += "* Current speed: " + currentSpeed + "\n";
+		retStr += "* Game ID: " + this.gameSessionID + "\n";
+		retStr += Configuration.getConfig() + "\n";
+		retStr += "* Current speed: " + this.currentSpeed + "\n";
 		return retStr;
 	}
 

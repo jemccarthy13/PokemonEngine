@@ -27,9 +27,10 @@ public class NPCThread extends Thread implements Serializable {
 	 * Extension of Thread, must implement "run" - this performs the random movement
 	 * of the NPCs
 	 */
+	@Override
 	public void run() {
 		while (true) {
-			if (stop) {
+			if (this.stop) {
 				// stop the npc thread to pause logic during a battle
 				break;
 			}

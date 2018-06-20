@@ -82,9 +82,10 @@ public class JukeBox {
 		 * 
 		 * @param resourcePath
 		 *            - the path to the audio resource
+		 * @throws IOException
 		 * @throws Exception
 		 */
-		public SoundEffect(String resourcePath) {
+		public SoundEffect(String resourcePath) throws IOException {
 			// create the necessary steps to make a new Clip
 			InputStream resourceStream = JukeBox.class.getResourceAsStream(resourcePath);
 			AudioInputStream ais = null;
@@ -101,8 +102,10 @@ public class JukeBox {
 			try {
 				this.m_clip = (Clip) AudioSystem.getLine(info);
 			} catch (LineUnavailableException e) {
-				DebugUtility.printError("Error reading: " + resourcePath);
+				DebugUtility.printError("Error reading: " + resourcePath + "\n" + e.getMessage());
 			}
+			resourceStream.close();
+			ais.close();
 			this.m_clip.addLineListener(this);
 		}
 
@@ -112,6 +115,7 @@ public class JukeBox {
 		 * @param event
 		 *            - a line event that triggers an update
 		 */
+		@Override
 		public void update(LineEvent event) {
 			if (event.getType().equals(LineEvent.Type.STOP)) {
 				this.m_clip.stop();

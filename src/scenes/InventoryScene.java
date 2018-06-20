@@ -23,8 +23,8 @@ public class InventoryScene extends SelectionScene {
 	public static InventoryScene instance = new InventoryScene();
 
 	protected InventoryScene() {
-		maxRowSelection = 5;
-		maxColSelection = 4;
+		this.maxRowSelection = 5;
+		this.maxColSelection = 4;
 	}
 
 	/**
@@ -54,6 +54,7 @@ public class InventoryScene extends SelectionScene {
 	/**
 	 * Perform back button press at BagScene
 	 */
+	@Override
 	public void doBack(GameController control) {
 		GameGraphicsData.getInstance().setScene(MenuScene.instance);
 	}
@@ -63,6 +64,7 @@ public class InventoryScene extends SelectionScene {
 	 * 
 	 * @param control
 	 */
+	@Override
 	public void doAction(GameController control) {
 		GameGraphicsData.getInstance().setScene(ItemConfirmScene.instance);
 	}
@@ -77,6 +79,7 @@ public class InventoryScene extends SelectionScene {
 	/**
 	 * Perform the right arrow
 	 */
+	@Override
 	public void doRight(GameController control) {
 		this.colSelection++;
 		if (this.colSelection >= this.maxColSelection) {
@@ -91,6 +94,7 @@ public class InventoryScene extends SelectionScene {
 	/**
 	 * Perform the right arrow
 	 */
+	@Override
 	public void doLeft(GameController control) {
 		this.colSelection--;
 		if (this.colSelection < 0) {

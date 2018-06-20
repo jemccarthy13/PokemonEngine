@@ -1,6 +1,7 @@
 package party;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -29,6 +30,12 @@ public class MoveLibrary extends HashMap<String, MoveData> {
 			s.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+
+		try {
+			fs.close();
+		} catch (IOException e) {
+			// do nothing
 		}
 	}
 

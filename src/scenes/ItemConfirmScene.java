@@ -16,11 +16,12 @@ public class ItemConfirmScene extends InventoryScene {
 	/**
 	 * Singleton instance
 	 */
+	@SuppressWarnings("hiding")
 	public static ItemConfirmScene instance = new ItemConfirmScene();
 
 	private ItemConfirmScene() {
-		maxRowSelection = 1;
-		maxColSelection = 0;
+		this.maxRowSelection = 1;
+		this.maxColSelection = 0;
 	}
 
 	/**
@@ -38,6 +39,7 @@ public class ItemConfirmScene extends InventoryScene {
 	/**
 	 * Perform back button press at BagScene
 	 */
+	@Override
 	public void doBack(GameController control) {
 		GameGraphicsData.getInstance().setScene(InventoryScene.instance);
 	}
@@ -47,6 +49,7 @@ public class ItemConfirmScene extends InventoryScene {
 	 * 
 	 * @param control
 	 */
+	@Override
 	public void doAction(GameController control) {
 		// use item
 	}

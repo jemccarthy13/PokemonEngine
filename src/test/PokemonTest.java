@@ -19,7 +19,7 @@ public class PokemonTest {
 	 * Test doing damage and healing party members
 	 */
 	@Test
-	public void testPartyMemberHealth() {
+	public static void testPartyMemberHealth() {
 		Battler member1 = BattlerFactory.createPokemon("Bulbasaur", 5);
 		int health = member1.getMaxStat(STAT.HP);
 		member1.takeDamage(health / 2);
@@ -37,7 +37,7 @@ public class PokemonTest {
 	 * Test level up evolution of a party member
 	 */
 	@Test
-	public void testPartyMemberEvolution() {
+	public static void testPartyMemberEvolution() {
 		DebugUtility.setLevel(DEBUG_LEVEL.DEBUG);
 		Battler member1 = BattlerFactory.createPokemon("Bulbasaur", 5);
 		Battler member2 = BattlerFactory.createPokemon("Bulbasaur", 10);
@@ -74,5 +74,7 @@ public class PokemonTest {
 	/**
 	 * Test level up moves learned (up to 4 and more than 4)
 	 */
-	public void testPartyMemberMovesLearned() {}
+	public void testPartyMemberMovesLearned() {
+		// do nothing
+	}
 }

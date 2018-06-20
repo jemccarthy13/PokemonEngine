@@ -289,6 +289,7 @@ public class TileChooser extends JPanel implements ActionListener, GraphicsBankC
 	 * @param bank
 	 *            - the graphics bank to check against
 	 */
+	@Override
 	public void tilesetUpdated(GraphicsBank bank) {
 		DebugUtility.printMessage("tilset updated");
 		if (bank == this.gfx) {
@@ -337,6 +338,7 @@ public class TileChooser extends JPanel implements ActionListener, GraphicsBankC
 	 * @param event
 	 *            - the event that occurred
 	 */
+	@Override
 	public void actionPerformed(ActionEvent event) {
 		if ((event.getSource() == this.applyBtn) && (this.propertyTile != null)) {
 			this.propertyTile.name = this.tileName.getText();
@@ -463,7 +465,10 @@ public class TileChooser extends JPanel implements ActionListener, GraphicsBankC
 	 * @param removedTile
 	 *            - the tile that was removed
 	 */
-	public void MapTileRemoved(GraphicsBank bank, MapTile removedTile) {}
+	@Override
+	public void MapTileRemoved(GraphicsBank bank, MapTile removedTile) {
+		// do nothing
+	}
 
 	/**
 	 * Change listener implementation for a map tile being added
@@ -473,7 +478,10 @@ public class TileChooser extends JPanel implements ActionListener, GraphicsBankC
 	 * @param addedTile
 	 *            - the tile that was added
 	 */
-	public void MapTileAdded(GraphicsBank bank, MapTile addedTile) {}
+	@Override
+	public void MapTileAdded(GraphicsBank bank, MapTile addedTile) {
+		// do nothing
+	}
 
 	/**
 	 * Class that represents a file drop
@@ -498,6 +506,7 @@ public class TileChooser extends JPanel implements ActionListener, GraphicsBankC
 		 *            - the data to be imported
 		 * @return whether or not the data can be imported
 		 */
+		@Override
 		public boolean canImport(JComponent ignored, DataFlavor[] data) {
 			for (int i = 0; i < data.length; i++) {
 				if (data[i].equals(DataFlavor.javaFileListFlavor)) {
@@ -516,10 +525,14 @@ public class TileChooser extends JPanel implements ActionListener, GraphicsBankC
 		 *            - the data to be imported
 		 * @return whether or not the data can be imported
 		 */
+		@Override
 		public boolean importData(JComponent ignored, Transferable dataholder) {
 			try {
 				List<?> localList = (List<?>) dataholder.getTransferData(DataFlavor.javaFileListFlavor);
-				if (localList.size() > 4) {}
+				if (localList.size() > 4) {
+					// do nothing
+				}
+
 				Iterator<?> localIterator = localList.iterator();
 				while (localIterator.hasNext()) {
 					File localFile = (File) localIterator.next();
@@ -579,6 +592,7 @@ public class TileChooser extends JPanel implements ActionListener, GraphicsBankC
 		 * @param event
 		 *            - the event that triggered an action
 		 */
+		@Override
 		public void actionPerformed(ActionEvent event) {
 			TileChooser.this.selectedTile = this.tile;
 		}
@@ -589,7 +603,10 @@ public class TileChooser extends JPanel implements ActionListener, GraphicsBankC
 		 * @param ignored
 		 *            an event that is ignored
 		 */
-		public void mouseEntered(MouseEvent ignored) {}
+		@Override
+		public void mouseEntered(MouseEvent ignored) {
+			// do nothing
+		}
 
 		/**
 		 * Required no-op mouse listener method
@@ -597,7 +614,10 @@ public class TileChooser extends JPanel implements ActionListener, GraphicsBankC
 		 * @param ignored
 		 *            an event that is ignored
 		 */
-		public void mouseExited(MouseEvent ignored) {}
+		@Override
+		public void mouseExited(MouseEvent ignored) {
+			// do nothing
+		}
 
 		/**
 		 * Required no-op mouse listener method
@@ -605,7 +625,10 @@ public class TileChooser extends JPanel implements ActionListener, GraphicsBankC
 		 * @param ignored
 		 *            an event that is ignored
 		 */
-		public void mousePressed(MouseEvent ignored) {}
+		@Override
+		public void mousePressed(MouseEvent ignored) {
+			// do nothing
+		}
 
 		/**
 		 * Required no-op mouse listener method
@@ -613,7 +636,10 @@ public class TileChooser extends JPanel implements ActionListener, GraphicsBankC
 		 * @param ignored
 		 *            an event that is ignored
 		 */
-		public void mouseReleased(MouseEvent ignored) {}
+		@Override
+		public void mouseReleased(MouseEvent ignored) {
+			// do nothing
+		}
 
 		/**
 		 * On a right click, display the tile's properties
@@ -621,6 +647,7 @@ public class TileChooser extends JPanel implements ActionListener, GraphicsBankC
 		 * @param mouseClick
 		 *            - the mouse click event
 		 */
+		@Override
 		public void mouseClicked(MouseEvent mouseClick) {
 			if (SwingUtilities.isRightMouseButton(mouseClick)) {
 				TileChooser.this.showProperties(this.tile);

@@ -32,12 +32,13 @@ public class GameClient extends Thread {
 	 * 
 	 * @param args
 	 */
+	@Override
 	public void run() {
 		int portNum = 8085;
 		try {
-			socket = new Socket("localhost", portNum);
-			printWriter = new PrintWriter(socket.getOutputStream(), true);
-			printWriter.println("set ID " + sessionID);
+			this.socket = new Socket("localhost", portNum);
+			this.printWriter = new PrintWriter(this.socket.getOutputStream(), true);
+			this.printWriter.println("set ID " + this.sessionID);
 			DebugUtility.printMessage("Connection established: port (" + portNum + ")");
 		} catch (ConnectException e) {
 			DebugUtility.printError("Connection refused: port (" + portNum + ") in use or no response.");
@@ -54,7 +55,7 @@ public class GameClient extends Thread {
 	 */
 	public void sendMessage(String string) {
 		try {
-			printWriter.println(string);
+			this.printWriter.println(string);
 		} catch (NullPointerException e) {
 			DebugUtility.printError("Server/client connection wasn't established.");
 			DebugUtility.printError("Exiting anyway.");
@@ -63,6 +64,9 @@ public class GameClient extends Thread {
 
 	/**
 	 * Setup and start the multiplayer session
+	 * 
+	 * @param id
+	 *            - the id of the player
 	 */
 	public void establishMultiplayerSession(int id) {
 		DebugUtility.printMessage("Connecting to game server...");

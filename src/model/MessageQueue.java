@@ -56,7 +56,7 @@ public class MessageQueue extends AbstractQueue<String> {
 	 */
 	@Override
 	public boolean offer(String arg0) {
-		container.add(arg0);
+		this.container.add(arg0);
 		return true;
 	}
 
@@ -69,7 +69,7 @@ public class MessageQueue extends AbstractQueue<String> {
 	public String peek() {
 		String retVal = null;
 		if (size() != 0) {
-			retVal = container.get(0);
+			retVal = this.container.get(0);
 		}
 		return retVal;
 	}
@@ -83,7 +83,7 @@ public class MessageQueue extends AbstractQueue<String> {
 	public String poll() {
 		String retVal = null;
 		if (size() != 0) {
-			retVal = container.remove(0);
+			retVal = this.container.remove(0);
 		}
 		return retVal;
 	}
@@ -95,7 +95,7 @@ public class MessageQueue extends AbstractQueue<String> {
 	 */
 	@Override
 	public Iterator<String> iterator() {
-		return container.iterator();
+		return this.container.iterator();
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class MessageQueue extends AbstractQueue<String> {
 	 */
 	@Override
 	public int size() {
-		return container.size();
+		return this.container.size();
 	}
 
 	/**
@@ -116,16 +116,15 @@ public class MessageQueue extends AbstractQueue<String> {
 	public String[] getMessages() {
 		String x1 = null, x2 = null;
 		if (size() > 0) {
-			x1 = container.get(0);
+			x1 = this.container.get(0);
 		}
 		if (size() > 1) {
-			x2 = container.get(1);
+			x2 = this.container.get(1);
 		}
 		if (x1 == null) {
 			return null;
-		} else {
-			x2 = (x2 == null) ? "" : x2;
 		}
+		x2 = (x2 == null) ? "" : x2;
 		return new String[] { x1, x2 };
 	}
 }

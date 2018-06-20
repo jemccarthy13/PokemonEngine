@@ -1,12 +1,11 @@
 package trainers;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Java 'typedef' matches TrainerList to ArrayList<Actor>
  */
-public class TrainerList extends ArrayList<Actor> implements Serializable {
+public class TrainerList extends ArrayList<Actor> {
 	/**
 	 * Serialization information
 	 */

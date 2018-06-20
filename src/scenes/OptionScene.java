@@ -40,6 +40,7 @@ public class OptionScene extends SelectionScene {
 	/**
 	 * "z" button press
 	 */
+	@Override
 	public void doBack(GameController control) {
 		GameGraphicsData.getInstance().setScene(MenuScene.instance);
 	}
@@ -47,6 +48,7 @@ public class OptionScene extends SelectionScene {
 	/**
 	 * "z" button press
 	 */
+	@Override
 	public void doAction(GameController control) {
 		if (this.rowSelection == 5) {
 			Configuration.getInstance().toggleSound();

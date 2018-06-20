@@ -1,6 +1,5 @@
 package location;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,7 +10,7 @@ import trainers.Actor.DIR;
 /**
  * Loads all data for a particular location from a file
  */
-public class LocationData extends JSONObject implements Serializable {
+public class LocationData extends JSONObject {
 
 	private static final long serialVersionUID = 5824633156334142566L;
 	/**
@@ -50,25 +49,26 @@ public class LocationData extends JSONObject implements Serializable {
 	 * @return array of objects of this data entry
 	 */
 	public Object[] toArray() {
-		return new Object[] { name, canFlyOutOf, boundaries.get(DIR.NORTH), boundaries.get(DIR.EAST),
-				boundaries.get(DIR.SOUTH), boundaries.get(DIR.WEST), pokemon, probabilities, minLevels, maxLevels };
+		return new Object[] { this.name, this.canFlyOutOf, this.boundaries.get(DIR.NORTH),
+				this.boundaries.get(DIR.EAST), this.boundaries.get(DIR.SOUTH), this.boundaries.get(DIR.WEST),
+				this.pokemon, this.probabilities, this.minLevels, this.maxLevels };
 	}
 
 	/**
 	 * Default constructor
 	 */
 	public LocationData() {
-		boundaries = new HashMap<DIR, Integer>();
-		boundaries.put(DIR.NORTH, 0);
-		boundaries.put(DIR.SOUTH, 0);
-		boundaries.put(DIR.EAST, 0);
-		boundaries.put(DIR.WEST, 0);
-		pokemon = new ArrayList<String>();
-		probabilities = new ArrayList<Integer>();
-		minLevels = new ArrayList<Integer>();
-		maxLevels = new ArrayList<Integer>();
-		canFlyOutOf = false;
-		name = "";
+		this.boundaries = new HashMap<DIR, Integer>();
+		this.boundaries.put(DIR.NORTH, 0);
+		this.boundaries.put(DIR.SOUTH, 0);
+		this.boundaries.put(DIR.EAST, 0);
+		this.boundaries.put(DIR.WEST, 0);
+		this.pokemon = new ArrayList<String>();
+		this.probabilities = new ArrayList<Integer>();
+		this.minLevels = new ArrayList<Integer>();
+		this.maxLevels = new ArrayList<Integer>();
+		this.canFlyOutOf = false;
+		this.name = "";
 
 	}
 
@@ -78,7 +78,8 @@ public class LocationData extends JSONObject implements Serializable {
 	 * @return whether or not the data is valid
 	 */
 	public boolean isValidData() {
-		return (name != null && canFlyOutOf != null && boundaries != null && minLevels != null && maxLevels != null);
+		return (this.name != null && this.canFlyOutOf != null && this.boundaries != null && this.minLevels != null
+				&& this.maxLevels != null);
 	}
 
 	/**
@@ -86,14 +87,15 @@ public class LocationData extends JSONObject implements Serializable {
 	 * 
 	 * @return string representation
 	 */
+	@Override
 	public String toString() {
-		String retStr = "Location: " + this.name + "\n";;
+		String retStr = "Location: " + this.name + "\n";
 		retStr += "Fly: " + this.canFlyOutOf + "\n";
 		retStr += "Boundaries: " + "\n";
-		retStr += "N: " + boundaries.get(DIR.NORTH) + "\n";
-		retStr += "S: " + boundaries.get(DIR.SOUTH) + "\n";
-		retStr += "E: " + boundaries.get(DIR.EAST) + "\n";
-		retStr += "W: " + boundaries.get(DIR.WEST) + "\n";
+		retStr += "N: " + this.boundaries.get(DIR.NORTH) + "\n";
+		retStr += "S: " + this.boundaries.get(DIR.SOUTH) + "\n";
+		retStr += "E: " + this.boundaries.get(DIR.EAST) + "\n";
+		retStr += "W: " + this.boundaries.get(DIR.WEST) + "\n";
 		return retStr;
 	}
 }

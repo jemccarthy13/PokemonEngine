@@ -137,8 +137,8 @@ public class Map {
 			for (int i1 = i; i1 < j; i1++) {
 				for (int i2 = k; i2 < m; i2++) {
 					if (this.tiles[i1][i2][n] != null) {
-						this.tiles[i1][i2][n].render(paramGraphics, i1 * this.zoomWidth - paramInt1, i2
-								* this.zoomHeight - paramInt2);
+						this.tiles[i1][i2][n].render(paramGraphics, i1 * this.zoomWidth - paramInt1,
+								i2 * this.zoomHeight - paramInt2);
 					}
 				}
 			}
@@ -179,8 +179,8 @@ public class Map {
 			for (int j = (int) d3; j < d4; j++) {
 				for (int k = (int) d1; k < d2; k++) {
 					if (this.tiles[k][j][i] != null) {
-						this.tiles[k][j][i].render(paramGraphics, k * this.zoomWidth + this.zoomWidth, j
-								* this.zoomHeight + this.zoomHeight);
+						this.tiles[k][j][i].render(paramGraphics, k * this.zoomWidth + this.zoomWidth,
+								j * this.zoomHeight + this.zoomHeight);
 					}
 				}
 			}
@@ -209,8 +209,8 @@ public class Map {
 		for (int j = (int) d3; j < d4; j++) {
 			for (int k = (int) d1; k < d2; k++) {
 				if (this.tiles[k][j][i] != null) {
-					this.tiles[k][j][i].render(paramGraphics, k * this.zoomWidth + this.zoomWidth, j * this.zoomHeight
-							+ this.zoomHeight);
+					this.tiles[k][j][i].render(paramGraphics, k * this.zoomWidth + this.zoomWidth,
+							j * this.zoomHeight + this.zoomHeight);
 				}
 			}
 		}
@@ -290,12 +290,12 @@ public class Map {
 	}
 
 	void resize(int paramInt1, int paramInt2, int paramInt3) {
-		paramInt1 = Math.max(1, paramInt1);
-		paramInt2 = Math.max(1, paramInt2);
-		MapTile[][][] arrayOfTile = new MapTile[paramInt1][paramInt2][paramInt3];
+		int int1 = Math.max(1, paramInt1);
+		int int2 = Math.max(1, paramInt2);
+		MapTile[][][] arrayOfTile = new MapTile[int1][int2][paramInt3];
 
-		int i = Math.min(paramInt1, this.tiles.length);
-		int j = Math.min(paramInt2, this.tiles[0].length);
+		int i = Math.min(int1, this.tiles.length);
+		int j = Math.min(int2, this.tiles[0].length);
 		int k = Math.min(paramInt3, this.tiles[0][0].length);
 		for (int m = 0; m < i; m++) {
 			for (int n = 0; n < j; n++) {
@@ -337,8 +337,8 @@ public class Map {
 	/**
 	 * Convert the map to an array of int for processing
 	 * 
-	 * @return int[][][] representing the map as numbered tiles for rendering by
-	 *         the game engine
+	 * @return int[][][] representing the map as numbered tiles for rendering by the
+	 *         game engine
 	 */
 	public int[][][] toIntArray() {
 		int[][][] arrayOfInt = new int[this.tiles.length][this.tiles[0].length][this.tiles[0][0].length];

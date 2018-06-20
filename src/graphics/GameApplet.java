@@ -19,6 +19,7 @@ public class GameApplet extends JApplet {
 
 	static GamePanel pokemonGame = null;
 
+	@Override
 	public void init() {
 		DebugUtility.printMessage("In init...");
 		DebugUtility.printMessage("Creating game panel...");
@@ -34,7 +35,7 @@ public class GameApplet extends JApplet {
 			DebugUtility.printError("Unable to load map!");
 		}
 		// setup key press listening
-		GameKeyListener.getInstance().setGameController(pokemonGame.gameController);
+		GameKeyListener.setGameController(pokemonGame.gameController);
 		this.addKeyListener(GameKeyListener.getInstance());
 
 		DebugUtility.printHeader("Event Registration");
@@ -46,10 +47,12 @@ public class GameApplet extends JApplet {
 		add(pokemonGame);
 	}
 
-	public void paintComponent(Graphics g) {
+	public static void paintComponent(Graphics g) {
 		g.drawString("painting...", 20, 30);
 		pokemonGame.paintComponent(g);
 	}
 
-	public static void main(String[] args) {}
+	public static void main(String[] args) {
+		// do nothing
+	}
 }

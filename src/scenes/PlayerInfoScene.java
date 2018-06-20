@@ -63,6 +63,7 @@ public class PlayerInfoScene extends SelectionScene {
 	/**
 	 * "x" button press at Trainer Card scene
 	 */
+	@Override
 	public void doBack(GameController control) {
 		GameGraphicsData.getInstance().setScene(MenuScene.instance);
 	}

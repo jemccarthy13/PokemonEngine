@@ -1,12 +1,11 @@
 package tiles;
 
-import graphics.SpriteLibrary;
-
 import java.awt.Image;
 import java.io.InputStreamReader;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import graphics.SpriteLibrary;
 
 /**
  * A typedef to ArrayList<Image> (array of tile images) that is loaded once to
@@ -15,7 +14,7 @@ import java.util.Scanner;
  * @author John
  * 
  */
-public class TileSet extends ArrayList<Image> implements Serializable {
+public class TileSet extends ArrayList<Image> {
 
 	/**
 	 * Serialization information

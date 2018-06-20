@@ -1,12 +1,11 @@
 package trainers;
 
-import graphics.SpriteLibrary;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
+import graphics.SpriteLibrary;
 import model.Coordinate;
 import party.Party;
 import trainers.Actor.DIR;
@@ -86,7 +85,7 @@ public class ActorData implements Serializable {
 	 * @return ArrayList<ImageIcon> sprites
 	 */
 	public ArrayList<ImageIcon> getSprites() {
-		return SpriteLibrary.getSprites(sprite_name);
+		return SpriteLibrary.getSprites(this.sprite_name);
 	}
 
 	/**
@@ -94,11 +93,12 @@ public class ActorData implements Serializable {
 	 * 
 	 * @return a string representation of this Actor
 	 */
+	@Override
 	public String toString() {
-		String retStr = name;
-		retStr += "\n- " + position.getX() + ", " + position.getY();
-		retStr += "\n- " + money;
-		retStr += "\n- " + dir;
+		String retStr = this.name;
+		retStr += "\n- " + this.position.getX() + ", " + this.position.getY();
+		retStr += "\n- " + this.money;
+		retStr += "\n- " + this.dir;
 		return retStr;
 	}
 }

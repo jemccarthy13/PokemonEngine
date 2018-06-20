@@ -32,6 +32,7 @@ public class BattleItemScene extends BaseScene {
 	/**
 	 * Perform "z" button click
 	 */
+	@Override
 	public void doAction(GameController control) {
 		GameGraphicsData.getInstance().setScene(BattleScene.instance);
 	}
@@ -39,6 +40,7 @@ public class BattleItemScene extends BaseScene {
 	/**
 	 * Perform "x" button click
 	 */
+	@Override
 	public void doBack(GameController control) {
 		GameGraphicsData.getInstance().setScene(BattleScene.instance);
 	}

@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 public class PromptDialog {
 	static String ans = null;
 
-	static void tell(String paramString1, String paramString2) {
+	static void tell(String paramString1) {
 		JDialog localJDialog = new JDialog();
 		localJDialog.setLocationRelativeTo(null);
 		JPanel localJPanel1 = new JPanel(new FlowLayout());
@@ -35,6 +35,7 @@ public class PromptDialog {
 		localJButton.addActionListener(new ActionListener() {
 			private final JDialog val$d = new JDialog();
 
+			@Override
 			public void actionPerformed(ActionEvent paramAnonymousActionEvent) {
 				PromptDialog.ans = ((JButton) paramAnonymousActionEvent.getSource()).getText();
 				this.val$d.dispose();

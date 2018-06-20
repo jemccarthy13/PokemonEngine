@@ -27,6 +27,7 @@ public class BattleMessageScene extends BaseScene {
 	/**
 	 * Perform "z" button click
 	 */
+	@Override
 	public void doAction(GameController gameControl) {
 		GameGraphicsData.getInstance().setScene(WorldScene.instance);
 	}
@@ -34,6 +35,7 @@ public class BattleMessageScene extends BaseScene {
 	/**
 	 * Perform "x" button click
 	 */
+	@Override
 	public void doBack(GameController gameControl) {
 		GameGraphicsData.getInstance().setScene(WorldScene.instance);
 	}

@@ -1,5 +1,7 @@
 package test;
 
+import java.io.IOException;
+
 import org.junit.Test;
 
 import graphics.GamePanel;
@@ -15,6 +17,10 @@ public class SaveTest {
 	@Test
 	public static void testSave() {
 		GamePanel g = GamePanel.getInstance();
-		g.gameController.saveGame();
+		try {
+			g.gameController.saveGame();
+		} catch (IOException e) {
+			// do nothing
+		}
 	}
 }

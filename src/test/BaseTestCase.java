@@ -1,7 +1,5 @@
 package test;
 
-import graphics.GameFrame;
-
 import java.awt.AWTException;
 import java.awt.Rectangle;
 import java.awt.Robot;
@@ -16,8 +14,9 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 
-import utilities.DebugUtility;
 import controller.GameController;
+import graphics.GameFrame;
+import utilities.DebugUtility;
 
 /**
  * The base test case
@@ -34,10 +33,10 @@ public class BaseTestCase {
 	 * @param title
 	 *            - the name of the file to create (usually "StepXYZ")
 	 */
-	public void takeScreenshot(String title) {
+	public static void takeScreenshot(String title) {
 
-		BufferedImage capture = robot.createScreenCapture(new Rectangle(pf.getX(), pf.getY(), pf.getWidth(), pf
-				.getHeight()));
+		BufferedImage capture = robot
+				.createScreenCapture(new Rectangle(pf.getX(), pf.getY(), pf.getWidth(), pf.getHeight()));
 		File f = new File("test_results/" + title + ".jpg");
 		DebugUtility.printMessage("Saving: " + f.getAbsolutePath());
 		if (!f.exists()) {
@@ -59,7 +58,7 @@ public class BaseTestCase {
 	 * Set up necessary variables for unit test
 	 */
 	@Before
-	public void InitializeForTests() {
+	public static void InitializeForTests() {
 		pf = new GameFrame();
 		pf.setVisible(true);
 		pf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -72,7 +71,7 @@ public class BaseTestCase {
 		} catch (AWTException e) {
 			Assert.fail("Unable to create robot");
 		}
-		game = pf.getController();
+		game = GameFrame.getController();
 
 		// quiet startup
 		try {
@@ -87,7 +86,7 @@ public class BaseTestCase {
 	 * Shutdown the game
 	 */
 	@After
-	public void Shutdown() {
+	public static void Shutdown() {
 		pf.dispose();
 	}
 }

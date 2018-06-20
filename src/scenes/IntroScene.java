@@ -34,8 +34,9 @@ public class IntroScene extends BaseScene {
 	/**
 	 * Perform "Z" button click
 	 */
+	@Override
 	public void doAction(GameController control) {
-		control.incrIntroStage();
+		GameController.incrIntroStage();
 		if (GameData.getInstance().introStage == 15) {
 			GameGraphicsData.getInstance().setScene(NameScene.instance);
 			NameBuilder.getInstance().setToBeNamed("PLAYER");

@@ -32,8 +32,8 @@ public class MoveData implements Serializable {
 	 */
 	public String name = null;
 	/**
-	 * How powerful the move is (1-100), 100+ are super moves that require
-	 * recharge TODO implement recharge moves
+	 * How powerful the move is (1-100), 100+ are super moves that require recharge
+	 * TODO implement recharge moves
 	 */
 	public int power = -1;
 
@@ -46,8 +46,8 @@ public class MoveData implements Serializable {
 	 */
 	public String type;
 	/**
-	 * The number of times a move can be used before the character needs to heal
-	 * or recover
+	 * The number of times a move can be used before the character needs to heal or
+	 * recover
 	 */
 	public int movePP = -1;
 	/**
@@ -60,11 +60,12 @@ public class MoveData implements Serializable {
 	 * 
 	 * @return string representing move data
 	 */
+	@Override
 	public String toString() {
-		String retStr = name + "\n";
-		retStr += power + "\n";
-		retStr += "Category: " + category + "\n";
-		retStr += "Type: " + type;
+		String retStr = this.name + "\n";
+		retStr += this.power + "\n";
+		retStr += "Category: " + this.category + "\n";
+		retStr += "Type: " + this.type;
 		return retStr;
 	}
 
@@ -76,25 +77,25 @@ public class MoveData implements Serializable {
 	 */
 	public MoveData(String moveData) {
 		String[] x = moveData.split(",");
-		name = x[0];
-		power = Integer.parseInt(x[1]);
+		this.name = x[0];
+		this.power = Integer.parseInt(x[1]);
 		if (x[2].equals("PHYSICAL")) {
-			category = MOVECATEGORY.PHYSICAL;
+			this.category = MOVECATEGORY.PHYSICAL;
 		} else if (x[2].equals("SPECIAL")) {
-			category = MOVECATEGORY.SPECIAL;
+			this.category = MOVECATEGORY.SPECIAL;
 		} else if (x[2].equals("STAT")) {
-			category = MOVECATEGORY.STAT;
+			this.category = MOVECATEGORY.STAT;
 		} else {
-			category = MOVECATEGORY.PHYSICAL;
+			this.category = MOVECATEGORY.PHYSICAL;
 		}
 
 		if (x[3].equals("FLYING")) {
-			type = "FLYING";
+			this.type = "FLYING";
 		} else {
-			type = "NORMAL";
+			this.type = "NORMAL";
 		}
-		movePP = Integer.parseInt(x[4]);
-		accuracy = Integer.parseInt(x[5]);
+		this.movePP = Integer.parseInt(x[4]);
+		this.accuracy = Integer.parseInt(x[5]);
 	}
 
 	/**
@@ -103,6 +104,7 @@ public class MoveData implements Serializable {
 	 * @return whether or not the move data is valid
 	 */
 	public boolean isValidData() {
-		return (name != null && type != null && power != -1 && category != null && type != null && movePP != -1 && accuracy != -1);
+		return (this.name != null && this.type != null && this.power != -1 && this.category != null && this.type != null
+				&& this.movePP != -1 && this.accuracy != -1);
 	}
 }

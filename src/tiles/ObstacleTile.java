@@ -1,11 +1,9 @@
 package tiles;
 
-import java.io.Serializable;
-
 /**
  * A type of a Tile that the Player can't walk through
  */
-public class ObstacleTile extends Tile implements Serializable {
+public class ObstacleTile extends Tile {
 	/**
 	 * Serialization information
 	 */

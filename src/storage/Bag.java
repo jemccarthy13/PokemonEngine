@@ -29,14 +29,15 @@ public class Bag extends HashMap<POCKETS, ItemList> {
 		private String pocketString;
 
 		POCKETS(int val, String str) {
-			pocketNum = val;
-			pocketString = str;
+			this.pocketNum = val;
+			this.pocketString = str;
 		}
 
 		public int getNumber() {
 			return this.pocketNum;
 		}
 
+		@Override
 		public String toString() {
 			return this.pocketString;
 		}
@@ -64,7 +65,7 @@ public class Bag extends HashMap<POCKETS, ItemList> {
 	 * @return - the current pocket
 	 */
 	public POCKETS getCurrentPocket() {
-		return currentPocket;
+		return this.currentPocket;
 	}
 
 	/**

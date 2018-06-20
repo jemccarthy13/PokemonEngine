@@ -50,14 +50,14 @@ public class RelativePath {
 			if ((i < 0) || (j < 0)) {
 				break;
 			}
-		} while (((String) fileList1.get(i)).equals(fileList2.get(j)));
+		} while (fileList1.get(i).equals(fileList2.get(j)));
 		for (; i >= 0; i--) {
 			str = str + ".." + File.separator;
 		}
 		for (; j >= 1; j--) {
-			str = str + (String) fileList2.get(j) + File.separator;
+			str = str + fileList2.get(j) + File.separator;
 		}
-		str = str + (String) fileList2.get(j);
+		str = str + fileList2.get(j);
 		return str;
 	}
 

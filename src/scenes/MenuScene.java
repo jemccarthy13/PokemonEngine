@@ -30,18 +30,18 @@ public class MenuScene extends SelectionScene {
 	private MenuScene() {
 		super();
 
-		menuSelections.put(0, EncycopediaScene.instance);
-		menuSelections.put(1, PartyScene.instance);
-		menuSelections.put(2, InventoryScene.instance);
-		menuSelections.put(3, HelpScene.instance);
-		menuSelections.put(4, PlayerInfoScene.instance);
-		menuSelections.put(5, SaveScene.instance);
-		menuSelections.put(6, OptionScene.instance);
-		menuSelections.put(7, WorldScene.instance);
+		this.menuSelections.put(0, EncycopediaScene.instance);
+		this.menuSelections.put(1, PartyScene.instance);
+		this.menuSelections.put(2, InventoryScene.instance);
+		this.menuSelections.put(3, HelpScene.instance);
+		this.menuSelections.put(4, PlayerInfoScene.instance);
+		this.menuSelections.put(5, SaveScene.instance);
+		this.menuSelections.put(6, OptionScene.instance);
+		this.menuSelections.put(7, WorldScene.instance);
 
 		super.maxColSelection = 0;
 		super.maxRowSelection = 7;
-	};
+	}
 
 	/**
 	 * Render the pause scene.
@@ -56,16 +56,18 @@ public class MenuScene extends SelectionScene {
 	/**
 	 * "Z" button pressed
 	 */
+	@Override
 	public void doAction(GameController control) {
-		if (menuSelections.get(this.rowSelection) == InventoryScene.instance) {
+		if (this.menuSelections.get(this.rowSelection) == InventoryScene.instance) {
 			InventoryScene.instance.setMaxRow(control);
 		}
-		GameGraphicsData.getInstance().setScene(menuSelections.get(this.rowSelection));
+		GameGraphicsData.getInstance().setScene(this.menuSelections.get(this.rowSelection));
 	}
 
 	/**
 	 * "x" button pressed
 	 */
+	@Override
 	public void doBack(GameController control) {
 		GameGraphicsData.getInstance().setScene(WorldScene.instance);
 	}
@@ -73,6 +75,7 @@ public class MenuScene extends SelectionScene {
 	/**
 	 * Enter button pressed
 	 */
+	@Override
 	public void doEnter(GameController control) {
 		GameGraphicsData.getInstance().setScene(WorldScene.instance);
 	}

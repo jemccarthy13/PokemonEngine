@@ -16,8 +16,8 @@ public class RandomNumUtils {
 	private static Random randomGenerator = new Random();
 
 	/**
-	 * The core random number generator; generate a random number between start
-	 * and end
+	 * The core random number generator; generate a random number between start and
+	 * end
 	 * 
 	 * @param start
 	 *            - the minimum number
@@ -62,6 +62,8 @@ public class RandomNumUtils {
 			return DIR.SOUTH;
 		case 4:
 			return DIR.WEST;
+		default:
+			break;
 		}
 		return DIR.SOUTH;
 	}
@@ -105,8 +107,7 @@ public class RandomNumUtils {
 	}
 
 	/**
-	 * generates a number to incrase a stat by: 75% chance of +2, 25% chance of
-	 * +3
+	 * generates a number to incrase a stat by: 75% chance of +2, 25% chance of +3
 	 * 
 	 * @TODO verify max stats increase when stats
 	 * 
@@ -132,7 +133,7 @@ public class RandomNumUtils {
 		// rare: 3.33
 		// very rare: 1.25
 
-		int rarity = (int) 9;
+		int rarity = 9;
 
 		boolean isEncounter = false;
 		if (generateRandom(0, 188) <= rarity) {

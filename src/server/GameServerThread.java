@@ -24,7 +24,7 @@ public class GameServerThread extends Thread {
 	 *            - input to process
 	 */
 	public GameServerThread(int id, BufferedReader reader) {
-		input = reader;
+		this.input = reader;
 		this.id = id;
 	}
 
@@ -32,15 +32,15 @@ public class GameServerThread extends Thread {
 	 * Start the server.
 	 */
 	@Override
-	public void start() {
+	public synchronized void start() {
 		// Get the client message
 		String inputLine = "";
 		try {
 			while (inputLine != "quit") {
-				inputLine = input.readLine();
+				inputLine = this.input.readLine();
 				if (inputLine != null) {
 					if (inputLine.contains("set ID")) {
-						Matcher m = p.matcher(inputLine);
+						Matcher m = this.p.matcher(inputLine);
 						m.find();
 						String ID = m.group();
 						System.out.println("Player " + ID + " entered session.");
@@ -52,7 +52,9 @@ public class GameServerThread extends Thread {
 					}
 				}
 			}
-		} catch (IOException e) {}
+		} catch (IOException e) {
+			// do nothing
+		}
 
 	}
 

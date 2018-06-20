@@ -103,6 +103,7 @@ public class MapComponent extends JComponent implements MouseListener, MouseMoti
 	/**
 	 * 
 	 */
+	@Override
 	public synchronized void paintComponent(Graphics paramGraphics) {
 		paramGraphics.setColor(Color.white);
 		paramGraphics.fillRect(0, 0, this.width * this.tileWidth, this.height * this.tileHeight);
@@ -124,10 +125,10 @@ public class MapComponent extends JComponent implements MouseListener, MouseMoti
 		paramGraphics.setColor(Color.black);
 		paramGraphics.drawLine(0, 0, this.width * this.tileWidth, 0);
 		paramGraphics.drawLine(0, 0, 0, this.height * this.tileHeight);
-		paramGraphics.drawLine(this.width * this.tileWidth, 0, this.width * this.tileWidth, this.height
-				* this.tileHeight);
-		paramGraphics.drawLine(0, this.height * this.tileHeight, this.width * this.tileWidth, this.height
-				* this.tileHeight);
+		paramGraphics.drawLine(this.width * this.tileWidth, 0, this.width * this.tileWidth,
+				this.height * this.tileHeight);
+		paramGraphics.drawLine(0, this.height * this.tileHeight, this.width * this.tileWidth,
+				this.height * this.tileHeight);
 	}
 
 	/**
@@ -135,16 +136,15 @@ public class MapComponent extends JComponent implements MouseListener, MouseMoti
 	 * @param paramInt2
 	 */
 	public void mapClicked(int paramInt1, int paramInt2) {
-		paramInt1 /= this.tileWidth;
-		paramInt2 /= this.tileHeight;
-		if ((paramInt1 < this.map.getWidth()) && (paramInt1 >= 0) && (paramInt2 < this.map.getHeight())
-				&& (paramInt2 >= 0)) {
+		int int1 = paramInt1 / this.tileWidth;
+		int int2 = paramInt2 / this.tileHeight;
+		if ((int1 < this.map.getWidth()) && (int1 >= 0) && (int2 < this.map.getHeight()) && (int2 >= 0)) {
 			if (this.mapEdit.getPaintMode() == 0) {
-				this.map.setTile(paramInt1, paramInt2, this.activeLayer, this.mapEdit.getSelectedTile());
+				this.map.setTile(int1, int2, this.activeLayer, MapEdit.getSelectedTile());
 				this.stateChanged = true;
 			} else if (this.mapEdit.getPaintMode() == 1) {
-				recursiveFlood(paramInt1, paramInt2, this.activeLayer,
-						this.map.getTile(paramInt1, paramInt2, this.activeLayer), this.mapEdit.getSelectedTile());
+				recursiveFlood(int1, int2, this.activeLayer, this.map.getTile(int1, int2, this.activeLayer),
+						MapEdit.getSelectedTile());
 			} else {
 				DebugUtility.printMessage("Invalid paint mode");
 			}
@@ -215,6 +215,7 @@ public class MapComponent extends JComponent implements MouseListener, MouseMoti
 	/**
 	 * Method that is fired when a mouse pressed event occurs
 	 */
+	@Override
 	public void mousePressed(MouseEvent paramMouseEvent) {
 		if (this.stateChanged) {
 			saveUndoState();
@@ -237,6 +238,7 @@ public class MapComponent extends JComponent implements MouseListener, MouseMoti
 	/**
 	 * Method that is fired when a mouse released event occurs
 	 */
+	@Override
 	public void mouseReleased(MouseEvent paramMouseEvent) {
 		switch (paramMouseEvent.getButton()) {
 		case 1:
@@ -261,12 +263,16 @@ public class MapComponent extends JComponent implements MouseListener, MouseMoti
 	/**
 	 * Method that is fired when a mouse entered event occurs
 	 */
-	public void mouseEntered(MouseEvent paramMouseEvent) {}
+	@Override
+	public void mouseEntered(MouseEvent paramMouseEvent) {
+		// do nothing
+	}
 
 	/**
-	 * Method that is fired when a mouse dragged event occurs This paints all
-	 * tiles touched with the currently selected tile
+	 * Method that is fired when a mouse dragged event occurs This paints all tiles
+	 * touched with the currently selected tile
 	 */
+	@Override
 	public void mouseDragged(MouseEvent paramMouseEvent) {
 		if ((this.btn1Pressed) && (this.mapEdit.getPaintMode() != 1)) {
 			mapClicked(paramMouseEvent.getX(), paramMouseEvent.getY());
@@ -286,17 +292,26 @@ public class MapComponent extends JComponent implements MouseListener, MouseMoti
 	/**
 	 * Method that is fired when a mouse exited event occurs
 	 */
-	public void mouseExited(MouseEvent paramMouseEvent) {}
+	@Override
+	public void mouseExited(MouseEvent paramMouseEvent) {
+		// do nothing
+	}
 
 	/**
 	 * Method that is fired when a mouse clicked event occurs
 	 */
-	public void mouseClicked(MouseEvent paramMouseEvent) {}
+	@Override
+	public void mouseClicked(MouseEvent paramMouseEvent) {
+		// do nothing
+	}
 
 	/**
 	 * Method that is fired when a mouse moved event occurs
 	 */
-	public void mouseMoved(MouseEvent paramMouseEvent) {}
+	@Override
+	public void mouseMoved(MouseEvent paramMouseEvent) {
+		// do nothing
+	}
 
 	/**
 	 * @param paramBoolean
@@ -315,6 +330,7 @@ public class MapComponent extends JComponent implements MouseListener, MouseMoti
 	/**
 	 * 
 	 */
+	@Override
 	public void mapChanging(boolean paramBoolean) {
 		if (!paramBoolean) {
 			saveUndoState();
@@ -326,6 +342,7 @@ public class MapComponent extends JComponent implements MouseListener, MouseMoti
 	/**
 	 * 
 	 */
+	@Override
 	public void mapChanged(boolean paramBoolean) {
 		repaint();
 	}

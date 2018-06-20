@@ -36,11 +36,11 @@ public class NameScene extends SelectionScene {
 		g.drawImage(SpriteLibrary.getImage("Namescreen"), 0, 0, null);
 
 		if (this.rowSelection < 5) {
-			g.drawImage(SpriteLibrary.getImage("Arrow"), (int) (40 + Tile.TILESIZE * 2 * this.colSelection),
+			g.drawImage(SpriteLibrary.getImage("Arrow"), 40 + Tile.TILESIZE * 2 * this.colSelection,
 					100 + Tile.TILESIZE * this.rowSelection, null);
 		}
 		if (this.rowSelection == 5) {
-			g.drawImage(SpriteLibrary.getImage("Arrow"), (int) (100 + Tile.TILESIZE * 6 * this.colSelection),
+			g.drawImage(SpriteLibrary.getImage("Arrow"), 100 + Tile.TILESIZE * 6 * this.colSelection,
 					100 + Tile.TILESIZE * this.rowSelection, null);
 		}
 
@@ -78,6 +78,7 @@ public class NameScene extends SelectionScene {
 	 * @param gameControl
 	 *            - the controller to perform game functions
 	 */
+	@Override
 	public void doAction(GameController gameControl) {
 		if (this.rowSelection == 5) {
 			doEndDel(gameControl);
@@ -92,6 +93,7 @@ public class NameScene extends SelectionScene {
 	 * @param gameControl
 	 *            - the controller to perform game functions
 	 */
+	@Override
 	public void doBack(GameController gameControl) {
 		NameBuilder.getInstance().removeChar();
 	}
@@ -102,6 +104,7 @@ public class NameScene extends SelectionScene {
 	 * @param gameControl
 	 *            - the controller to perform game functions
 	 */
+	@Override
 	public void doRight(GameController gameControl) {
 		super.doRight(gameControl);
 		if (this.rowSelection == 5 && this.colSelection > 1) {
@@ -115,6 +118,7 @@ public class NameScene extends SelectionScene {
 	 * @param gameControl
 	 *            - a controller to perform game functions
 	 */
+	@Override
 	public void doDown(GameController gameControl) {
 		if (this.rowSelection == 4) {
 			this.colSelection = 1;

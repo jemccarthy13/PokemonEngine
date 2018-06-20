@@ -32,7 +32,7 @@ public class Storage implements Serializable {
 		// initialize all of the boxes up front
 		for (int x = 0; x < max_num_boxes; x++) {
 			ArrayList<Battler> box = new ArrayList<Battler>();
-			boxes.add(box);
+			this.boxes.add(box);
 		}
 	}
 
@@ -45,7 +45,7 @@ public class Storage implements Serializable {
 	 */
 	public boolean depositPokemon(Battler p) {
 		boolean added = false;
-		for (ArrayList<Battler> box : boxes) {
+		for (ArrayList<Battler> box : this.boxes) {
 			if (box.size() < BOX_CAPACITY) {
 				box.add(p);
 				added = true;
@@ -62,7 +62,7 @@ public class Storage implements Serializable {
 	 * @return whether or not the party member was withdrawn
 	 */
 	public boolean withdrawPokemon(Battler p) {
-		for (ArrayList<Battler> box : boxes) {
+		for (ArrayList<Battler> box : this.boxes) {
 			if (box.contains(p)) {
 				return box.remove(p);
 			}

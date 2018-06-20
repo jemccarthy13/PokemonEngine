@@ -4,6 +4,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -67,8 +68,8 @@ public class GameController implements Serializable {
 	 *            - the ActionListner to base this timer on
 	 */
 	public void startGameTimer(ActionListener theGame) {
-		gameSpeed = new Timer(100 - GameData.getInstance().currentSpeed.getValue(), theGame);
-		gameSpeed.start();
+		this.gameSpeed = new Timer(100 - GameData.getInstance().currentSpeed.getValue(), theGame);
+		this.gameSpeed.start();
 	}
 
 	/**
@@ -77,7 +78,7 @@ public class GameController implements Serializable {
 	 * @return player
 	 */
 	public Player getPlayer() {
-		return player;
+		return this.player;
 	}
 
 	/***************************************************************************
@@ -91,30 +92,30 @@ public class GameController implements Serializable {
 	 */
 	private void newGame() {
 		String name = "GOLD";
-		player = new Player(4, 2, name);
+		this.player = new Player(4, 2, name);
 		Battler charmander = BattlerFactory.createPokemon("Charmander", 7);
 		Battler sentret = BattlerFactory.createPokemon("Sentret", 3);
 		Battler charizard = BattlerFactory.createPokemon("Charmander", 99);
 		Battler pidgey = BattlerFactory.createPokemon("Pidgey", 20);
 		Battler mewtwo = BattlerFactory.createPokemon("Mewtwo", 50);
 		Battler squirtle = BattlerFactory.createPokemon("Squirtle", 50);
-		player.caughtWild(charmander);
-		player.caughtWild(sentret);
-		player.caughtWild(charizard);
-		player.caughtWild(pidgey);
-		player.caughtWild(mewtwo);
-		player.caughtWild(squirtle);
-		player.setMoney(1000000);
-		player.setCurLocation(LocationLibrary.getLocation("Route 27"));
+		this.player.caughtWild(charmander);
+		this.player.caughtWild(sentret);
+		this.player.caughtWild(charizard);
+		this.player.caughtWild(pidgey);
+		this.player.caughtWild(mewtwo);
+		this.player.caughtWild(squirtle);
+		this.player.setMoney(1000000);
+		this.player.setCurLocation(LocationLibrary.getLocation("Route 27"));
 		AudioLibrary.playBackgroundMusic(getPlayer().getCurLoc().getName());
 
-		player.getBag().addToPocket(POCKETS.ITEMS, ItemLibrary.getInstance().get("POTION"));
-		player.getBag().addToPocket(POCKETS.ITEMS, ItemLibrary.getInstance().get("POTION"));
-		player.getBag().addToPocket(POCKETS.ITEMS, ItemLibrary.getInstance().get("HYPER POTION"));
+		this.player.getBag().addToPocket(POCKETS.ITEMS, ItemLibrary.getInstance().get("POTION"));
+		this.player.getBag().addToPocket(POCKETS.ITEMS, ItemLibrary.getInstance().get("POTION"));
+		this.player.getBag().addToPocket(POCKETS.ITEMS, ItemLibrary.getInstance().get("HYPER POTION"));
 
-		int i = (Tile.TILESIZE * (8 - player.getCurrentX()));
+		int i = (Tile.TILESIZE * (8 - this.player.getCurrentX()));
 		GameGraphicsData.getInstance().setStartCoordX(i);
-		i = (Tile.TILESIZE * (6 - player.getCurrentY()));
+		i = (Tile.TILESIZE * (6 - this.player.getCurrentY()));
 		GameGraphicsData.getInstance().setStartCoordY(i);
 		GameData.getInstance().introStage = 1;
 	}
@@ -124,9 +125,9 @@ public class GameController implements Serializable {
 	 * 
 	 * @param continued
 	 *            - whether or not to continue the default save game
-	 * @return a new GameData instance representing the game state
+	 * @throws IOException
 	 */
-	public void startGame(boolean continued) {
+	public void startGame(boolean continued) throws IOException {
 
 		DebugUtility.printHeader("Starting game:");
 		Scene nextScene = WorldScene.instance;
@@ -134,7 +135,7 @@ public class GameController implements Serializable {
 
 		if (continued) {
 			loadGame();
-			if (player == null || player.tData == null || !player.tData.isValidData()) {
+			if (this.player == null || this.player.tData == null || !this.player.tData.isValidData()) {
 				DebugUtility.printError("Unable to continue game from save file.");
 			} else {
 				continueFound = true;
@@ -158,7 +159,7 @@ public class GameController implements Serializable {
 		DebugUtility.printMessage("Started game.");
 
 		// Connect to the server
-		GameClient.getInstance().establishMultiplayerSession(player.getID());
+		GameClient.getInstance().establishMultiplayerSession(this.player.getID());
 
 		// Start NPC movement
 		NPCThread.getInstance().start();
@@ -166,7 +167,7 @@ public class GameController implements Serializable {
 		// start clock for current session
 		GameTime.getInstance().start();
 
-		DebugUtility.printMessage("- " + player.tData.toString());
+		DebugUtility.printMessage("- " + this.player.tData.toString());
 		DebugUtility.printMessage("Rendered session id: " + GameData.getInstance().gameSessionID);
 	}
 
@@ -183,7 +184,7 @@ public class GameController implements Serializable {
 	 *            - Direction player is facing
 	 */
 	public void setOffsetY(DIR playerDir) {
-		if (player.canMoveInDir(playerDir)) {
+		if (this.player.canMoveInDir(playerDir)) {
 			switch (playerDir) {
 			case NORTH:
 				GameGraphicsData.getInstance().addOffsetY(2);
@@ -204,7 +205,7 @@ public class GameController implements Serializable {
 	 *            - Direction player is facing
 	 */
 	public void setOffsetX(DIR playerDir) {
-		if (player.canMoveInDir(playerDir)) {
+		if (this.player.canMoveInDir(playerDir)) {
 			switch (playerDir) {
 			case EAST:
 				GameGraphicsData.getInstance().addOffsetX(-2);
@@ -225,18 +226,17 @@ public class GameController implements Serializable {
 	 *            - current player position
 	 */
 	public void doTeleport(Coordinate playerPos) {
-		Player player = getPlayer();
 
-		player.setLoc(TeleportLibrary.getList().get(playerPos));
+		this.player.setLoc(TeleportLibrary.getList().get(playerPos));
 
-		int i = (player.getCurrentX() - playerPos.getX()) * -1 * Tile.TILESIZE;
+		int i = (this.player.getCurrentX() - playerPos.getX()) * -1 * Tile.TILESIZE;
 		GameGraphicsData.getInstance().setStartCoordX(i);
-		i = (player.getCurrentY() - playerPos.getY()) * -1 * Tile.TILESIZE;
+		i = (this.player.getCurrentY() - playerPos.getY()) * -1 * Tile.TILESIZE;
 		GameGraphicsData.getInstance().setStartCoordY(i);
 
 		// face the opposite direction of the way the player entered the
 		// teleport square
-		player.turnAround();
+		this.player.turnAround();
 	}
 
 	/**
@@ -251,7 +251,7 @@ public class GameController implements Serializable {
 	public boolean validEncounterConditions(Actor npc) {
 		boolean isValid = false;
 		if (GameGraphicsData.getInstance().getScene() == WorldScene.instance) {
-			isValid = npc.isTrainer() && !player.isWalking() && Configuration.DOBATTLES
+			isValid = npc.isTrainer() && !this.player.isWalking() && Configuration.DOBATTLES
 					&& !getPlayer().beatenTrainers.contains(npc.getName()) && npcSeesPlayer(npc);
 		}
 		return isValid;
@@ -272,9 +272,8 @@ public class GameController implements Serializable {
 	 * @return whether or not the NPC sees the player
 	 */
 	private boolean npcSeesPlayer(Actor curNPC) {
-		Player player = getPlayer();
-		int playerCurY = player.getCurrentY();
-		int playerCurX = player.getCurrentX();
+		int playerCurY = this.player.getCurrentY();
+		int playerCurX = this.player.getCurrentX();
 		int NPC_X = curNPC.getCurrentX();
 		int NPC_Y = curNPC.getCurrentY();
 		DIR NPC_DIR = curNPC.getDirection();
@@ -294,12 +293,12 @@ public class GameController implements Serializable {
 	 */
 	public void postMovementChecks() {
 		// check for wild encounter
-		if (GameMap.getInstance().isBattleAt(player.getPosition())) {
+		if (GameMap.getInstance().isBattleAt(this.player.getPosition())) {
 			if (RandomNumUtils.isWildEncounter()) {
-				currentEnemyParty.clear();
-				currentEnemyParty.add(BattlerFactory.getInstance().randomPokemon(getPlayer().getCurLoc()));
-				MessageQueue.getInstance().add("Wild " + currentEnemyParty.get(0).getName() + " appeared");
-				BattleEngine.getInstance().fight(currentEnemyParty, this, null);
+				this.currentEnemyParty.clear();
+				this.currentEnemyParty.add(BattlerFactory.randomPokemon(getPlayer().getCurLoc()));
+				MessageQueue.getInstance().add("Wild " + this.currentEnemyParty.get(0).getName() + " appeared");
+				BattleEngine.getInstance().fight(this.currentEnemyParty, this, null);
 			}
 		}
 		for (Battler p : getPlayer().getParty()) {
@@ -321,7 +320,7 @@ public class GameController implements Serializable {
 	 * @param keyCode
 	 *            - the key code of the key pressed
 	 */
-	public void tryBorderNPC(Actor curNpc, Coordinate c, DIR playerDir) {
+	public static void tryBorderNPC(Actor curNpc, Coordinate c, DIR playerDir) {
 		Coordinate c1 = curNpc.getPosition();
 		if (c1.equals(c)) {
 			curNpc.setDirectionOpposite(playerDir);
@@ -333,14 +332,16 @@ public class GameController implements Serializable {
 	/**
 	 * Increment to get the next 2 messages for the intro scene
 	 */
-	public void incrIntroStage() {
+	public static void incrIntroStage() {
 		GameData.getInstance().introStage += 2;
 	}
 
 	/**
 	 * Save game object to a default .SAV file
+	 * 
+	 * @throws IOException
 	 */
-	public void saveGame() {
+	public void saveGame() throws IOException {
 		GameTime.getInstance().saveTime();
 
 		FileOutputStream fout = null;
@@ -357,15 +358,17 @@ public class GameController implements Serializable {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			DebugUtility.printMessage("Unable to save game...");
-			return;
 		}
+		oos.close();
 		DebugUtility.printMessage("** Saved game.");
 	}
 
 	/**
 	 * loads game object from a default .SAV file
+	 * 
+	 * @throws IOException
 	 */
-	public void loadGame() {
+	public static void loadGame() throws IOException {
 		FileInputStream fout = null;
 		ObjectInputStream oos = null;
 		try {
@@ -378,5 +381,6 @@ public class GameController implements Serializable {
 		} catch (Exception e1) {
 			DebugUtility.printMessage("Unable to load game...");
 		}
+		oos.close();
 	}
 }

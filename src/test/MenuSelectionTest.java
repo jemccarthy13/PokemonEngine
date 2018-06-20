@@ -20,7 +20,7 @@ public class MenuSelectionTest extends BaseTestCase {
 
 		Thread.sleep(2000);
 
-		this.takeScreenshot(this.getClass().getName() + "_Encyclopedia");
+		BaseTestCase.takeScreenshot(this.getClass().getName() + "_Encyclopedia");
 	}
 
 	/**
@@ -34,7 +34,7 @@ public class MenuSelectionTest extends BaseTestCase {
 
 		Thread.sleep(2000);
 
-		this.takeScreenshot(this.getClass().getName() + "_PartyScene");
+		BaseTestCase.takeScreenshot(this.getClass().getName() + "_PartyScene");
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class MenuSelectionTest extends BaseTestCase {
 
 		Thread.sleep(2000);
 
-		this.takeScreenshot(this.getClass().getName() + "_BagScene");
+		BaseTestCase.takeScreenshot(this.getClass().getName() + "_BagScene");
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class MenuSelectionTest extends BaseTestCase {
 
 		Thread.sleep(2000);
 
-		this.takeScreenshot(this.getClass().getName() + "_MapScene");
+		BaseTestCase.takeScreenshot(this.getClass().getName() + "_MapScene");
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class MenuSelectionTest extends BaseTestCase {
 
 		Thread.sleep(2000);
 
-		this.takeScreenshot(this.getClass().getName() + "_PlayerScene");
+		BaseTestCase.takeScreenshot(this.getClass().getName() + "_PlayerScene");
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class MenuSelectionTest extends BaseTestCase {
 
 		Thread.sleep(2000);
 
-		this.takeScreenshot(this.getClass().getName() + "_SaveScene");
+		BaseTestCase.takeScreenshot(this.getClass().getName() + "_SaveScene");
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class MenuSelectionTest extends BaseTestCase {
 
 		Thread.sleep(2000);
 
-		this.takeScreenshot(this.getClass().getName() + "_OptionScene");
+		BaseTestCase.takeScreenshot(this.getClass().getName() + "_OptionScene");
 	}
 
 	/**
@@ -118,15 +118,15 @@ public class MenuSelectionTest extends BaseTestCase {
 
 		Thread.sleep(2000);
 
-		this.takeScreenshot(this.getClass().getName() + "_ExitMenuStep1");
+		BaseTestCase.takeScreenshot(this.getClass().getName() + "_ExitMenuStep1");
 
 		TestUtils.pause(robot, game);
 		Thread.sleep(1000);
-		this.takeScreenshot(this.getClass().getName() + "_ExitMenuStep2");
+		BaseTestCase.takeScreenshot(this.getClass().getName() + "_ExitMenuStep2");
 
 		robot.keyPress(KeyEvent.VK_X);
 		Thread.sleep(1000);
-		this.takeScreenshot(this.getClass().getName() + "_ExitMenuStep3");
+		BaseTestCase.takeScreenshot(this.getClass().getName() + "_ExitMenuStep3");
 
 	}
 }

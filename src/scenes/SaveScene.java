@@ -2,6 +2,7 @@ package scenes;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.io.IOException;
 
 import controller.GameController;
 import graphics.GameGraphicsData;
@@ -53,6 +54,7 @@ public class SaveScene extends SelectionScene {
 	/**
 	 * "x" button pressed at Save scene
 	 */
+	@Override
 	public void doBack(GameController control) {
 		GameGraphicsData.getInstance().setScene(MenuScene.instance);
 	}
@@ -60,10 +62,15 @@ public class SaveScene extends SelectionScene {
 	/**
 	 * action button pressed at Save scene
 	 */
+	@Override
 	public void doAction(GameController control) {
 		if (this.rowSelection == 0) {
-			control.saveGame();
-			MessageQueue.getInstance().add("Game saved successfully!");
+			try {
+				control.saveGame();
+				MessageQueue.getInstance().add("Game saved successfully!");
+			} catch (IOException e) {
+				MessageQueue.getInstance().add("Unable to save game!");
+			}
 		}
 		GameGraphicsData.getInstance().setScene(MenuScene.instance);
 	}

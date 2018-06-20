@@ -87,11 +87,11 @@ public class BattleEngine {
 		 * @return opposite TURN
 		 */
 		public TURN opposite() {
+			TURN retTurn = OPPONENT;
 			if (this == OPPONENT) {
-				return PLAYER;
-			} else {
-				return OPPONENT;
+				retTurn = PLAYER;
 			}
+			return retTurn;
 		}
 	}
 
@@ -121,18 +121,18 @@ public class BattleEngine {
 	 */
 	public void fight(Party enemyPkmn, GameController g, String opponentName) {
 		if (Configuration.DOBATTLES) {
-			game = g;
+			this.game = g;
 			m_instance.currentSelectionMainX = 0;
 			m_instance.currentSelectionMainY = 0;
 
 			int idx = -1;
-			for (int x = 0; x < game.getPlayer().getParty().size(); x++) {
-				if (game.getPlayer().getParty().get(x).getStat(STAT.HP) > 0) {
+			for (int x = 0; x < this.game.getPlayer().getParty().size(); x++) {
+				if (this.game.getPlayer().getParty().get(x).getStat(STAT.HP) > 0) {
 					idx = x;
-					x = game.getPlayer().getParty().size() + 1;
+					x = this.game.getPlayer().getParty().size() + 1;
 				}
 			}
-			m_instance.playerCurrentPokemon = game.getPlayer().getParty().get(idx);
+			m_instance.playerCurrentPokemon = this.game.getPlayer().getParty().get(idx);
 			System.err.println(m_instance.playerCurrentPokemon);
 			m_instance.playerCurrentPokemon.setParticipated();
 			m_instance.enemyPokemon = enemyPkmn;
@@ -140,7 +140,7 @@ public class BattleEngine {
 			m_instance.playerTurn = true;
 			m_instance.enemyName = opponentName;
 
-			game.getPlayer().canMove = false;
+			this.game.getPlayer().canMove = false;
 			GameGraphicsData.getInstance().setScene(BattleScene.instance);
 		}
 	}
@@ -194,6 +194,8 @@ public class BattleEngine {
 				this.enemyCurrentPokemon = this.enemyPokemon.get(stillAlive.get(choice));
 			}
 			break;
+		default:
+			break;
 		}
 	}
 
@@ -204,12 +206,12 @@ public class BattleEngine {
 	 */
 	public void giveEXP() {
 		int s = 0;
-		for (int x = 0; x < game.getPlayer().getParty().size(); x++) {
-			if (((Battler) game.getPlayer().getParty().get(x)).hasParticipated()) {
+		for (int x = 0; x < this.game.getPlayer().getParty().size(); x++) {
+			if (this.game.getPlayer().getParty().get(x).hasParticipated()) {
 				s++;
 			}
 		}
-		this.playerCurrentPokemon.gainExp(game, this.enemyCurrentPokemon.getExpGain(false, s));
+		this.playerCurrentPokemon.gainExp(this.game, this.enemyCurrentPokemon.getExpGain(false, s));
 	}
 
 	/**
@@ -219,19 +221,19 @@ public class BattleEngine {
 		giveEXP();
 		DebugUtility.printMessage("Player won!");
 		// reset logic
-		game.getPlayer().canMove = false;
+		this.game.getPlayer().canMove = false;
 
 		MessageQueue.getInstance().add("Player won!");
 		GameGraphicsData.getInstance().setScene(BattleMessageScene.instance);
 
-		game.getPlayer().beatenTrainers.add(enemyName);
+		this.game.getPlayer().beatenTrainers.add(this.enemyName);
 
-		enemyPokemon.get(0).setStatusEffect(STATUS.NORMAL);
+		this.enemyPokemon.get(0).setStatusEffect(STATUS.NORMAL);
 
 		// reset the music
 		// TODO - verify playBackgroundMusic doesn't automatically pause/stop
 		// when switching music
-		AudioLibrary.playBackgroundMusic(game.getPlayer().getCurLoc().getName());
+		AudioLibrary.playBackgroundMusic(this.game.getPlayer().getCurLoc().getName());
 	}
 
 	/**
@@ -242,15 +244,15 @@ public class BattleEngine {
 		// TODO - change to message boxes
 
 		String[] lossMessages = { "Player Pokemon has fainted",
-				game.getPlayer().getName() + " is all out of usable Pokemon!",
-				game.getPlayer().getName() + " whited out." };
+				this.game.getPlayer().getName() + " is all out of usable Pokemon!",
+				this.game.getPlayer().getName() + " whited out." };
 
 		for (String message : lossMessages) {
 			DebugUtility.printMessage(message);
 			MessageQueue.getInstance().add(message);
 		}
-		game.getPlayer().setDirection(DIR.SOUTH);
-		Party playerParty = game.getPlayer().getParty();
+		this.game.getPlayer().setDirection(DIR.SOUTH);
+		Party playerParty = this.game.getPlayer().getParty();
 		for (Battler member : playerParty) {
 			member.fullHeal();
 		}
@@ -271,8 +273,8 @@ public class BattleEngine {
 		DebugUtility.printHeader("Turn: " + turn);
 
 		// get the attacker and defender based on this TURN
-		Battler attacker = (turn == TURN.PLAYER) ? playerCurrentPokemon : enemyCurrentPokemon;
-		Battler defender = (turn == TURN.PLAYER) ? enemyCurrentPokemon : playerCurrentPokemon;
+		Battler attacker = (turn == TURN.PLAYER) ? this.playerCurrentPokemon : this.enemyCurrentPokemon;
+		Battler defender = (turn == TURN.PLAYER) ? this.enemyCurrentPokemon : this.playerCurrentPokemon;
 		if (attacker.getStat(STAT.HP) > 0) {
 			// get the chosen move
 			MoveData chosen = attacker.getMove(move);
@@ -313,6 +315,7 @@ public class BattleEngine {
 				// TODO - deal % damage for burn / psn
 				AudioLibrary.playClip(SOUND_EFFECT.DAMAGE);
 				DebugUtility.printMessage(attacker.getName() + " has been hurt by it's " + status);
+				//$FALL-THROUGH$
 			default:
 				defender.takeDamage(attacker.doDamage(chosen));
 				AudioLibrary.playClip(SOUND_EFFECT.DAMAGE);

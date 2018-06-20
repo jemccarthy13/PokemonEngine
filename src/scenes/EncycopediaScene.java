@@ -33,6 +33,7 @@ public class EncycopediaScene extends SelectionScene {
 	/**
 	 * "x" button press at Pokedex scene
 	 */
+	@Override
 	public void doBack(GameController control) {
 		GameGraphicsData.getInstance().setScene(MenuScene.instance);
 	}

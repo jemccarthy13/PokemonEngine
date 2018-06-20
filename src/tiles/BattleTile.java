@@ -1,11 +1,9 @@
 package tiles;
 
-import java.io.Serializable;
-
 /**
  * A type of a Tile that causes wild encounters
  */
-public class BattleTile extends Tile implements Serializable {
+public class BattleTile extends Tile {
 	/**
 	 * Serialization information
 	 */

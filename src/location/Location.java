@@ -33,7 +33,7 @@ public class Location implements Serializable {
 	 * @return string name
 	 */
 	public String getName() {
-		return lData.name;
+		return this.lData.name;
 	}
 
 	/**

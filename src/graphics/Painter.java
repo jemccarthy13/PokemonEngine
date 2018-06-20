@@ -52,7 +52,7 @@ public class Painter {
 	 * @param scene
 	 *            - the scene that can be rendered
 	 */
-	public void register(BaseScene scene) {
+	public static void register(BaseScene scene) {
 		instance.scenePainters.put(scene.getClass().hashCode(), scene);
 	}
 
@@ -96,10 +96,10 @@ public class Painter {
 	 *            - the starting y location
 	 */
 	public static void paintSmallString(Graphics g, String string, int startX, int startY) {
-		string = string.toUpperCase();
+		String paintStr = string.toUpperCase();
 		int offset = ((int) (Tile.TILESIZE / 2.7)) - 2;
-		for (int x = 0; x < string.toCharArray().length; x++) {
-			switch (string.toCharArray()[x]) {
+		for (int x = 0; x < paintStr.toCharArray().length; x++) {
+			switch (paintStr.toCharArray()[x]) {
 			case '?':
 				g.drawImage(SpriteLibrary.getImage("QUESTION"), startX + offset * x, startY, null);
 				break;
@@ -135,9 +135,9 @@ public class Painter {
 	 *            - the starting y location
 	 */
 	public static void paintString(Graphics g, String string, int startX, int startY) {
-		string = string.toUpperCase();
-		for (int x = 0; x < string.toCharArray().length; x++) {
-			switch (string.toCharArray()[x]) {
+		String paintStr = string.toUpperCase();
+		for (int x = 0; x < paintStr.toCharArray().length; x++) {
+			switch (paintStr.toCharArray()[x]) {
 			case '?':
 				g.drawImage(SpriteLibrary.getImage("QUESTION"), startX + Tile.TILESIZE * x, startY, null);
 				break;

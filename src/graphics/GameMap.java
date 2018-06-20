@@ -59,11 +59,11 @@ public class GameMap {
 		private BufferedReader reader;
 
 		SynchronizedReader(BufferedReader r) {
-			reader = r;
+			this.reader = r;
 		}
 
 		public synchronized String readLine() throws IOException {
-			return reader.readLine();
+			return this.reader.readLine();
 		}
 	}
 
@@ -75,21 +75,21 @@ public class GameMap {
 
 		SynchronizedReader reader;
 		int layer;
-		int width;
-		int height;
+		int layerWidth;
+		int layerHeight;
 
 		ProcessLayerThread(int w, int h, SynchronizedReader r, int lyr) {
-			reader = r;
-			layer = lyr;
-			width = w;
-			height = h;
+			this.reader = r;
+			this.layer = lyr;
+			this.layerWidth = w;
+			this.layerHeight = h;
 		}
 
 		@Override
 		public void run() {
 			String line = null;
 			try {
-				line = reader.readLine();
+				line = this.reader.readLine();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -97,12 +97,12 @@ public class GameMap {
 			int curCol = 0;
 
 			StringTokenizer tokens = new StringTokenizer(line);
-			for (int y = 0; y < width * height; y++) {
+			for (int y = 0; y < this.layerWidth * this.layerHeight; y++) {
 
 				String code = tokens.nextToken();
 
-				curCol = y % width;
-				if ((curCol == 0) && (layer == 1 || layer == 2) && (y != 0)) {
+				curCol = y % this.layerWidth;
+				if ((curCol == 0) && (this.layer == 1 || this.layer == 2) && (y != 0)) {
 					curRow++;
 				}
 
@@ -110,19 +110,20 @@ public class GameMap {
 				Coordinate c = new Coordinate(curCol, curRow);
 
 				if (Arrays.binarySearch(TileSet.IMPASSIBLE_TILES, Integer.parseInt(code)) >= 0) {
-					if (layer == 1 || (layer == 2 && Integer.parseInt(code) > 0)) {
+					if (this.layer == 1 || (this.layer == 2 && Integer.parseInt(code) > 0)) {
 						setMapTileAt(c, TileSet.OBSTACLE);
 					}
 				} else if (Arrays.binarySearch(TileSet.BATTLE_TILES, Integer.parseInt(code)) >= 0) {
-					if (layer == 1 || (layer == 2 && Integer.parseInt(code) > 0)) {
+					if (this.layer == 1 || (this.layer == 2 && Integer.parseInt(code) > 0)) {
 						setMapTileAt(c, TileSet.BATTLE);
 					}
 				} else {
-					if ((layer == 1 || (layer == 2 && Integer.parseInt(code) > 0)) && getMapTileAt(c) == null) {
+					if ((this.layer == 1 || (this.layer == 2 && Integer.parseInt(code) > 0))
+							&& getMapTileAt(c) == null) {
 						setMapTileAt(c, TileSet.NORMAL);
 					}
 				}
-				addMapImageAt(layer, y, Integer.parseInt(code));
+				addMapImageAt(this.layer, y, Integer.parseInt(code));
 			}
 		}
 
@@ -163,7 +164,7 @@ public class GameMap {
 		// initialize the Image map and add obstacles to the Tile map
 		ArrayList<Thread> threads = new ArrayList<Thread>();
 		for (int layers = 0; layers < 3; layers++) {
-			Thread t = new ProcessLayerThread(width, height, reader, layers);
+			Thread t = new ProcessLayerThread(this.width, this.height, reader, layers);
 			t.start();
 			threads.add(t);
 		}
@@ -173,8 +174,8 @@ public class GameMap {
 		}
 
 		DebugUtility.printMessage("Loaded map.");
-		DebugUtility.printMessage(tileMap.get(new Coordinate(4, 2).toString()).toString());
-		DebugUtility.printMessage("" + imageMap.size());
+		DebugUtility.printMessage(this.tileMap.get(new Coordinate(4, 2).toString()).toString());
+		DebugUtility.printMessage("" + this.imageMap.size());
 	}
 
 	/**
@@ -187,12 +188,12 @@ public class GameMap {
 	 * @return int representing which tile of the tileset should be painted
 	 */
 	public synchronized int getMapImageAt(int layer, int y) {
-		Integer i = imageMap.get(new Coordinate(layer, y).toString());
-		if (i == null) {
-			return 0;
-		} else {
-			return imageMap.get(new Coordinate(layer, y).toString());
+		int retInt = 0;
+		Integer i = this.imageMap.get(new Coordinate(layer, y).toString());
+		if (i != null) {
+			retInt = this.imageMap.get(new Coordinate(layer, y).toString());
 		}
+		return retInt;
 	}
 
 	/**
@@ -206,7 +207,7 @@ public class GameMap {
 	 *            - the new image number value
 	 */
 	public synchronized void setMapImageAt(int layer, int y, int value) {
-		imageMap.set(new Coordinate(layer, y), value);
+		this.imageMap.set(new Coordinate(layer, y), value);
 	}
 
 	/**
@@ -220,7 +221,7 @@ public class GameMap {
 	 *            - the value to add
 	 */
 	public synchronized void addMapImageAt(int x, int y, int value) {
-		imageMap.put(new Coordinate(x, y).toString(), value);
+		this.imageMap.put(new Coordinate(x, y).toString(), value);
 	}
 
 	/**
@@ -231,7 +232,7 @@ public class GameMap {
 	 * @return a Tile of the map
 	 */
 	public synchronized Tile getMapTileAt(Coordinate c) {
-		return tileMap.get(c.toString());
+		return this.tileMap.get(c.toString());
 	}
 
 	/**
@@ -243,7 +244,7 @@ public class GameMap {
 	 *            - the tile to set that index to
 	 */
 	public synchronized void setMapTileAt(Coordinate position, Tile tile) {
-		tileMap.set(position, tile);
+		this.tileMap.set(position, tile);
 	}
 
 	public boolean isObstacleAt(Coordinate loc) {
@@ -256,7 +257,7 @@ public class GameMap {
 		return getMapTileAt(loc).getClass().equals(BattleTile.class);
 	}
 
-	public boolean isTeleportAt(Coordinate loc) {
+	public static boolean isTeleportAt(Coordinate loc) {
 		return TeleportLibrary.getList().containsKey(loc);
 	}
 

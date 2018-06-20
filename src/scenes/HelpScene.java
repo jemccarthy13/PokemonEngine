@@ -49,6 +49,7 @@ public class HelpScene extends SelectionScene {
 	/**
 	 * "x" button press at Pokegear scene
 	 */
+	@Override
 	public void doBack(GameController control) {
 		GameGraphicsData.getInstance().setScene(MenuScene.instance);
 	}
@@ -56,6 +57,7 @@ public class HelpScene extends SelectionScene {
 	/**
 	 * "z" button press at Pokegear scene
 	 */
+	@Override
 	public void doAction(GameController control) {
 		// control.setCurrentSelection(new Coordinate(0, 0));
 		// TODO map "Z" button press

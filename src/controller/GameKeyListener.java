@@ -46,7 +46,7 @@ public class GameKeyListener implements KeyListener, Serializable {
 	 * @param controller
 	 *            - the controller to use
 	 */
-	public void setGameController(GameController controller) {
+	public static void setGameController(GameController controller) {
 		instance.gameControl = controller;
 	}
 
@@ -70,7 +70,7 @@ public class GameKeyListener implements KeyListener, Serializable {
 	 * @param scene
 	 *            - the scene to register
 	 */
-	public void register(BaseScene scene) {
+	public static void register(BaseScene scene) {
 		actionPerformers.put(scene.getClass().hashCode(), scene);
 	}
 
@@ -81,6 +81,7 @@ public class GameKeyListener implements KeyListener, Serializable {
 	 * @param e
 	 *            - the key that was pressed
 	 */
+	@Override
 	public void keyPressed(KeyEvent e) {
 		int keyCode = e.getKeyCode();
 
@@ -95,7 +96,7 @@ public class GameKeyListener implements KeyListener, Serializable {
 				|| GameGraphicsData.getInstance().getScene() == IntroScene.instance
 				|| GameGraphicsData.getInstance().getScene() == NameScene.instance) {
 			Integer actionToPerform = GameGraphicsData.getInstance().getScene().getClass().hashCode();
-			actionPerformers.get(actionToPerform).keyPress(keyCode, gameControl);
+			actionPerformers.get(actionToPerform).keyPress(keyCode, this.gameControl);
 		}
 
 		if (GameGraphicsData.getInstance().getScene() instanceof SelectionScene) {
@@ -110,7 +111,10 @@ public class GameKeyListener implements KeyListener, Serializable {
 	 * @param e
 	 *            - the key that was released
 	 */
-	public void keyReleased(KeyEvent e) {}
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// do nothing
+	}
 
 	/**
 	 * Handles logic on a key being typed
@@ -118,5 +122,8 @@ public class GameKeyListener implements KeyListener, Serializable {
 	 * @param e
 	 *            - the key that was typed
 	 */
-	public void keyTyped(KeyEvent e) {}
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// do nothing
+	}
 }

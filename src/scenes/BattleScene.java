@@ -80,6 +80,7 @@ public class BattleScene extends BaseScene {
 	/**
 	 * Right arrow button press
 	 */
+	@Override
 	public void doRight(GameController gameControl) {
 		BattleEngine.getInstance().currentSelectionMainX = 1;
 	}
@@ -87,6 +88,7 @@ public class BattleScene extends BaseScene {
 	/**
 	 * Left arrow button press
 	 */
+	@Override
 	public void doLeft(GameController gameControl) {
 		BattleEngine.getInstance().currentSelectionMainX = 0;
 	}
@@ -94,6 +96,7 @@ public class BattleScene extends BaseScene {
 	/**
 	 * Up arrow button press
 	 */
+	@Override
 	public void doDown(GameController gameControl) {
 		BattleEngine.getInstance().currentSelectionMainY = 1;
 	}
@@ -101,6 +104,7 @@ public class BattleScene extends BaseScene {
 	/**
 	 * Up arrow button press
 	 */
+	@Override
 	public void doUp(GameController gameControl) {
 		BattleEngine.getInstance().currentSelectionMainY = 0;
 	}
@@ -108,6 +112,7 @@ public class BattleScene extends BaseScene {
 	/**
 	 * "z" button press
 	 */
+	@Override
 	public void doAction(GameController gameControl) {
 		// do logic based on current selection
 		switch (2 * BattleEngine.getInstance().currentSelectionMainY
@@ -131,6 +136,8 @@ public class BattleScene extends BaseScene {
 				// but if it's an opponent, player is stuck
 				MessageQueue.getInstance().add("Can't run away from a opponent!");
 			}
+			break;
+		default:
 			break;
 		}
 	}

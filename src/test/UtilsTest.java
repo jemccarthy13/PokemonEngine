@@ -2,11 +2,10 @@ package test;
 
 import java.util.ArrayList;
 
-import location.Location;
-import location.LocationLibrary;
-
 import org.junit.Test;
 
+import location.Location;
+import location.LocationLibrary;
 import party.Battler;
 import party.BattlerFactory;
 import utilities.DebugUtility;
@@ -72,7 +71,7 @@ public class UtilsTest {
 		DebugUtility.printMessage("Random Pokemon (Route 29):");
 		for (int x = 0; x < 10; x++) {
 			DebugUtility.printMessage("-------- " + x + " --------");
-			Battler p = BattlerFactory.getInstance().randomPokemon(loc);
+			Battler p = BattlerFactory.randomPokemon(loc);
 			DebugUtility.printMessage(p.toString());
 		}
 
@@ -80,7 +79,7 @@ public class UtilsTest {
 
 		ArrayList<Battler> trainer = new ArrayList<Battler>();
 		for (int y = 0; y < 5; y++) {
-			trainer.add(BattlerFactory.getInstance().randomPokemon(loc));
+			trainer.add(BattlerFactory.randomPokemon(loc));
 		}
 		DebugUtility.printMessage();
 		DebugUtility.printMessage("Trainer's Random Pokemon");

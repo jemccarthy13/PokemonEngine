@@ -12,6 +12,6 @@ public class EmptyTest extends BaseTestCase {
 	 */
 	@Test
 	public void testStartup() {
-
+		// do nothing
 	}
 }

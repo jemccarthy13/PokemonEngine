@@ -1,6 +1,5 @@
 package trainers;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import controller.GameController;
@@ -16,7 +15,7 @@ import utilities.RandomNumUtils;
 /**
  * Player - holds data for the current user
  */
-public class Player extends Actor implements Serializable {
+public class Player extends Actor {
 
 	/**
 	 * Serialization information
@@ -62,8 +61,8 @@ public class Player extends Actor implements Serializable {
 	 */
 	public Player(int x, int y, String n) {
 		super(x, y, n, spriteName);
-		curLoc = new Location(LocationLibrary.getInstance().get("New Bark Town"));
-		id = RandomNumUtils.createTrainerID();
+		this.curLoc = new Location(LocationLibrary.getInstance().get("New Bark Town"));
+		this.id = RandomNumUtils.createTrainerID();
 	}
 
 	/**
@@ -72,9 +71,10 @@ public class Player extends Actor implements Serializable {
 	 * @return current location
 	 */
 	public Location getCurLoc() {
-		return curLoc;
+		return this.curLoc;
 	}
 
+	@Override
 	public void doAnimation(GameController gameController) {
 		if (isWalking()) {
 			gameController.setOffsetY(getDirection());

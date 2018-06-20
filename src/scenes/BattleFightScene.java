@@ -78,6 +78,7 @@ public class BattleFightScene extends SelectionScene {
 	/**
 	 * Up arrow button press
 	 */
+	@Override
 	public void doUp(GameController gameControl) {
 		checkMove(0, -1);
 	}
@@ -85,6 +86,7 @@ public class BattleFightScene extends SelectionScene {
 	/**
 	 * Down arrow button press
 	 */
+	@Override
 	public void doDown(GameController gameControl) {
 		checkMove(0, 1);
 	}
@@ -92,6 +94,7 @@ public class BattleFightScene extends SelectionScene {
 	/**
 	 * Left arrow button press
 	 */
+	@Override
 	public void doLeft(GameController gameControl) {
 		checkMove(-1, 0);
 	}
@@ -99,6 +102,7 @@ public class BattleFightScene extends SelectionScene {
 	/**
 	 * Right arrow button press
 	 */
+	@Override
 	public void doRight(GameController gameControl) {
 		checkMove(1, 0);
 	}
@@ -106,6 +110,7 @@ public class BattleFightScene extends SelectionScene {
 	/**
 	 * "x" button press
 	 */
+	@Override
 	public void doBack(GameController gameControl) {
 		GameGraphicsData.getInstance().setScene(BattleScene.instance);
 	}
@@ -113,6 +118,7 @@ public class BattleFightScene extends SelectionScene {
 	/**
 	 * "z" button press
 	 */
+	@Override
 	public void doAction(GameController gameControl) {
 		int move = (2 * this.colSelection) + this.rowSelection;
 		DebugUtility.printMessage("Selected: " + move);

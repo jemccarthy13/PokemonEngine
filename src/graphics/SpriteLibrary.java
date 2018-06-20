@@ -57,12 +57,14 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 	 * @return an ImageIcon for a text character
 	 */
 	public ImageIcon getFontChar(Character c) {
+		ImageIcon retIcon = null;
 		if (containsKey(c + ".png")) {
-			return get(c.toString() + ".png").get(0);
+			retIcon = get(c.toString() + ".png").get(0);
 		} else {
 			getImageIcon(c.toString());
-			return get(c.toString() + ".png").get(0);
+			retIcon = get(c.toString() + ".png").get(0);
 		}
+		return retIcon;
 	}
 
 	/**
@@ -155,24 +157,24 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 	 * @return an ImageIcon, if it can be created
 	 */
 	public ImageIcon getImageIcon(String name) {
-		name += ".png";
+		String iconName = name + ".png";
+		ImageIcon retIcon = null;
 		// if the image exists, get it and return it
-		if (containsKey(name)) {
-			return get(name).get(0);
+		if (containsKey(iconName)) {
+			retIcon = get(iconName).get(0);
 		} else {
-			tryPath("Characters/BattleSprites", name);
-			tryPath("Titles", name);
-			tryPath("Pictures", name);
-			tryPath("Font", name);
-			tryPath("tiles", name);
-			tryPath("tiles", name);
+			tryPath("Characters/BattleSprites", iconName);
+			tryPath("Titles", iconName);
+			tryPath("Pictures", iconName);
+			tryPath("Font", iconName);
+			tryPath("tiles", iconName);
+			tryPath("tiles", iconName);
 
-			if (containsKey(name)) {
-				return get(name).get(0);
-			} else {
-				return null;
+			if (containsKey(iconName)) {
+				retIcon = get(iconName).get(0);
 			}
 		}
+		return retIcon;
 	}
 
 	/**
@@ -189,7 +191,7 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 			DebugUtility.printMessage("Unable to load: " + name + " " + path);
 			return false;
 		}
-		File folder = new File(libPath + path + "/");
+		File folder = new File(this.libPath + path + "/");
 		File[] listOfFiles = folder.listFiles();
 		if (listOfFiles != null) {
 			for (File file : listOfFiles) {
@@ -221,8 +223,8 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 			File file = new File(npcFilePath);
 			String[] directories = file.list(new FilenameFilter() {
 				@Override
-				public boolean accept(File dir, String name) {
-					return new File(dir, name).isDirectory();
+				public boolean accept(File dir, String name1) {
+					return new File(dir, name1).isDirectory();
 				}
 			});
 
@@ -264,13 +266,13 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 		if (!f.exists()) {
 			DebugUtility.error("Image path does not exist: " + path);
 		}
-		path = "/" + path.replace("resources/", "").replace("resources\\", "");
-		URL iconURL = System.class.getResource(path);
+		String resPath = "/" + path.replace("resources/", "").replace("resources\\", "");
+		URL iconURL = System.class.getResource(resPath);
 		if (iconURL == null) {
-			DebugUtility.printError("Cannot find resource" + path);
+			DebugUtility.printError("Cannot find resource" + resPath);
 
 		} else {
-			thisIcon = new ImageIcon(System.class.getResource(path));
+			thisIcon = new ImageIcon(System.class.getResource(resPath));
 		}
 		return thisIcon;
 	}

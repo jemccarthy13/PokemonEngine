@@ -25,7 +25,7 @@ public class StartNewGameTest extends BaseTestCase {
 	 * @throws InterruptedException
 	 */
 	@Test
-	public void testStartUp() throws InterruptedException {
+	public static void testStartUp() throws InterruptedException {
 
 		if (Configuration.SHOWINTRO) {
 			// test introductory scene

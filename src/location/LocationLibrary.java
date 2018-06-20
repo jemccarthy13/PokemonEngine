@@ -39,7 +39,9 @@ public class LocationLibrary extends HashMap<String, LocationData> {
 		try {
 
 			// this is the JSON object for the entire file
-			JSONObject all_locations = (JSONObject) parser.parse(new FileReader(filename));
+			FileReader reader = new FileReader(filename);
+			JSONObject all_locations = (JSONObject) parser.parse(reader);
+			reader.close();
 
 			// this is the JSON object that is labeled "pokedex": an array of
 			// all pokemon data
@@ -61,10 +63,10 @@ public class LocationLibrary extends HashMap<String, LocationData> {
 
 				// get the coordinate boundaries for this location
 				ld.boundaries = new HashMap<DIR, Integer>();
-				ld.boundaries
-						.put(DIR.NORTH, ((Long) ((JSONObject) loc_data.get("boundaries")).get("north")).intValue());
-				ld.boundaries
-						.put(DIR.SOUTH, ((Long) ((JSONObject) loc_data.get("boundaries")).get("south")).intValue());
+				ld.boundaries.put(DIR.NORTH,
+						((Long) ((JSONObject) loc_data.get("boundaries")).get("north")).intValue());
+				ld.boundaries.put(DIR.SOUTH,
+						((Long) ((JSONObject) loc_data.get("boundaries")).get("south")).intValue());
 				ld.boundaries.put(DIR.EAST, ((Long) ((JSONObject) loc_data.get("boundaries")).get("east")).intValue());
 				ld.boundaries.put(DIR.WEST, ((Long) ((JSONObject) loc_data.get("boundaries")).get("west")).intValue());
 

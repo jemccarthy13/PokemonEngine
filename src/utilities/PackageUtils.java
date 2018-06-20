@@ -1,6 +1,7 @@
 package utilities;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
@@ -8,10 +9,11 @@ import java.util.jar.JarInputStream;
 public class PackageUtils {
 
 	public static void printFilesInJar() {
+		JarInputStream jarFile = null;
 		try {
 			ArrayList<String> classes = new ArrayList<String>();
 
-			JarInputStream jarFile = new JarInputStream(new FileInputStream("PokemonGame.jar"));
+			jarFile = new JarInputStream(new FileInputStream("PokemonGame.jar"));
 			JarEntry jarEntry;
 
 			while (true) {
@@ -24,10 +26,14 @@ public class PackageUtils {
 					classes.add(jarEntry.getName().replaceAll("/", "\\."));
 				}
 			}
-			jarFile.close();
-
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				jarFile.close();
+			} catch (IOException e) {
+				// do nothing
+			}
 		}
 	}
 }

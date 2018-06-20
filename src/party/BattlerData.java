@@ -52,6 +52,7 @@ public class BattlerData implements Serializable {
 	 * 
 	 * @return string representation
 	 */
+	@Override
 	public String toString() {
 		String retStr = "Name: " + this.name + "\n";
 		retStr += "PokedexNumber: " + this.pokedexNumber + "\n";
@@ -74,6 +75,7 @@ public class BattlerData implements Serializable {
 	 */
 	public boolean isValidData() {
 		return (this.type != null && this.pokedexNumber != null && this.evolution_stages != null
-				&& this.evolution_levels != null && this.baseExp != 0 && this.movesLearned != null && this.levelsLearned != null);
+				&& this.evolution_levels != null && this.baseExp != 0 && this.movesLearned != null
+				&& this.levelsLearned != null);
 	}
 }

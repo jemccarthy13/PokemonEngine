@@ -46,7 +46,7 @@ public class LocationTableModel extends AbstractTableModel {
 	 *            - the object to add
 	 */
 	public void addObject(Object obj) {
-		addObject(obj, objects.size());
+		addObject(obj, this.objects.size());
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class LocationTableModel extends AbstractTableModel {
 	 *            - the location to add the object
 	 */
 	public void addObject(Object obj, int index) {
-		objects.add(index, obj);
+		this.objects.add(index, obj);
 		fireTableRowsInserted(index, index);
 	}
 
@@ -69,8 +69,8 @@ public class LocationTableModel extends AbstractTableModel {
 	 *            - the object to remove
 	 */
 	public void removeObject(Object obj) {
-		int index = objects.indexOf(obj);
-		objects.remove(index);
+		int index = this.objects.indexOf(obj);
+		this.objects.remove(index);
 		fireTableRowsDeleted(index, index);
 	}
 
@@ -82,7 +82,7 @@ public class LocationTableModel extends AbstractTableModel {
 	 * @return a representation of the object in the table
 	 */
 	public Object getObject(int rowIndex) {
-		return objects.get(rowIndex);
+		return this.objects.get(rowIndex);
 	}
 
 	/**
@@ -94,6 +94,7 @@ public class LocationTableModel extends AbstractTableModel {
 	 *            the column of the cell
 	 * @return true always
 	 */
+	@Override
 	public boolean isCellEditable(int row, int col) {
 		return true;
 	}
@@ -108,8 +109,9 @@ public class LocationTableModel extends AbstractTableModel {
 	 * @param col
 	 *            - the column of the cell
 	 */
+	@Override
 	public void setValueAt(Object value, int row, int col) {
-		LocationData obj = (LocationData) objects.get(row);
+		LocationData obj = (LocationData) this.objects.get(row);
 		switch (col) {
 		case 0:
 			obj.name = (String) value;
@@ -146,11 +148,13 @@ public class LocationTableModel extends AbstractTableModel {
 			for (String s : value.toString().replace("[", "").replace("]", "").split(",")) {
 				obj.minLevels.add(Integer.parseInt(s));
 			}
+			break;
 		case 9:
 			obj.maxLevels = new ArrayList<Integer>();
 			for (String s : value.toString().replace("[", "").replace("]", "").split(",")) {
 				obj.maxLevels.add(Integer.parseInt(s));
 			}
+			break;
 		default:
 			throw new IndexOutOfBoundsException();
 		}
@@ -163,7 +167,7 @@ public class LocationTableModel extends AbstractTableModel {
 	 */
 	@Override
 	public int getRowCount() {
-		return objects.size();
+		return this.objects.size();
 	}
 
 	/**
@@ -171,10 +175,10 @@ public class LocationTableModel extends AbstractTableModel {
 	 */
 	@Override
 	public int getColumnCount() {
-		if (columns.length != columnTypes.length) {
+		if (this.columns.length != this.columnTypes.length) {
 			DebugUtility.error("column length != columnTypes length");
 		}
-		return columns.length;
+		return this.columns.length;
 	}
 
 	/**
@@ -185,10 +189,10 @@ public class LocationTableModel extends AbstractTableModel {
 	 */
 	@Override
 	public String getColumnName(int columnIndex) {
-		if (columnIndex > columns.length) {
+		if (columnIndex > this.columns.length) {
 			throw new IndexOutOfBoundsException();
 		}
-		return columns[columnIndex];
+		return this.columns[columnIndex];
 	}
 
 	/**
@@ -199,10 +203,10 @@ public class LocationTableModel extends AbstractTableModel {
 	 */
 	@Override
 	public Class<?> getColumnClass(int columnIndex) {
-		if (columnIndex > columnTypes.length) {
+		if (columnIndex > this.columnTypes.length) {
 			throw new IndexOutOfBoundsException();
 		}
-		return columnTypes[columnIndex];
+		return this.columnTypes[columnIndex];
 	}
 
 	/**
@@ -215,7 +219,7 @@ public class LocationTableModel extends AbstractTableModel {
 	 */
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		LocationData obj = (LocationData) objects.get(rowIndex);
+		LocationData obj = (LocationData) this.objects.get(rowIndex);
 		return obj.toArray()[columnIndex];
 	}
 }

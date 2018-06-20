@@ -1,6 +1,7 @@
 package storage;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -29,6 +30,11 @@ public class ItemLibrary extends HashMap<String, Item> {
 			s.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		try {
+			fs.close();
+		} catch (IOException e) {
+			// do nothing
 		}
 	}
 

@@ -71,7 +71,7 @@ public class AudioLibrary {
 		 *            - the value of the enumerated value
 		 */
 		SOUND_EFFECT(String v) {
-			value = v;
+			this.value = v;
 		}
 
 		/**
@@ -80,7 +80,7 @@ public class AudioLibrary {
 		 * @return value of enumeration
 		 */
 		String getValue() {
-			return value;
+			return this.value;
 		}
 	}
 
@@ -90,14 +90,14 @@ public class AudioLibrary {
 	private AudioLibrary() {
 		DebugUtility.printHeader("Audio");
 		DebugUtility.printMessage("Initializing audio library...");
-		encounterTrackNames = new ArrayList<String>();
+		this.encounterTrackNames = new ArrayList<String>();
 		// create a list of encounter tracks
 		for (File file : new File(Configuration.MUSIC_PATH).listFiles()) {
 			if (file.isFile()) {
 				String name_of_file = file.getName();
 				Pattern p = Pattern.compile("^Encounter.*");
 				if (p.matcher(name_of_file).matches()) {
-					encounterTrackNames.add(name_of_file.replace(".mid", ""));
+					this.encounterTrackNames.add(name_of_file.replace(".mid", ""));
 				}
 			}
 		}
@@ -134,9 +134,9 @@ public class AudioLibrary {
 	 * Pick and play a random encounter track
 	 */
 	public void pickTrainerMusic() {
-		if (encounterTrackNames.size() > 0) {
-			int choice = RandomNumUtils.generateRandom(encounterTrackNames.size(), 0);
-			playBackgroundMusic(encounterTrackNames.get(choice));
+		if (this.encounterTrackNames.size() > 0) {
+			int choice = RandomNumUtils.generateRandom(this.encounterTrackNames.size(), 0);
+			playBackgroundMusic(this.encounterTrackNames.get(choice));
 		}
 	}
 

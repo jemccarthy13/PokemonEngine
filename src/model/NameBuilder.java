@@ -25,7 +25,7 @@ public class NameBuilder {
 	 * @return the object currently being named
 	 */
 	public String getToBeNamed() {
-		return toBeNamed;
+		return this.toBeNamed;
 	}
 
 	/**
@@ -44,7 +44,7 @@ public class NameBuilder {
 	 * @return max number of rows
 	 */
 	public int maxRows() {
-		return charArray.length;
+		return this.charArray.length;
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class NameBuilder {
 	 * @return max columns
 	 */
 	public int maxCols() {
-		return charArray[0].length;
+		return this.charArray[0].length;
 	}
 
 	/**
@@ -64,8 +64,8 @@ public class NameBuilder {
 	 *            current row / column
 	 */
 	public void addSelectedChar(Coordinate selection) {
-		if (buildName.length() < Configuration.MAX_NAME_SIZE) {
-			buildName.append(charArray[selection.getX()][selection.getY()]);
+		if (this.buildName.length() < Configuration.MAX_NAME_SIZE) {
+			this.buildName.append(this.charArray[selection.getX()][selection.getY()]);
 		}
 	}
 
@@ -74,17 +74,18 @@ public class NameBuilder {
 	 * 
 	 * @return name string
 	 */
+	@Override
 	public String toString() {
-		return buildName.toString();
+		return this.buildName.toString();
 	}
 
 	/**
 	 * Remove the last character from the name buffer
 	 */
 	public void removeChar() {
-		int size = buildName.length();
+		int size = this.buildName.length();
 		if (size > 0) {
-			buildName.deleteCharAt(size - 1);
+			this.buildName.deleteCharAt(size - 1);
 		}
 	}
 
@@ -92,7 +93,7 @@ public class NameBuilder {
 	 * Delete all characters from the name buffer
 	 */
 	public void reset() {
-		int size = buildName.length();
-		buildName.delete(0, size);
+		int size = this.buildName.length();
+		this.buildName.delete(0, size);
 	}
 }

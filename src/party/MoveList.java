@@ -20,7 +20,7 @@ public class MoveList extends ArrayList<MoveData> {
 	 * @param memberName
 	 */
 	public MoveList(String memberName) {
-		name = memberName;
+		this.name = memberName;
 	}
 
 	/**
@@ -35,13 +35,13 @@ public class MoveList extends ArrayList<MoveData> {
 	 */
 	public boolean add(MoveData move, boolean askForOverwrite) {
 		boolean success = false;
-		if (size() < capacity || size() == 0) {
+		if (size() < this.capacity || size() == 0) {
 			this.add(move);
 			success = true;
 		} else {
 			/** @TODO replace this with a ReplaceMoveScene **/
 			if (askForOverwrite) {
-				DebugUtility.printMessage(name + " already knows 4 moves.  Make room for another?");
+				DebugUtility.printMessage(this.name + " already knows 4 moves.  Make room for another?");
 				Scanner s = new Scanner(System.in);
 				String str = s.nextLine();
 				if (str.contains("y")) {
@@ -53,7 +53,7 @@ public class MoveList extends ArrayList<MoveData> {
 				}
 				s.close();
 			} else {
-				if (this.size() >= capacity) {
+				if (this.size() >= this.capacity) {
 					this.remove(0);
 				}
 				add(move);

@@ -90,6 +90,7 @@ public class PartyScene extends SelectionScene {
 	/**
 	 * "z" button press at party scene
 	 */
+	@Override
 	public void doAction(GameController control) {
 		if (this.rowSelection >= control.getPlayer().getParty().size()) {
 			doBack(control);
@@ -101,6 +102,7 @@ public class PartyScene extends SelectionScene {
 	/**
 	 * "x" button press at Party scene
 	 */
+	@Override
 	public void doBack(GameController control) {
 		GameGraphicsData.getInstance().setScene(MenuScene.instance);
 	}
@@ -108,6 +110,7 @@ public class PartyScene extends SelectionScene {
 	/**
 	 * up arrow button press at Party scene
 	 */
+	@Override
 	public void doDown(GameController control) {
 		this.maxRowSelection = control.getPlayer().getParty().size();
 		super.doDown(control);

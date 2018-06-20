@@ -26,7 +26,9 @@ public class GameFrame extends JFrame {
 		 * WindowListener required
 		 */
 		@Override
-		public void windowActivated(WindowEvent arg0) {}
+		public void windowActivated(WindowEvent arg0) {
+			// do nothing
+		}
 
 		/**
 		 * 
@@ -42,31 +44,41 @@ public class GameFrame extends JFrame {
 		 * WindowListener required
 		 */
 		@Override
-		public void windowClosing(WindowEvent arg0) {}
+		public void windowClosing(WindowEvent arg0) {
+			// do nothing
+		}
 
 		/**
 		 * WindowListener required
 		 */
 		@Override
-		public void windowDeactivated(WindowEvent arg0) {}
+		public void windowDeactivated(WindowEvent arg0) {
+			// do nothing
+		}
 
 		/**
 		 * WindowListener required
 		 */
 		@Override
-		public void windowDeiconified(WindowEvent arg0) {}
+		public void windowDeiconified(WindowEvent arg0) {
+			// do nothing
+		}
 
 		/**
 		 * WindowListener required
 		 */
 		@Override
-		public void windowIconified(WindowEvent arg0) {}
+		public void windowIconified(WindowEvent arg0) {
+			// do nothing
+		}
 
 		/**
 		 * WindowListener required
 		 */
 		@Override
-		public void windowOpened(WindowEvent arg0) {}
+		public void windowOpened(WindowEvent arg0) {
+			// do nothing
+		}
 	};
 
 	/**
@@ -95,7 +107,7 @@ public class GameFrame extends JFrame {
 	 * 
 	 * @return the current game controller
 	 */
-	public GameController getController() {
+	public static GameController getController() {
 		return pokemonGame.gameController;
 	}
 

@@ -13,14 +13,14 @@ public class GameGraphicsData {
 		return instance;
 	}
 
-	Scene currentScene = TitleScene.instance;
+	private Scene currentScene = TitleScene.instance;
 
 	public void setScene(Scene toScene) {
-		currentScene = toScene;
+		this.currentScene = toScene;
 	}
 
 	public Scene getScene() {
-		return currentScene;
+		return this.currentScene;
 	}
 
 	// ====================== Graphics control variables ===================//

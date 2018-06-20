@@ -5,12 +5,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import location.Location;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import location.Location;
 import utilities.DebugUtility;
 import utilities.RandomNumUtils;
 
@@ -42,7 +41,9 @@ public class BattlerFactory extends HashMap<String, BattlerData> {
 		try {
 
 			// this is the JSON object for the entire file
-			JSONObject all_pokemon = (JSONObject) parser.parse(new FileReader(filename));
+			FileReader reader = new FileReader(filename);
+			JSONObject all_pokemon = (JSONObject) parser.parse(reader);
+			reader.close();
 
 			// this is the JSON object that is labeled "pokedex": an array of
 			// all pokemon data
@@ -133,14 +134,14 @@ public class BattlerFactory extends HashMap<String, BattlerData> {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	/**
-	 * Given a location, generate a random party member from the wild battler
-	 * chart of that region
+	 * Given a location, generate a random party member from the wild battler chart
+	 * of that region
 	 * 
 	 * @param location
 	 *            - where the party member should be generated from
 	 * @return a new party member
 	 */
-	public Battler randomPokemon(Location location) {
+	public static Battler randomPokemon(Location location) {
 		String name = location.getPokemon(RandomNumUtils.generateRandom(0, 100));
 		int level = RandomNumUtils.randomLevel(location.getMaxLevel(name), location.getMinLevel(name));
 		return createPokemon(name, level);

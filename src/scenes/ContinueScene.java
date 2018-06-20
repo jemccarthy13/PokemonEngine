@@ -1,9 +1,11 @@
 package scenes;
 
 import java.awt.Graphics;
+import java.io.IOException;
 
 import controller.GameController;
 import graphics.SpriteLibrary;
+import model.MessageQueue;
 
 /**
  * A representation of the continue scene
@@ -33,11 +35,16 @@ public class ContinueScene extends SelectionScene {
 	/**
 	 * "z" button press
 	 */
+	@Override
 	public void doAction(GameController gameControl) {
-		if (this.rowSelection == 0) {
-			gameControl.startGame(true);
-		} else if (this.rowSelection == 1) {
-			gameControl.startGame(false);
+		try {
+			if (this.rowSelection == 0) {
+				gameControl.startGame(true);
+			} else if (this.rowSelection == 1) {
+				gameControl.startGame(false);
+			}
+		} catch (IOException e) {
+			MessageQueue.getInstance().add("Unable to start game!");
 		}
 	}
 }

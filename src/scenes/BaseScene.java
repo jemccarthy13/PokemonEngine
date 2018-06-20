@@ -28,8 +28,8 @@ public class BaseScene implements Scene {
 	 * Register the created scene with the renderer and action performer
 	 */
 	protected BaseScene() {
-		Painter.getInstance().register(this);
-		GameKeyListener.getInstance().register(this);
+		Painter.register(this);
+		GameKeyListener.register(this);
 	}
 
 	/**
@@ -71,6 +71,8 @@ public class BaseScene implements Scene {
 		case KeyEvent.VK_RIGHT:
 			doRight(gameControl);
 			break;
+		default:
+			break;
 		}
 
 		// play sound when any button is pressed
@@ -81,41 +83,56 @@ public class BaseScene implements Scene {
 	 * Handle enter button press at scene
 	 */
 	@Override
-	public void doEnter(GameController gameControl) {}
+	public void doEnter(GameController gameControl) {
+		// do nothing
+	}
 
 	/**
 	 * Handle "Z" button press at scene
 	 */
 	@Override
-	public void doAction(GameController gameControl) {}
+	public void doAction(GameController gameControl) {
+		// do nothing
+	}
 
 	/**
 	 * Handle "x" button press at scene
 	 */
 	@Override
-	public void doBack(GameController gameControl) {}
+	public void doBack(GameController gameControl) {
+		// do nothing
+	}
 
 	/**
 	 * Handle left arrow press at scene
 	 */
 	@Override
-	public void doLeft(GameController gameControl) {}
+	public void doLeft(GameController gameControl) {
+		// do nothing
+	}
 
 	/**
 	 * Handle right arrow press at scene
 	 */
 	@Override
-	public void doRight(GameController gameControl) {}
+	public void doRight(GameController gameControl) {
+		// do nothing
+	}
 
 	/**
 	 * Up arrow press at scene
 	 */
 	@Override
-	public void doUp(GameController gameControl) {}
+	public void doUp(GameController gameControl) {
+		// do nothing
+	}
 
 	/**
 	 * Down arrow press at scene
 	 */
 	@Override
-	public void doDown(GameController gameControl) {}
+	public void doDown(GameController gameControl) {
+		// do nothing
+	}
+
 }

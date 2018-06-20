@@ -89,7 +89,7 @@ public class Configuration implements Serializable {
 		 * @return int representing game speed
 		 */
 		public int getValue() {
-			return value;
+			return this.value;
 		}
 	}
 
@@ -103,19 +103,19 @@ public class Configuration implements Serializable {
 	}
 
 	public boolean isSoundOn() {
-		return isSoundOn;
+		return this.isSoundOn;
 	}
 
 	public void toggleSound() {
-		isSoundOn = !isSoundOn;
+		this.isSoundOn = !this.isSoundOn;
 	}
 
 	public boolean isNoClip() {
-		return NOCLIP;
+		return this.NOCLIP;
 	}
 
 	public void setNoClip(boolean isClip) {
-		NOCLIP = isClip;
+		this.NOCLIP = isClip;
 	}
 
 	/**
@@ -123,7 +123,7 @@ public class Configuration implements Serializable {
 	 * 
 	 * @return String representing game configuration
 	 */
-	public String getConfig() {
+	public static String getConfig() {
 		String retStr = "* No clip: " + getInstance().isNoClip() + "\n";
 		retStr += "* Do battles: " + DOBATTLES + "\n";
 		retStr += "* Show intro: " + SHOWINTRO + "\n"; // false = skip Oak intro

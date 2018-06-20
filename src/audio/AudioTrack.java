@@ -29,8 +29,8 @@ public class AudioTrack {
 	 *            - the title of the song
 	 */
 	public AudioTrack(String songTitle) {
-		trackTitle = songTitle;
-		String path = (Configuration.MUSIC_PATH + trackTitle.replace(" ", "") + ".mid").replace("resources", "");
+		this.trackTitle = songTitle;
+		String path = (Configuration.MUSIC_PATH + this.trackTitle.replace(" ", "") + ".mid").replace("resources", "");
 		try {
 			InputStream resource = AudioTrack.class.getResourceAsStream(path);
 			Sequence sequence = MidiSystem.getSequence(resource);
@@ -38,8 +38,10 @@ public class AudioTrack {
 			this.sequencer.open();
 			this.sequencer.setSequence(sequence);
 			this.sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
+			resource.close();
 		} catch (Exception e) {
-			DebugUtility.printError("Cannot load sound " + trackTitle);
+			DebugUtility.printError("Cannot load sound " + this.trackTitle);
+			DebugUtility.printError(e.getMessage());
 		}
 	}
 
@@ -67,6 +69,7 @@ public class AudioTrack {
 	 * 
 	 * @return track title
 	 */
+	@Override
 	public String toString() {
 		return this.trackTitle;
 	}

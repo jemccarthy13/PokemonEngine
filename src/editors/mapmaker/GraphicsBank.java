@@ -111,7 +111,9 @@ public class GraphicsBank {
 	 * @param paramFile
 	 *            - the file handle of the image to load
 	 */
-	public void addSprite(File paramFile) {}
+	public void addSprite(File paramFile) {
+		// do nothing
+	}
 
 	/**
 	 * Loads a map tile set given the path of the file
@@ -211,10 +213,11 @@ public class GraphicsBank {
 	 * @throws FileNotFoundException
 	 *             - if the file isn't available
 	 */
-	private File checkError(File tileSetFile, int j, BufferedReader localBufferedReader, String[] fileList,
+	private static File checkError(File tileSetFile, int j, BufferedReader localBufferedReader, String[] fileList,
 			File localFile) throws IOException, FileNotFoundException {
+		File retFile = localFile;
 		if (!localFile.exists()) {
-			localFile = new File(fileList[1]);
+			retFile = new File(fileList[1]);
 			if (localFile.exists()) {
 				DebugUtility.printError("WARNING: file " + fileList[1] + " not within the working directory");
 			} else {
@@ -223,7 +226,7 @@ public class GraphicsBank {
 						+ tileSetFile + " could not be found");
 			}
 		}
-		return localFile;
+		return retFile;
 	}
 
 	/**
@@ -240,7 +243,7 @@ public class GraphicsBank {
 		DebugUtility.printMessage("Saving " + this.MapTiles.size() + " MapTiles.");
 		Iterator<MapTile> mapTileIterator = this.MapTiles.iterator();
 		while (mapTileIterator.hasNext()) {
-			MapTile currentMapTile = (MapTile) mapTileIterator.next();
+			MapTile currentMapTile = mapTileIterator.next();
 			File compareFile = new File(currentMapTile.getPath()).getCanonicalFile();
 			String str = RelativePath.getRelativePath(new File(fileDir.getCanonicalPath()),
 					new File(compareFile.getCanonicalPath()));
@@ -279,7 +282,7 @@ public class GraphicsBank {
 		MapTile retTile = null;
 
 		while (localIterator.hasNext()) {
-			MapTile localMapTile = (MapTile) localIterator.next();
+			MapTile localMapTile = localIterator.next();
 			if (localMapTile.getNumber() == tileNumber) {
 				retTile = localMapTile;
 			}
@@ -297,7 +300,7 @@ public class GraphicsBank {
 		Iterator<MapTile> localIterator = this.MapTiles.iterator();
 		MapTile retTile = null;
 		while (localIterator.hasNext()) {
-			MapTile localMapTile = (MapTile) localIterator.next();
+			MapTile localMapTile = localIterator.next();
 			if (localMapTile.getName().equals(nameToMatch)) {
 				retTile = localMapTile;
 			}
@@ -367,7 +370,7 @@ public class GraphicsBank {
 	public void setEffect(float[] RGBHs) {
 		Iterator<MapTile> tileIterator = this.MapTiles.iterator();
 		while (tileIterator.hasNext()) {
-			((MapTile) tileIterator.next()).adjustRGBHS(RGBHs);
+			tileIterator.next().adjustRGBHS(RGBHs);
 		}
 	}
 
@@ -398,7 +401,7 @@ public class GraphicsBank {
 		int i = 1;
 		Iterator<MapTile> mapTileIterator = this.MapTiles.iterator();
 		while (mapTileIterator.hasNext()) {
-			MapTile currentTile = (MapTile) mapTileIterator.next();
+			MapTile currentTile = mapTileIterator.next();
 			if (i <= currentTile.getNumber()) {
 				i = currentTile.getNumber() + 1;
 			}
@@ -432,8 +435,7 @@ public class GraphicsBank {
 	public void fireChangeEvent() {
 		Iterator<GraphicsBankChangeListener> localIterator = this.changeListeners.iterator();
 		while (localIterator.hasNext()) {
-			GraphicsBankChangeListener localGraphicsBankChangeListener = (GraphicsBankChangeListener) localIterator
-					.next();
+			GraphicsBankChangeListener localGraphicsBankChangeListener = localIterator.next();
 			localGraphicsBankChangeListener.tilesetUpdated(this);
 		}
 	}
@@ -446,8 +448,7 @@ public class GraphicsBank {
 	private void fireAddEvent(MapTile addedMapTile) {
 		Iterator<GraphicsBankChangeListener> localIterator = this.changeListeners.iterator();
 		while (localIterator.hasNext()) {
-			GraphicsBankChangeListener localGraphicsBankChangeListener = (GraphicsBankChangeListener) localIterator
-					.next();
+			GraphicsBankChangeListener localGraphicsBankChangeListener = localIterator.next();
 			localGraphicsBankChangeListener.MapTileAdded(this, addedMapTile);
 		}
 	}
@@ -460,8 +461,7 @@ public class GraphicsBank {
 	private void fireRemoveEvent(MapTile removedMapTile) {
 		Iterator<GraphicsBankChangeListener> localIterator = this.changeListeners.iterator();
 		while (localIterator.hasNext()) {
-			GraphicsBankChangeListener localGraphicsBankChangeListener = (GraphicsBankChangeListener) localIterator
-					.next();
+			GraphicsBankChangeListener localGraphicsBankChangeListener = localIterator.next();
 			localGraphicsBankChangeListener.MapTileRemoved(this, removedMapTile);
 		}
 	}

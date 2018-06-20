@@ -98,42 +98,44 @@ public class LocationEditor extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (e.getSource().equals(openItem)) {
+			if (e.getSource().equals(LocationEditor.this.openItem)) {
 				JFileChooser j = new JFileChooser();
 				j.setCurrentDirectory(new File("./resources/data"));
 				int returnVal = j.showOpenDialog(LocationEditor.this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					locationFile = j.getSelectedFile();
-					DebugUtility.printMessage("opening " + locationFile.getName() + ".");
+					LocationEditor.this.locationFile = j.getSelectedFile();
+					DebugUtility.printMessage("opening " + LocationEditor.this.locationFile.getName() + ".");
 
-					locLib.populateMap(locationFile.getAbsolutePath());
+					LocationEditor.this.locLib.populateMap(LocationEditor.this.locationFile.getAbsolutePath());
 
-					for (String loc : locLib.keySet()) {
+					for (String loc : LocationEditor.this.locLib.keySet()) {
 						DebugUtility.printMessage(loc);
 					}
 
-					ltm = new LocationTableModel();
-					for (LocationData locData : locLib.values()) {
-						ltm.addObject(locData);
+					LocationEditor.this.ltm = new LocationTableModel();
+					for (LocationData locData : LocationEditor.this.locLib.values()) {
+						LocationEditor.this.ltm.addObject(locData);
 					}
-					JTable table = new JTable(ltm);
-					panel = new JScrollPane(table);
-					mainPanel.setLayout(new GridLayout());
-					mainPanel.add(panel);
+					JTable table = new JTable(LocationEditor.this.ltm);
+					LocationEditor.this.panel = new JScrollPane(table);
+					LocationEditor.this.mainPanel.setLayout(new GridLayout());
+					LocationEditor.this.mainPanel.add(LocationEditor.this.panel);
 					repaint();
 					validate();
 					// for (Entry<?> : entries){
 
 					// }
-				} else {}
+				} else {
+					// do nothing
+				}
 			}
-			if (e.getSource().equals(saveItem)) {
+			if (e.getSource().equals(LocationEditor.this.saveItem)) {
 				DebugUtility.printError("TODO - save data here");
 			}
-			if (e.getSource().equals(addItem)) {
+			if (e.getSource().equals(LocationEditor.this.addItem)) {
 				DebugUtility.printMessage("adding item");
-				locLib.put("", new LocationData());
-				ltm.addObject(locLib.get(""));
+				LocationEditor.this.locLib.put("", new LocationData());
+				LocationEditor.this.ltm.addObject(LocationEditor.this.locLib.get(""));
 				repaint();
 				validate();
 			}
@@ -150,17 +152,17 @@ public class LocationEditor extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 
-		fileMenu.add(saveItem);
-		fileMenu.add(openItem);
-		fileMenu.add(addItem);
+		this.fileMenu.add(this.saveItem);
+		this.fileMenu.add(this.openItem);
+		this.fileMenu.add(this.addItem);
 
-		openItem.addActionListener(listener);
-		addItem.addActionListener(listener);
+		this.openItem.addActionListener(this.listener);
+		this.addItem.addActionListener(this.listener);
 
-		menuBar.add(fileMenu);
+		this.menuBar.add(this.fileMenu);
 
-		this.setJMenuBar(menuBar);
-		this.add(mainPanel);
+		this.setJMenuBar(this.menuBar);
+		this.add(this.mainPanel);
 	}
 
 	/**

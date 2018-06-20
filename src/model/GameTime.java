@@ -60,9 +60,9 @@ public class GameTime implements Serializable {
 	}
 
 	public void setBankedTime(int hours, int minutes, int seconds) {
-		bankedHours = hours;
-		bankedMinutes = minutes;
-		bankedSeconds = seconds;
+		this.bankedHours = hours;
+		this.bankedMinutes = minutes;
+		this.bankedSeconds = seconds;
 	}
 
 	/**
@@ -71,28 +71,28 @@ public class GameTime implements Serializable {
 	 * over 60
 	 */
 	public void saveTime() {
-		bankedSeconds += sessionSeconds;
-		if (bankedSeconds > 60) {
-			bankedMinutes += bankedSeconds / 60;
-			bankedSeconds = 60 - (bankedSeconds / 60);
+		this.bankedSeconds += this.sessionSeconds;
+		if (this.bankedSeconds > 60) {
+			this.bankedMinutes += this.bankedSeconds / 60;
+			this.bankedSeconds = 60 - (this.bankedSeconds / 60);
 		}
-		bankedMinutes += sessionMinutes;
-		if (bankedMinutes > 60) {
-			bankedHours += (bankedMinutes / 60);
-			bankedMinutes = 60 - (bankedMinutes / 60);
+		this.bankedMinutes += this.sessionMinutes;
+		if (this.bankedMinutes > 60) {
+			this.bankedHours += (this.bankedMinutes / 60);
+			this.bankedMinutes = 60 - (this.bankedMinutes / 60);
 		}
-		bankedHours += sessionHours;
-		timeStarted = System.currentTimeMillis();
+		this.bankedHours += this.sessionHours;
+		this.timeStarted = System.currentTimeMillis();
 	}
 
 	/**
 	 * Update the session's hours, minutes, seconds based on current time
 	 */
 	public void updateTime() {
-		sessionSeconds = (int) ((System.currentTimeMillis() - timeStarted) / 1000L);
-		sessionHours = sessionSeconds / 3600;
-		sessionMinutes = (sessionSeconds - (sessionHours * 3600)) / 60;
-		sessionSeconds = (sessionSeconds - sessionHours * 3600 - sessionMinutes * 60);
+		this.sessionSeconds = (int) ((System.currentTimeMillis() - this.timeStarted) / 1000L);
+		this.sessionHours = this.sessionSeconds / 3600;
+		this.sessionMinutes = (this.sessionSeconds - (this.sessionHours * 3600)) / 60;
+		this.sessionSeconds = (this.sessionSeconds - this.sessionHours * 3600 - this.sessionMinutes * 60);
 	}
 
 	/**
@@ -103,9 +103,9 @@ public class GameTime implements Serializable {
 	public String formatTime() {
 
 		// add session time to banked time
-		int hours = sessionHours + bankedHours;
-		int minutes = sessionMinutes + bankedMinutes;
-		int seconds = sessionSeconds + bankedSeconds;
+		int hours = this.sessionHours + this.bankedHours;
+		int minutes = this.sessionMinutes + this.bankedMinutes;
+		int seconds = this.sessionSeconds + this.bankedSeconds;
 
 		// add any overlap to the next category
 		// i.e seconds = 70, then that's +1 minute, 10 seconds
@@ -124,6 +124,6 @@ public class GameTime implements Serializable {
 	}
 
 	public void start() {
-		timeStarted = System.currentTimeMillis();
+		this.timeStarted = System.currentTimeMillis();
 	}
 }

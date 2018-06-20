@@ -1,20 +1,18 @@
 package trainers;
 
-import graphics.SpriteLibrary;
-
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import model.Coordinate;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import party.Party;
+import graphics.SpriteLibrary;
+import model.Coordinate;
 import party.BattlerFactory;
+import party.Party;
 import trainers.Actor.DIR;
 import utilities.DebugUtility;
 
@@ -33,8 +31,8 @@ public class NPCLibrary extends HashMap<String, Actor> {
 	private static NPCLibrary m_instance = new NPCLibrary();
 
 	/**
-	 * Private constructor ensures only one instance. Loads data from the
-	 * NPCs.json file
+	 * Private constructor ensures only one instance. Loads data from the NPCs.json
+	 * file
 	 */
 	private NPCLibrary() {
 		String filename = "resources/data/NPCs.json";
@@ -60,8 +58,9 @@ public class NPCLibrary extends HashMap<String, Actor> {
 		JSONParser parser = new JSONParser();
 		try {
 			// this is the JSON main object for all NPCs
-			JSONObject all_npcs = (JSONObject) parser.parse(new FileReader(filename));
-
+			FileReader reader = new FileReader(filename);
+			JSONObject all_npcs = (JSONObject) parser.parse(reader);
+			reader.close();
 			// this is the JSON object that contains all NPC data as an array
 			JSONArray npc_data_all = (JSONArray) all_npcs.get("NPCs");
 

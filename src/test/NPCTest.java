@@ -1,7 +1,5 @@
 package test;
 
-import graphics.NPCThread;
-
 import java.awt.Color;
 import java.awt.Graphics;
 
@@ -10,6 +8,7 @@ import javax.swing.JPanel;
 
 import org.junit.Test;
 
+import graphics.NPCThread;
 import trainers.Actor;
 import trainers.NPCLibrary;
 
@@ -31,6 +30,7 @@ public class NPCTest extends JFrame {
 	JPanel p = new JPanel() {
 		private static final long serialVersionUID = 7322676857941810785L;
 
+		@Override
 		public void paintComponent(Graphics g) {
 			this.setBackground(Color.BLACK);
 
@@ -48,9 +48,10 @@ public class NPCTest extends JFrame {
 	 * The thread that powers random NPC directions
 	 */
 	Thread gameThread = new Thread() {
+		@Override
 		public void run() {
 			while (true) {
-				p.paintComponents(getGraphics());
+				NPCTest.this.p.paintComponents(getGraphics());
 				repaint();
 				validate();
 			}
@@ -63,9 +64,9 @@ public class NPCTest extends JFrame {
 	public NPCTest() {
 		NPCThread npct = new NPCThread();
 		npct.start();
-		gameThread.start();
+		this.gameThread.start();
 		setSize(300, 300);
-		add(p);
+		add(this.p);
 		repaint();
 		validate();
 		setLocationRelativeTo(null);

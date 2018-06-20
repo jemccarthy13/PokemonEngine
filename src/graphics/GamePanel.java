@@ -61,12 +61,12 @@ public class GamePanel extends JPanel implements ActionListener {
 	public GamePanel() {
 
 		try {
-			GameMap.getInstance().loadMap(gameController);
+			GameMap.getInstance().loadMap(this.gameController);
 		} catch (IOException | InterruptedException e) {
 			DebugUtility.printError("Unable to load map!");
 		}
 		// setup key press listening
-		GameKeyListener.getInstance().setGameController(gameController);
+		GameKeyListener.setGameController(this.gameController);
 		addKeyListener(GameKeyListener.getInstance());
 
 		DebugUtility.printHeader("Event Registration");
@@ -84,21 +84,22 @@ public class GamePanel extends JPanel implements ActionListener {
 	 * Any time an action is performed in the frame, this method updates the time
 	 * and handles world actions.
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		GameTime.getInstance().updateTime();
 		if (GameGraphicsData.getInstance().getScene() == WorldScene.instance) {
 			// get all comparison variables up front
-			Player player = gameController.getPlayer();
+			Player player = this.gameController.getPlayer();
 			Coordinate playerPos = player.getPosition();
 
 			// check for teleport at location
-			if (GameMap.getInstance().isTeleportAt(playerPos)) {
-				gameController.doTeleport(playerPos);
+			if (GameMap.isTeleportAt(playerPos)) {
+				this.gameController.doTeleport(playerPos);
 			} else {
 				// Party playerPokemon = player.getParty();
-				player.doAnimation(gameController);
+				player.doAnimation(this.gameController);
 				if (player.hasMoved()) {
-					gameController.postMovementChecks();
+					this.gameController.postMovementChecks();
 				}
 			}
 		}
@@ -112,14 +113,14 @@ public class GamePanel extends JPanel implements ActionListener {
 	private void checkForNPCEncounter() {
 		// check for trainer encounter with any NPC
 		for (Actor curNPC : NPCLibrary.getInstance().values()) {
-			if (gameController.validEncounterConditions(curNPC)) {
+			if (this.gameController.validEncounterConditions(curNPC)) {
 				NPCThread.getInstance().stopMoving();
 				enemyTrainerAnimation(curNPC);
 				AudioLibrary.playBackgroundMusic("TrainerBattle");
-				BattleEngine.getInstance().fight(curNPC.getParty(), gameController, curNPC.getName());
+				BattleEngine.getInstance().fight(curNPC.getParty(), this.gameController, curNPC.getName());
 			} else {
-				if (gameController.getPlayer() != null) {
-					gameController.getPlayer().canMove = true;
+				if (this.gameController.getPlayer() != null) {
+					this.gameController.getPlayer().canMove = true;
 				}
 			}
 		}
@@ -137,14 +138,16 @@ public class GamePanel extends JPanel implements ActionListener {
 
 		try {
 			// ! painting on initial eyesight
-			Painter.paintTrainerSighted(getGraphics(), gameController, curNPC.getPosition());
+			Painter.paintTrainerSighted(getGraphics(), this.gameController, curNPC.getPosition());
 			Thread.sleep(1500);
-		} catch (InterruptedException e) {}
+		} catch (InterruptedException e) {
+			// do nothing
+		}
 
 		DIR NPC_DIR = curNPC.getDirection();
 		int distToTravel = 0;
 
-		Player player = gameController.getPlayer();
+		Player player = this.gameController.getPlayer();
 
 		if (NPC_DIR == DIR.NORTH) {
 			player.setDirection(DIR.SOUTH);
@@ -172,6 +175,7 @@ public class GamePanel extends JPanel implements ActionListener {
 	/**
 	 * Calls the painter to paint it's graphics, refreshes the screen
 	 */
+	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Painter.paintComponent(g, this);

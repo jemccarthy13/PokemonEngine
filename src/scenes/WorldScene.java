@@ -3,7 +3,6 @@ package scenes;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
@@ -66,7 +65,7 @@ public class WorldScene extends BaseScene {
 					int tilePic = GameMap.getInstance().getMapImageAt(layer, tile_number);
 
 					if (!(layer == 2 && tilePic == 0)) {
-						g.drawImage((Image) TileSet.getInstance().get(tilePic), x_coor, y_coor, null);
+						g.drawImage(TileSet.getInstance().get(tilePic), x_coor, y_coor, null);
 					}
 					x_coor += Tile.TILESIZE;
 					tile_number++;
@@ -101,7 +100,7 @@ public class WorldScene extends BaseScene {
 	 *            - the key pressed
 	 * @return a DIR from the direction buttons if applicable
 	 */
-	private DIR getDirFromButton(int keyCode) {
+	private static DIR getDirFromButton(int keyCode) {
 		DIR toTravel = null;
 		switch (keyCode) {
 		case KeyEvent.VK_UP:
@@ -116,6 +115,8 @@ public class WorldScene extends BaseScene {
 		case KeyEvent.VK_RIGHT:
 			toTravel = DIR.EAST;
 			break;
+		default:
+			break;
 		}
 		return toTravel;
 	}
@@ -123,6 +124,7 @@ public class WorldScene extends BaseScene {
 	/**
 	 * Perform "z" button click at the world scene
 	 */
+	@Override
 	public void doAction(GameController control) {
 		AudioLibrary.playClip(SOUND_EFFECT.SELECT);
 		// overhead cost for following logic
@@ -130,13 +132,17 @@ public class WorldScene extends BaseScene {
 		DIR playerDir = player.getDirection();
 		for (Actor curNPC : NPCLibrary.getInstance().values()) {
 			if (playerDir == DIR.WEST) {
-				control.tryBorderNPC(curNPC, new Coordinate(player.getCurrentX() - 1, player.getCurrentY()), playerDir);
+				GameController.tryBorderNPC(curNPC, new Coordinate(player.getCurrentX() - 1, player.getCurrentY()),
+						playerDir);
 			} else if (playerDir == DIR.NORTH) {
-				control.tryBorderNPC(curNPC, new Coordinate(player.getCurrentX(), player.getCurrentY() - 1), playerDir);
+				GameController.tryBorderNPC(curNPC, new Coordinate(player.getCurrentX(), player.getCurrentY() - 1),
+						playerDir);
 			} else if (playerDir == DIR.EAST) {
-				control.tryBorderNPC(curNPC, new Coordinate(player.getCurrentX() + 1, player.getCurrentY()), playerDir);
+				GameController.tryBorderNPC(curNPC, new Coordinate(player.getCurrentX() + 1, player.getCurrentY()),
+						playerDir);
 			} else if (playerDir == DIR.SOUTH) {
-				control.tryBorderNPC(curNPC, new Coordinate(player.getCurrentX(), player.getCurrentY() + 1), playerDir);
+				GameController.tryBorderNPC(curNPC, new Coordinate(player.getCurrentX(), player.getCurrentY() + 1),
+						playerDir);
 			}
 		}
 	}

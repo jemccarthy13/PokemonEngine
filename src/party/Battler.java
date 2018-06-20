@@ -114,28 +114,28 @@ public class Battler implements Serializable {
 		this.curExp = (this.level * this.level * this.level);
 
 		for (Integer x : pData.evolution_levels) {
-			if (level > x && x != 0) {
-				evolution_stage++;
+			if (this.level > x && x != 0) {
+				this.evolution_stage++;
 			}
 		}
 
 		// create base max stats and initialize current stats to the maximums
 		for (STAT s : STAT.values()) {
-			maxStats.put(s, RandomNumUtils.randomBaseStat(level));
-			stats.put(s, maxStats.get(s));
+			this.maxStats.put(s, RandomNumUtils.randomBaseStat(this.level));
+			this.stats.put(s, this.maxStats.get(s));
 		}
 
-		moves = new MoveList(pData.name);
+		this.moves = new MoveList(pData.name);
 
 		int idx = -1;
 		for (int x = 0; x < pData.movesLearned.size(); x++) {
-			if (level > pData.levelsLearned.get(x)) {
+			if (this.level > pData.levelsLearned.get(x)) {
 				idx++;
 			}
 		}
 		for (int y = 0; y < 4; y++) {
 			if (idx - y <= pData.movesLearned.size() && idx - y >= 0) {
-				moves.add(MoveLibrary.getInstance().get(pData.movesLearned.get(idx - y)), false);
+				this.moves.add(MoveLibrary.getInstance().get(pData.movesLearned.get(idx - y)), false);
 			}
 		}
 
@@ -163,8 +163,8 @@ public class Battler implements Serializable {
 	 */
 	public int getExpGain(boolean trainerOwned, int numParticipants) {
 		double a = trainerOwned ? 1.5 : 1;
-		int b = pData.baseExp;
-		return (int) (a * b * level) / (7 * numParticipants);
+		int b = this.pData.baseExp;
+		return (int) (a * b * this.level) / (7 * numParticipants);
 	}
 
 	/**
@@ -220,45 +220,46 @@ public class Battler implements Serializable {
 		if (this.level < 100) {
 			this.level += 1;
 			// TODO - convert to use message box
-			MessageQueue.getInstance().add(getName() + " grew to level " + level + "!");
-			DebugUtility.printMessage(getName() + " grew to level " + level + "!");
+			MessageQueue.getInstance().add(getName() + " grew to level " + this.level + "!");
+			DebugUtility.printMessage(getName() + " grew to level " + this.level + "!");
 		}
-		for (STAT key : stats.keySet()) {
+		for (STAT key : this.stats.keySet()) {
 			if (key != STAT.ACCURACY) {
 				int incr = RandomNumUtils.randomStatIncr();
-				int new_value = stats.get(key) + incr;
+				int new_value = this.stats.get(key) + incr;
 
 				if (new_value > 240) {
 					new_value = 240;
 				}
 
-				stats.put(key, new_value);
+				this.stats.put(key, new_value);
 			}
 		}
-		for (STAT key : maxStats.keySet()) {
+		for (STAT key : this.maxStats.keySet()) {
 			if (key != STAT.ACCURACY) {
 				int incr = RandomNumUtils.randomStatIncr();
-				int new_value = maxStats.get(key) + incr;
+				int new_value = this.maxStats.get(key) + incr;
 
 				if (new_value > 240) {
 					new_value = 240;
 				}
 
-				maxStats.put(key, new_value);
+				this.maxStats.put(key, new_value);
 			}
 		}
-		if ((this.evolution_stage < 2) && (this.level == pData.evolution_levels.get(evolution_stage + 1))) {
+		if ((this.evolution_stage < 2) && (this.level == this.pData.evolution_levels.get(this.evolution_stage + 1))) {
 			this.evolution_stage += 1;
 			// TODO Convert to use message box
-			DebugUtility.printMessage("Congratulations!  Your " + pData.evolution_stages.get(evolution_stage - 1)
-					+ " has evolved into a " + pData.evolution_stages.get(evolution_stage) + "!");
+			DebugUtility
+					.printMessage("Congratulations!  Your " + this.pData.evolution_stages.get(this.evolution_stage - 1)
+							+ " has evolved into a " + this.pData.evolution_stages.get(this.evolution_stage) + "!");
 			updateSprites();
 		}
-		for (int x = 0; x < pData.movesLearned.size(); x++) {
-			if (level == pData.levelsLearned.get(x)) {
-				this.moves.add(MoveLibrary.getInstance().get(pData.movesLearned.get(x)));
+		for (int x = 0; x < this.pData.movesLearned.size(); x++) {
+			if (this.level == this.pData.levelsLearned.get(x)) {
+				this.moves.add(MoveLibrary.getInstance().get(this.pData.movesLearned.get(x)));
 				// TODO convert to use message box
-				DebugUtility.printMessage(getName() + " learned " + pData.movesLearned.get(x));
+				DebugUtility.printMessage(getName() + " learned " + this.pData.movesLearned.get(x));
 			}
 		}
 	}
@@ -283,6 +284,7 @@ public class Battler implements Serializable {
 	 * 
 	 * @param move
 	 *            - the move data of the opponent's move
+	 * @return amount of damage
 	 */
 	public int doDamage(MoveData move) {
 		int attackStat = 0;
@@ -313,12 +315,12 @@ public class Battler implements Serializable {
 	 *            - the amount to heal
 	 */
 	public void heal(int amount) {
-		int hp = stats.get(STAT.HP) + amount;
-		if (hp > maxStats.get(STAT.HP)) {
+		int hp = this.stats.get(STAT.HP) + amount;
+		if (hp > this.maxStats.get(STAT.HP)) {
 			fullHeal();
 		} else {
 			// restore the given amount
-			stats.put(STAT.HP, hp);
+			this.stats.put(STAT.HP, hp);
 		}
 	}
 
@@ -326,7 +328,7 @@ public class Battler implements Serializable {
 	 * Restore all health
 	 */
 	public void fullHeal() {
-		stats.put(STAT.HP, maxStats.get(STAT.HP));
+		this.stats.put(STAT.HP, this.maxStats.get(STAT.HP));
 	}
 
 	/**
@@ -337,7 +339,7 @@ public class Battler implements Serializable {
 	 * @return int value of the STAT
 	 */
 	public int getStat(STAT stat) {
-		return stats.get(stat);
+		return this.stats.get(stat);
 	}
 
 	/**
@@ -348,7 +350,7 @@ public class Battler implements Serializable {
 	 * @return int max value of stat
 	 */
 	public int getMaxStat(STAT stat) {
-		return maxStats.get(stat);
+		return this.maxStats.get(stat);
 	}
 
 	/**
@@ -360,7 +362,7 @@ public class Battler implements Serializable {
 	 *            - the value to set it to
 	 */
 	private void setStat(STAT stat, int value) {
-		stats.put(stat, value);
+		this.stats.put(stat, value);
 	}
 
 	/**
@@ -371,7 +373,7 @@ public class Battler implements Serializable {
 	 * @return the string name of Party member
 	 */
 	public String getName() {
-		return pData.evolution_stages.get(evolution_stage);
+		return this.pData.evolution_stages.get(this.evolution_stage);
 	}
 
 	/**
@@ -380,7 +382,7 @@ public class Battler implements Serializable {
 	 * @return int level
 	 */
 	public int getLevel() {
-		return level;
+		return this.level;
 	}
 
 	/**
@@ -391,7 +393,7 @@ public class Battler implements Serializable {
 	 * @return MoveData representing chosen move
 	 */
 	public MoveData getMove(int choice) {
-		return moves.get(choice);
+		return this.moves.get(choice);
 	}
 
 	/**
@@ -400,7 +402,7 @@ public class Battler implements Serializable {
 	 * @return int number of moves
 	 */
 	public int getNumMoves() {
-		return moves.size();
+		return this.moves.size();
 	}
 
 	/**
@@ -451,13 +453,14 @@ public class Battler implements Serializable {
 	 * 
 	 * @return String representation
 	 */
+	@Override
 	public String toString() {
-		String retStr = pData.toString();
+		String retStr = this.pData.toString();
 		retStr += "Level: " + this.level + "\n";
 		retStr += "Cur Exp: " + this.curExp + "\n";
 		int expNext = (int) Math.pow(this.level + 1, 3);
 		retStr += "Next level: " + expNext + "\n";
-		retStr += "Remainder: " + (expNext - curExp) + " \n";
+		retStr += "Remainder: " + (expNext - this.curExp) + " \n";
 		return retStr;
 	}
 
@@ -470,7 +473,7 @@ public class Battler implements Serializable {
 	 * @return String representation of the pokedex number
 	 */
 	public String formatPokedexNumber() {
-		return String.format("%03d", Integer.parseInt(this.pData.pokedexNumber) + evolution_stage);
+		return String.format("%03d", Integer.parseInt(this.pData.pokedexNumber) + this.evolution_stage);
 	}
 
 	/**
@@ -479,7 +482,7 @@ public class Battler implements Serializable {
 	 * @return STATUS current status
 	 */
 	public STATUS getStatusEffect() {
-		return statusEffect;
+		return this.statusEffect;
 	}
 
 	/**

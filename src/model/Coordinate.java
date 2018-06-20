@@ -18,8 +18,9 @@ public class Coordinate implements Serializable {
 	 * 
 	 * @return string representation of coordinate
 	 */
+	@Override
 	public String toString() {
-		return "(" + x + ", " + y + ")";
+		return "(" + this.x + ", " + this.y + ")";
 	}
 
 	/**
@@ -89,11 +90,11 @@ public class Coordinate implements Serializable {
 	 * @return whether or not the coordinates are the same
 	 */
 	public boolean equals(Coordinate another) {
+		boolean eq = false;
 		if (another.getX() == getX() && another.getY() == getY()) {
-			return true;
-		} else {
-			return false;
+			eq = true;
 		}
+		return eq;
 	}
 
 	/**
@@ -104,7 +105,7 @@ public class Coordinate implements Serializable {
 	 * @return a new coordinate
 	 */
 	public Coordinate move(DIR dir) {
-		Coordinate nCoor = new Coordinate(x, y);
+		Coordinate nCoor = new Coordinate(this.x, this.y);
 		if (dir == DIR.NORTH) {
 			nCoor.y -= 1;
 		} else if (dir == DIR.SOUTH) {
