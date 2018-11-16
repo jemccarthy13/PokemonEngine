@@ -95,8 +95,9 @@ public class Bag extends HashMap<POCKETS, ItemList> {
 	 */
 	public void addToPocket(POCKETS pocket, Item it) {
 		if (this.get(pocket).get(it) == null) {
-			this.get(pocket).put(it, 0);
+			this.get(pocket).put(it, Integer.valueOf(0));
 		}
-		this.get(pocket).put(it, this.get(pocket).get(it) + 1);
+		Integer p = Integer.valueOf(this.get(pocket).get(it).intValue() + 1);
+		this.get(pocket).put(it, p);
 	}
 }

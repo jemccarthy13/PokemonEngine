@@ -72,57 +72,55 @@ public class Scene {
 		float f4 = 0.0F;
 		float f5 = 1.0F;
 
-		BufferedReader localBufferedReader = new BufferedReader(new FileReader(paramFile));
+		try (BufferedReader localBufferedReader = new BufferedReader(new FileReader(paramFile))) {
+			String str1 = localBufferedReader.readLine();
 
-		String str1 = localBufferedReader.readLine();
+			StringTokenizer localStringTokenizer = new StringTokenizer(str1);
+			int j = Integer.parseInt(localStringTokenizer.nextToken());
+			int k = Integer.parseInt(localStringTokenizer.nextToken());
 
-		StringTokenizer localStringTokenizer = new StringTokenizer(str1);
-		int j = Integer.parseInt(localStringTokenizer.nextToken());
-		int k = Integer.parseInt(localStringTokenizer.nextToken());
+			String str2 = localStringTokenizer.nextToken();
 
-		String str2 = localStringTokenizer.nextToken();
+			GraphicsBank localGraphicsBank = new GraphicsBank();
 
-		GraphicsBank localGraphicsBank = new GraphicsBank();
+			File localFile = new File(paramFile.getParentFile(), str2);
+			DebugUtility.printMessage("Attempt to load tileset " + localFile.getAbsoluteFile());
 
-		File localFile = new File(paramFile.getParentFile(), str2);
-		DebugUtility.printMessage("Attempt to load tileset " + localFile.getAbsoluteFile());
+			localGraphicsBank.loadMapTileset(localFile);
 
-		localGraphicsBank.loadMapTileset(localFile);
+			Map localMap = new Map(j, k);
 
-		Map localMap = new Map(j, k);
-
-		str1 = localBufferedReader.readLine();
-		localStringTokenizer = new StringTokenizer(str1);
-		if (localStringTokenizer.nextToken().equalsIgnoreCase("colorization")) {
-			i = 1;
-			f1 = Float.parseFloat(localStringTokenizer.nextToken());
-			f2 = Float.parseFloat(localStringTokenizer.nextToken());
-			f3 = Float.parseFloat(localStringTokenizer.nextToken());
-			f4 = Float.parseFloat(localStringTokenizer.nextToken());
-			f5 = Float.parseFloat(localStringTokenizer.nextToken());
-		}
-		while (!str1.equals(".")) {
-			str1 = localBufferedReader.readLine();
-		}
-		for (int m = 0; m < 3; m++) {
 			str1 = localBufferedReader.readLine();
 			localStringTokenizer = new StringTokenizer(str1);
-			for (int n = 0; n < k; n++) {
-				for (int i1 = 0; i1 < j; i1++) {
-					String str3 = localStringTokenizer.nextToken();
-					localMap.setTile(i1, n, m, localGraphicsBank.getMapTile(Integer.parseInt(str3)));
+			if (localStringTokenizer.nextToken().equalsIgnoreCase("colorization")) {
+				i = 1;
+				f1 = Float.parseFloat(localStringTokenizer.nextToken());
+				f2 = Float.parseFloat(localStringTokenizer.nextToken());
+				f3 = Float.parseFloat(localStringTokenizer.nextToken());
+				f4 = Float.parseFloat(localStringTokenizer.nextToken());
+				f5 = Float.parseFloat(localStringTokenizer.nextToken());
+			}
+			while (!str1.equals(".")) {
+				str1 = localBufferedReader.readLine();
+			}
+			for (int m = 0; m < 3; m++) {
+				str1 = localBufferedReader.readLine();
+				localStringTokenizer = new StringTokenizer(str1);
+				for (int n = 0; n < k; n++) {
+					for (int i1 = 0; i1 < j; i1++) {
+						String str3 = localStringTokenizer.nextToken();
+						localMap.setTile(i1, n, m, localGraphicsBank.getMapTile(Integer.parseInt(str3)));
+					}
 				}
 			}
+			Scene localScene = new Scene(localMap, new ArrayList<>(), localGraphicsBank);
+			localScene.tileset = localGraphicsBank;
+			if (i != 0) {
+				float[] fParams = { f1, f2, f3, f4, f5, (float) 1.0 };
+				localScene.setEffect(fParams);
+			}
+			return localScene;
 		}
-		localBufferedReader.close();
-
-		Scene localScene = new Scene(localMap, new ArrayList<Object>(), localGraphicsBank);
-		localScene.tileset = localGraphicsBank;
-		if (i != 0) {
-			float[] fParams = { f1, f2, f3, f4, f5, (float) 1.0 };
-			localScene.setEffect(fParams);
-		}
-		return localScene;
 	}
 
 	static Scene loadScene(String paramString) throws IOException {
@@ -137,8 +135,7 @@ public class Scene {
 		if (this.tileset.isUnsaved()) {
 			throw new RuntimeException("Tileset is unsaved. Cannot save the scene");
 		}
-		try {
-			PrintWriter localPrintWriter = new PrintWriter(new BufferedWriter(new FileWriter(paramFile)));
+		try (PrintWriter localPrintWriter = new PrintWriter(new BufferedWriter(new FileWriter(paramFile)))) {
 
 			String str1 = "";
 
@@ -161,9 +158,8 @@ public class Scene {
 			localPrintWriter.println(".");
 			writeScene(localPrintWriter, i, j);
 			localPrintWriter.flush();
-			localPrintWriter.close();
-		} catch (IOException localIOException) {
-			throw new RuntimeException("Could not save the level");
+		} catch (IOException e) {
+			DebugUtility.printError("Could not load local file " + e.getMessage());
 		}
 		DebugUtility.printMessage("Saved");
 	}

@@ -32,7 +32,7 @@ public class GameApplet extends JApplet {
 		try {
 			GameMap.getInstance().loadMap(pokemonGame.gameController);
 		} catch (IOException | InterruptedException e) {
-			DebugUtility.printError("Unable to load map!");
+			DebugUtility.printError("Unable to load map!\n" + e.getLocalizedMessage());
 		}
 		// setup key press listening
 		GameKeyListener.setGameController(pokemonGame.gameController);

@@ -16,8 +16,8 @@ public class RandomNumUtils {
 	private static Random randomGenerator = new Random();
 
 	/**
-	 * The core random number generator; generate a random number between start and
-	 * end
+	 * The core random number generator; generate a random number between start
+	 * and end
 	 * 
 	 * @param start
 	 *            - the minimum number
@@ -99,15 +99,16 @@ public class RandomNumUtils {
 	 *            - the level of the Party Member
 	 * @return a random int base stat for that level
 	 */
-	public static int randomBaseStat(int level) {
+	public static Integer randomBaseStat(int level) {
 		int start = (int) (2.4 * level) - 5;
 		int end = (int) (2.4 * level) + 5;
 		int stat = generateRandom(start, end);
-		return (stat < 5) ? 5 : stat;
+		return Integer.valueOf((stat < 5) ? 5 : stat);
 	}
 
 	/**
-	 * generates a number to incrase a stat by: 75% chance of +2, 25% chance of +3
+	 * generates a number to incrase a stat by: 75% chance of +2, 25% chance of
+	 * +3
 	 * 
 	 * @TODO verify max stats increase when stats
 	 * 

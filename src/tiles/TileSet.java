@@ -77,8 +77,7 @@ public class TileSet extends ArrayList<Image> {
 	 * Load the tileset as a library of tile images
 	 */
 	private TileSet() {
-		try {
-			Scanner s = new Scanner(new InputStreamReader(TileSet.class.getResourceAsStream("/Tiles.tileset")));
+		try (Scanner s = new Scanner(new InputStreamReader(TileSet.class.getResourceAsStream("/Tiles.tileset")))) {
 			add(null);
 			while (s.hasNext()) {
 				String line = s.nextLine();
@@ -88,7 +87,6 @@ public class TileSet extends ArrayList<Image> {
 					add(im);
 				}
 			}
-			s.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

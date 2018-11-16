@@ -240,9 +240,9 @@ public class GameController implements Serializable {
 	}
 
 	/**
-	 * Are we at the world screen, does the NPC see the player, is the player not
-	 * walking, is the master control for battles turned on, and the trainer is not
-	 * beaten?
+	 * Are we at the world screen, does the NPC see the player, is the player
+	 * not walking, is the master control for battles turned on, and the trainer
+	 * is not beaten?
 	 * 
 	 * @param npc
 	 *            - npc to check
@@ -344,22 +344,18 @@ public class GameController implements Serializable {
 	public void saveGame() throws IOException {
 		GameTime.getInstance().saveTime();
 
-		FileOutputStream fout = null;
-		ObjectOutputStream oos = null;
-		try {
+		try (FileOutputStream fout = new FileOutputStream("resources/data/PokemonOrange.sav");
+				ObjectOutputStream oos = new ObjectOutputStream(fout);) {
 			File dir = new File("resources/data");
 			DebugUtility.printMessage(dir.isDirectory() + "");
 			DebugUtility.printMessage(getPlayer().tData.toString());
-			fout = new FileOutputStream("resources/data/PokemonOrange.sav");
-			oos = new ObjectOutputStream(fout);
 			oos.writeObject(GameData.getInstance());
-			oos.close();
-			fout.close();
-		} catch (Exception e1) {
+		} catch (
+
+		Exception e1) {
 			e1.printStackTrace();
 			DebugUtility.printMessage("Unable to save game...");
 		}
-		oos.close();
 		DebugUtility.printMessage("** Saved game.");
 	}
 
@@ -369,18 +365,12 @@ public class GameController implements Serializable {
 	 * @throws IOException
 	 */
 	public static void loadGame() throws IOException {
-		FileInputStream fout = null;
-		ObjectInputStream oos = null;
-		try {
-			fout = new FileInputStream("resources/data/PokemonOrange.sav");
-			oos = new ObjectInputStream(fout);
+		try (FileInputStream fout = new FileInputStream("resources/data/PokemonOrange.sav");
+				ObjectInputStream oos = new ObjectInputStream(fout);) {
 			GameData.setInstance((GameData) oos.readObject());
-			oos.close();
-			fout.close();
 			DebugUtility.printMessage("** Loaded game from save.");
 		} catch (Exception e1) {
-			DebugUtility.printMessage("Unable to load game...");
+			DebugUtility.printMessage("Unable to load game...\n" + e1.getLocalizedMessage());
 		}
-		oos.close();
 	}
 }

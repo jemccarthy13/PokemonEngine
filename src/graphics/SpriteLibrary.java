@@ -148,9 +148,9 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 	}
 
 	/**
-	 * Returns an image from the instance of the library if the image exists. If the
-	 * image does not exist, try some of the graphics library paths in order to load
-	 * the graphic flyweight
+	 * Returns an image from the instance of the library if the image exists. If
+	 * the image does not exist, try some of the graphics library paths in order
+	 * to load the graphic flyweight
 	 * 
 	 * @param name
 	 *            - the image to look for
@@ -196,7 +196,7 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 		if (listOfFiles != null) {
 			for (File file : listOfFiles) {
 				if (file.isFile() && name.equals(file.getName())) {
-					ArrayList<ImageIcon> spriteGroup = new ArrayList<ImageIcon>();
+					ArrayList<ImageIcon> spriteGroup = new ArrayList<>();
 					spriteGroup.add(createImage(file.getPath().replace("\\", "/")));
 					put(name, spriteGroup);
 					return true;
@@ -240,7 +240,7 @@ public class SpriteLibrary extends HashMap<String, ArrayList<ImageIcon>> {
 					// walking/direction animations
 					Arrays.sort(files);
 
-					ArrayList<ImageIcon> spriteGroup = new ArrayList<ImageIcon>();
+					ArrayList<ImageIcon> spriteGroup = new ArrayList<>();
 					for (String directionImage : files) {
 						spriteGroup.add(createImage(npcFilePath + npcCharacter + "/" + directionImage));
 					}

@@ -15,7 +15,7 @@ public class TeleportLibrary {
 	 * 
 	 * @TODO reciprocal teleportation
 	 */
-	static Map<Coordinate, Coordinate> teleports = new HashMap<Coordinate, Coordinate>();
+	static Map<Coordinate, Coordinate> teleports = new HashMap<>();
 
 	/**
 	 * Constructs a new teleportation library

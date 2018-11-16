@@ -36,12 +36,12 @@ public class GameMap {
 	/**
 	 * Representation of the map images
 	 */
-	private GameMapList<Integer> imageMap = new GameMapList<Integer>();
+	private GameMapList<Integer> imageMap = new GameMapList<>();
 
 	/**
 	 * Representation of the map tiles (characteristics such as obstacle or not)
 	 */
-	private GameMapList<Tile> tileMap = new GameMapList<Tile>();
+	private GameMapList<Tile> tileMap = new GameMapList<>();
 
 	public int getWidth() {
 		return this.width;
@@ -52,8 +52,8 @@ public class GameMap {
 	}
 
 	/**
-	 * In a threaded environment, the file needs to be protected so the file reading
-	 * can be synchronized between threads.
+	 * In a threaded environment, the file needs to be protected so the file
+	 * reading can be synchronized between threads.
 	 */
 	private class SynchronizedReader {
 		private BufferedReader reader;
@@ -162,7 +162,7 @@ public class GameMap {
 		DebugUtility.printMessage("Loading map...");
 
 		// initialize the Image map and add obstacles to the Tile map
-		ArrayList<Thread> threads = new ArrayList<Thread>();
+		ArrayList<Thread> threads = new ArrayList<>();
 		for (int layers = 0; layers < 3; layers++) {
 			Thread t = new ProcessLayerThread(this.width, this.height, reader, layers);
 			t.start();
@@ -191,7 +191,7 @@ public class GameMap {
 		int retInt = 0;
 		Integer i = this.imageMap.get(new Coordinate(layer, y).toString());
 		if (i != null) {
-			retInt = this.imageMap.get(new Coordinate(layer, y).toString());
+			retInt = this.imageMap.get(new Coordinate(layer, y).toString()).intValue();
 		}
 		return retInt;
 	}
@@ -207,7 +207,7 @@ public class GameMap {
 	 *            - the new image number value
 	 */
 	public synchronized void setMapImageAt(int layer, int y, int value) {
-		this.imageMap.set(new Coordinate(layer, y), value);
+		this.imageMap.set(new Coordinate(layer, y), Integer.valueOf(value));
 	}
 
 	/**
@@ -221,7 +221,7 @@ public class GameMap {
 	 *            - the value to add
 	 */
 	public synchronized void addMapImageAt(int x, int y, int value) {
-		this.imageMap.put(new Coordinate(x, y).toString(), value);
+		this.imageMap.put(new Coordinate(x, y).toString(), Integer.valueOf(value));
 	}
 
 	/**
@@ -262,7 +262,8 @@ public class GameMap {
 	}
 
 	/**
-	 * Check whether or not a coordinate is within the height and width of the map
+	 * Check whether or not a coordinate is within the height and width of the
+	 * map
 	 * 
 	 * @param loc
 	 *            - the coordinate to check

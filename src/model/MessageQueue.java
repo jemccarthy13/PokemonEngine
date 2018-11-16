@@ -9,7 +9,7 @@ import java.util.Iterator;
  */
 public class MessageQueue extends AbstractQueue<String> {
 
-	private ArrayList<String> container = new ArrayList<String>();
+	private ArrayList<String> container = new ArrayList<>();
 
 	private static MessageQueue instance = new MessageQueue();
 
@@ -75,7 +75,8 @@ public class MessageQueue extends AbstractQueue<String> {
 	}
 
 	/**
-	 * Get the head of the queue (first in first out) and remove it from the queue
+	 * Get the head of the queue (first in first out) and remove it from the
+	 * queue
 	 * 
 	 * @return popped head of the queue
 	 */

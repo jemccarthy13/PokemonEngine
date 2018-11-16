@@ -41,7 +41,7 @@ public class SaveScene extends SelectionScene {
 
 		g.drawImage(SpriteLibrary.getImage("Save"), 0, 0, null);
 		g.drawString(player.getName(), 100, 68);
-		g.drawString(((Integer) player.getBadges()).toString(), 100, 101);
+		g.drawString(Integer.valueOf(player.getBadges()).toString(), 100, 101);
 		g.drawString("1", 110, 134);
 		g.drawString(GameTime.getInstance().formatTime(), 76, 166);
 		if (this.rowSelection == 0) {
@@ -69,7 +69,7 @@ public class SaveScene extends SelectionScene {
 				control.saveGame();
 				MessageQueue.getInstance().add("Game saved successfully!");
 			} catch (IOException e) {
-				MessageQueue.getInstance().add("Unable to save game!");
+				MessageQueue.getInstance().add("Unable to save game!\n" + e.getMessage());
 			}
 		}
 		GameGraphicsData.getInstance().setScene(MenuScene.instance);

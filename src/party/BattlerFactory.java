@@ -38,10 +38,7 @@ public class BattlerFactory extends HashMap<String, BattlerData> {
 	 */
 	public void populateMap(String filename) {
 		JSONParser parser = new JSONParser();
-		try {
-
-			// this is the JSON object for the entire file
-			FileReader reader = new FileReader(filename);
+		try (FileReader reader = new FileReader(filename)) {
 			JSONObject all_pokemon = (JSONObject) parser.parse(reader);
 			reader.close();
 
@@ -70,26 +67,26 @@ public class BattlerFactory extends HashMap<String, BattlerData> {
 				pd.baseExp = ((Long) pokemon_data.get("base_exp")).intValue();
 
 				// get the pokemon's evolution stage names
-				pd.evolution_stages = new ArrayList<String>();
-				pd.evolution_levels = new ArrayList<Integer>();
+				pd.evolution_stages = new ArrayList<>();
+				pd.evolution_levels = new ArrayList<>();
 				JSONArray json_evolutions = (JSONArray) pokemon_data.get("evolution_stages");
 				Iterator<?> evolution_it = json_evolutions.iterator();
 				while (evolution_it.hasNext()) {
 					JSONObject stage = (JSONObject) evolution_it.next();
 					pd.evolution_stages.add((String) stage.get("name"));
-					pd.evolution_levels.add(((Long) (stage.get("level"))).intValue());
+					pd.evolution_levels.add(((Integer) (stage.get("level"))));
 				}
 
 				// get the pokemon's moves & levels they learn those moves
-				pd.movesLearned = new ArrayList<String>();
-				pd.levelsLearned = new ArrayList<Integer>();
+				pd.movesLearned = new ArrayList<>();
+				pd.levelsLearned = new ArrayList<>();
 
 				JSONArray json_moves = (JSONArray) pokemon_data.get("moves");
 				Iterator<?> moves_iterator = json_moves.iterator();
 				while (moves_iterator.hasNext()) {
 					JSONObject move = (JSONObject) moves_iterator.next();
 					pd.movesLearned.add((String) move.get("name"));
-					pd.levelsLearned.add(((Long) (move.get("level"))).intValue());
+					pd.levelsLearned.add(((Integer) (move.get("level"))));
 				}
 
 				if (pd.isValidData()) {
@@ -134,8 +131,8 @@ public class BattlerFactory extends HashMap<String, BattlerData> {
 	//
 	// ////////////////////////////////////////////////////////////////////////
 	/**
-	 * Given a location, generate a random party member from the wild battler chart
-	 * of that region
+	 * Given a location, generate a random party member from the wild battler
+	 * chart of that region
 	 * 
 	 * @param location
 	 *            - where the party member should be generated from

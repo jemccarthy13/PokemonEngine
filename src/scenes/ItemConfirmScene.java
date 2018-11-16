@@ -16,8 +16,7 @@ public class ItemConfirmScene extends InventoryScene {
 	/**
 	 * Singleton instance
 	 */
-	@SuppressWarnings("hiding")
-	public static ItemConfirmScene instance = new ItemConfirmScene();
+	static ItemConfirmScene instance = new ItemConfirmScene();
 
 	private ItemConfirmScene() {
 		this.maxRowSelection = 1;

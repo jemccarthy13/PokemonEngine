@@ -60,7 +60,7 @@ public class Map {
 	 */
 	public Map(int paramInt1, int paramInt2) {
 		this.tiles = new MapTile[paramInt1][paramInt2][3];
-		this.changeListeners = new ArrayList<MapChangeListener>();
+		this.changeListeners = new ArrayList<>();
 	}
 
 	/**
@@ -337,8 +337,8 @@ public class Map {
 	/**
 	 * Convert the map to an array of int for processing
 	 * 
-	 * @return int[][][] representing the map as numbered tiles for rendering by the
-	 *         game engine
+	 * @return int[][][] representing the map as numbered tiles for rendering by
+	 *         the game engine
 	 */
 	public int[][][] toIntArray() {
 		int[][][] arrayOfInt = new int[this.tiles.length][this.tiles[0].length][this.tiles[0][0].length];

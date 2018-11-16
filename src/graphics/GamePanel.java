@@ -46,24 +46,24 @@ public class GamePanel extends JPanel implements ActionListener {
 
 	// ===================== Game logic controller ==========================//
 	/**
-	 * Single point of access for control of the game - abstraction between the view
-	 * and the data (model)
+	 * Single point of access for control of the game - abstraction between the
+	 * view and the data (model)
 	 */
 	public GameController gameController = new GameController();
 
 	/**
-	 * Default constructor for Main panel. This is the panel that all aspects of the
-	 * game are painted to.
+	 * Default constructor for Main panel. This is the panel that all aspects of
+	 * the game are painted to.
 	 * 
-	 * Constructor loads the map, registeres to listen for key events, and starts
-	 * the title music (sets up the start of gameplay)
+	 * Constructor loads the map, registeres to listen for key events, and
+	 * starts the title music (sets up the start of gameplay)
 	 */
 	public GamePanel() {
 
 		try {
 			GameMap.getInstance().loadMap(this.gameController);
 		} catch (IOException | InterruptedException e) {
-			DebugUtility.printError("Unable to load map!");
+			DebugUtility.printError("Unable to load map!\n" + e.getMessage());
 		}
 		// setup key press listening
 		GameKeyListener.setGameController(this.gameController);
@@ -81,8 +81,8 @@ public class GamePanel extends JPanel implements ActionListener {
 	}
 
 	/**
-	 * Any time an action is performed in the frame, this method updates the time
-	 * and handles world actions.
+	 * Any time an action is performed in the frame, this method updates the
+	 * time and handles world actions.
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -107,8 +107,8 @@ public class GamePanel extends JPanel implements ActionListener {
 	}
 
 	/**
-	 * Checks if the player is in sight range of any NPC and the NPC is looking at
-	 * the player and the player's walking animation is finished
+	 * Checks if the player is in sight range of any NPC and the NPC is looking
+	 * at the player and the player's walking animation is finished
 	 */
 	private void checkForNPCEncounter() {
 		// check for trainer encounter with any NPC
@@ -141,7 +141,7 @@ public class GamePanel extends JPanel implements ActionListener {
 			Painter.paintTrainerSighted(getGraphics(), this.gameController, curNPC.getPosition());
 			Thread.sleep(1500);
 		} catch (InterruptedException e) {
-			// do nothing
+			DebugUtility.printMessage(e.getLocalizedMessage());
 		}
 
 		DIR NPC_DIR = curNPC.getDirection();

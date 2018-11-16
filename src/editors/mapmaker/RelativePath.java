@@ -19,7 +19,7 @@ public class RelativePath {
 	 * @return the list of paths to that file
 	 */
 	private static List<String> getPathList(File file) {
-		ArrayList<String> localArrayList = new ArrayList<String>();
+		ArrayList<String> localArrayList = new ArrayList<>();
 		try {
 			File localFile = file.getCanonicalFile();
 			while (localFile != null) {

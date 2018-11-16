@@ -47,7 +47,7 @@ public class Location implements Serializable {
 		String retStr = "Error in getting Pokemon from location";
 		int total = 0;
 		for (int x = 0; x < this.lData.probabilities.size(); x++) {
-			total += this.lData.probabilities.get(x);
+			total += this.lData.probabilities.get(x).intValue();
 
 			if (name_number <= total) {
 				return this.lData.pokemon.get(x);

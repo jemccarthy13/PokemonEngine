@@ -160,11 +160,11 @@ public class BattleEngine {
 			Party playerParty = this.game.getPlayer().getParty();
 			DebugUtility.printMessage("Party has: " + playerParty.size() + " party members.");
 
-			ArrayList<Integer> stillAlive = new ArrayList<Integer>();
+			ArrayList<Integer> stillAlive = new ArrayList<>();
 			for (int i = 0; i < playerParty.size(); i++) {
 				if (playerParty.get(i).getStat(STAT.HP) > 0) {
 					loss = false;
-					stillAlive.add(i);
+					stillAlive.add(Integer.valueOf(i));
 				}
 			}
 			if (loss) {
@@ -172,18 +172,18 @@ public class BattleEngine {
 			} else {
 				// random switch pokemon
 				int choice = RandomNumUtils.generateRandom(0, stillAlive.size() - 1);
-				this.playerCurrentPokemon = playerParty.get(stillAlive.get(choice));
+				this.playerCurrentPokemon = playerParty.get(stillAlive.get(choice).intValue());
 			}
 			break;
 		case OPPONENT:
 			boolean enemyLoss = true;
 
 			DebugUtility.printMessage("Enemy had: " + this.enemyPokemon.size() + " party members.");
-			stillAlive = new ArrayList<Integer>();
+			stillAlive = new ArrayList<>();
 			for (int i = 0; i < this.enemyPokemon.size(); i++) {
 				if (this.enemyPokemon.get(i).getStat(STAT.HP) > 0) {
 					enemyLoss = false;
-					stillAlive.add(i);
+					stillAlive.add(Integer.valueOf(i));
 				}
 			}
 			if (enemyLoss) {
@@ -191,7 +191,7 @@ public class BattleEngine {
 			} else {
 				// random switch pokemon
 				int choice = RandomNumUtils.generateRandom(0, stillAlive.size() - 1);
-				this.enemyCurrentPokemon = this.enemyPokemon.get(stillAlive.get(choice));
+				this.enemyCurrentPokemon = this.enemyPokemon.get(stillAlive.get(choice).intValue());
 			}
 			break;
 		default:

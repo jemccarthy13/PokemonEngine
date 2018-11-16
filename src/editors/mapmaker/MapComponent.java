@@ -61,8 +61,8 @@ public class MapComponent extends JComponent implements MouseListener, MouseMoti
 		setPreferredSize(new Dimension(this.tileWidth * this.width, this.tileHeight * this.height));
 		addMouseListener(this);
 		addMouseMotionListener(this);
-		this.undoStack = new Stack<Object>();
-		this.redoStack = new Stack<Object>();
+		this.undoStack = new Stack<>();
+		this.redoStack = new Stack<>();
 		this.stateChanged = true;
 	}
 
@@ -269,8 +269,8 @@ public class MapComponent extends JComponent implements MouseListener, MouseMoti
 	}
 
 	/**
-	 * Method that is fired when a mouse dragged event occurs This paints all tiles
-	 * touched with the currently selected tile
+	 * Method that is fired when a mouse dragged event occurs This paints all
+	 * tiles touched with the currently selected tile
 	 */
 	@Override
 	public void mouseDragged(MouseEvent paramMouseEvent) {

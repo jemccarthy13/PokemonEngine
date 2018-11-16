@@ -24,8 +24,8 @@ public class MoveList extends ArrayList<MoveData> {
 	}
 
 	/**
-	 * Add a move to the move list. If Battler knows 'capacity' number of moves, ask
-	 * if the Player wants to replace a move.
+	 * Add a move to the move list. If Battler knows 'capacity' number of moves,
+	 * ask if the Player wants to replace a move.
 	 * 
 	 * @param move
 	 *            - the move to add
@@ -42,16 +42,17 @@ public class MoveList extends ArrayList<MoveData> {
 			/** @TODO replace this with a ReplaceMoveScene **/
 			if (askForOverwrite) {
 				DebugUtility.printMessage(this.name + " already knows 4 moves.  Make room for another?");
-				Scanner s = new Scanner(System.in);
-				String str = s.nextLine();
-				if (str.contains("y")) {
-					DebugUtility.printMessage("Which move to delete?");
-					Integer delete = Integer.parseInt(s.nextLine());
-					this.remove(this.get(delete));
-					add(move);
-					success = true;
+
+				try (Scanner s = new Scanner(System.in)) {
+					String str = s.nextLine();
+					if (str.contains("y")) {
+						DebugUtility.printMessage("Which move to delete?");
+						int delete = Integer.parseInt(s.nextLine());
+						this.remove(this.get(delete));
+						add(move);
+						success = true;
+					}
 				}
-				s.close();
 			} else {
 				if (this.size() >= this.capacity) {
 					this.remove(0);

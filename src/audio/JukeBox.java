@@ -25,7 +25,7 @@ public class JukeBox {
 	/**
 	 * saved clips that have already been loaded
 	 */
-	private HashMap<String, SoundEffect> availableClips = new HashMap<String, SoundEffect>();
+	private HashMap<String, SoundEffect> availableClips = new HashMap<>();
 
 	/**
 	 * Loads a given audio sound effect file and maps to given sound name
@@ -87,26 +87,20 @@ public class JukeBox {
 		 */
 		public SoundEffect(String resourcePath) throws IOException {
 			// create the necessary steps to make a new Clip
-			InputStream resourceStream = JukeBox.class.getResourceAsStream(resourcePath);
-			AudioInputStream ais = null;
-			try {
-				ais = AudioSystem.getAudioInputStream(resourceStream);
-			} catch (UnsupportedAudioFileException e) {
-				DebugUtility.printError("Unsupported audio file: " + resourcePath);
-			} catch (IOException e) {
-				DebugUtility.printError("Unable to read: " + resourcePath);
-			}
-			DataLine.Info info = new DataLine.Info(Clip.class, ais.getFormat());
+			try (InputStream resourceStream = JukeBox.class.getResourceAsStream(resourcePath);
+					AudioInputStream ais = AudioSystem.getAudioInputStream(resourceStream)) {
+				DataLine.Info info = new DataLine.Info(Clip.class, ais.getFormat());
 
-			// store the clip internal to this class
-			try {
-				this.m_clip = (Clip) AudioSystem.getLine(info);
-			} catch (LineUnavailableException e) {
-				DebugUtility.printError("Error reading: " + resourcePath + "\n" + e.getMessage());
+				// store the clip internal to this class
+				try {
+					this.m_clip = (Clip) AudioSystem.getLine(info);
+				} catch (LineUnavailableException e) {
+					DebugUtility.printError("Error reading: " + resourcePath + "\n" + e.getMessage());
+				}
+				this.m_clip.addLineListener(this);
+			} catch (UnsupportedAudioFileException e) {
+				DebugUtility.printError("Unsupported audio file: " + resourcePath + "\n" + e.getMessage());
 			}
-			resourceStream.close();
-			ais.close();
-			this.m_clip.addLineListener(this);
 		}
 
 		/**

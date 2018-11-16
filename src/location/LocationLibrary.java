@@ -1,6 +1,8 @@
 package location;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -8,6 +10,7 @@ import java.util.Iterator;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import trainers.Actor.DIR;
 import utilities.DebugUtility;
@@ -36,12 +39,9 @@ public class LocationLibrary extends HashMap<String, LocationData> {
 	 */
 	public void populateMap(String filename) {
 		JSONParser parser = new JSONParser();
-		try {
+		try (FileReader reader = new FileReader(filename)) {
 
-			// this is the JSON object for the entire file
-			FileReader reader = new FileReader(filename);
 			JSONObject all_locations = (JSONObject) parser.parse(reader);
-			reader.close();
 
 			// this is the JSON object that is labeled "pokedex": an array of
 			// all pokemon data
@@ -62,27 +62,25 @@ public class LocationLibrary extends HashMap<String, LocationData> {
 				ld.canFlyOutOf = (Boolean) loc_data.get("canFlyOutOf");
 
 				// get the coordinate boundaries for this location
-				ld.boundaries = new HashMap<DIR, Integer>();
-				ld.boundaries.put(DIR.NORTH,
-						((Long) ((JSONObject) loc_data.get("boundaries")).get("north")).intValue());
-				ld.boundaries.put(DIR.SOUTH,
-						((Long) ((JSONObject) loc_data.get("boundaries")).get("south")).intValue());
-				ld.boundaries.put(DIR.EAST, ((Long) ((JSONObject) loc_data.get("boundaries")).get("east")).intValue());
-				ld.boundaries.put(DIR.WEST, ((Long) ((JSONObject) loc_data.get("boundaries")).get("west")).intValue());
+				ld.boundaries = new HashMap<>();
+				ld.boundaries.put(DIR.NORTH, ((Integer) ((JSONObject) loc_data.get("boundaries")).get("north")));
+				ld.boundaries.put(DIR.SOUTH, ((Integer) ((JSONObject) loc_data.get("boundaries")).get("south")));
+				ld.boundaries.put(DIR.EAST, ((Integer) ((JSONObject) loc_data.get("boundaries")).get("east")));
+				ld.boundaries.put(DIR.WEST, ((Integer) ((JSONObject) loc_data.get("boundaries")).get("west")));
 
-				ld.pokemon = new ArrayList<String>();
-				ld.probabilities = new ArrayList<Integer>();
-				ld.minLevels = new ArrayList<Integer>();
-				ld.maxLevels = new ArrayList<Integer>();
+				ld.pokemon = new ArrayList<>();
+				ld.probabilities = new ArrayList<>();
+				ld.minLevels = new ArrayList<>();
+				ld.maxLevels = new ArrayList<>();
 
 				JSONArray available_pkmn = (JSONArray) loc_data.get("pokemon_available");
 				Iterator<?> pkmn_it = available_pkmn.iterator();
 				while (pkmn_it.hasNext()) {
 					JSONObject stage = (JSONObject) pkmn_it.next();
 					ld.pokemon.add((String) stage.get("name"));
-					ld.probabilities.add(((Long) (stage.get("probability"))).intValue());
-					ld.minLevels.add(((Long) (stage.get("min_level"))).intValue());
-					ld.maxLevels.add(((Long) (stage.get("max_level"))).intValue());
+					ld.probabilities.add(((Integer) (stage.get("probability"))));
+					ld.minLevels.add(((Integer) (stage.get("min_level"))));
+					ld.maxLevels.add(((Integer) (stage.get("max_level"))));
 				}
 
 				if (ld.isValidData()) {
@@ -93,8 +91,12 @@ public class LocationLibrary extends HashMap<String, LocationData> {
 					DebugUtility.error("Unknown error in populating location map.");
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			DebugUtility.printError("File not found: " + filename + "\n" + e.getMessage());
+		} catch (IOException e) {
+			DebugUtility.printError(e.getMessage());
+		} catch (ParseException e) {
+			DebugUtility.printError("Unable to parse: " + filename + "\n" + e.getMessage());
 		}
 	}
 

@@ -105,6 +105,7 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 			this.scene = Scene.loadScene("lastOpenScene.dat");
 		} catch (IOException localIOException) {
 			this.scene = new Scene();
+			DebugUtility.printError(localIOException.getLocalizedMessage());
 		}
 		this.map = this.scene.getMap();
 		this.gfx = this.scene.getTileset();
@@ -191,7 +192,7 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 			try {
 				Thread.sleep(1000L);
 			} catch (InterruptedException localInterruptedException) {
-				// do nothing
+				DebugUtility.print(localInterruptedException.getLocalizedMessage());
 			}
 		}
 	}
@@ -498,6 +499,7 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 			localJButton = new JButton(new ImageIcon(getClass().getResource(paramString2)));
 		} catch (Exception localException) {
 			localJButton = new JButton(paramString1);
+			DebugUtility.printError(localException.getMessage());
 		}
 		localJButton.setToolTipText(paramString3);
 		localJButton.addActionListener(this);
@@ -515,6 +517,7 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 			localJToggleButton = new JToggleButton(new ImageIcon(getClass().getResource(paramString2)));
 		} catch (Exception localException) {
 			localJToggleButton = new JToggleButton(paramString1);
+			DebugUtility.printMessage(localException.getMessage());
 		}
 		localJToggleButton.setToolTipText(paramString3);
 		localJToggleButton.addActionListener(this);
@@ -619,7 +622,7 @@ public class MapEdit implements ActionListener, ChangeListener, KeyListener {
 	 * Create a new map scene
 	 */
 	public void newFile() {
-		this.scene = new Scene(new Map(10, 10), new ArrayList<Object>(), this.gfx);
+		this.scene = new Scene(new Map(10, 10), new ArrayList<>(), this.gfx);
 		this.zoomLevel = 1.0F;
 		this.map = this.scene.getMap();
 		setGraphicsBank(this.scene.getTileset());

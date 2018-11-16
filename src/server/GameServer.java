@@ -44,7 +44,7 @@ public class GameServer {
 				new Thread(new GameServerThread(connections, bufferedReader)).start();
 				connections++;
 			} catch (BindException e1) {
-				DebugUtility.error(portNum + " already in use.");
+				DebugUtility.error(portNum + " already in use.\n" + e1.getLocalizedMessage());
 			} catch (IOException e) {
 				System.out.println(e.getMessage());
 			}

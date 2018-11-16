@@ -41,7 +41,8 @@ public class GameClient extends Thread {
 			this.printWriter.println("set ID " + this.sessionID);
 			DebugUtility.printMessage("Connection established: port (" + portNum + ")");
 		} catch (ConnectException e) {
-			DebugUtility.printError("Connection refused: port (" + portNum + ") in use or no response.");
+			DebugUtility.printError(
+					"Connection refused: port (" + portNum + ") in use or no response.\n" + e.getLocalizedMessage());
 		} catch (IOException e1) {
 			DebugUtility.printError("Unknown error: " + e1.getMessage());
 		}
@@ -58,7 +59,7 @@ public class GameClient extends Thread {
 			this.printWriter.println(string);
 		} catch (NullPointerException e) {
 			DebugUtility.printError("Server/client connection wasn't established.");
-			DebugUtility.printError("Exiting anyway.");
+			DebugUtility.printError("Exiting anyway.\n " + e.getLocalizedMessage());
 		}
 	}
 

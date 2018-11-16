@@ -27,10 +27,10 @@ import trainers.Actor.DIR;
 public class Painter {
 
 	/**
-	 * The data structure that stores all the Scenes that know how to render game
-	 * graphics
+	 * The data structure that stores all the Scenes that know how to render
+	 * game graphics
 	 */
-	HashMap<Integer, Scene> scenePainters = new HashMap<Integer, Scene>();
+	HashMap<Integer, Scene> scenePainters = new HashMap<>();
 
 	/**
 	 * Singleton instance
@@ -53,7 +53,7 @@ public class Painter {
 	 *            - the scene that can be rendered
 	 */
 	public static void register(BaseScene scene) {
-		instance.scenePainters.put(scene.getClass().hashCode(), scene);
+		instance.scenePainters.put(Integer.valueOf(scene.getClass().hashCode()), scene);
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class Painter {
 
 		// based on the current scene, render the appropriate images
 		int sceneToRender = GameGraphicsData.getInstance().getScene().getClass().hashCode();
-		instance.scenePainters.get(sceneToRender).render(g, control);
+		instance.scenePainters.get(Integer.valueOf(sceneToRender)).render(g, control);
 
 		// At any scene other than the name screen, message boxes
 		// will interrupt any underlying functionality and take priority until
@@ -116,8 +116,8 @@ public class Painter {
 				g.drawImage(SpriteLibrary.getImage("SLASH_small"), startX + offset * x, startY, null);
 				break;
 			default:
-				g.drawImage(SpriteLibrary.getInstance().getSmallFontChar(string.toCharArray()[x]).getImage(),
-						startX + offset * x, startY, null);
+				g.drawImage(SpriteLibrary.getInstance().getSmallFontChar(Character.valueOf(string.toCharArray()[x]))
+						.getImage(), startX + offset * x, startY, null);
 			}
 		}
 	}
@@ -154,7 +154,8 @@ public class Painter {
 				g.drawImage(SpriteLibrary.getImage("SLASH"), startX + Tile.TILESIZE * x, startY, null);
 				break;
 			default:
-				g.drawImage(SpriteLibrary.getInstance().getFontChar(string.toCharArray()[x]).getImage(),
+				g.drawImage(
+						SpriteLibrary.getInstance().getFontChar(Character.valueOf(string.toCharArray()[x])).getImage(),
 						startX + Tile.TILESIZE * x, startY, null);
 			}
 		}

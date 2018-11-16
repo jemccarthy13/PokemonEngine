@@ -1,7 +1,6 @@
 package party;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -19,23 +18,13 @@ public class MoveLibrary extends HashMap<String, MoveData> {
 	 */
 	private MoveLibrary() {
 		String filePath = "resources/data/MOVES.MDAT";
-		FileInputStream fs = null;
-		try {
-			fs = new FileInputStream(filePath);
-			Scanner s = new Scanner(fs);
+		try (FileInputStream fs = new FileInputStream(filePath); Scanner s = new Scanner(fs)) {
 			while (s.hasNext()) {
 				MoveData m = new MoveData(s.nextLine());
 				put(m.name, m);
 			}
-			s.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-
-		try {
-			fs.close();
-		} catch (IOException e) {
-			// do nothing
 		}
 	}
 

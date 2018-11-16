@@ -33,7 +33,7 @@ public class GameKeyListener implements KeyListener, Serializable {
 	/**
 	 * Hashmap of actions to occur at registered scenes
 	 */
-	static HashMap<Integer, BaseScene> actionPerformers = new HashMap<Integer, BaseScene>();
+	static HashMap<Integer, BaseScene> actionPerformers = new HashMap<>();
 
 	/**
 	 * GameKeyListener instance
@@ -71,7 +71,7 @@ public class GameKeyListener implements KeyListener, Serializable {
 	 *            - the scene to register
 	 */
 	public static void register(BaseScene scene) {
-		actionPerformers.put(scene.getClass().hashCode(), scene);
+		actionPerformers.put(Integer.valueOf(scene.getClass().hashCode()), scene);
 	}
 
 	/**
@@ -95,8 +95,8 @@ public class GameKeyListener implements KeyListener, Serializable {
 				|| GameGraphicsData.getInstance().getScene() == BattleMessageScene.instance
 				|| GameGraphicsData.getInstance().getScene() == IntroScene.instance
 				|| GameGraphicsData.getInstance().getScene() == NameScene.instance) {
-			Integer actionToPerform = GameGraphicsData.getInstance().getScene().getClass().hashCode();
-			actionPerformers.get(actionToPerform).keyPress(keyCode, this.gameControl);
+			int actionToPerform = GameGraphicsData.getInstance().getScene().getClass().hashCode();
+			actionPerformers.get(Integer.valueOf(actionToPerform)).keyPress(keyCode, this.gameControl);
 		}
 
 		if (GameGraphicsData.getInstance().getScene() instanceof SelectionScene) {

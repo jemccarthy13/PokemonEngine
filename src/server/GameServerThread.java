@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import utilities.DebugUtility;
+
 /**
  * A thread to read server socket input.
  */
@@ -53,7 +55,7 @@ public class GameServerThread extends Thread {
 				}
 			}
 		} catch (IOException e) {
-			// do nothing
+			DebugUtility.printError(e.getMessage());
 		}
 
 	}

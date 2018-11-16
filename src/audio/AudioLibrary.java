@@ -32,7 +32,7 @@ public class AudioLibrary {
 	/**
 	 * An ArrayList of the tracks that have been loaded already
 	 */
-	private static HashMap<String, AudioTrack> musicTracks = new HashMap<String, AudioTrack>();
+	private static HashMap<String, AudioTrack> musicTracks = new HashMap<>();
 
 	public static AudioLibrary getInstance() {
 		return instance;
@@ -90,7 +90,7 @@ public class AudioLibrary {
 	private AudioLibrary() {
 		DebugUtility.printHeader("Audio");
 		DebugUtility.printMessage("Initializing audio library...");
-		this.encounterTrackNames = new ArrayList<String>();
+		this.encounterTrackNames = new ArrayList<>();
 		// create a list of encounter tracks
 		for (File file : new File(Configuration.MUSIC_PATH).listFiles()) {
 			if (file.isFile()) {

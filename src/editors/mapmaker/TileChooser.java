@@ -441,7 +441,7 @@ public class TileChooser extends JPanel implements ActionListener, GraphicsBankC
 		try {
 			ImageIO.read(fileToRead);
 		} catch (Exception localException) {
-			DebugUtility.printMessage("FAIL");
+			DebugUtility.printMessage("FAIL\n" + localException.getMessage());
 			return;
 		}
 		DebugUtility.printMessage("getbasedir.... ahuh!");

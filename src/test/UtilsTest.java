@@ -77,7 +77,7 @@ public class UtilsTest {
 
 		DebugUtility.printMessage();
 
-		ArrayList<Battler> trainer = new ArrayList<Battler>();
+		ArrayList<Battler> trainer = new ArrayList<>();
 		for (int y = 0; y < 5; y++) {
 			trainer.add(BattlerFactory.randomPokemon(loc));
 		}

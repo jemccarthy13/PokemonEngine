@@ -86,8 +86,8 @@ public class GraphicsBank {
 	 * Graphics bank constructor
 	 */
 	public GraphicsBank() {
-		this.MapTiles = new ArrayList<MapTile>();
-		this.changeListeners = new ArrayList<GraphicsBankChangeListener>();
+		this.MapTiles = new ArrayList<>();
+		this.changeListeners = new ArrayList<>();
 		this.loadedFrom = null;
 
 		this.baseMapTileSize = new Dimension(32, 32);
@@ -150,48 +150,49 @@ public class GraphicsBank {
 		this.loadedFrom = tileSetFile;
 
 		int j = 0;
-		BufferedReader localBufferedReader = new BufferedReader(new FileReader(tileSetFile));
-		String str = localBufferedReader.readLine();
-		for (;;) {
-			str = localBufferedReader.readLine();
-			j++;
-			if (str == null) {
-				break;
-			}
-			str = str.trim();
-			if ((str.length() != 0) && (str.charAt(0) != '#')) {
-				String[] arrayOfString = str.split(",");
-				if (arrayOfString.length < 4) {
-					DebugUtility.printError("Could not parse line " + j + ". :");
-					DebugUtility.printError(str);
-					DebugUtility.printError("(There are not enough tokens)");
-				} else {
-					int i = 0;
-					try {
-						i = Integer.parseInt(arrayOfString[0].trim());
-					} catch (Exception localException) {
+		try (BufferedReader localBufferedReader = new BufferedReader(new FileReader(tileSetFile))) {
+			String str = localBufferedReader.readLine();
+			for (;;) {
+				str = localBufferedReader.readLine();
+				j++;
+				if (str == null) {
+					break;
+				}
+				str = str.trim();
+				if ((str.length() != 0) && (str.charAt(0) != '#')) {
+					String[] arrayOfString = str.split(",");
+					if (arrayOfString.length < 4) {
 						DebugUtility.printError("Could not parse line " + j + ". :");
 						DebugUtility.printError(str);
-						DebugUtility.printError("(The MapTile id is not a valid number)");
-					}
-					arrayOfString[1] = arrayOfString[1].trim();
-					arrayOfString[2] = arrayOfString[2].trim();
-					arrayOfString[3] = arrayOfString[3].trim();
-
-					File localFile = new File(this.baseDirectory, arrayOfString[1]);
-					localFile = checkError(tileSetFile, j, localBufferedReader, arrayOfString, localFile);
-					MapTile localMapTile = null;
-					if (arrayOfString.length > 4) {
-						localMapTile = new MapTile(i, localFile.toString(), arrayOfString[2].trim(),
-								arrayOfString[3].trim(), arrayOfString[4].trim());
+						DebugUtility.printError("(There are not enough tokens)");
 					} else {
-						localMapTile = new MapTile(i, localFile.toString(), arrayOfString[2], arrayOfString[3]);
+						int i = 0;
+						try {
+							i = Integer.parseInt(arrayOfString[0].trim());
+						} catch (Exception localException) {
+							DebugUtility.printError("Could not parse line " + j + ". :");
+							DebugUtility.printError(str);
+							DebugUtility.printError(
+									"(The MapTile id is not a valid number)\n" + localException.getLocalizedMessage());
+						}
+						arrayOfString[1] = arrayOfString[1].trim();
+						arrayOfString[2] = arrayOfString[2].trim();
+						arrayOfString[3] = arrayOfString[3].trim();
+
+						File localFile = new File(this.baseDirectory, arrayOfString[1]);
+						localFile = checkError(tileSetFile, j, localBufferedReader, arrayOfString, localFile);
+						MapTile localMapTile = null;
+						if (arrayOfString.length > 4) {
+							localMapTile = new MapTile(i, localFile.toString(), arrayOfString[2].trim(),
+									arrayOfString[3].trim(), arrayOfString[4].trim());
+						} else {
+							localMapTile = new MapTile(i, localFile.toString(), arrayOfString[2], arrayOfString[3]);
+						}
+						this.MapTiles.add(localMapTile);
 					}
-					this.MapTiles.add(localMapTile);
 				}
 			}
 		}
-		localBufferedReader.close();
 	}
 
 	/**
@@ -239,23 +240,23 @@ public class GraphicsBank {
 	 */
 	void saveMapTileset(File saveFile) throws IOException {
 		File fileDir = saveFile.getParentFile();
-		PrintWriter saveWriter = new PrintWriter(new FileWriter(saveFile));
-		DebugUtility.printMessage("Saving " + this.MapTiles.size() + " MapTiles.");
-		Iterator<MapTile> mapTileIterator = this.MapTiles.iterator();
-		while (mapTileIterator.hasNext()) {
-			MapTile currentMapTile = mapTileIterator.next();
-			File compareFile = new File(currentMapTile.getPath()).getCanonicalFile();
-			String str = RelativePath.getRelativePath(new File(fileDir.getCanonicalPath()),
-					new File(compareFile.getCanonicalPath()));
-			saveWriter.print(currentMapTile.getNumber() + ", " + str + ", " + currentMapTile.getName() + ", "
-					+ currentMapTile.getType());
-			if (currentMapTile.getInfo() != null) {
-				saveWriter.println(", " + currentMapTile.getInfo());
-			} else {
-				saveWriter.println();
+		try (PrintWriter saveWriter = new PrintWriter(new FileWriter(saveFile))) {
+			DebugUtility.printMessage("Saving " + this.MapTiles.size() + " MapTiles.");
+			Iterator<MapTile> mapTileIterator = this.MapTiles.iterator();
+			while (mapTileIterator.hasNext()) {
+				MapTile currentMapTile = mapTileIterator.next();
+				File compareFile = new File(currentMapTile.getPath()).getCanonicalFile();
+				String str = RelativePath.getRelativePath(new File(fileDir.getCanonicalPath()),
+						new File(compareFile.getCanonicalPath()));
+				saveWriter.print(currentMapTile.getNumber() + ", " + str + ", " + currentMapTile.getName() + ", "
+						+ currentMapTile.getType());
+				if (currentMapTile.getInfo() != null) {
+					saveWriter.println(", " + currentMapTile.getInfo());
+				} else {
+					saveWriter.println();
+				}
 			}
 		}
-		saveWriter.close();
 		this.baseDirectory = fileDir;
 		this.loadedFrom = saveFile;
 		this.isUnsaved = false;

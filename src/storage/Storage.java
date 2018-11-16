@@ -20,7 +20,7 @@ public class Storage implements Serializable {
 
 	// since the above two parameters can change, the boxes themselves must be
 	// flexible enough to grow or shrink as necessary
-	private ArrayList<ArrayList<Battler>> boxes = new ArrayList<ArrayList<Battler>>();
+	private ArrayList<ArrayList<Battler>> boxes = new ArrayList<>();
 
 	// behind the scenes, the PC stores items exactly how the Bag does
 	public Bag items = new Bag();
@@ -31,7 +31,7 @@ public class Storage implements Serializable {
 	public Storage() {
 		// initialize all of the boxes up front
 		for (int x = 0; x < max_num_boxes; x++) {
-			ArrayList<Battler> box = new ArrayList<Battler>();
+			ArrayList<Battler> box = new ArrayList<>();
 			this.boxes.add(box);
 		}
 	}

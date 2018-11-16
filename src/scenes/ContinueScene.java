@@ -44,7 +44,7 @@ public class ContinueScene extends SelectionScene {
 				gameControl.startGame(false);
 			}
 		} catch (IOException e) {
-			MessageQueue.getInstance().add("Unable to start game!");
+			MessageQueue.getInstance().add("Unable to start game!\n " + e.getMessage());
 		}
 	}
 }

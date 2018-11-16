@@ -31,14 +31,12 @@ public class AudioTrack {
 	public AudioTrack(String songTitle) {
 		this.trackTitle = songTitle;
 		String path = (Configuration.MUSIC_PATH + this.trackTitle.replace(" ", "") + ".mid").replace("resources", "");
-		try {
-			InputStream resource = AudioTrack.class.getResourceAsStream(path);
+		try (InputStream resource = AudioTrack.class.getResourceAsStream(path)) {
 			Sequence sequence = MidiSystem.getSequence(resource);
 			this.sequencer = MidiSystem.getSequencer();
 			this.sequencer.open();
 			this.sequencer.setSequence(sequence);
 			this.sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
-			resource.close();
 		} catch (Exception e) {
 			DebugUtility.printError("Cannot load sound " + this.trackTitle);
 			DebugUtility.printError(e.getMessage());

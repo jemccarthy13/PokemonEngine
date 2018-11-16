@@ -69,7 +69,7 @@ public class BaseTestCase {
 		try {
 			robot = new Robot();
 		} catch (AWTException e) {
-			Assert.fail("Unable to create robot");
+			Assert.fail("Unable to create robot \n" + e.getMessage());
 		}
 		game = GameFrame.getController();
 
@@ -77,7 +77,7 @@ public class BaseTestCase {
 		try {
 			TestUtils.startNewGame(robot, game);
 		} catch (InterruptedException e) {
-			Assert.fail("Thread sleep failed");
+			Assert.fail("Thread sleep failed\n" + e.getMessage());
 		}
 
 	}

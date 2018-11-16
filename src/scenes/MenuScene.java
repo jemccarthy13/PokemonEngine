@@ -22,7 +22,7 @@ public class MenuScene extends SelectionScene {
 	/**
 	 * A map of the menu selection to the corresponding scene
 	 */
-	HashMap<Integer, BaseScene> menuSelections = new HashMap<Integer, BaseScene>();
+	HashMap<Integer, BaseScene> menuSelections = new HashMap<>();
 
 	/**
 	 * When it is created, register itself for Painting and KeyPress
@@ -30,14 +30,14 @@ public class MenuScene extends SelectionScene {
 	private MenuScene() {
 		super();
 
-		this.menuSelections.put(0, EncycopediaScene.instance);
-		this.menuSelections.put(1, PartyScene.instance);
-		this.menuSelections.put(2, InventoryScene.instance);
-		this.menuSelections.put(3, HelpScene.instance);
-		this.menuSelections.put(4, PlayerInfoScene.instance);
-		this.menuSelections.put(5, SaveScene.instance);
-		this.menuSelections.put(6, OptionScene.instance);
-		this.menuSelections.put(7, WorldScene.instance);
+		this.menuSelections.put(Integer.valueOf(0), EncycopediaScene.instance);
+		this.menuSelections.put(Integer.valueOf(1), PartyScene.instance);
+		this.menuSelections.put(Integer.valueOf(2), InventoryScene.instance);
+		this.menuSelections.put(Integer.valueOf(3), HelpScene.instance);
+		this.menuSelections.put(Integer.valueOf(4), PlayerInfoScene.instance);
+		this.menuSelections.put(Integer.valueOf(5), SaveScene.instance);
+		this.menuSelections.put(Integer.valueOf(6), OptionScene.instance);
+		this.menuSelections.put(Integer.valueOf(7), WorldScene.instance);
 
 		super.maxColSelection = 0;
 		super.maxRowSelection = 7;
@@ -58,10 +58,10 @@ public class MenuScene extends SelectionScene {
 	 */
 	@Override
 	public void doAction(GameController control) {
-		if (this.menuSelections.get(this.rowSelection) == InventoryScene.instance) {
+		if (this.menuSelections.get(Integer.valueOf(this.rowSelection)) == InventoryScene.instance) {
 			InventoryScene.instance.setMaxRow(control);
 		}
-		GameGraphicsData.getInstance().setScene(this.menuSelections.get(this.rowSelection));
+		GameGraphicsData.getInstance().setScene(this.menuSelections.get(Integer.valueOf(this.rowSelection)));
 	}
 
 	/**

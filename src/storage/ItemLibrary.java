@@ -1,7 +1,6 @@
 package storage;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -19,22 +18,14 @@ public class ItemLibrary extends HashMap<String, Item> {
 	 */
 	private ItemLibrary() {
 		String filePath = "resources/data/ITEMS.MDAT";
-		FileInputStream fs = null;
-		try {
-			fs = new FileInputStream(filePath);
-			Scanner s = new Scanner(fs);
+
+		try (FileInputStream fs = new FileInputStream(filePath); Scanner s = new Scanner(fs)) {
 			while (s.hasNext()) {
 				Item m = new Item(s.nextLine());
 				put(m.getName(), m);
 			}
-			s.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		try {
-			fs.close();
-		} catch (IOException e) {
-			// do nothing
 		}
 	}
 

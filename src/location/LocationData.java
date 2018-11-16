@@ -58,16 +58,16 @@ public class LocationData extends JSONObject {
 	 * Default constructor
 	 */
 	public LocationData() {
-		this.boundaries = new HashMap<DIR, Integer>();
-		this.boundaries.put(DIR.NORTH, 0);
-		this.boundaries.put(DIR.SOUTH, 0);
-		this.boundaries.put(DIR.EAST, 0);
-		this.boundaries.put(DIR.WEST, 0);
-		this.pokemon = new ArrayList<String>();
-		this.probabilities = new ArrayList<Integer>();
-		this.minLevels = new ArrayList<Integer>();
-		this.maxLevels = new ArrayList<Integer>();
-		this.canFlyOutOf = false;
+		this.boundaries = new HashMap<>();
+		this.boundaries.put(DIR.NORTH, Integer.valueOf(0));
+		this.boundaries.put(DIR.SOUTH, Integer.valueOf(0));
+		this.boundaries.put(DIR.EAST, Integer.valueOf(0));
+		this.boundaries.put(DIR.WEST, Integer.valueOf(0));
+		this.pokemon = new ArrayList<>();
+		this.probabilities = new ArrayList<>();
+		this.minLevels = new ArrayList<>();
+		this.maxLevels = new ArrayList<>();
+		this.canFlyOutOf = Boolean.valueOf(false);
 		this.name = "";
 
 	}

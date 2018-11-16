@@ -37,7 +37,7 @@ public class LocationTableModel extends AbstractTableModel {
 	/**
 	 * A list of the objects in the table
 	 */
-	private final List<Object> objects = new ArrayList<Object>();
+	private final List<Object> objects = new ArrayList<>();
 
 	/**
 	 * Add an object to the table
@@ -132,27 +132,27 @@ public class LocationTableModel extends AbstractTableModel {
 			obj.boundaries.put(DIR.SOUTH, (Integer) value);
 			break;
 		case 6:
-			obj.pokemon = new ArrayList<String>();
+			obj.pokemon = new ArrayList<>();
 			for (String s : value.toString().replace("[", "").replace("]", "").split(",")) {
 				obj.pokemon.add(s);
 			}
 			break;
 		case 7:
-			obj.probabilities = new ArrayList<Integer>();
+			obj.probabilities = new ArrayList<>();
 			for (String s : value.toString().replace("[", "").replace("]", "").split(",")) {
-				obj.probabilities.add(Integer.parseInt(s));
+				obj.probabilities.add(Integer.valueOf(s));
 			}
 			break;
 		case 8:
-			obj.minLevels = new ArrayList<Integer>();
+			obj.minLevels = new ArrayList<>();
 			for (String s : value.toString().replace("[", "").replace("]", "").split(",")) {
-				obj.minLevels.add(Integer.parseInt(s));
+				obj.minLevels.add(Integer.valueOf(s));
 			}
 			break;
 		case 9:
-			obj.maxLevels = new ArrayList<Integer>();
+			obj.maxLevels = new ArrayList<>();
 			for (String s : value.toString().replace("[", "").replace("]", "").split(",")) {
-				obj.maxLevels.add(Integer.parseInt(s));
+				obj.maxLevels.add(Integer.valueOf(s));
 			}
 			break;
 		default:

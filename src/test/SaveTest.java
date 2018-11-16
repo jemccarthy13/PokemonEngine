@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.junit.Test;
 
 import graphics.GamePanel;
+import utilities.DebugUtility;
 
 /**
  * Test saving and loading the game.
@@ -20,7 +21,7 @@ public class SaveTest {
 		try {
 			g.gameController.saveGame();
 		} catch (IOException e) {
-			// do nothing
+			DebugUtility.printError(e.getMessage());
 		}
 	}
 }
