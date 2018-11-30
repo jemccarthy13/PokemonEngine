@@ -51,6 +51,7 @@ public class OptionScene extends SelectionScene {
 	@Override
 	public void doAction(GameController control) {
 		if (this.rowSelection == 5) {
+			System.out.println("toggling sound");
 			Configuration.getInstance().toggleSound();
 		}
 	}

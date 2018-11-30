@@ -13,10 +13,8 @@ import graphics.SpriteLibrary;
 public class ItemConfirmScene extends InventoryScene {
 
 	private static final long serialVersionUID = -8128814959473744472L;
-	/**
-	 * Singleton instance
-	 */
-	static ItemConfirmScene instance = new ItemConfirmScene();
+
+	private static ItemConfirmScene m_instance = new ItemConfirmScene();
 
 	private ItemConfirmScene() {
 		this.maxRowSelection = 1;
@@ -50,6 +48,11 @@ public class ItemConfirmScene extends InventoryScene {
 	 */
 	@Override
 	public void doAction(GameController control) {
-		// use item
+		// use or give item
+		GameGraphicsData.getInstance().setScene(UseGiveItemScene.getInstance());
+	}
+
+	public static Scene getInstance() {
+		return m_instance;
 	}
 }

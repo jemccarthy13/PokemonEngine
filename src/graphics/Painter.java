@@ -116,7 +116,7 @@ public class Painter {
 				g.drawImage(SpriteLibrary.getImage("SLASH_small"), startX + offset * x, startY, null);
 				break;
 			default:
-				g.drawImage(SpriteLibrary.getInstance().getSmallFontChar(Character.valueOf(string.toCharArray()[x]))
+				g.drawImage(SpriteLibrary.getInstance().getSmallFontChar(Character.valueOf(paintStr.toCharArray()[x]))
 						.getImage(), startX + offset * x, startY, null);
 			}
 		}

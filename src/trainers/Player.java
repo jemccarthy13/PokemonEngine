@@ -28,7 +28,7 @@ public class Player extends Actor {
 	/**
 	 * The list of names of beaten trainers
 	 */
-	public ArrayList<String> beatenTrainers = new ArrayList<String>();
+	public ArrayList<String> beatenTrainers = new ArrayList<>();
 	/**
 	 * The number of badges this player has earned
 	 */

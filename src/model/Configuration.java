@@ -2,6 +2,8 @@ package model;
 
 import java.io.Serializable;
 
+import audio.AudioLibrary;
+
 /**
  * Stores the configuration of the game
  */
@@ -108,6 +110,9 @@ public class Configuration implements Serializable {
 
 	public void toggleSound() {
 		this.isSoundOn = !this.isSoundOn;
+		if (this.isSoundOn == false) {
+			AudioLibrary.pauseBackgroundMusic();
+		}
 	}
 
 	public boolean isNoClip() {

@@ -58,13 +58,13 @@ public class BattlerFactory extends HashMap<String, BattlerData> {
 				pd.name = (String) pokemon_data.get("pName");
 
 				// get the pokemon's pokedex number
-				pd.pokedexNumber = (String) pokemon_data.get("pokedex_num");
+				pd.pokedexNumber = Integer.parseInt((String) pokemon_data.get("pokedex_num"));
 
 				// get the pokemon's type
 				pd.type = (String) pokemon_data.get("type");
 
 				// get the pokemon's base experience
-				pd.baseExp = ((Long) pokemon_data.get("base_exp")).intValue();
+				pd.baseExp = Integer.parseInt(((String) pokemon_data.get("base_exp")));
 
 				// get the pokemon's evolution stage names
 				pd.evolution_stages = new ArrayList<>();
@@ -74,7 +74,7 @@ public class BattlerFactory extends HashMap<String, BattlerData> {
 				while (evolution_it.hasNext()) {
 					JSONObject stage = (JSONObject) evolution_it.next();
 					pd.evolution_stages.add((String) stage.get("name"));
-					pd.evolution_levels.add(((Integer) (stage.get("level"))));
+					pd.evolution_levels.add(Integer.valueOf(((String) stage.get("level")).toString()));
 				}
 
 				// get the pokemon's moves & levels they learn those moves
@@ -86,7 +86,7 @@ public class BattlerFactory extends HashMap<String, BattlerData> {
 				while (moves_iterator.hasNext()) {
 					JSONObject move = (JSONObject) moves_iterator.next();
 					pd.movesLearned.add((String) move.get("name"));
-					pd.levelsLearned.add(((Integer) (move.get("level"))));
+					pd.levelsLearned.add(Integer.valueOf((String) move.get("level")));
 				}
 
 				if (pd.isValidData()) {
@@ -98,8 +98,8 @@ public class BattlerFactory extends HashMap<String, BattlerData> {
 				}
 			}
 		} catch (Exception e) {
-			DebugUtility.error("Unable to load Pokedex data.");
 			e.printStackTrace();
+			DebugUtility.error("Unable to load Pokedex data.");
 		}
 	}
 

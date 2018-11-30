@@ -63,10 +63,14 @@ public class LocationLibrary extends HashMap<String, LocationData> {
 
 				// get the coordinate boundaries for this location
 				ld.boundaries = new HashMap<>();
-				ld.boundaries.put(DIR.NORTH, ((Integer) ((JSONObject) loc_data.get("boundaries")).get("north")));
-				ld.boundaries.put(DIR.SOUTH, ((Integer) ((JSONObject) loc_data.get("boundaries")).get("south")));
-				ld.boundaries.put(DIR.EAST, ((Integer) ((JSONObject) loc_data.get("boundaries")).get("east")));
-				ld.boundaries.put(DIR.WEST, ((Integer) ((JSONObject) loc_data.get("boundaries")).get("west")));
+				ld.boundaries.put(DIR.NORTH,
+						Integer.valueOf(((JSONObject) loc_data.get("boundaries")).get("north").toString()));
+				ld.boundaries.put(DIR.SOUTH,
+						Integer.valueOf(((JSONObject) loc_data.get("boundaries")).get("south").toString()));
+				ld.boundaries.put(DIR.EAST,
+						Integer.valueOf(((JSONObject) loc_data.get("boundaries")).get("east").toString()));
+				ld.boundaries.put(DIR.WEST,
+						Integer.valueOf(((JSONObject) loc_data.get("boundaries")).get("west").toString()));
 
 				ld.pokemon = new ArrayList<>();
 				ld.probabilities = new ArrayList<>();
@@ -78,9 +82,9 @@ public class LocationLibrary extends HashMap<String, LocationData> {
 				while (pkmn_it.hasNext()) {
 					JSONObject stage = (JSONObject) pkmn_it.next();
 					ld.pokemon.add((String) stage.get("name"));
-					ld.probabilities.add(((Integer) (stage.get("probability"))));
-					ld.minLevels.add(((Integer) (stage.get("min_level"))));
-					ld.maxLevels.add(((Integer) (stage.get("max_level"))));
+					ld.probabilities.add(Integer.valueOf(stage.get("probability").toString()));
+					ld.minLevels.add(Integer.valueOf(stage.get("min_level").toString()));
+					ld.maxLevels.add(Integer.valueOf(stage.get("max_level").toString()));
 				}
 
 				if (ld.isValidData()) {

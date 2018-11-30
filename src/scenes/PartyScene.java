@@ -20,7 +20,7 @@ public class PartyScene extends SelectionScene {
 	 */
 	public static PartyScene instance = new PartyScene();
 
-	private PartyScene() {
+	protected PartyScene() {
 		this.maxColSelection = 0;
 		this.maxRowSelection = 6;
 	}

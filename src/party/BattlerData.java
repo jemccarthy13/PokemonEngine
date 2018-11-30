@@ -25,7 +25,7 @@ public class BattlerData implements Serializable {
 	/**
 	 * Party members Pokedex number
 	 */
-	public String pokedexNumber = null;
+	public int pokedexNumber = -2;
 	/**
 	 * The names this party member reaches at further evolutions
 	 */
@@ -74,7 +74,7 @@ public class BattlerData implements Serializable {
 	 * @return whether or not the data is valid
 	 */
 	public boolean isValidData() {
-		return (this.type != null && this.pokedexNumber != null && this.evolution_stages != null
+		return (this.type != null && this.pokedexNumber != -2 && this.evolution_stages != null
 				&& this.evolution_levels != null && this.baseExp != 0 && this.movesLearned != null
 				&& this.levelsLearned != null);
 	}

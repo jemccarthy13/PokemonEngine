@@ -66,7 +66,7 @@ public class InventoryScene extends SelectionScene {
 	 */
 	@Override
 	public void doAction(GameController control) {
-		GameGraphicsData.getInstance().setScene(ItemConfirmScene.instance);
+		GameGraphicsData.getInstance().setScene(ItemConfirmScene.getInstance());
 	}
 
 	public void setMaxRow(GameController control) {

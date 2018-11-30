@@ -474,7 +474,7 @@ public class Battler implements Serializable {
 	 * @return String representation of the pokedex number
 	 */
 	public String formatPokedexNumber() {
-		return String.format("%03d", this.pData.pokedexNumber + this.evolution_stage);
+		return String.format("%03d", Integer.valueOf(this.pData.pokedexNumber + this.evolution_stage));
 	}
 
 	/**

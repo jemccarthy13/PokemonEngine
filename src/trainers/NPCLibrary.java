@@ -31,8 +31,8 @@ public class NPCLibrary extends HashMap<String, Actor> {
 	private static NPCLibrary m_instance = new NPCLibrary();
 
 	/**
-	 * Private constructor ensures only one instance. Loads data from the NPCs.json
-	 * file
+	 * Private constructor ensures only one instance. Loads data from the
+	 * NPCs.json file
 	 */
 	private NPCLibrary() {
 		String filename = "resources/data/NPCs.json";
@@ -56,9 +56,8 @@ public class NPCLibrary extends HashMap<String, Actor> {
 	 */
 	public void populateMap(String filename) {
 		JSONParser parser = new JSONParser();
-		try {
+		try (FileReader reader = new FileReader(filename)) {
 			// this is the JSON main object for all NPCs
-			FileReader reader = new FileReader(filename);
 			JSONObject all_npcs = (JSONObject) parser.parse(reader);
 			reader.close();
 			// this is the JSON object that contains all NPC data as an array
@@ -82,7 +81,7 @@ public class NPCLibrary extends HashMap<String, Actor> {
 				td.position = new Coordinate(x, y);
 
 				// get npc stationary true/false
-				td.stationary = (Boolean) npc_data.get("stationary");
+				td.stationary = ((Boolean) npc_data.get("stationary")).booleanValue();
 
 				// get npc sprite images directory name (sprite image name)
 				td.sprite_name = (String) npc_data.get("image");
@@ -91,7 +90,7 @@ public class NPCLibrary extends HashMap<String, Actor> {
 				// get the conversation text
 				JSONArray conversation = (JSONArray) npc_data.get("speech_text");
 				// convert to arraylist and push to trainerdata
-				ArrayList<String> list = new ArrayList<String>();
+				ArrayList<String> list = new ArrayList<>();
 				Iterator<?> convo_it = conversation.iterator();
 				while (convo_it.hasNext()) {
 					list.add((String) convo_it.next());
@@ -102,7 +101,7 @@ public class NPCLibrary extends HashMap<String, Actor> {
 				JSONArray pkmn_json = (JSONArray) npc_data.get("pokemon");
 				td.trainer = (pkmn_json == null) ? false : true;
 
-				if (td.trainer) {
+				if (td.trainer && pkmn_json != null) {
 					// convert to PokemonList and push to trainerdata
 					Party pList = new Party();
 					Iterator<?> pkmn_it = pkmn_json.iterator();
@@ -120,7 +119,8 @@ public class NPCLibrary extends HashMap<String, Actor> {
 				put(td.name, new Actor(td));
 			}
 		} catch (Exception e) {
-			DebugUtility.error("Unable to load NPC data.");
+			e.printStackTrace();
+			DebugUtility.error("Unable to load NPC data.\n" + e.getMessage());
 		}
 	}
 }
