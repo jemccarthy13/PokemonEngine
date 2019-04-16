@@ -31,9 +31,9 @@ public class HelpScene extends SelectionScene {
 		g.setColor(Color.BLACK);
 		g.drawImage(SpriteLibrary.getImage("Map"), 0, 0, null);
 
-		// TODO paint rectangle around selection
+		// todo paint rectangle around selection
 
-		// TODO up arrow increment map selection, down arrow decrement
+		// todo up arrow increment map selection, down arrow decrement
 
 		/**
 		 * g.setColor(Color.BLACK); g.drawImage(SpriteLibrary.getImage("PokegearBG"), 0,
@@ -60,6 +60,6 @@ public class HelpScene extends SelectionScene {
 	@Override
 	public void doAction(GameController control) {
 		// control.setCurrentSelection(new Coordinate(0, 0));
-		// TODO map "Z" button press
+		// todo map "Z" button press
 	}
 }

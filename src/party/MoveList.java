@@ -39,7 +39,7 @@ public class MoveList extends ArrayList<MoveData> {
 			this.add(move);
 			success = true;
 		} else {
-			/** @TODO replace this with a ReplaceMoveScene **/
+			/** @todo replace this with a ReplaceMoveScene **/
 			if (askForOverwrite) {
 				DebugUtility.printMessage(this.name + " already knows 4 moves.  Make room for another?");
 

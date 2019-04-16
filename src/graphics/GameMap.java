@@ -248,12 +248,12 @@ public class GameMap {
 	}
 
 	public boolean isObstacleAt(Coordinate loc) {
-		// TODO water tiles
+		// todo water tiles
 		return (TileSet.compareTiles(getMapTileAt(loc), TileSet.OBSTACLE));
 	}
 
 	public boolean isBattleAt(Coordinate loc) {
-		// TODO water tiles
+		// todo water tiles
 		return getMapTileAt(loc).getClass().equals(BattleTile.class);
 	}
 

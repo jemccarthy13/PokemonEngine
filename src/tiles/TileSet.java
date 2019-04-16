@@ -37,7 +37,7 @@ public class TileSet extends ArrayList<Image> {
 	/**
 	 * An array of all of the tile numbers that should be OBSTACLEs
 	 * 
-	 * @TODO - make part of tilset descriptor (JSON)
+	 * @todo - make part of tilset descriptor (JSON)
 	 */
 	public static final int[] IMPASSIBLE_TILES = { 0, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 18, 20, 21, 22, 23, 24, 25,
 			26, 27, 28, 30, 31, 32, 33, 34, 35, 36, 37, 38, 48, 49, 50, 51, 52, 53, 54, 55, 57, 58, 59, 60, 61, 62, 63,
@@ -49,7 +49,7 @@ public class TileSet extends ArrayList<Image> {
 	/**
 	 * An array of all of the tile numbers that should be BATTLE_TILEs
 	 * 
-	 * @TODO - make part of tilset descriptor (JSON)
+	 * @todo - make part of tilset descriptor (JSON)
 	 */
 	public static final int[] BATTLE_TILES = { 10, 17, 41 };
 
@@ -61,7 +61,7 @@ public class TileSet extends ArrayList<Image> {
 	/**
 	 * Compare two see if two tiles are of the same class
 	 * 
-	 * @TODO make sure this is used for collision / battle checks
+	 * @todo make sure this is used for collision / battle checks
 	 * @param one
 	 *            - the first tile
 	 * @param two

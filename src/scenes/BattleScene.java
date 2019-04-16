@@ -129,7 +129,7 @@ public class BattleScene extends BaseScene {
 		case 3:
 			// try to run away if wild
 			if (BattleEngine.getInstance().enemyName == null) {
-				// TODO probability of running away...
+				// todo probability of running away...
 				MessageQueue.getInstance().add("Got away safely!");
 				GameGraphicsData.getInstance().setScene(WorldScene.instance);
 			} else {

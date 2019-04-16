@@ -130,7 +130,7 @@ public class LocationEditor extends JFrame {
 				}
 			}
 			if (e.getSource().equals(LocationEditor.this.saveItem)) {
-				DebugUtility.printError("TODO - save data here");
+				DebugUtility.printError("todo - save data here");
 			}
 			if (e.getSource().equals(LocationEditor.this.addItem)) {
 				DebugUtility.printMessage("adding item");

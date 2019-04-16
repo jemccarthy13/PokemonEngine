@@ -10,7 +10,7 @@ public class MoveData implements Serializable {
 	private static final long serialVersionUID = 9003426637910342523L;
 
 	/**
-	 * TODO analyze move categories for abstraction
+	 * todo analyze move categories for abstraction
 	 */
 	public enum MOVECATEGORY {
 		/**
@@ -33,7 +33,7 @@ public class MoveData implements Serializable {
 	public String name = null;
 	/**
 	 * How powerful the move is (1-100), 100+ are super moves that require recharge
-	 * TODO implement recharge moves
+	 * todo implement recharge moves
 	 */
 	public int power = -1;
 

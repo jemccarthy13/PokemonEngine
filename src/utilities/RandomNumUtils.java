@@ -110,7 +110,7 @@ public class RandomNumUtils {
 	 * generates a number to incrase a stat by: 75% chance of +2, 25% chance of
 	 * +3
 	 * 
-	 * @TODO verify max stats increase when stats
+	 * @todo verify max stats increase when stats
 	 * 
 	 * @return a random stat increase
 	 */

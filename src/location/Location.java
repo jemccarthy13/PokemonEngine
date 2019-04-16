@@ -6,7 +6,7 @@ import java.io.Serializable;
 //
 // Location -
 //
-// TODO - determine the need for this wrapper - can use LocationData directly
+// todo - determine the need for this wrapper - can use LocationData directly
 //
 ///////////////////////////////////////////////////////////////////////////////
 /**

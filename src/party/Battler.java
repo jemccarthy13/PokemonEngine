@@ -47,7 +47,7 @@ public class Battler implements Serializable {
 		/**
 		 * How fast the party member is
 		 * 
-		 * TODO in battle, check for fastest party member to go first
+		 * todo in battle, check for fastest party member to go first
 		 */
 		SPEED,
 		/**
@@ -193,11 +193,11 @@ public class Battler implements Serializable {
 		Random rr = new Random();
 		if (rr.nextInt(5) <= 1) {
 			if (getStatusEffect() == STATUS.SLP) {
-				// TODO - change to message boxes
+				// todo - change to message boxes
 				DebugUtility.printMessage(getName() + " has woken up.");
 			}
 			if (getStatusEffect() == STATUS.FRZ) {
-				// TODO - change to message boxes
+				// todo - change to message boxes
 				DebugUtility.printMessage(getName() + " has broken free from the ice.");
 			}
 			setStatusEffect(STATUS.NORMAL);
@@ -219,7 +219,7 @@ public class Battler implements Serializable {
 	public void levelUp(GameController game) {
 		if (this.level < 100) {
 			this.level += 1;
-			// TODO - convert to use message box
+			// todo - convert to use message box
 			MessageQueue.getInstance().add(getName() + " grew to level " + this.level + "!");
 			DebugUtility.printMessage(getName() + " grew to level " + this.level + "!");
 		}
@@ -250,7 +250,7 @@ public class Battler implements Serializable {
 		if ((this.evolution_stage < 2)
 				&& (this.level == this.pData.evolution_levels.get(this.evolution_stage + 1).intValue())) {
 			this.evolution_stage += 1;
-			// TODO Convert to use message box
+			// todo Convert to use message box
 			DebugUtility
 					.printMessage("Congratulations!  Your " + this.pData.evolution_stages.get(this.evolution_stage - 1)
 							+ " has evolved into a " + this.pData.evolution_stages.get(this.evolution_stage) + "!");
@@ -259,7 +259,7 @@ public class Battler implements Serializable {
 		for (int x = 0; x < this.pData.movesLearned.size(); x++) {
 			if (this.level == this.pData.levelsLearned.get(x).intValue()) {
 				this.moves.add(MoveLibrary.getInstance().get(this.pData.movesLearned.get(x)));
-				// TODO convert to use message box
+				// todo convert to use message box
 				DebugUtility.printMessage(getName() + " learned " + this.pData.movesLearned.get(x));
 			}
 		}
@@ -281,7 +281,7 @@ public class Battler implements Serializable {
 	/**
 	 * Deals damage based on the given move
 	 * 
-	 * TODO implement "STAT" damage
+	 * todo implement "STAT" damage
 	 * 
 	 * @param move
 	 *            - the move data of the opponent's move
@@ -369,7 +369,7 @@ public class Battler implements Serializable {
 	/**
 	 * Return the name of this PartyMember
 	 * 
-	 * TODO custom names
+	 * todo custom names
 	 * 
 	 * @return the string name of Party member
 	 */

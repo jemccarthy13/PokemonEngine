@@ -1,6 +1,6 @@
 This file will be replaced with a more in-depth documentation at some point in the future.
 
-For now this will be the location of any @TODO action items, desired features, and committed updates.  
+For now this will be the location of any @todo action items, desired features, and committed updates.  
 
 Also documented will be known bugs.
 ===================================================================
@@ -19,7 +19,7 @@ Features:
 - Partial convert to Javadoc style comments instead of
   custom commenting
  
- TODOs:
+ todos:
 - Need to enable more options (create better options scenes to paint)
 - Create sprites for more NPCs
 - Pokegear abstraction / implement sub-menus
@@ -45,7 +45,7 @@ Features:
 - Graphics bugs on Unix-based OS fixed
 - Deprecated unneeded classes
 
-TODO/KNOWN BUGS:
+todo/KNOWN BUGS:
 - See repository issues for more information
 
 ===================================================================
@@ -56,7 +56,7 @@ Features:
 - Restructured framework, with run time enhancements
 - Fully commented
 
-TODO:
+todo:
 - Options don't work
 - pause menu selections only bare skeletons
 - need world map sprite for pokegear
@@ -81,7 +81,7 @@ Features:
 - Pokemon handles sprite upgrade with level up and evolution
 - Trainers' pokemon are included in npc factory to reduce hard code
 
-TODO:
+todo:
 - Options don't work
 - pause menu selections only bare skeletons
 - need world map sprite for pokegear
@@ -106,7 +106,7 @@ Features:
 - "Continue" hard coded values work
 - Sprites library half cleaned
 
-TODO:
+todo:
 - battle engine picks default move for every turn
 - Options don't work
 - pause menu selections only bare skeletons

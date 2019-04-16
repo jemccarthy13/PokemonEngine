@@ -30,7 +30,7 @@ public class BattlePartyScene extends BaseScene {
 	/**
 	 * Handle a key press at the party scene
 	 * 
-	 * TODO implement switching battlers mid battle
+	 * todo implement switching battlers mid battle
 	 */
 	@Override
 	public void keyPress(int keyCode, GameController control) {

@@ -27,7 +27,7 @@ public class OptionScene extends SelectionScene {
 	/**
 	 * Render the option scene.
 	 * 
-	 * TODO implement other options
+	 * todo implement other options
 	 */
 	@Override
 	public void render(Graphics g, GameController gameControl) {

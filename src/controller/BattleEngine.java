@@ -148,7 +148,7 @@ public class BattleEngine {
 	/**
 	 * Depending on the current TURN, handle changing party members
 	 * 
-	 * @TODO method-ize check for white out conditions
+	 * @todo method-ize check for white out conditions
 	 * 
 	 * @param turn
 	 *            the current turn
@@ -231,7 +231,7 @@ public class BattleEngine {
 		this.enemyPokemon.get(0).setStatusEffect(STATUS.NORMAL);
 
 		// reset the music
-		// TODO - verify playBackgroundMusic doesn't automatically pause/stop
+		// todo - verify playBackgroundMusic doesn't automatically pause/stop
 		// when switching music
 		AudioLibrary.playBackgroundMusic(this.game.getPlayer().getCurLoc().getName());
 	}
@@ -241,7 +241,7 @@ public class BattleEngine {
 	 */
 	public void Lose() {
 		this.enemyCurrentPokemon.setStatusEffect(STATUS.NORMAL);
-		// TODO - change to message boxes
+		// todo - change to message boxes
 
 		String[] lossMessages = { "Player Pokemon has fainted",
 				this.game.getPlayer().getName() + " is all out of usable Pokemon!",
@@ -262,7 +262,7 @@ public class BattleEngine {
 	/**
 	 * Do TURN logic - assuming move has already been chosen
 	 * 
-	 * TODO - change to message boxes
+	 * todo - change to message boxes
 	 * 
 	 * @param turn
 	 *            - the current TURN
@@ -303,7 +303,7 @@ public class BattleEngine {
 					AudioLibrary.playClip(SOUND_EFFECT.DAMAGE);
 
 					// decrement move counter, print result
-					// TODO convert to message
+					// todo convert to message
 					DebugUtility.printMessage(turn + "'s turn is over");
 					chosen.movePP--;
 				} else {
@@ -312,7 +312,7 @@ public class BattleEngine {
 				break;
 			case BRN: // fall through, BRN and PZN are the same
 			case PZN:
-				// TODO - deal % damage for burn / psn
+				// todo - deal % damage for burn / psn
 				AudioLibrary.playClip(SOUND_EFFECT.DAMAGE);
 				DebugUtility.printMessage(attacker.getName() + " has been hurt by it's " + status);
 				//$FALL-THROUGH$

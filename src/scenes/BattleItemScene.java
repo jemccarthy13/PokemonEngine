@@ -10,7 +10,7 @@ import graphics.SpriteLibrary;
 /**
  * A representation of a battle item scene
  * 
- * TODO battle item scene painting of items and logic to use items
+ * todo battle item scene painting of items and logic to use items
  */
 public class BattleItemScene extends BaseScene {
 

@@ -95,7 +95,7 @@ public class PartyScene extends SelectionScene {
 		if (this.rowSelection >= control.getPlayer().getParty().size()) {
 			doBack(control);
 		} else {
-			// TODO selected party member display
+			// todo selected party member display
 		}
 	}
 

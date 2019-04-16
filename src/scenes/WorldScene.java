@@ -82,7 +82,7 @@ public class WorldScene extends BaseScene {
 			GameMap.getInstance().setMapTileAt(curNPC.getPosition(), TileSet.OBSTACLE);
 		}
 
-		// TODO - remove this line and the 2 setTranform lines to start
+		// todo - remove this line and the 2 setTranform lines to start
 		// debugging transition to 20x20 painting
 		g.translate(-offsetX, -offsetY);
 

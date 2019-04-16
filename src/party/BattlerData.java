@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * Holds all the data needed to construct a Pokemon: name, number, evolution
  * stages + levels, baseExp, moves + levels learned
  * 
- * TODO consolidate evol_stages & evol_levels to MAP TODO consolidate
+ * todo consolidate evol_stages & evol_levels to MAP todo consolidate
  * movesLearned & levelsLearned to MAP
  */
 public class BattlerData implements Serializable {

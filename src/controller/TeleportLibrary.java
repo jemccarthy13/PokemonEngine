@@ -13,7 +13,7 @@ public class TeleportLibrary {
 	/**
 	 * The container of one way teleport locations
 	 * 
-	 * @TODO reciprocal teleportation
+	 * @todo reciprocal teleportation
 	 */
 	static Map<Coordinate, Coordinate> teleports = new HashMap<>();
 

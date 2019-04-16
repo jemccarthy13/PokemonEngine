@@ -215,7 +215,7 @@ public class Actor implements Serializable {
 	 *            - the other Actor
 	 * @return whether or not conversation can happen
 	 * 
-	 * @TODO - analyze this for borderNPC check / trainer battle
+	 * @todo - analyze this for borderNPC check / trainer battle
 	 */
 	public boolean getTalkable(Actor other) {
 		if (other.getCurrentY() + 1 == this.tData.position.getY()) {
@@ -375,7 +375,7 @@ public class Actor implements Serializable {
 	 * @return a string of the number of PartyMembers owned (used to print trainer
 	 *         data)
 	 * 
-	 * @TODO replace with a number
+	 * @todo replace with a number
 	 */
 	public String getNumPokemonOwned() {
 		return String.valueOf(this.tData.party.size());
@@ -402,7 +402,7 @@ public class Actor implements Serializable {
 	/**
 	 * Get the current stage of conversation text
 	 * 
-	 * @TODO compare with other conversation utilities and determine if all are
+	 * @todo compare with other conversation utilities and determine if all are
 	 *       necessary
 	 * @param stage
 	 *            - the stage of the conversation
@@ -415,7 +415,7 @@ public class Actor implements Serializable {
 	/**
 	 * Get the length of conversation text
 	 * 
-	 * @TODO - remove
+	 * @todo - remove
 	 * @return length of conversation
 	 */
 	public int getTextLength() {
