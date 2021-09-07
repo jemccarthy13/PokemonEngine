@@ -147,6 +147,7 @@ public class GameMap {
 				new InputStreamReader(GameController.class.getResourceAsStream(Configuration.MAP_TO_LOAD)));
 		SynchronizedReader reader = new SynchronizedReader(bReader);
 		String line = reader.readLine();
+
 		StringTokenizer tokens = new StringTokenizer(line);
 
 		// read the dimensions, and skip additional data until map data

@@ -98,7 +98,8 @@ public class Configuration implements Serializable {
 	/**
 	 * Default constructor initializes the number of selections at each screen
 	 */
-	private Configuration() {}
+	private Configuration() {
+	}
 
 	public static Configuration getInstance() {
 		return instance;
